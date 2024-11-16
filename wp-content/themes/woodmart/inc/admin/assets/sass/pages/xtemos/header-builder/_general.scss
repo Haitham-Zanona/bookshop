@@ -8,6 +8,23 @@
 	// MAIN BUILDER AREA
 	// ------------------------------------------
 
+	.whb-header-builder {
+
+		button {
+			color: var(--xts-body-color);
+		}
+	}
+
+	.woodmart_page_xts_header_builder {
+
+		&[style*="overflow: hidden;"] {
+			
+			#wpbody-content {
+				z-index: 9999;
+			}
+		}
+	}
+
 	#whb-header-builder:empty {
 		height: 300px;
 		border-radius: var(--xts-brd-radius);
@@ -53,11 +70,15 @@
 		border-radius: 50%;
 		background-attachment: scroll !important;
 		background-size: contain !important;
-
 		margin-inline-end: 5px;
 
 		&:not([style]) {
 			display: none;
+		}
+
+		&[style*="255, 255, 255"],
+		&[style*="backdrop-filter"] {
+			border: 1px solid var(--xts-option-border-color-darker-10);
 		}
 	}
 
@@ -74,6 +95,7 @@
 
 	.whb-inline-checkbox {
 		display: flex;
+		align-items: center;
 
 		input[type="checkbox"] {
 			margin-top: 2px;
@@ -174,16 +196,18 @@
 			position: relative;
 			flex: 0 1 calc(33.33333% - 10px);
 			margin-bottom: 0;
-			padding-top: 10px;
-			padding-bottom: 10px;
+			// padding-top: 10px;
+			// padding-bottom: 10px;
+			padding-block: 10px;
 			border: 1px solid var(--xts-option-border-color);
 			border-radius: var(--xts-brd-radius);
 			text-align: start;
 			cursor: pointer;
 			transition: .2s all ease-in-out;
 
-			padding-inline-end: 5px;
-			padding-inline-start: 50px;
+			// padding-inline-start: 50px;
+			// padding-inline-end: 5px;
+			padding-inline: 50px 5px;
 
 			&:before {
 				position: absolute;
@@ -225,8 +249,9 @@
 		.xts-notice {
 			width: 100%;
 
-			margin-inline-start: 0;
-			margin-inline-end: 10px;
+			// margin-inline-start: 0;
+			// margin-inline-end: 10px;
+			margin-inline: 0 10px;
 		}
 	}
 
@@ -256,13 +281,41 @@
 
 			[class*="xts-col-"] {
 				margin-bottom: 0;
-				padding-right: 0 !important;
-				padding-left: 0 !important;
+				// padding-right: 0 !important;
+				// padding-left: 0 !important;
+				padding-inline: 0 !important;
 			}
 		}
 
-		.whb-background-option {
-			margin-top: 0 !important;
+		// .whb-background-option {
+		// 	margin-top: 0 !important;
+		// }
+
+		.whb-divider-option {
+			margin: 0 !important;
+		}
+
+		// .whb-editor-field {
+
+		// 	&.xts-col-12 {
+				
+		// 		select,
+		// 		input[type="text"] {
+		// 			max-width: calc(50% - 15px);
+		// 		}
+		// 	}
+		// }
+	}
+
+	// ------------------------------------------------------------------------------------------------
+	// HTML BLOCK ELEMENT
+	// ------------------------------------------------------------------------------------------------
+
+	.whb-field-block_id {
+
+		.xts-add-block-link {
+			display: inline-block !important;
+			margin-inline-start: 10px;
 		}
 	}
 

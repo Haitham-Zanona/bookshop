@@ -104,13 +104,15 @@
 		// }
 	}
 
+	.xts-dev-domain-agree,
 	.xts-activation-form-agree {
 		display: flex;
 		align-items: center;
-		margin-top: 20px;
-		margin-bottom: 20px;
-
+		margin-block: 20px;
 		--xts-tooltip-width: 360px;
+	}
+
+	.xts-activation-form-agree {
 
 		.xts-hint {
 			margin-inline-start: 5px;

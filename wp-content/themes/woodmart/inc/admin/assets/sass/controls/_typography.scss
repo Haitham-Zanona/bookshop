@@ -249,9 +249,10 @@
 		.wd-typography-btn {
 			overflow: hidden;
 			padding-top: 2px;
-			padding-inline-end: 12px;
+			// padding-inline-start: 3px;
+			// padding-inline-end: 12px;
+			padding-inline: 3px 12px;
 			padding-bottom: 2px;
-			padding-inline-start: 3px;
 			height: 37px;
 			border: 1px solid var(--xts-option-border-color);
 			background-color: #FFF;
@@ -381,9 +382,10 @@
 				align-items: center;
 				justify-content: space-between;
 
-				.wpb_element_label {
+				// .wpb_element_label,
+				.wpb-param-heading {
 					margin-inline-end: 5px;
-					margin-bottom: 0;
+					margin-bottom: 0 !important;
 					padding: 0 !important;
 					border: none !important;
 				}
@@ -396,7 +398,8 @@
 
 			&.vc_wrapper-param-type-wd_slider {
 
-				.wpb_element_label {
+				// .wpb_element_label,
+				.wpb-param-heading {
 					position: absolute;
 					top: 0;
 					inset-inline-start: 15px;

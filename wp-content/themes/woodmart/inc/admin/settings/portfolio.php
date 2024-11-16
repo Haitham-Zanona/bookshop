@@ -3,13 +3,13 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
 		'id'          => 'portfolio',
 		'name'        => esc_html__( 'Portfolio', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio.jpg" alt="">', true ),
 		'description' => esc_html__( 'Enable/disable portfolio on your website.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'portfolio_section',
@@ -42,7 +42,7 @@ Options::add_field(
 		'type'        => 'text_input',
 		'section'     => 'portfolio_section',
 		'priority'    => 20,
-		'class'    => 'xts-col-6',
+		'class'       => 'xts-col-6',
 	)
 );
 
@@ -55,7 +55,7 @@ Options::add_field(
 		'type'        => 'text_input',
 		'section'     => 'portfolio_section',
 		'priority'    => 30,
-		'class'    => 'xts-col-6',
+		'class'       => 'xts-col-6',
 	)
 );
 
@@ -68,7 +68,7 @@ Options::add_field(
 	array(
 		'id'          => 'portfolio_full_width',
 		'name'        => esc_html__( 'Full width portfolio', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'full-width-portfolio.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'full-width-portfolio.jpg" alt="">', true ),
 		'description' => esc_html__( 'Makes the container 100% width of the page.', 'woodmart' ),
 		'group'       => esc_html__( 'Layout', 'woodmart' ),
 		'type'        => 'switcher',
@@ -222,7 +222,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'          => 'portfolio_spacing',
-		'name'        => esc_html__( 'Space between projects', 'woodmart' ),
+		'name'        => esc_html__( 'Space between projects on desktop', 'woodmart' ),
 		'description' => esc_html__( 'You can set different spacing between blocks on portfolio page', 'woodmart' ),
 		'group'       => esc_html__( 'Layout', 'woodmart' ),
 		'type'        => 'buttons',
@@ -255,6 +255,100 @@ Options::add_field(
 		),
 		'default'     => 0,
 		'priority'    => 20,
+		't_tab'       => array(
+			'id'    => 'portfolio_spacing_tabs',
+			'tab'   => esc_html__( 'Desktop', 'woodmart' ),
+			'icon'  => 'xts-i-desktop',
+			'style' => 'devices',
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'portfolio_spacing_tablet',
+		'name'        => esc_html__( 'Space between projects on tablet', 'woodmart' ),
+		'description' => esc_html__( 'You can set different spacing between blocks on portfolio page', 'woodmart' ),
+		'group'       => esc_html__( 'Layout', 'woodmart' ),
+		'type'        => 'buttons',
+		'section'     => 'portfolio_archive_section',
+		'options'     => array(
+			0  => array(
+				'name'  => '0',
+				'value' => 0,
+			),
+			2  => array(
+				'name'  => '2',
+				'value' => 2,
+			),
+			6  => array(
+				'name'  => '5',
+				'value' => 6,
+			),
+			10 => array(
+				'name'  => '10',
+				'value' => 10,
+			),
+			20 => array(
+				'name'  => '20',
+				'value' => 20,
+			),
+			30 => array(
+				'name'  => '30',
+				'value' => 30,
+			),
+		),
+		'default'     => '',
+		'priority'    => 21,
+		't_tab'       => array(
+			'id'   => 'portfolio_spacing_tabs',
+			'tab'  => esc_html__( 'Tablet', 'woodmart' ),
+			'icon' => 'xts-i-tablet',
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'portfolio_spacing_mobile',
+		'name'        => esc_html__( 'Space between projects on mobile', 'woodmart' ),
+		'description' => esc_html__( 'You can set different spacing between blocks on portfolio page', 'woodmart' ),
+		'group'       => esc_html__( 'Layout', 'woodmart' ),
+		'type'        => 'buttons',
+		'section'     => 'portfolio_archive_section',
+		'options'     => array(
+			0  => array(
+				'name'  => '0',
+				'value' => 0,
+			),
+			2  => array(
+				'name'  => '2',
+				'value' => 2,
+			),
+			6  => array(
+				'name'  => '5',
+				'value' => 6,
+			),
+			10 => array(
+				'name'  => '10',
+				'value' => 10,
+			),
+			20 => array(
+				'name'  => '20',
+				'value' => 20,
+			),
+			30 => array(
+				'name'  => '30',
+				'value' => 30,
+			),
+		),
+		'default'     => '',
+		'priority'    => 22,
+		't_tab'       => array(
+			'id'   => 'portfolio_spacing_tabs',
+			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
+			'icon' => 'xts-i-phone',
+		),
 	)
 );
 
@@ -285,17 +379,17 @@ Options::add_field(
 		'options'     => array(
 			'pagination' => array(
 				'name'  => esc_html__( 'Pagination links', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-pagination-links.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-pagination-links.jpg" alt="">', true ),
 				'value' => 'pagination',
 			),
 			'load_more'  => array(
 				'name'  => esc_html__( '"Load more" button', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-load-more-button.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-load-more-button.jpg" alt="">', true ),
 				'value' => 'load_more',
 			),
 			'infinit'    => array(
 				'name'  => esc_html__( 'Infinit scrolling', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-infinit.gif" alt="">', 'woodmart' ), true ),
+				'hint'  => '<video data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-pagination-infinit.mp4" autoplay loop muted></video>',
 				'value' => 'infinit',
 			),
 		),
@@ -418,7 +512,7 @@ Options::add_field(
 	array(
 		'id'          => 'portoflio_filters',
 		'name'        => esc_html__( 'Show categories filters', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-categories-filters.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-categories-filters.jpg" alt="">', true ),
 		'description' => esc_html__( 'Display categories list that allows you to filter your portfolio projects.', 'woodmart' ),
 		'group'       => esc_html__( 'Project options', 'woodmart' ),
 		'type'        => 'switcher',
@@ -441,12 +535,12 @@ Options::add_field(
 		'options'     => array(
 			'links'   => array(
 				'name'  => esc_html__( 'Links', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-categories-filters-links.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-categories-filters-links.mp4" autoplay loop muted></video>',
 				'value' => 'links',
 			),
 			'masonry' => array(
 				'name'  => esc_html__( 'Masonry', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-categories-filters-masonry.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-categories-filters-masonry.mp4" autoplay loop muted></video>',
 				'value' => 'masonry',
 			),
 		),
@@ -509,7 +603,7 @@ Options::add_field(
 	array(
 		'id'          => 'single_portfolio_title_in_page_title',
 		'name'        => esc_html__( 'Project name in page title', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'project-title-in-page-heading.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'project-title-in-page-heading.jpg" alt="">', true ),
 		'description' => esc_html__( 'Display project title instead of portfolio page title in page heading', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'portfolio_singe_project_section',
@@ -522,7 +616,7 @@ Options::add_field(
 	array(
 		'id'          => 'portfolio_navigation',
 		'name'        => esc_html__( 'Projects navigation', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-projects-navigation.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'portfolio-projects-navigation.jpg" alt="">', true ),
 		'description' => esc_html__( 'Next and previous projects links on single project page', 'woodmart' ),
 		'group'       => esc_html__( 'Elements', 'woodmart' ),
 		'type'        => 'switcher',
@@ -537,7 +631,7 @@ Options::add_field(
 	array(
 		'id'          => 'portfolio_related',
 		'name'        => esc_html__( 'Related projects', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'project-related-projects.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'project-related-projects.jpg" alt="">', true ),
 		'description' => esc_html__( 'Show related projects carousel.', 'woodmart' ),
 		'group'       => esc_html__( 'Elements', 'woodmart' ),
 		'type'        => 'switcher',

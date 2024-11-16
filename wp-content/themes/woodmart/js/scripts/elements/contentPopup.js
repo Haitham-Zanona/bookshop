@@ -18,16 +18,18 @@
 		}
 
 		$('.wd-open-popup').magnificPopup({
-			type        : 'inline',
-			removalDelay: 500, //delay removal by X to allow out-animation
-			tClose      : woodmart_settings.close,
-			tLoading    : woodmart_settings.loading,
-			callbacks   : {
+			type           : 'inline',
+			removalDelay   : 600, //delay removal by X to allow out-animation
+			tClose         : woodmart_settings.close,
+			tLoading       : woodmart_settings.loading,
+			fixedContentPos: true,
+			callbacks      : {
 				beforeOpen: function() {
-					this.st.mainClass = 'mfp-move-horizontal content-popup-wrapper';
+					this.wrap.addClass('wd-popup-slide-from-left');
 				},
 				open      : function() {
 					woodmartThemeModule.$document.trigger('wood-images-loaded');
+					woodmartThemeModule.$document.trigger('wdOpenPopup');
 				}
 			}
 		});

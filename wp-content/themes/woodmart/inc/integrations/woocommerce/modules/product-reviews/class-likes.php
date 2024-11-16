@@ -118,7 +118,7 @@ class Likes {
 	 * @return array
 	 */
 	public function add_localized_settings( $settings ) {
-		$settings['myaccount_page'] = esc_url( get_permalink( get_option( 'woocommerce_myaccount_page_id' ) ) );
+		$settings['review_likes_tooltip'] = esc_html__( 'Please log in to rate reviews.', 'woodmart' );
 
 		return $settings;
 	}
@@ -126,12 +126,19 @@ class Likes {
 	/**
 	 * Render comments html with pros and cons field.
 	 *
+	 * @codeCoverageIgnore
 	 * @param WP_Comment $data_object Comment data object.
 	 *
 	 * @return void
 	 */
 	public function render( $data_object ) {
-		if ( ! woodmart_get_opt( 'reviews_enable_likes' ) || '0' !== $data_object->comment_parent || ( ! wp_doing_ajax() && ( is_admin() || ! is_singular( 'product' ) ) ) ) {
+		$is_elementor_preview = false;
+
+		if ( 'elementor' === woodmart_get_current_page_builder() ) {
+			$is_elementor_preview = woodmart_elementor_is_edit_mode() || woodmart_elementor_is_preview_page();
+		}
+
+		if ( ! woodmart_get_opt( 'reviews_enable_likes' ) || '0' !== $data_object->comment_parent || ( ! wp_doing_ajax() && ! $is_elementor_preview && ( is_admin() || ! is_singular( 'product' ) ) ) ) {
 			return;
 		}
 
@@ -143,10 +150,14 @@ class Likes {
 		?>
 		<div class="wd-review-likes">
 			<div class="wd-action-btn wd-style-text wd-like wd-like-icon">
-				<a><span><?php echo esc_html( $likes ); ?></span></a>
+				<a href="#">
+					<span><?php echo esc_html( $likes ); ?></span>
+				</a>
 			</div>
 			<div class="wd-action-btn wd-style-text wd-dislike wd-dislike-icon">
-				<a><span><?php echo esc_html( $dislikes ); ?></span></a>
+				<a href="#">
+					<span><?php echo esc_html( $dislikes ); ?></span>
+				</a>
 			</div>
 		</div>
 		<?php

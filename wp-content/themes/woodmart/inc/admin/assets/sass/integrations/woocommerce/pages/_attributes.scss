@@ -25,8 +25,9 @@
 			}
 
 			.form-field {
-				margin-top: 0;
-				margin-bottom: 40px;
+				// margin-top: 0;
+				// margin-bottom: 40px;
+				margin-block: 0 40px;
 
 				label {
 					display: block;
@@ -35,9 +36,10 @@
 					@extend %option-title-label;
 				}
 
+				:is(
 				input[type=text],
 				select,
-				textarea {
+				textarea) {
 					@extend %input-style;
 				}
 
@@ -57,34 +59,29 @@
 			// ------------------------------------------
 
 			p.submit {
-				position: relative;
-				z-index: $z-layer-2;
-				margin-top: 30px;
-				margin-bottom: 0;
-				padding: 0;
-
-				&:before {
-					position: absolute;
-					top: 50%;
-					bottom: 0;
-					inset-inline-start: 10px;
-					z-index: $z-layer-1;
-					color: #FFF;
-					transform: translateY(-50%);
-					pointer-events: none;
-
-					@include font-icon-base;
-				}
+				@extend %sticky-save-button;
 			}
 
 			[type="submit"] {
-				padding-inline-start: 30px;
-
 				@extend %xts-button;
 
 				&.button-primary {
 					@extend %xts-button-primary;
 					@extend %xts-button-primary-hover;
+				}
+			}
+		}
+
+		&.rtl {
+
+			:is(
+			.wrap.woocommerce > form,
+			.form-wrap form,
+			#addtag,
+			#edittag) {
+
+				p.submit {
+					@extend %sticky-button-rtl;
 				}
 			}
 		}
@@ -121,8 +118,9 @@
 		.form-wrap {
 
 			h2 {
-				margin-top: 0;
-				margin-bottom: 18px;
+				margin-block: 0 18px;
+				// margin-top: 0;
+				// margin-bottom: 18px;
 				font-size: 16px;
 			}
 		}
@@ -138,10 +136,18 @@
 			// ------------------------------------------
 
 			p.submit {
+				@extend %sticky-add-button-icon;
 
-				&:before {
-					@include font-icon-content($xts-icon-add);
-				}
+				// &:before {
+					// @include font-icon-content($xts-icon-add);
+				// }
+			}
+		}
+
+		.rtl & {
+
+			p.submit {
+				@extend %sticky-button-rtl;
 			}
 		}
 
@@ -212,13 +218,32 @@
 			// ------------------------------------------
 
 			p.submit {
+				@extend %sticky-save-button-icon;
 
-				&:before {
-					@include font-icon-content($xts-icon-update);
-				}
+				// &:before {
+				// 	// @include font-icon-content($xts-icon-update);
+				// 	@include font-icon-content($xts-icon-save);
+				// }
 			}
 		}
 	}
+
+	// .rtl {
+
+	// 	.product_page_product_attributes {
+
+	// 		.wrap.woocommerce > form {
+
+	// 			// ------------------------------------------
+	// 			// ACTIONS
+	// 			// ------------------------------------------
+
+	// 			p.submit {
+	// 				@extend %sticky-button-rtl;
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 } // END IF
 
@@ -247,10 +272,15 @@
 			// ------------------------------------------
 
 			p.submit {
+				@extend %sticky-add-button-icon;
 
-				&:before {
-					@include font-icon-content($xts-icon-add);
-				}
+				// &:before {
+				// 	@include font-icon-content($xts-icon-add);
+				// }
+
+				// .rtl & {
+				// 	@extend %sticky-button-rtl;
+				// }
 			}
 
 			//**** LOADER ****//
@@ -313,37 +343,25 @@
 			// ------------------------------------------
 
 			.edit-tag-actions {
-				position: relative;
-				z-index: $z-layer-2;
-				margin-top: 30px;
+				@extend %sticky-save-button;
+				@extend %sticky-save-button-icon;
 
-				.button {
-					padding-inline-start: 30px;
-				}
+				// &:before {
+				// 	@include font-icon($xts-icon-save);
+				// }
 
 				#delete-link a {
-					@extend %xts-inline-button;
-
-					&.delete {
-						@extend %xts-inline-button-warning;
-					}
-
-					&:before {
-						@include font-icon($xts-icon-delete-bin);
-					}
+					@extend %sticky-save-button-delete;
 				}
+			}
+		}
 
-				&:before {
-					position: absolute;
-					top: 50%;
-					bottom: 0;
-					inset-inline-start: 10px;
-					z-index: $z-layer-1;
-					color: #FFF;
-					transform: translateY(-50%);
-					pointer-events: none;
+		&.rtl {
 
-					@include font-icon($xts-icon-update);
+			#edittag {
+	
+				.edit-tag-actions {
+					@extend %sticky-button-rtl;
 				}
 			}
 		}

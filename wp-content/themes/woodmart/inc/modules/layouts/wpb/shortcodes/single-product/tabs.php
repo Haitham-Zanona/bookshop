@@ -20,39 +20,44 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 	 */
 	function woodmart_shortcode_single_product_tabs( $settings ) {
 		$default_settings = array(
-			'layout'                            => 'tabs',
-			'enable_additional_info'            => 'yes',
-			'enable_reviews'                    => 'yes',
-			'enable_description'                => 'yes',
-			'additional_info_style'             => 'bordered',
-			'additional_info_layout'            => 'list',
-			'reviews_layout'                    => 'one-column',
-			'reviews_columns'                   => '',
-			'css'                               => '',
+			'layout'                              => 'tabs',
+			'accordion_on_mobile'                 => 'no',
+			'attr_hide_name'                      => 'no',
+			'attr_hide_image'                     => 'no',
+			'enable_additional_info'              => 'yes',
+			'enable_reviews'                      => 'yes',
+			'enable_description'                  => 'yes',
+			'additional_info_style'               => 'bordered',
+			'additional_info_layout'              => 'list',
+			'reviews_layout'                      => 'one-column',
+			'reviews_columns'                     => '',
+			'css'                                 => '',
+			'side_hidden_content_position'        => 'right',
+			'side_hidden_title_text_color_scheme' => 'inherit',
 
 			/**
 			 * Tabs Settings.
 			 */
-			'tabs_style'                        => 'default',
-			'tabs_title_text_color_scheme'      => 'inherit',
-			'tabs_alignment'                    => 'center',
-			'tabs_content_text_color_scheme'    => 'inherit',
+			'tabs_style'                          => 'default',
+			'tabs_title_text_color_scheme'        => 'inherit',
+			'tabs_alignment'                      => 'center',
+			'tabs_content_text_color_scheme'      => 'inherit',
 
 			/**
 			 * Accordion Settings.
 			 */
-			'accordion_state'                   => 'first',
-			'accordion_style'                   => 'default',
-			'accordion_title_text_color_scheme' => 'inherit',
-			'accordion_alignment'               => 'left',
-			'accordion_hide_top_bottom_border'  => 'no',
+			'accordion_state'                     => 'first',
+			'accordion_style'                     => 'default',
+			'accordion_title_text_color_scheme'   => 'inherit',
+			'accordion_alignment'                 => 'left',
+			'accordion_hide_top_bottom_border'    => 'no',
 
 			/**
 			 * Opener Settings.
 			 */
-			'accordion_opener_alignment'        => 'left',
-			'accordion_opener_style'            => 'arrow',
-			'all_open_style'                    => 'default',
+			'accordion_opener_alignment'          => 'left',
+			'accordion_opener_style'              => 'arrow',
+			'all_open_style'                      => 'default',
 		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
@@ -68,7 +73,7 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 			Global_Data::get_instance()->set_data( $key, $value );
 		}
 
-		$wrapper_classes = apply_filters( 'vc_shortcodes_css_class', '', '', $settings );
+		$wrapper_classes  = apply_filters( 'vc_shortcodes_css_class', '', '', $settings );
 
 		if ( $settings['css'] ) {
 			$wrapper_classes .= ' ' . vc_shortcode_custom_css_class( $settings['css'] );
@@ -85,8 +90,17 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 		$args                     = array();
 		$title_content_classes    = '';
 
+		if ( 'yes' === $settings['enable_additional_info'] ) {
+			$additional_info_classes .= 'yes' === $settings['attr_hide_name'] ? ' wd-hide-name' : '';
+			$additional_info_classes .= 'yes' === $settings['attr_hide_image'] ? ' wd-hide-image' : '';
+		}
+
 		if ( 'inherit' !== $settings['tabs_content_text_color_scheme'] ) {
 			$title_content_classes .= ' color-scheme-' . $settings['tabs_content_text_color_scheme'];
+		}
+
+		if ( 'side-hidden' === $settings['layout'] ) {
+			$title_content_classes .= ' wd-' . woodmart_vc_get_control_data( $settings['side_hidden_content_position'], 'desktop' );
 		}
 
 		$default_args = array(
@@ -106,6 +120,7 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 			$args = array(
 				'builder_tabs_classes'             => $title_classes,
 				'builder_nav_tabs_wrapper_classes' => $title_wrapper_classes,
+				'accordion_on_mobile'              => $settings['accordion_on_mobile'],
 			);
 		} elseif ( 'accordion' === $settings['layout'] ) {
 			$accordion_classes = ' wd-style-' . $settings['accordion_style'];
@@ -127,6 +142,16 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 				'builder_state'             => $accordion_state,
 				'builder_opener_classes'    => $opener_classes,
 				'builder_title_classes'     => $title_classes,
+			);
+		} elseif ( 'side-hidden' === $settings['layout'] ) {
+			$title_classes = '';
+
+			if ( 'inherit' !== $settings['side_hidden_title_text_color_scheme'] && 'custom' !== $settings['side_hidden_title_text_color_scheme'] ) {
+				$title_classes .= ' color-scheme-' . $settings['side_hidden_title_text_color_scheme'];
+			}
+
+			$args = array(
+				'builder_title_classes' => $title_classes,
 			);
 		}
 
@@ -170,7 +195,6 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_tabs' ) ) {
 			?>
 		</div>
 		<?php
-
 		Main::restore_preview();
 
 		return ob_get_clean();

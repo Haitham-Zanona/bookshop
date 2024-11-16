@@ -35,31 +35,21 @@ if ( ! $checkout->is_registration_enabled() && $checkout->is_registration_requir
 // filter hook for include new pages inside the payment method
 $get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', wc_get_checkout_url() ); ?>
 
-<form name="checkout" method="post" class="checkout woocommerce-checkout row" action="<?php echo esc_url( $get_checkout_url ); ?>" enctype="multipart/form-data">
-
-	<div class="col-12 col-md-5 col-lg-6">
+<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( $get_checkout_url ); ?>" enctype="multipart/form-data">
 
 			<?php if ( $checkout->get_checkout_fields() ) : ?>
 
 				<?php do_action( 'woocommerce_checkout_before_customer_details' ); ?>
 
-				<div class="row" id="customer_details">
-					<div class="col-12">
-						<?php do_action( 'woocommerce_checkout_billing' ); ?>
-					</div>
-
-					<div class="col-12">
-						<?php do_action( 'woocommerce_checkout_shipping' ); ?>
-					</div>
+				<div class="customer-details" id="customer_details">
+					<?php do_action( 'woocommerce_checkout_billing' ); ?>
+					<?php do_action( 'woocommerce_checkout_shipping' ); ?>
 				</div>
 
 				<?php do_action( 'woocommerce_checkout_after_customer_details' ); ?>
 
 			<?php endif; ?>
 
-	</div>
-
-	<div class="col-12 col-md-7 col-lg-6">
 		<div class="checkout-order-review">
 			<?php do_action( 'woocommerce_checkout_before_order_review_heading' ); ?>
 
@@ -74,7 +64,6 @@ $get_checkout_url = apply_filters( 'woocommerce_get_checkout_url', wc_get_checko
 			<?php do_action( 'woocommerce_checkout_after_order_review' ); ?>
 
 		</div>
-	</div>
 	
 </form>
 

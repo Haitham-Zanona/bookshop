@@ -39,8 +39,14 @@ if ( ! function_exists( 'woodmart_add_to_compare_loop_btn' ) ) {
 	 * Add to compare button on loop product.
 	 */
 	function woodmart_add_to_compare_loop_btn() {
+		$classes = '';
+
+		if ( 'buttons-on-hover' === woodmart_loop_prop( 'product_hover' ) && 'list' !== woodmart_loop_prop( 'products_view' )  ) {
+			$classes .= ' wd-tooltip';
+		}
+
 		if ( woodmart_get_opt( 'compare' ) && woodmart_get_opt( 'compare_on_grid' ) ) {
-			Ui::get_instance()->add_to_compare_btn( 'wd-action-btn wd-style-icon wd-compare-icon' );
+			Ui::get_instance()->add_to_compare_btn( 'wd-action-btn wd-style-icon wd-compare-icon' . $classes );
 		}
 
 		if ( ! class_exists( 'YITH_Woocompare' ) || 'yes' !== get_option( 'yith_woocompare_compare_button_in_products_list' ) ) {
@@ -55,7 +61,7 @@ if ( ! function_exists( 'woodmart_add_to_compare_loop_btn' ) ) {
 		}
 
 		?>
-		<div class="product-compare-button wd-action-btn wd-style-icon wd-compare-icon">
+		<div class="product-compare-button wd-action-btn wd-style-icon wd-compare-icon<?php echo esc_attr( $classes ); ?>">
 			<?php if ( $product_id || ! apply_filters( 'yith_woocompare_remove_compare_link_by_cat', false, $product_id ) ) : ?>
 				<a href="<?php echo esc_url( woodmart_compare_add_product_url( $product_id ) ); ?>" class="compare" data-product_id="<?php echo esc_attr( $product_id ); ?>" rel="nofollow noopener">
 					<?php echo esc_html( $button_text ); ?>
@@ -96,7 +102,7 @@ if ( ! function_exists( 'woodmart_compare_available_fields' ) ) {
 	 *
 	 * @return mixed
 	 */
-	function woodmart_compare_available_fields( $new = false ) {
-		return Compare::get_instance()->compare_available_fields( $new );
+	function woodmart_compare_available_fields() {
+		return Compare::get_instance()->compare_available_fields( true );
 	}
 }

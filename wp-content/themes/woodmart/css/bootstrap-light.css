@@ -10,8 +10,23 @@
 .row {
   display: flex;
   flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
+  margin-inline: calc((var(--wd-sp, 30px) / 2) * -1);
+}
+
+[class*="wd-spacing-"] {
+  margin-bottom: calc(var(--wd-sp, 30px) / -1);
+}
+
+[class*="wd-spacing-"] > [class*="col"] {
+  margin-bottom: var(--wd-sp, 30px);
+}
+
+.wd-spacing-20 {
+  --wd-sp: 20px;
+}
+
+.wd-spacing-10 {
+  --wd-sp: 10px;
 }
 
 .no-gutters {
@@ -35,8 +50,7 @@
   position: relative;
   width: 100%;
   min-height: 1px;
-  padding-right: 15px;
-  padding-left: 15px;
+  padding-inline: calc(var(--wd-sp, 30px) / 2);
 }
 
 .col {

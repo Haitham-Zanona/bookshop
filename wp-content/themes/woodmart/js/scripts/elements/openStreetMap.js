@@ -128,17 +128,17 @@
 					maxZoom: 18
 				}).addTo(map);
 			}else if ( 'stamen-toner' === settings.geoapify_tile ) {
-				L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+				L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_toner/{z}/{x}/{y}{r}.png', {
 					attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
 					maxZoom: 18
 				}).addTo(map);
 			}else if ( 'stamen-terrain' === settings.geoapify_tile ) {
-				L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg', {
+				L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png', {
 					attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
 					maxZoom: 18
 				}).addTo(map);
 			}else if ( 'stamen-watercolor' === settings.geoapify_tile ) {
-				L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg', {
+				L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg', {
 					attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.',
 					maxZoom: 18
 				}).addTo(map);
@@ -215,7 +215,16 @@
 				return;
 			}
 
-			if ( settings.hasOwnProperty( 'init_type' ) && 'button' === settings.init_type) {
+			if ( $mapContainer.closest('.wd-popup').length > 0 && ! $mapContainer.hasClass('wd-map-inited') ) {
+				woodmartThemeModule.$document.on('wdOpenPopup', function() {
+					if ($mapContainer.hasClass('wd-map-inited')) {
+						return;
+					}
+
+					$mapContainer.addClass('wd-map-inited');
+					mapInit($map, settings);
+				});
+			} else if ( settings.hasOwnProperty( 'init_type' ) && 'button' === settings.init_type) {
 				$mapContainer.find('.wd-init-map').on('click', function(e) {
 					e.preventDefault();
 
@@ -238,7 +247,7 @@
 					}
 				});
 			} else if ( settings.hasOwnProperty( 'init_type' ) && 'interaction' === settings.init_type) {
-				woodmartThemeModule.$window.on('wdEventStarted', function() {
+				window.addEventListener('wdEventStarted', function () {
 					if ($mapContainer.hasClass('wd-map-inited')) {
 						return;
 					}

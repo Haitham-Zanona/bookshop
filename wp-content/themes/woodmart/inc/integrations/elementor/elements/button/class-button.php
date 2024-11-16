@@ -150,65 +150,7 @@ class Button extends Widget_Base {
 			]
 		);
 
-		$this->add_control(
-			'icon_type',
-			[
-				'label'   => esc_html__( 'Type', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => [
-					'icon'  => esc_html__( 'Icon', 'woodmart' ),
-					'image' => esc_html__( 'Image', 'woodmart' ),
-				],
-				'default' => 'icon',
-			]
-		);
-
-		$this->add_control(
-			'image',
-			array(
-				'label'     => esc_html__( 'Choose image', 'woodmart' ),
-				'type'      => Controls_Manager::MEDIA,
-				'condition' => array(
-					'icon_type' => 'image',
-				),
-			)
-		);
-
-		$this->add_group_control(
-			Group_Control_Image_Size::get_type(),
-			array(
-				'name'      => 'image',
-				'default'   => 'thumbnail',
-				'separator' => 'none',
-				'condition' => array(
-					'icon_type' => 'image',
-				),
-			)
-		);
-
-		$this->add_control(
-			'icon',
-			[
-				'label' => esc_html__( 'Icon', 'woodmart' ),
-				'type'  => Controls_Manager::ICONS,
-				'condition' => array(
-					'icon_type' => 'icon',
-				),
-			]
-		);
-
-		$this->add_control(
-			'icon_position',
-			[
-				'label'   => esc_html__( 'Icon position', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => [
-					'right' => esc_html__( 'Right', 'woodmart' ),
-					'left'  => esc_html__( 'Left', 'woodmart' ),
-				],
-				'default' => 'right',
-			]
-		);
+		woodmart_get_button_style_icon_map( $this );
 
 		$this->end_controls_section();
 	}

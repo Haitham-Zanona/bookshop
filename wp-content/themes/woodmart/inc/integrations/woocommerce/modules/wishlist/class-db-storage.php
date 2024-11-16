@@ -109,10 +109,12 @@ class DB_Storage implements Storage {
 			array(
 				'product_id'  => $product_id,
 				'wishlist_id' => $wishlist_id,
+				'date_added'  => current_time( 'mysql', 1 ),
 			),
 			array(
 				'%d',
 				'%d',
+				'%s',
 			)
 		);
 	}

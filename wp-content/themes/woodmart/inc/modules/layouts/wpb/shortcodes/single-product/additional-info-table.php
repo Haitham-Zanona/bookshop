@@ -21,6 +21,8 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_additional_info_table
 	function woodmart_shortcode_single_product_additional_info_table( $settings ) {
 		$default_settings = array(
 			'layout'           => 'list',
+			'attr_hide_name'   => 'no',
+			'attr_hide_image'  => 'no',
 			'style'            => 'bordered',
 			'css'              => '',
 			'include'          => array(),
@@ -59,29 +61,26 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_additional_info_table
 				if ( function_exists( 'vc_icon_element_fonts_enqueue' ) && $settings[ 'icon_' . $settings['icon_library'] ] ) {
 					vc_icon_element_fonts_enqueue( $settings['icon_library'] );
 				}
-			} else if ( 'image' === $settings['icon_type'] && ! empty( $settings['image'] ) && function_exists( 'wpb_getImageBySize' ) ) {
+			} elseif ( 'image' === $settings['icon_type'] && ! empty( $settings['image'] ) ) {
 				if ( woodmart_is_svg( wp_get_attachment_image_url( $settings['image'] ) ) ) {
 					$icon_output = woodmart_get_svg_html(
 						$settings['image'],
 						$settings['img_size']
 					);
 				} else {
-					$icon_output = wpb_getImageBySize(
-						array(
-							'attach_id'  => $settings['image'],
-							'thumb_size' => $settings['img_size'],
-						)
-					)['thumbnail'];
+					$icon_output = woodmart_otf_get_image_html( $settings['image'], $settings['img_size'] );
 				}
 
 				$heading_output = '<span class="' . esc_attr( $icon_class ) . '">' . $icon_output . '</span>';
 			}
 
-		$heading_output = '<h4 class="title element-title">' . $heading_output . '<span class="title-text">' . $settings['title'] . '</span></h4>';
+			$heading_output = '<h4 class="wd-el-title title element-title">' . $heading_output . '<span class="title-text">' . $settings['title'] . '</span></h4>';
 		}
 
 		$wrapper_classes .= ' wd-layout-' . $settings['layout'];
 		$wrapper_classes .= ' wd-style-' . $settings['style'];
+		$wrapper_classes .= 'yes' === $settings['attr_hide_name'] ? ' wd-hide-name' : '';
+		$wrapper_classes .= 'yes' === $settings['attr_hide_image'] ? ' wd-hide-image' : '';
 
 		if ( $settings['include'] ) {
 			$settings['include'] = explode( ', ', $settings['include'] );

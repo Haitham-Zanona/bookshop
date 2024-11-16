@@ -42,6 +42,12 @@ if ( ! empty( $params['design'] ) ) {
 	$extra_class .= ' wd-style-' . $params['design'];
 }
 
+if ( 'dropdown' === $cart_position && ! empty( $params['bg_overlay'] ) ) {
+	woodmart_enqueue_js_script( 'menu-overlay' );
+
+	$extra_class .= ' wd-with-overlay';
+}
+
 if ( isset( $params['wrap_type'], $params['design'], $params['style'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['design'] && in_array( $params['style'], array( '6', '7' ), true ) ) {
 	$extra_class .= ' wd-with-wrap';
 }

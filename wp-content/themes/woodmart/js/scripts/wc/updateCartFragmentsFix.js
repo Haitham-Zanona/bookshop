@@ -11,7 +11,7 @@
 	});
 
 	$('body').on('wc_fragments_refreshed wc_fragments_loaded', function() {
-		if (typeof wd_cart_fragments_params !== 'undefined') {
+		if (typeof wd_cart_fragments_params !== 'undefined' && 'undefined' !== typeof Cookies) {
 			var wc_fragments  = JSON.parse(sessionStorage.getItem(wd_cart_fragments_params.fragment_name)),
 			    cart_hash_key = wd_cart_fragments_params.cart_hash_key,
 			    cart_hash     = sessionStorage.getItem(cart_hash_key),

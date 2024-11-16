@@ -1,4 +1,4 @@
-/* global jQuery, woodmartConfig, woodmartAdmin */
+/* global jQuery, woodmartConfig, woodmartAdminModule */
 
 (function($) {
 	'use strict';
@@ -20,13 +20,15 @@
 							changeNextButtonStatus(response.data.required_plugins);
 							changePageStatus(response.data.is_all_activated);
 						} else {
-							woodmartAdmin.addNotice($('.xts-plugin-response'), 'warning', response.message);
+							woodmartAdminModule.woodmartAdmin.addNotice($('.xts-plugin-response').first(), 'warning', response.message);
 							removeLinkClasses($link);
-							woodmartAdmin.hideNotice();
+							woodmartAdminModule.woodmartAdmin.hideNotice();
 						}
-						if (response.data.status === 'deactivate') {
+						
+						if ( response.hasOwnProperty('data') && response.data.hasOwnProperty('status') && response.data.status === 'deactivate') {
 							reloadPage($link);
 						}
+
 						callback(response);
 					}
 				});
@@ -67,9 +69,9 @@
 				},
 				success: function(response) {
 					if ('error' === response.status) {
-						woodmartAdmin.addNotice($('.xts-plugin-response'), 'warning', response.message);
+						woodmartAdminModule.woodmartAdmin.addNotice($('.xts-plugin-response').first(), 'warning', response.message);
 						removeLinkClasses($link);
-						woodmartAdmin.hideNotice();
+						woodmartAdminModule.woodmartAdmin.hideNotice();
 						return;
 					}
 
@@ -237,15 +239,15 @@
 					if (response && 'success' === response.status) {
 						$('.xts-wizard-child-theme').addClass('xts-installed');
 					} else if (response && 'dir_not_exists' === response.status) {
-						woodmartAdmin.addNotice($responseSelector, 'error', 'The directory can\'t be created on the server. Please, install the child theme manually or contact our support for help.');
+						woodmartAdminModule.woodmartAdmin.addNotice($responseSelector, 'error', 'The directory can\'t be created on the server. Please, install the child theme manually or contact our support for help.');
 					} else {
-						woodmartAdmin.addNotice($responseSelector, 'error', 'The child theme can\'t be installed. Skip this step and install the child theme manually via Appearance -> Themes.');
+						woodmartAdminModule.woodmartAdmin.addNotice($responseSelector, 'error', 'The child theme can\'t be installed. Skip this step and install the child theme manually via Appearance -> Themes.');
 					}
 				},
 				error   : function() {
 					$btn.removeClass('xts-loading');
 
-					woodmartAdmin.addNotice($responseSelector, 'error', 'The child theme can\'t be installed. Skip this step and install the child theme manually via Appearance -> Themes.');
+					woodmartAdminModule.woodmartAdmin.addNotice($responseSelector, 'error', 'The child theme can\'t be installed. Skip this step and install the child theme manually via Appearance -> Themes.');
 				}
 			});
 		});

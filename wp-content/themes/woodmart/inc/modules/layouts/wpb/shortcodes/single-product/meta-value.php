@@ -29,6 +29,12 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_meta_value' ) ) {
 		if ( ! $settings['meta_key'] ) {
 			return '';
 		}
+		
+		$meta_value = get_post_meta( get_the_ID(), $settings['meta_key'], true );
+
+		if ( empty( $meta_value ) ) {
+			return '';
+		}
 
 		$wrapper_classes = apply_filters( 'vc_shortcodes_css_class', '', '', $settings );
 
@@ -44,7 +50,7 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_meta_value' ) ) {
 
 		?>
 		<div class="wd-single-meta-value wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
-			<?php echo get_post_meta( get_the_ID(), $settings['meta_key'], true ); // phpcs:ignore ?>
+			<?php echo $meta_value; // phpcs:ignore ?>
 		</div>
 		<?php
 

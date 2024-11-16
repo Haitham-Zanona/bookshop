@@ -40,7 +40,10 @@ if ( ! class_exists( 'WOODMART_Static_Block_Widget' ) ) {
 		// Output function
 
 		function widget( $args, $instance )	{
-	
+			if ( $this->is_widget_preview() ) {
+				return;
+			}
+
 			echo woodmart_get_html_block( $instance['id'] );
 		}
 	

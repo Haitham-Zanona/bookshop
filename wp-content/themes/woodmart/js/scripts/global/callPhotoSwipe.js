@@ -17,7 +17,7 @@
 				{
 					id   : 'twitter',
 					label: woodmart_settings.tweet,
-					url  : 'https://twitter.com/intent/tweet?text={{text}}&url={{url}}'
+					url  : 'https://x.com/intent/tweet?text={{text}}&url={{url}}'
 				},
 				{
 					id   : 'pinterest',

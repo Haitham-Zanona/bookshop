@@ -228,8 +228,9 @@ class Additional_Info_Table extends Widget_Base {
 				'label'        => esc_html__( 'Layout', 'woodmart' ),
 				'type'         => Controls_Manager::SELECT,
 				'options'      => array(
-					'list' => esc_html__( 'List', 'woodmart' ),
-					'grid' => esc_html__( 'Grid', 'woodmart' ),
+					'list'   => esc_html__( 'List', 'woodmart' ),
+					'grid'   => esc_html__( 'Grid', 'woodmart' ),
+					'inline' => esc_html__( 'Inline', 'woodmart' ),
 				),
 				'prefix_class' => 'wd-layout-',
 				'default'      => 'list',
@@ -317,6 +318,19 @@ class Additional_Info_Table extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'attr_hide_image',
+			array(
+				'label'        => esc_html__( 'Hide image', 'woodmart' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
+				'label_off'    => esc_html__( 'No', 'woodmart' ),
+				'return_value' => 'image',
+				'prefix_class' => 'wd-hide-',
+			)
+		);
+
 		$this->add_responsive_control(
 			'image_width',
 			array(
@@ -333,6 +347,9 @@ class Additional_Info_Table extends Widget_Base {
 				'selectors'   => array(
 					'{{WRAPPER}} .shop_attributes' => '--wd-attr-img-width: {{SIZE}}{{UNIT}};',
 				),
+				'condition'   => array(
+					'attr_hide_image!' => 'image',
+				),
 			)
 		);
 
@@ -345,12 +362,28 @@ class Additional_Info_Table extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'attr_hide_name',
+			array(
+				'label'        => esc_html__( 'Hide name', 'woodmart' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => '',
+				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
+				'label_off'    => esc_html__( 'No', 'woodmart' ),
+				'return_value' => 'name',
+				'prefix_class' => 'wd-hide-',
+			)
+		);
+
 		$this->add_group_control(
 			Group_Control_Typography::get_type(),
 			array(
-				'name'     => 'attr_name_typography',
-				'label'    => esc_html__( 'Name typography', 'woodmart' ),
-				'selector' => '{{WRAPPER}} .woocommerce-product-attributes-item__label',
+				'name'      => 'attr_name_typography',
+				'label'     => esc_html__( 'Name typography', 'woodmart' ),
+				'selector'  => '{{WRAPPER}} .woocommerce-product-attributes-item__label',
+				'condition' => array(
+					'attr_hide_name!' => 'name',
+				),
 			)
 		);
 
@@ -361,6 +394,36 @@ class Additional_Info_Table extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .woocommerce-product-attributes-item__label' => 'color: {{VALUE}}',
+				),
+				'condition' => array(
+					'attr_hide_name!' => 'name',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'attr_name_column_width',
+			array(
+				'label'      => esc_html__( 'Name column width', 'woodmart' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( '%', 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min'  => 0,
+						'max'  => 300,
+						'step' => 1,
+					),
+					'%'  => array(
+						'min'  => 1,
+						'max'  => 100,
+						'step' => 1,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .woocommerce-product-attributes-item__label' => 'width: {{SIZE}}{{UNIT}};',
+				),
+				'condition'  => array(
+					'layout' => 'inline',
 				),
 			)
 		);
@@ -434,7 +497,7 @@ class Additional_Info_Table extends Widget_Base {
 				'label'     => esc_html__( 'Icon color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .title-icon' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .img-wrapper' => 'color: {{VALUE}}',
 				),
 				'condition' => array(
 					'icon_type' => array( 'icon' ),
@@ -455,7 +518,7 @@ class Additional_Info_Table extends Widget_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}} .title-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .img-wrapper' => 'font-size: {{SIZE}}{{UNIT}};',
 				),
 				'condition' => array(
 					'icon_type' => array( 'icon' ),
@@ -474,19 +537,18 @@ class Additional_Info_Table extends Widget_Base {
 		$icon_output = '';
 
 		if ( 'image' === $settings['icon_type'] && isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$icon_output = woodmart_get_image_html( $settings, 'image' );
+			$icon_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] );
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ) ) ) {
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
 				if ( 'custom' === $settings['image_size'] && ! empty( $settings['image_custom_dimension'] ) ) {
 					$icon_output = woodmart_get_svg_html( $settings['image']['id'], $settings['image_custom_dimension'] );
 				} else {
 					$icon_output = woodmart_get_svg_html( $settings['image']['id'], $settings['image_size'] );
 				}
 			}
-
-			$icon_output = '<span class="title-icon">' . $icon_output . '</span>';
 		} elseif ( 'icon' === $settings['icon_type'] && $settings['icon'] ) {
-			$icon_output = woodmart_elementor_get_render_icon( $settings['icon'], array( 'class' => 'title-icon'), 'span' );
+			$icon_output = woodmart_elementor_get_render_icon( $settings['icon'] );
+
 		}
 
 		Main::setup_preview();
@@ -525,9 +587,11 @@ class Additional_Info_Table extends Widget_Base {
 
 		if ( ! empty( $settings['title'] ) ) {
 			?>
-			<h4 class="title element-title">
+			<h4 class="wd-el-title title element-title">
 				<?php if ( $icon_output ) : ?>
-					<?php echo wp_kses( $icon_output, true ); ?>
+					<span class="img-wrapper">
+						<?php echo $icon_output; // phpcs:ignore. ?>
+					</span>
 				<?php endif; ?>
 				<span class="title-text">
 					<?php echo esc_html( $settings['title'] ); ?>

@@ -32,7 +32,7 @@
 
 		var pItem = document.getElementsByClassName('wd-lazy-load'), pCount, timer;
 
-		woodmartThemeModule.$document.on('wood-images-loaded added_to_cart updated_checkout', function() {
+		woodmartThemeModule.$document.on('wood-images-loaded added_to_cart updated_cart_totals updated_checkout', function() {
 			inView();
 		});
 
@@ -131,11 +131,11 @@
 				requestAnimationFrame(function() {
 					item.classList.add('wd-loaded');
 
-					var $masonry = jQuery(item).parents('.view-masonry .gallery-images, .grid-masonry, .masonry-container');
+					var $masonry = jQuery(item).parents('.grid-masonry, .wd-masonry');
 					if ($masonry.length > 0) {
 						$masonry.isotope('layout');
 					}
-					var $categories = jQuery(item).parents('.categories-masonry');
+					var $categories = jQuery(item).parents('.wd-cats-element .wd-masonry');
 					if ($categories.length > 0) {
 						$categories.packery();
 					}

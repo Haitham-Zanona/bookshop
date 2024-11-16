@@ -8,8 +8,8 @@
 namespace XTS\Modules\Product_Reviews;
 
 use WP_Comment;
-use XTS\Options;
-use XTS\Presets;
+use XTS\Admin\Modules\Options;
+use XTS\Admin\Modules\Options\Presets;
 use XTS\Singleton;
 
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
@@ -22,6 +22,8 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 class Rating_Criteria extends Singleton {
 	/**
 	 * Init.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function init() {
 		$this->hooks();
@@ -70,6 +72,7 @@ class Rating_Criteria extends Singleton {
 	/**
 	 * This method add wrapper for star rating html.
 	 *
+	 * @codeCoverageIgnore
 	 * @param  WP_Comment $comment
 	 * @return void
 	 */
@@ -118,6 +121,7 @@ class Rating_Criteria extends Singleton {
 	/**
 	 * This method return criteria stars ratings fields to comment form.
 	 *
+	 * @codeCoverageIgnore
 	 * @return string
 	 */
 	public function get_criteria_stars_ratings_fields() {
@@ -231,14 +235,9 @@ class Rating_Criteria extends Singleton {
 	 * @return array Example: array( 'criteria_id' => 'criteria_title', ).
 	 */
 	public function get_summary_criteria_list() {
-		$summary_criteria_list = array();
-		$criteria_ids_list     = array();
+		$criteria_ids_list = array();
 
-		if ( ! woodmart_get_opt( 'reviews_rating_by_criteria' ) ) {
-			return $summary_criteria_list;
-		}
-
-		if ( isset( $_REQUEST['summary_criteria_ids'] ) ) {
+		if ( isset( $_REQUEST['summary_criteria_ids'] ) && ! empty( $_REQUEST['summary_criteria_ids'] ) ) {
 			$criteria_ids_list = explode( ',', $_REQUEST['summary_criteria_ids'] );
 		}
 
@@ -377,6 +376,10 @@ class Rating_Criteria extends Singleton {
 	 */
 	private function get_summary_criteria_list_from_theme_settings() {
 		$summary_criteria_list = array();
+
+		if ( ! woodmart_get_opt( 'reviews_rating_by_criteria' ) ) {
+			return $summary_criteria_list;
+		}
 
 		for ( $i = 1; $i <= 6; $i++ ) {
 			$criteria_slug_id  = 'reviews_rating_summary_criteria_' . $i . '_slug';

@@ -13,7 +13,7 @@
 
 ?>
 
-<div class="wd-testimon column<?php echo esc_attr( $item_classes ); ?>">
+<div class="wd-testimon<?php echo esc_attr( $item_classes ); ?>">
 	<div class="wd-testimon-info">
 		<?php if ( $image ) : ?>
 			<div class="wd-testimon-thumb">

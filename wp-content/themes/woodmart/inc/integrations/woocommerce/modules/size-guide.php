@@ -172,7 +172,7 @@ if ( ! function_exists( 'woodmart_sguide_display' ) ) {
 
 		if ( $sguide_post_id ) {
 			$sguide_post = get_post( $sguide_post_id );
-			$size_tables = get_post_meta( $sguide_post_id, 'woodmart_sguide' );
+			$size_tables = get_post_meta( $sguide_post_id, 'woodmart_sguide', true );
 
 			woodmart_sguide_display_table_template( $sguide_post, $size_tables, $args );
 		}
@@ -205,7 +205,7 @@ if ( ! function_exists( 'woodmart_sguide_display_table_template' ) ) {
 				<?php echo get_post_meta( $sguide_post->ID, 'woodmart_shortcodes_custom_css', true ); ?>
 			/* */
 			</style>
-			<div id="woodmart_sizeguide" class="mfp-with-anim mfp-hide wd-popup wd-sizeguide <?php echo woodmart_get_old_classes( ' woodmart-content-popup' ); ?>">
+			<div id="wd_sizeguide" class="mfp-hide wd-popup wd-sizeguide <?php echo woodmart_get_old_classes( ' woodmart-content-popup' ); ?>">
 				<h4 class="wd-sizeguide-title">
 					<?php echo esc_html( $sguide_post->post_title ); ?>
 				</h4>
@@ -215,16 +215,14 @@ if ( ! function_exists( 'woodmart_sguide_display_table_template' ) ) {
 				<?php if ( 'show' === $show_table ) : ?>
 					<div class="responsive-table">
 						<table class="wd-sizeguide-table">
-							<?php foreach ( $size_tables as $table ) : ?>
-								<?php foreach ( $table as $row ) : ?>
-									<tr>
-										<?php foreach ( $row as $col ) : ?>
-											<td>
-												<?php echo esc_html( $col ); ?>
-											</td>
-										<?php endforeach; ?>
-									</tr>
-								<?php endforeach; ?>
+							<?php foreach ( $size_tables as $row ) : ?>
+								<tr>
+									<?php foreach ( $row as $col ) : ?>
+										<td>
+											<?php echo esc_html( $col ); ?>
+										</td>
+									<?php endforeach; ?>
+								</tr>
 							<?php endforeach; ?>
 						</table>
 					</div>
@@ -232,7 +230,7 @@ if ( ! function_exists( 'woodmart_sguide_display_table_template' ) ) {
 			</div>
 
 			<div class="wd-sizeguide-btn wd-action-btn wd-sizeguide-icon<?php echo esc_attr( $args['builder_classes'] ); ?>">
-				<a class="wd-open-popup" rel="nofollow" href="#woodmart_sizeguide">
+				<a class="wd-open-popup" rel="nofollow" href="#wd_sizeguide">
 					<span><?php esc_html_e( 'Size Guide', 'woodmart' ); ?></span>
 				</a>
 			</div>
@@ -248,31 +246,33 @@ if ( ! function_exists( 'woodmart_sguide_display_table_template' ) ) {
  
 //Size guide save category
 if( ! function_exists( 'woodmart_sguide_save_category' ) ) {
-    function woodmart_sguide_save_category( $post_id ) {
-        if ( isset( $_POST['woodmart_sguide_category'] ) ) {
-            $selected_sguide_category = woodmart_clean( $_POST['woodmart_sguide_category'] );
-            update_post_meta( $post_id, 'woodmart_chosen_cats', $selected_sguide_category );
-            
-            $terms = get_terms( 'product_cat' );
-            foreach ( $selected_sguide_category as $selected_sguide_cat ) {
-	            update_term_meta( $selected_sguide_cat, 'woodmart_chosen_sguide', $post_id );
-            }   
-            foreach( $terms as $term ){
-                if ( !in_array( $term->term_id, $selected_sguide_category ) ) {
+	function woodmart_sguide_save_category( $post_id ) {
+		if ( isset( $_POST['woodmart_sguide_category'] ) ) {
+			$selected_sguide_category = woodmart_clean( $_POST['woodmart_sguide_category'] );
+			update_post_meta( $post_id, 'woodmart_chosen_cats', $selected_sguide_category );
+
+			$terms = get_terms( 'product_cat' );
+			foreach ( $selected_sguide_category as $selected_sguide_cat ) {
+				update_term_meta( $selected_sguide_cat, 'woodmart_chosen_sguide', $post_id );
+			}
+			foreach( $terms as $term ){
+				if ( ! in_array( $term->term_id, $selected_sguide_category ) ) {
 					if ( $post_id == get_term_meta( $term->term_id, 'woodmart_chosen_sguide', true ) ) {
 						update_term_meta( $term->term_id, 'woodmart_chosen_sguide', '' );
-                    }
-                }
-            }
-        }
-        else{
-            update_post_meta( $post_id, 'woodmart_chosen_cats', '' );
-	        $terms = get_terms( 'product_cat' );
-	        foreach( $terms as $term ){
-		        update_term_meta( $term->term_id, 'woodmart_chosen_sguide', '' );
-	        }
-        }
-    }
+					}
+				}
+			}
+		}
+		else{
+			update_post_meta( $post_id, 'woodmart_chosen_cats', '' );
+			$terms = get_terms( 'product_cat' );
+			foreach( $terms as $term ){
+				if ( $post_id == get_term_meta( $term->term_id, 'woodmart_chosen_sguide', true ) ) {
+					update_term_meta( $term->term_id, 'woodmart_chosen_sguide', '' );
+				}
+			}
+		}
+	}
 }
 
 //Size guide category template

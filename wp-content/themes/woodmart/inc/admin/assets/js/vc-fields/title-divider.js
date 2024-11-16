@@ -47,7 +47,7 @@
 				titleName = $divider.data('param_settings').wrapper_name;
 			}
 
-			var $title = $('<div class="wpb_element_label">' + titleName + '</div>');
+			var $title = $('<div class="wpb-param-heading"><div class="wpb_element_label">' + titleName + '</div></div>');
 
 			$divider.before($wrapper);
 			$wrapper.append($title);
@@ -64,7 +64,9 @@
 				$wrapper.append($content);
 			}
 
-			$btn.on('click', function(){
+			$btn.on('click', function(e){
+				e.preventDefault();
+
 				var $this = $(this);
 
 				$this.addClass('xts-changed');
@@ -159,6 +161,7 @@
 
 		if (typeof tinyMCE !== 'undefined') {
 			tinyMCE.EditorManager.execCommand('mceAddEditor', true, 'wpb_tinymce_content');
+
 			if (typeof _formated_content !== typeof undefined) {
 				tinyMCE.get('wpb_tinymce_content').setContent(_formated_content);
 			}

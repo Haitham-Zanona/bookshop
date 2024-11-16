@@ -4,6 +4,13 @@
 
 @if $page-patcher {
 
+	.woodmart_page_xts_patcher {
+
+		.xts-box-header {
+			justify-content: space-between;
+		}
+	}
+
 	.xts-patches-notice {
 
 		.xts-success {
@@ -22,17 +29,32 @@
 			}
 		}
 
-		&.xts-applied {
+		// &.xts-applied {
 
-			.xts-patch-apply {
-				display: none;
-			}
+		// 	.xts-patch-apply {
+		// 		display: none;
+		// 	}
 
-			.xts-patch-label-applied {
-				display: inline-flex;
-			}
+		// 	.xts-patch-label-applied {
+		// 		display: inline-flex;
+		// 	}
+		// }
+	}
+
+	[class*="xts-patch-apply"] {
+			
+		.xts-applied & {
+			display: none;
 		}
 	}
+
+	.xts-patch-label-applied {
+
+		.xts-applied & {
+			display: inline-flex;
+		}
+	}
+
 
 	.xts-patch-label-applied {
 		display: none;
@@ -70,7 +92,7 @@
 	}
 
 	.xts-patch-button-wrapper {
-		max-width: 100px;
+		max-width: 135px;
 		text-align: end;
 	}
 

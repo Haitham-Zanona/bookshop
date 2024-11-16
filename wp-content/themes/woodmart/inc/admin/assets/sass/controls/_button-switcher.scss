@@ -9,8 +9,9 @@
 		display: inline-flex;
 		align-items: center;
 		box-sizing: border-box; // NOTE FOR POST TYPE TABLE
-		padding-right: 6px;
-		padding-left: 6px;
+		// padding-right: 6px;
+		// padding-left: 6px;
+		padding-inline: 6px;
 		min-width: 64px;
 		height: 32px;
 		border: 1px solid var(--xts-option-border-color);
@@ -30,7 +31,7 @@
 			&:before {
 				position: absolute;
 				top: 5px;
-				inset-inline-start: 6px;
+				left: 6px;
 
 				@include loader(18px,1px,rgba(0,0,0,.15),#000);
 				@include act-loader;
@@ -43,7 +44,7 @@
 			color: #FFF;
 
 			&:before {
-				inset-inline-start: 42px;
+				left: 42px;
 				border-color: rgba(255,255,255,.15);
 
 				border-inline-start-color: #FFF;
@@ -59,8 +60,9 @@
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding-right: 5px;
-		padding-left: 5px;
+		// padding-right: 5px;
+		// padding-left: 5px;
+		padding-inline: 5px;
 		width: 100%;
 		text-transform: uppercase;
 		font-weight: 600;
@@ -114,15 +116,17 @@
 
 	.xts-switcher-dot-wrap {
 		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
+		inset: 0;
+		// top: 0;
+		// right: 0;
+		// bottom: 0;
+		// left: 0;
 		display: flex;
 		align-items: center;
 		justify-content: flex-start;
-		padding-right: 5px;
-		padding-left: 5px;
+		// padding-right: 5px;
+		// padding-left: 5px;
+		padding-inline: 5px;
 		transition: all .2s ease;
 
 		.rtl & {

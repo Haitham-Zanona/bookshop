@@ -5,10 +5,11 @@
 
 namespace XTS\Elementor;
 
+use Elementor\Group_Control_Typography;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Plugin;
-use WOODMART_Mega_Menu_Walker;
+use XTS\Modules\Mega_Menu_Walker;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -149,11 +150,30 @@ class WD_Mega_Menu extends Widget_Base {
 				'options'   => array(
 					'default' => esc_html__( 'Default', 'woodmart' ),
 					'with-bg' => esc_html__( 'With background', 'woodmart' ),
+					'simple'  => esc_html__( 'Simple', 'woodmart' ),
 				),
 				'condition' => array(
 					'design' => array( 'vertical' ),
 				),
 				'default'   => 'default',
+			)
+		);
+
+		$this->add_control(
+			'vertical_items_gap',
+			array(
+				'label'     => esc_html__( 'Items gap', 'woodmart' ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => array(
+					's' => esc_html__( 'Small', 'woodmart' ),
+					'm' => esc_html__( 'Medium', 'woodmart' ),
+					'l' => esc_html__( 'Large', 'woodmart' ),
+				),
+				'condition' => array(
+					'design'          => array( 'vertical' ),
+					'dropdown_design' => array( 'simple' ),
+				),
+				'default'   => 's',
 			)
 		);
 
@@ -219,6 +239,29 @@ class WD_Mega_Menu extends Widget_Base {
 			)
 		);
 
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'item_typography',
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
+				'selector' => '{{WRAPPER}} .wd-nav > .menu-item > a',
+			)
+		);
+
+		$this->add_control(
+			'icon_alignment',
+			array(
+				'label'   => esc_html__( 'Icon alignment', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'inherit' => esc_html__( 'Default', 'woodmart' ),
+					'left'    => esc_html__( 'Left', 'woodmart' ),
+					'right'   => esc_html__( 'Right', 'woodmart' ),
+				),
+				'default' => 'inherit',
+			)
+		);
+
 		$this->end_controls_section();
 
 		/**
@@ -281,6 +324,8 @@ class WD_Mega_Menu extends Widget_Base {
 			'design'                => 'vertical',
 			'dropdown_design'       => 'default',
 			'items_gap'             => 's',
+			'vertical_items_gap'    => 's',
+			'icon_alignment'        => 'inherit',
 			'color'                 => '',
 			'woodmart_color_scheme' => 'light',
 		);
@@ -318,13 +363,17 @@ class WD_Mega_Menu extends Widget_Base {
 
 		if ( 'vertical' === $settings['design'] ) {
 			$menu_class .= ' wd-design-' . $settings['dropdown_design'];
+			$menu_class .= ' wd-gap-' . $settings['vertical_items_gap'];
+
+			woodmart_enqueue_inline_style( 'mod-nav-vertical' );
+			woodmart_enqueue_inline_style( 'mod-nav-vertical-design-' . $settings['dropdown_design'] );
+		}
+
+		if ( $settings['icon_alignment'] && 'inherit' !== $settings['icon_alignment'] ) {
+			$menu_class .= ' wd-icon-' . $settings['icon_alignment'];
 		}
 
 		woodmart_enqueue_inline_style( 'widget-nav-mega-menu' );
-
-		if ( 'vertical' === $settings['design'] ) {
-			woodmart_enqueue_inline_style( 'mod-nav-vertical' );
-		}
 
 		$this->add_inline_editing_attributes( 'title' );
 
@@ -342,7 +391,7 @@ class WD_Mega_Menu extends Widget_Base {
 					'fallback_cb' => '',
 					'menu'        => $settings['nav_menu'],
 					'menu_class'  => $menu_class,
-					'walker'      => new WOODMART_Mega_Menu_Walker(),
+					'walker'      => new Mega_Menu_Walker(),
 				)
 			);
 			?>

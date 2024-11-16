@@ -53,12 +53,12 @@ woodmart_enqueue_js_script( 'accordion-element' );
 				$content_classes       .= ' wd-active';
 			}
 
-			if ( 'woocommerce_product_additional_information_tab' === $product_tab['callback'] ) {
+			if ( isset( $product_tab['callback'] ) && 'woocommerce_product_additional_information_tab' === $product_tab['callback'] ) {
 				$content_classes .= ' wd-single-attrs';
 				$content_classes .= $args['builder_additional_info_classes'];
 			}
 
-			if ( 'comments_template' === $product_tab['callback'] ) {
+			if ( isset( $product_tab['callback'] ) && 'comments_template' === $product_tab['callback'] ) {
 				$content_classes .= ' wd-single-reviews';
 				$content_classes .= $args['builder_reviews_classes'];
 			}
@@ -66,9 +66,11 @@ woodmart_enqueue_js_script( 'accordion-element' );
 			<div class="wd-accordion-item">
 				<div id="tab-title-<?php echo esc_attr( $key ); ?>" class="wd-accordion-title<?php echo esc_attr( $title_wrapper_classes ); ?>" data-accordion-index="<?php echo esc_attr( $key ); ?>">
 					<div class="wd-accordion-title-text">
-						<span>
-							<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
-						</span>
+						<?php if ( isset( $product_tab['title'] ) ) : ?>
+							<span>
+								<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
+							</span>
+						<?php endif; ?>
 					</div>
 
 					<span class="wd-accordion-opener<?php echo esc_attr( $accordion_opener_classes ); ?>"></span>

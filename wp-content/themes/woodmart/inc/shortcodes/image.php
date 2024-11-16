@@ -49,15 +49,8 @@ if ( ! function_exists( 'woodmart_shortcode_image' ) ) {
 		if ( 'links' === $atts['click_action'] && function_exists( 'vc_value_from_safe' ) ) {
 			$atts['img_link'] = vc_value_from_safe( $atts['img_link'] );
 		}
-
-		$image_data = wpb_getImageBySize(
-			array(
-				'attach_id'  => $atts['img_id'],
-				'thumb_size' => $atts['img_size'],
-			)
-		);
-
-		$image_html = isset( $image_data['thumbnail'] ) ? $image_data['thumbnail'] : '';
+		$image_data = wp_get_attachment_image_src( $atts['img_id'], $atts['img_size'] );
+		$image_html = woodmart_otf_get_image_html( $atts['img_id'], $atts['img_size'] );
 
 		if ( 'lightbox' === $atts['click_action'] ) {
 			$wrapper_classes .= ' photoswipe-images';
@@ -65,10 +58,10 @@ if ( ! function_exists( 'woodmart_shortcode_image' ) ) {
 			woodmart_enqueue_inline_style( 'photoswipe' );
 			woodmart_enqueue_js_script( 'photoswipe-images' );
 
-			if ( isset( $image_data['p_img_large'] ) ) {
-				$atts['img_link'] = isset( $image_data['p_img_large'][0] ) ? $image_data['p_img_large'][0] : '';
-				$width            = isset( $image_data['p_img_large'][1] ) ? $image_data['p_img_large'][1] : '';
-				$height           = isset( $image_data['p_img_large'][2] ) ? $image_data['p_img_large'][2] : '';
+			if ( ! empty( $image_data ) ) {
+				$atts['img_link'] = isset( $image_data[0] ) ? $image_data[0] : '';
+				$width            = isset( $image_data[1] ) ? $image_data[1] : '';
+				$height           = isset( $image_data[2] ) ? $image_data[2] : '';
 
 				$image_link_atts .= ' data-width="' . esc_attr( $width ) . '" data-height="' . esc_attr( $height ) . '"';
 			}
@@ -78,7 +71,7 @@ if ( ! function_exists( 'woodmart_shortcode_image' ) ) {
 			$wrapper_classes .= ' inline-element';
 		}
 
-		if ( isset( $image_data['p_img_large'][0] ) && woodmart_is_svg( $image_data['p_img_large'][0] ) ) {
+		if ( isset( $image_data[0] ) && woodmart_is_svg( $image_data[0] ) ) {
 			$image_html = woodmart_get_svg_html(
 				$atts['img_id'],
 				$atts['img_size']

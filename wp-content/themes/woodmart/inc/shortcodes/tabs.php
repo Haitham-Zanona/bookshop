@@ -31,6 +31,7 @@ if ( ! function_exists( 'woodmart_shortcode_tabs' ) ) {
 				'description'               => '',
 				'image'                     => '',
 				'img_size'                  => '30x30',
+				'enable_heading_bg'         => 'no',
 
 				/**
 				 * Tabs Titles.
@@ -63,6 +64,10 @@ if ( ! function_exists( 'woodmart_shortcode_tabs' ) ) {
 
 		if ( function_exists( 'vc_shortcode_custom_css_class' ) ) {
 			$wrapper_classes .= ' ' . vc_shortcode_custom_css_class( $attr['css'] );
+		}
+
+		if ( 'yes' === $attr['enable_heading_bg'] ) {
+			$wrapper_classes .= ' wd-header-with-bg';
 		}
 
 		$nav_tabs_wrapper_classes = '';
@@ -172,10 +177,10 @@ if ( ! function_exists( 'woodmart_shortcode_tabs' ) ) {
 								$icon_output = woodmart_display_icon( $data['tabs_image'], $data['tabs_image_size'], 128 ); // phpcs:ignore
 
 								if ( woodmart_is_svg( wp_get_attachment_image_src( $data['tabs_image'] )[0] ) ) {
-									$icon_output = '<div class="img-wrapper">' . woodmart_get_svg_html( $data['tabs_image'], $data['tabs_image_size'] ) . '</div>';
+									$icon_output = '<span class="img-wrapper">' . woodmart_get_svg_html( $data['tabs_image'], $data['tabs_image_size'] ) . '</span>';
 								}
 							} elseif ( ! empty( $tabs_icon_library ) ) {
-								$icon_output = '<div class="img-wrapper"><i class="' . esc_attr( $tabs_icon_library ) . '"></i></div>';
+								$icon_output = '<span class="img-wrapper"><i class="' . esc_attr( $tabs_icon_library ) . '"></i></span>';
 							}
 							?>
 

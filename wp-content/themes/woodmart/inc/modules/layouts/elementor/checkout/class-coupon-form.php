@@ -8,6 +8,8 @@
 namespace XTS\Modules\Layouts;
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Border;
+use Elementor\Group_Control_Typography;
 use Elementor\Plugin;
 use Elementor\Widget_Base;
 
@@ -103,11 +105,146 @@ class Coupon_Form extends Widget_Base {
 		);
 
 		$this->add_control(
-			'reviews_note',
+			'alignment',
 			array(
-				'type'            => Controls_Manager::RAW_HTML,
-				'raw'             => esc_html__( 'Note: This element have not options', 'woodmart' ),
-				'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+				'label'        => esc_html__( 'Alignment', 'woodmart' ),
+				'type'         => 'wd_buttons',
+				'options'      => array(
+					'left'   => array(
+						'title' => esc_html__( 'Left', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/left.jpg',
+					),
+					'center' => array(
+						'title' => esc_html__( 'Center', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/center.jpg',
+					),
+					'right'  => array(
+						'title' => esc_html__( 'Right', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/right.jpg',
+					),
+				),
+				'prefix_class' => 'text-',
+				'default'      => '',
+			)
+		);
+
+		$this->end_controls_section();
+
+		/**
+		 * Toggle settings.
+		 */
+		$this->start_controls_section(
+			'toggle_style_section',
+			array(
+				'label' => esc_html__( 'Toggle', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'toggle_typography',
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
+				'selector' => '{{WRAPPER}} .woocommerce-form-coupon-toggle > div',
+			)
+		);
+
+		$this->end_controls_section();
+
+		/**
+		 * Form settings.
+		 */
+		$this->start_controls_section(
+			'form_style_section',
+			array(
+				'label' => esc_html__( 'Form', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'form_width',
+			array(
+				'label'       => esc_html__( 'Width', 'woodmart' ),
+				'type'        => Controls_Manager::SLIDER,
+				'size_units'  => array( 'px', '%' ),
+				'range'       => array(
+					'px' => array(
+						'min'  => 0,
+						'max'  => 1200,
+						'step' => 1,
+					),
+					'%' => array(
+						'min'  => 0,
+						'max'  => 100,
+						'step' => 1,
+					),
+				),
+				'selectors'   => array(
+					'{{WRAPPER}} .checkout_coupon' => 'max-width: {{SIZE}}{{UNIT}};',
+				),
+				'default' => array(
+					'unit' => 'px',
+					'size' => 470,
+				),
+			)
+		);
+
+		$this->add_control(
+			'form_bg_color',
+			array(
+				'label'     => esc_html__( 'Background color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .checkout_coupon' => 'background-color: {{VALUE}}',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Border::get_type(),
+			array(
+				'name'      => 'form_border',
+				'label'     => esc_html__( 'Border', 'woodmart' ),
+				'selector'  => '{{WRAPPER}} .checkout_coupon',
+				'separator' => 'before',
+			)
+		);
+
+		$this->add_responsive_control(
+			'border_radius',
+			array(
+				'label'      => esc_html__( 'Border radius', 'woodmart' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px' ),
+				'selectors' => array(
+					'{{WRAPPER}} .checkout_coupon' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'condition' => array(
+					'form_border_border!' => array( '', 'none' ),
+				),
+			)
+		);
+
+		$this->add_responsive_control(
+			'form_padding',
+			array(
+				'label'      => esc_html__( 'Padding', 'woodmart' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px' ),
+				'default'    => array(
+					'top'      => '',
+					'bottom'   => '',
+					'left'     => '',
+					'right'    => '',
+					'unit'     => 'px',
+					'isLinked' => true,
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .checkout_coupon' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+				'separator' => 'before',
 			)
 		);
 

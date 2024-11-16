@@ -138,6 +138,7 @@ class Linked_Variations extends Widget_Base {
 					'hide' => esc_html__( 'Hide', 'woodmart' ),
 				),
 				'devices'        => array( 'desktop', 'mobile' ),
+				'classes'        => 'wd-hide-custom-breakpoints wd-hide-tablet-breakpoint',
 				'default'        => 'side',
 				'mobile_default' => 'side',
 				'render_type'    => 'template',

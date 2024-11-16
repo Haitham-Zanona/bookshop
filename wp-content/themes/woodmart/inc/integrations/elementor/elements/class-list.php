@@ -412,7 +412,7 @@ class Icon_List extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '#2C2C2C',
 				'selectors' => array(
-					'{{WRAPPER}} .list-icon' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .wd-icon' => 'color: {{VALUE}}',
 				),
 				'condition' => array(
 					'list_type' => array( 'icon', 'ordered', 'unordered' ),
@@ -427,7 +427,7 @@ class Icon_List extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '',
 				'selectors' => array(
-					'{{WRAPPER}} li:hover .list-icon' => 'color: {{VALUE}}',
+					'{{WRAPPER}} li:hover .wd-icon' => 'color: {{VALUE}}',
 				),
 				'condition' => array(
 					'list_type' => array( 'icon', 'ordered', 'unordered' ),
@@ -442,7 +442,7 @@ class Icon_List extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '#EAEAEA',
 				'selectors' => array(
-					'{{WRAPPER}} .list-icon' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} .wd-icon' => 'background-color: {{VALUE}}',
 				),
 				'condition' => array(
 					'list_style' => array( 'rounded', 'square' ),
@@ -457,7 +457,7 @@ class Icon_List extends Widget_Base {
 				'type'      => Controls_Manager::COLOR,
 				'default'   => '',
 				'selectors' => array(
-					'{{WRAPPER}} li:hover .list-icon' => 'background-color: {{VALUE}}',
+					'{{WRAPPER}} li:hover .wd-icon' => 'background-color: {{VALUE}}',
 				),
 				'condition' => array(
 					'list_style' => array( 'rounded', 'square' ),
@@ -478,7 +478,7 @@ class Icon_List extends Widget_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}} .wd-list .list-icon' => 'font-size: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} .wd-list .wd-icon' => 'font-size: {{SIZE}}{{UNIT}};',
 				),
 				'condition' => array(
 					'list_type!' => array( 'image' ),
@@ -514,7 +514,7 @@ class Icon_List extends Widget_Base {
 		);
 
 		$settings    = wp_parse_args( $this->get_settings_for_display(), $default_settings );
-		$icon_output = '<span class="list-icon"></span>';
+		$icon_output = '<span class="list-icon wd-icon"></span>';
 
 		if ( ! $settings['list_items'] ) {
 			return;
@@ -540,9 +540,9 @@ class Icon_List extends Widget_Base {
 		}
 
 		if ( 'image' === $settings['list_type'] && isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$icon_output = woodmart_get_image_html( $settings, 'image' );
+			$icon_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] );
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ) ) ) {
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
 				if ( 'custom' === $settings['image_size'] && ! empty( $settings['image_custom_dimension'] ) ) {
 					$icon_output = woodmart_get_svg_html( $settings['image']['id'], $settings['image_custom_dimension'] );
 				} else {
@@ -550,7 +550,7 @@ class Icon_List extends Widget_Base {
 				}
 			}
 		} elseif ( 'icon' === $settings['list_type'] && $settings['icon'] ) {
-			$icon_output = woodmart_elementor_get_render_icon( $settings['icon'], array( 'class' => 'list-icon' ), 'span' );
+			$icon_output = woodmart_elementor_get_render_icon( $settings['icon'], array( 'class' => 'list-icon wd-icon' ), 'span' );
 		}
 
 		// Icon settings.
@@ -588,10 +588,9 @@ class Icon_List extends Widget_Base {
 				}
 
 				if ( 'image' === $item['item_type'] && isset( $item['image']['id'] ) && $item['image']['id'] ) {
+					$item_icon_output = woodmart_otf_get_image_html( $item['image']['id'], $item['image_size'], $item['image_custom_dimension'] );
 
-					$item_icon_output = woodmart_get_image_html( $item, 'image' );
-
-					if ( woodmart_is_svg( woodmart_get_image_url( $item['image']['id'], 'image', $settings ) ) ) {
+					if ( woodmart_is_svg( wp_get_attachment_image_url( $item['image']['id'] ) ) ) {
 						if ( 'custom' === $item['image_size'] && ! empty( $item['image_custom_dimension'] ) ) {
 							$item_icon_output = woodmart_get_svg_html( $item['image']['id'], $item['image_custom_dimension'] );
 						} else {

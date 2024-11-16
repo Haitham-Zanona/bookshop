@@ -1,4 +1,4 @@
-/* global jQuery, woodmartConfig, woodmartAdmin */
+/* global jQuery, woodmartConfig */
 
 (function($) {
 	'use strict';

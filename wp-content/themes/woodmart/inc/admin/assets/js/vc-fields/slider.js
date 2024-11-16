@@ -4,13 +4,19 @@
 			var $this = $(this);
 			var $value = $this.find('.wd-slider-field-value');
 			var $slider = $this.find('.wd-slider-field');
-			var $text = $this.find('.wd-slider-value-preview');
+			var $input = $this.find('.wd-slider-value-preview');
 			var sliderData = $value.data();
 			var mainInputVal = $value.val();
 
 			if (mainInputVal && isBase64(mainInputVal) && sliderData.css_args) {
 				var parseVal = JSON.parse(window.atob(mainInputVal));
 				mainInputVal = parseVal.data[sliderData.css_params.device];
+			}
+
+			$input.val(mainInputVal);
+
+			if ('auto' === mainInputVal) {
+				mainInputVal = 0;
 			}
 
 			$slider.slider({
@@ -21,11 +27,15 @@
 				step : sliderData.step,
 				slide: function(event, ui) {
 					setMainValue($this, ui.value);
-					$text.text(ui.value);
+					$input.val(ui.value);
 				}
 			});
 
-			$text.text($slider.slider('value'));
+
+			$input.on('change', function () {
+				setMainValue($this, $(this).val());
+			});
+
 			setMainValue($this, mainInputVal);
 		});
 

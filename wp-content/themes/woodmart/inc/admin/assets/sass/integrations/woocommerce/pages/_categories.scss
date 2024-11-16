@@ -4,7 +4,9 @@
 
 @if $int-woo-page-categories {
 
-	.taxonomy-product_cat {
+	:is(
+	.taxonomy-product_cat,
+	.taxonomy-cms_block_cat) {
 
 		#col-left {
 			width: 40%;
@@ -131,7 +133,9 @@
 
 @if $int-woo-page-categories {
 
-	.taxonomy-product_cat {
+	:is(
+	.taxonomy-product_cat,
+	.taxonomy-cms_block_cat) {
 
 		.form-wrap {
 
@@ -150,28 +154,12 @@
 			// ------------------------------------------
 
 			p.submit {
-				position: relative;
-				z-index: $z-layer-2;
-				margin-top: 30px;
-				margin-bottom: 0;
-				padding: 0;
+				@extend %sticky-save-button;
+				@extend %sticky-add-button-icon;
 
-				.button {
-					padding-inline-start: 30px;
-				}
-
-				&:before {
-					position: absolute;
-					top: 50%;
-					bottom: 0;
-					inset-inline-start: 10px;
-					z-index: $z-layer-1;
-					color: #FFF;
-					transform: translateY(-50%);
-					pointer-events: none;
-
-					@include font-icon($xts-icon-add);
-				}
+				// &:before {
+				// 	@include font-icon($xts-icon-add);
+				// }
 			}
 
 			//**** LOADER ****//
@@ -187,6 +175,16 @@
 				}
 			}
 		}
+
+		&.rtl {
+
+			#addtag {
+
+				p.submit {
+					@extend %sticky-button-rtl;
+				}
+			}
+		}
 	}
 
 } // END IF
@@ -197,7 +195,9 @@
 
 @if $int-woo-page-categories {
 
-	.taxonomy-product_cat {
+	:is(
+	.taxonomy-product_cat,
+	.taxonomy-cms_block_cat) {
 
 		#edittag {
 			margin-top: 20px;
@@ -208,8 +208,9 @@
 			.form-table {
 				margin-top: 0;
 
+				:is(
 				th,
-				td {
+				td) {
 					padding: 0;
 				}
 			}
@@ -232,37 +233,29 @@
 			// ------------------------------------------
 
 			.edit-tag-actions {
-				position: relative;
-				z-index: $z-layer-2;
-				margin-top: 30px;
+				@extend %sticky-save-button;
+				@extend %sticky-save-button-icon;
 
-				.button {
-					padding-inline-start: 30px;
-				}
+				// &:before {
+				// 	@include font-icon($xts-icon-save);
+				// }
 
 				#delete-link a {
-					@extend %xts-inline-button;
-
-					&.delete {
-						@extend %xts-inline-button-warning;
-					}
-
-					&:before {
-						@include font-icon($xts-icon-delete-bin);
-					}
+					@extend %sticky-save-button-delete;
 				}
+			}
+		}
 
-				&:before {
-					position: absolute;
-					top: 50%;
-					bottom: 0;
-					inset-inline-start: 10px;
-					z-index: $z-layer-1;
-					color: #FFF;
-					transform: translateY(-50%);
-					pointer-events: none;
+		&.rtl {
 
-					@include font-icon($xts-icon-update);
+			#edittag {
+
+				// ------------------------------------------
+				// ACTIONS
+				// ------------------------------------------
+
+				.edit-tag-actions {
+					@extend %sticky-button-rtl;
 				}
 			}
 		}
@@ -281,7 +274,9 @@
 		// LAYOUT
 		// ------------------------------------------
 
-		.taxonomy-product_cat {
+		:is(
+		.taxonomy-product_cat,
+		.taxonomy-cms_block_cat) {
 
 			:is(
 			#col-left,

@@ -30,9 +30,11 @@ class Sends_About_Products_Wishlists extends Singleton {
 	 * Init.
 	 */
 	public function init() {
+		// @codeCoverageIgnoreStart
 		if ( ! woodmart_woocommerce_installed() ) {
 			return;
 		}
+		// @codeCoverageIgnoreEnd
 
 		$this->include_files();
 
@@ -47,13 +49,18 @@ class Sends_About_Products_Wishlists extends Singleton {
 	 * @return void
 	 */
 	public function include_files() {
-		if ( $this->check_is_enabled_option_in_woocommerce( 'woocommerce_woodmart_back_in_stock_email_settings' ) || isset( $_GET['page'] ) && 'digthis-woocommerce-preview-emails' === $_GET['page'] ) {
+		if ( woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_back_in_stock_email_settings' ) ) {
 			require_once XTS_WISHLIST_DIR . 'sends-about-products-wishlist/class-send-back-in-stock.php';
 		}
 
-		if ( $this->check_is_enabled_option_in_woocommerce( 'woocommerce_woodmart_on_sale_products_email_settings' ) || isset( $_GET['page'] ) && 'digthis-woocommerce-preview-emails' === $_GET['page'] ) {
+		if ( woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_on_sale_products_email_settings' ) ) {
 			require_once XTS_WISHLIST_DIR . 'sends-about-products-wishlist/class-send-on-sales-products.php';
 		}
+
+		if ( woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_promotional_email_settings', 'yes' ) ) {
+			require_once XTS_WISHLIST_DIR . 'sends-about-products-wishlist/class-send-promotional.php';
+		}
+
 	}
 
 	/**
@@ -66,21 +73,9 @@ class Sends_About_Products_Wishlists extends Singleton {
 	public function add_woocommerce_emails( $emails ) {
 		$emails['woodmart_wishlist_back_in_stock']    = include XTS_WISHLIST_DIR . '/emails/class-back-in-stock-email.php';
 		$emails['woodmart_wishlist_on_sale_products'] = include XTS_WISHLIST_DIR . '/emails/class-on-sale-products-email.php';
+		$emails['woodmart_promotional_email']         = include XTS_WISHLIST_DIR . '/emails/class-promotional-email.php';
 
 		return $emails;
-	}
-
-	/**
-	 * Check is enabled option in woocommerce.
-	 *
-	 * @param string $option Name option.
-	 *
-	 * @return bool
-	 */
-	public function check_is_enabled_option_in_woocommerce( $option ) {
-		$settings = get_option( $option, array() );
-
-		return isset( $settings['enabled'] ) && 'yes' === $settings['enabled'];
 	}
 
 	/**
@@ -125,7 +120,7 @@ class Sends_About_Products_Wishlists extends Singleton {
 		if ( ! in_array( $user->user_email, $unsubscribed_users, true ) ) {
 			$unsubscribed_users[] = $user->user_email;
 
-			update_option( $this->unsubscribed_users, $unsubscribed_users );
+			update_option( $this->unsubscribed_users, $unsubscribed_users, false );
 
 			delete_user_meta( $user_id, 'woodmart_send_wishlist_unsubscribe_token' );
 			delete_user_meta( $user_id, 'woodmart_send_wishlist_unsubscribe_token_expiration' );

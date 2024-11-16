@@ -4,10 +4,7 @@
 		var currentImage,
 		    $productGallery   = $('.woocommerce-product-gallery'),
 		    $mainImages       = $('.woocommerce-product-gallery__wrapper'),
-		    $thumbs           = $productGallery.find('.thumbnails'),
-		    PhotoSwipeTrigger = '.woodmart-show-product-gallery';
-
-		$thumbs.addClass('thumbnails-ready');
+		    PhotoSwipeTrigger = '.wd-show-product-gallery-wrap > a';
 
 		if ($productGallery.hasClass('image-action-popup')) {
 			PhotoSwipeTrigger += ', .woocommerce-product-gallery__image > a';
@@ -29,16 +26,21 @@
 			woodmartThemeModule.callPhotoSwipe(getCurrentGalleryIndex(e), items);
 		});
 
-		$thumbs.on('click', '.image-link', function(e) {
-			e.preventDefault();
-		});
-
 		var getCurrentGalleryIndex = function(e) {
-			if ($mainImages.hasClass('owl-carousel')) {
-				return $mainImages.find('.owl-item.active').index();
-			} else {
-				return $(e.currentTarget).parent().parent().index();
+			var index = 0;
+			var $currentTarget = $(e.currentTarget);
+
+			if ( $currentTarget.parents('.wd-carousel-item').length ) {
+				index = $currentTarget.parents('.wd-carousel-item').index();
+			} else if ( $currentTarget.hasClass( 'woodmart-show-product-gallery' ) ) {
+				var wrapperGallery = $currentTarget.parents('.woocommerce-product-gallery');
+
+				if ( wrapperGallery.hasClass('thumbs-position-left') || wrapperGallery.hasClass('thumbs-position-bottom') || wrapperGallery.hasClass('thumbs-position-without') ) {
+					index = $currentTarget.parents('.wd-gallery-images').find('.wd-carousel-item.wd-active').index();
+				}
 			}
+
+			return index;
 		};
 
 		var getProductItems = function() {
@@ -51,7 +53,7 @@
 				    height  = $this.attr('data-large_image_height'),
 				    caption = $this.data('caption');
 
-				if ( $this.parents('.product-image-wrap.wd-with-video').length ) {
+				if ( $this.parents('.wd-carousel-item.wd-with-video').length ) {
 					var videoContent = $this.parents('.wd-with-video')[0].outerHTML;
 
 					if ( -1 !== videoContent.indexOf('wd-inited') ) {

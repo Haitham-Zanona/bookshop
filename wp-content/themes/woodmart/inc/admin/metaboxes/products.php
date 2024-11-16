@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Metaboxes;
+use XTS\Admin\Modules\Options\Metaboxes;
 
 if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 	/**
@@ -80,7 +80,7 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'new_label',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Permanent "New" label', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'permanent-new-label.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'permanent-new-label.jpg" alt="">', true ),
 				'description' => esc_html__( 'Enable this option to make your product have "New" status forever.', 'woodmart' ),
 				'section'     => 'product_general_section',
 				'priority'    => 10,
@@ -120,7 +120,7 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'swatches_attribute',
 				'type'        => 'select',
 				'name'        => esc_html__( 'Grid swatch attribute to display', 'woodmart' ),
-				'hint'         => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'grid-swatch-attribute-to-display.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'grid-swatch-attribute-to-display.mp4" autoplay loop muted></video>',
 				'description' => esc_html__( 'Choose attribute that will be shown on products grid for this particular product', 'woodmart' ),
 				'section'     => 'product_general_section',
 				'options'     => $taxonomies_list,
@@ -133,7 +133,7 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'related_off',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Hide related products', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-related-products.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-related-products.jpg" alt="">', true ),
 				'description' => esc_html__( 'You can hide related products on this page', 'woodmart' ),
 				'section'     => 'product_general_section',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -144,10 +144,23 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 
 		$product_metabox->add_field(
 			array(
+				'id'       => $woodmart_prefix . 'exclude_show_single_variation',
+				'type'     => 'checkbox',
+				'name'     => esc_html__( 'Exclude variation products on grid', 'woodmart' ),
+				'section'  => 'product_general_section',
+				'on-text'  => esc_html__( 'Yes', 'woodmart' ),
+				'off-text' => esc_html__( 'No', 'woodmart' ),
+				'priority' => 45,
+				'class'    => 'xts-col-6',
+			)
+		);
+
+		$product_metabox->add_field(
+			array(
 				'id'          => $woodmart_prefix . 'product_video',
 				'type'        => 'text_input',
 				'name'        => esc_html__( 'Product video URL', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'product-video-url.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'product-video-url.mp4" autoplay loop muted></video>',
 				'description' => esc_html__( 'URL example: https://www.youtube.com/watch?v=LXb3EKWsInQ', 'woodmart' ),
 				'section'     => 'product_general_section',
 				'priority'    => 50,
@@ -169,7 +182,7 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 		$product_metabox->add_field(
 			array(
 				'id'          => $woodmart_prefix . 'single_product_style',
-				'name'        => esc_html__( 'Product image width', 'woodmart' ),
+				'name'        => esc_html__( 'Product page layout', 'woodmart' ),
 				'description' => esc_html__( 'You can choose different page layout depending on the product image size you need.', 'woodmart' ),
 				'type'        => 'select',
 				'section'     => 'layout_options_section',
@@ -206,11 +219,11 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 
 		$product_metabox->add_field(
 			array(
-				'id'          => $woodmart_prefix . 'thums_position',
-				'name'        => esc_html__( 'Thumbnails position', 'woodmart' ),
-				'type'        => 'select',
-				'section'     => 'layout_options_section',
-				'options'     => array(
+				'id'       => $woodmart_prefix . 'thums_position',
+				'name'     => esc_html__( 'Thumbnails position', 'woodmart' ),
+				'type'     => 'select',
+				'section'  => 'layout_options_section',
+				'options'  => array(
 					'inherit'              => array(
 						'name'  => esc_html__( 'Inherit', 'woodmart' ),
 						'value' => 'inherit',
@@ -231,25 +244,19 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 						'name'  => esc_html__( 'Bottom (2 columns)', 'woodmart' ),
 						'value' => 'left',
 					),
-					'carousel_two_columns' => array(
-						'name'  => esc_html__( 'Carousel (2 columns)', 'woodmart' ),
-						'value' => 'carousel_two_columns',
-					),
 					'bottom_combined'      => array(
-						'name'  => esc_html__( 'Combined grid', 'woodmart' ),
+						'name'  => esc_html__( 'Combined grid (1:2:1)', 'woodmart' ),
 						'value' => 'bottom_combined',
-					),
-					'centered'             => array(
-						'name'  => esc_html__( 'Centered', 'woodmart' ),
-						'value' => 'centered',
 					),
 					'without'              => array(
 						'name'  => esc_html__( 'Without', 'woodmart' ),
 						'value' => 'without',
 					),
 				),
-				'default'     => 'inherit',
-				'priority'    => 20,
+				'status'   => 'deprecated',
+				'status_description' => esc_html__( 'This option is deprecated. You can now use "Layouts" or "Theme settings presets" to change one or several individual product pages.', 'woodmart' ),
+				'default'  => 'inherit',
+				'priority' => 20,
 			)
 		);
 
@@ -291,21 +298,21 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'id'       => $woodmart_prefix . 'extra_position',
 				'name'     => esc_html__( 'Extra content position', 'woodmart' ),
 				'type'     => 'buttons',
-				'section'     => 'layout_options_section',
+				'section'  => 'layout_options_section',
 				'options'  => array(
 					'after'     => array(
 						'name'  => esc_html__( 'After content', 'woodmart' ),
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-affter-content.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-affter-content.jpg" alt="">', true ),
 						'value' => 'after',
 					),
 					'before'    => array(
 						'name'  => esc_html__( 'Before content', 'woodmart' ),
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-before-content.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-before-content.jpg" alt="">', true ),
 						'value' => 'before',
 					),
 					'prefooter' => array(
 						'name'  => esc_html__( 'Prefooter', 'woodmart' ),
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-prefooter.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-position-prefooter.jpg" alt="">', true ),
 						'value' => 'prefooter',
 					),
 				),
@@ -429,7 +436,7 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'hide_tabs_titles',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Hide tabs headings', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'hide-tabs-headings.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'hide-tabs-headings.jpg" alt="">', true ),
 				'description' => esc_html__( 'Description and Additional information', 'woodmart' ),
 				'section'     => 'tab_options_section',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -444,11 +451,11 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'type'     => 'text_input',
 				'name'     => esc_html__( 'Custom tab title', 'woodmart' ),
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'    => 'custom_tabs',
 					'tab'   => esc_html__( 'Tab [1]', 'woodmart' ),
 					'style' => 'default',
-				],
+				),
 				'priority' => 20,
 			)
 		);
@@ -470,11 +477,11 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				),
 				'default'  => 'text',
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'    => 'custom_tabs',
 					'tab'   => esc_html__( 'Tab [1]', 'woodmart' ),
 					'style' => 'default',
-				],
+				),
 				'class'    => 'xts-html-block-switch',
 				'priority' => 30,
 			)
@@ -487,10 +494,10 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'wysiwyg'  => true,
 				'name'     => esc_html__( 'Custom tab content', 'woodmart' ),
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [1]', 'woodmart' ),
-				],
+				),
 				'requires' => array(
 					array(
 						'key'     => $woodmart_prefix . 'product_custom_tab_content_type',
@@ -516,10 +523,10 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 					'search' => 'woodmart_get_post_by_query_autocomplete',
 					'render' => 'woodmart_get_post_by_ids_autocomplete',
 				),
-				't_tab'        => [
+				't_tab'        => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [1]', 'woodmart' ),
-				],
+				),
 				'requires'     => array(
 					array(
 						'key'     => $woodmart_prefix . 'product_custom_tab_content_type',
@@ -537,10 +544,10 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'type'     => 'text_input',
 				'name'     => esc_html__( 'Custom tab title', 'woodmart' ),
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-				],
+				),
 				'priority' => 60,
 			)
 		);
@@ -562,10 +569,10 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				),
 				'default'  => 'text',
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-				],
+				),
 				'class'    => 'xts-html-block-switch',
 				'priority' => 70,
 			)
@@ -578,11 +585,11 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 				'wysiwyg'  => true,
 				'name'     => esc_html__( 'Custom tab content', 'woodmart' ),
 				'section'  => 'tab_options_section',
-				't_tab'    => [
+				't_tab'    => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-				],
-				'requires'     => array(
+				),
+				'requires' => array(
 					array(
 						'key'     => $woodmart_prefix . 'product_custom_tab_content_type_2',
 						'compare' => 'equals',
@@ -607,10 +614,10 @@ if ( ! function_exists( 'woodmart_register_product_metaboxes' ) ) {
 					'search' => 'woodmart_get_post_by_query_autocomplete',
 					'render' => 'woodmart_get_post_by_ids_autocomplete',
 				),
-				't_tab'        => [
+				't_tab'        => array(
 					'id'  => 'custom_tabs',
 					'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-				],
+				),
 				'requires'     => array(
 					array(
 						'key'     => $woodmart_prefix . 'product_custom_tab_content_type_2',
@@ -659,7 +666,7 @@ $product_attribute_metabox->add_field(
 	array(
 		'id'          => 'title_image',
 		'name'        => esc_html__( 'Image for the category page title', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-the-category-page-title.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-the-category-page-title.jpg" alt="">', true ),
 		'description' => esc_html__( 'Use this image as a background for the page title on this category page.', 'woodmart' ),
 		'type'        => 'upload',
 		'section'     => 'general',
@@ -671,7 +678,7 @@ $product_attribute_metabox->add_field(
 	array(
 		'id'          => 'category_icon',
 		'name'        => esc_html__( 'Image for categories navigation', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-categories-navigation.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-categories-navigation.jpg" alt="">', true ),
 		'description' => esc_html__( 'This image will be used in the page title categories menu and categories element with the selected option type "navigation".', 'woodmart' ),
 		'type'        => 'upload',
 		'section'     => 'general',
@@ -683,7 +690,7 @@ $product_attribute_metabox->add_field(
 	array(
 		'id'          => 'category_icon_alt',
 		'name'        => esc_html__( 'Image for header menu', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-header-menu.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'image-for-header-menu.jpg" alt="">', true ),
 		'description' => esc_html__( 'The image will be used for this category display in any menu displayed in the header.', 'woodmart' ),
 		'type'        => 'upload',
 		'section'     => 'general',
@@ -695,7 +702,7 @@ $product_attribute_metabox->add_field(
 	array(
 		'id'       => 'category_extra_description_type',
 		'name'     => esc_html__( 'Extra description', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'category-extra-description.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'category-extra-description.jpg" alt="">', true ),
 		'type'     => 'buttons',
 		'section'  => 'general',
 		'options'  => array(
@@ -745,16 +752,16 @@ $product_attribute_metabox->add_field(
 		'id'          => 'category_extra_description_text',
 		'name'        => esc_html__( 'Text', 'woodmart' ),
 		'description' => esc_html__( 'Additional category description that will be displayed after product loop on this category page.', 'woodmart' ),
-		'type'     => 'textarea',
-		'wysiwyg'  => true,
-		'section'  => 'general',
-		'requires' => array(
+		'type'        => 'textarea',
+		'wysiwyg'     => true,
+		'section'     => 'general',
+		'requires'    => array(
 			array(
 				'key'     => 'category_extra_description_type',
 				'compare' => 'equals',
 				'value'   => 'text',
 			),
 		),
-		'priority' => 50,
+		'priority'    => 50,
 	)
 );

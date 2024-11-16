@@ -82,9 +82,13 @@ class Checkout extends Layout_Type {
 			<?php woocommerce_checkout_login_form(); ?>
 		<?php endif; ?>
 
-		<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
-			<?php $this->template_content( 'checkout_form' ); ?>
-		</form>
+		<?php if ( function_exists( 'WC' ) && ! WC()->checkout()->is_registration_enabled() && WC()->checkout()->is_registration_required() && ! is_user_logged_in() ) : ?>
+			<?php echo wp_kses_post( apply_filters( 'woocommerce_checkout_must_be_logged_in_message', __( 'You must be logged in to checkout.', 'woocommerce' ) ) ); ?>
+		<?php else : ?>
+			<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
+				<?php $this->template_content( 'checkout_form' ); ?>
+			</form>
+		<?php endif; ?>
 
 		<?php
 		$this->after_template_content();

@@ -8,7 +8,7 @@
 namespace XTS\Modules\Layouts;
 
 use Elementor\Plugin;
-use WOODMART_Vctemplates;
+use XTS\Vctemplates;
 use XTS\Elementor\Elementor;
 use XTS\Elementor\XTS_Library_Source;
 
@@ -80,7 +80,7 @@ class Import {
 	 * Run WPB import.
 	 */
 	private function run_wpb() {
-		$vc_templates = new WOODMART_Vctemplates();
+		$vc_templates = new Vctemplates();
 		$data         = json_decode( $this->get_data(), true );
 		$config       = json_decode( $this->get_config(), true );
 

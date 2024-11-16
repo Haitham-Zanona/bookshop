@@ -1,10 +1,10 @@
 /* global woodmart_settings */
 (function($) {
 	woodmartThemeModule.instagramAjaxQuery = function() {
-		$('.instagram-widget').each(function() {
+		$('.wd-insta').each(function() {
 			var $instagram = $(this);
 
-			if (!$instagram.hasClass('instagram-with-error')) {
+			if (!$instagram.hasClass('wd-error')) {
 				return;
 			}
 

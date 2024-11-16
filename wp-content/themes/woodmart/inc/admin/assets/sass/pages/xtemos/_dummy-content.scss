@@ -44,7 +44,7 @@
 	.xts-import-item-image {
 		position: relative;
 		overflow: hidden;
-		padding-top: 66.5%;
+		padding-top: 66.4%;
 		transition: inherit;
 
 		will-change: transform;
@@ -56,10 +56,11 @@
 
 		img {
 			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: 0;
-			left: 0;
+			inset: 0;
+			// top: 0;
+			// right: 0;
+			// bottom: 0;
+			// left: 0;
 			max-width: 100%;
 			width: 100%;
 			height: auto;
@@ -76,10 +77,11 @@
 		&:before {
 			content: "";
 			position: absolute;
-			top: 0;
-			right: 0;
-			bottom: -1px;
-			left: 0;
+			inset: 0 0 -1px 0;
+			// top: 0;
+			// right: 0;
+			// bottom: -1px;
+			// left: 0;
 			z-index: 1;
 			transition: inherit;
 		}
@@ -109,9 +111,10 @@
 			}
 		}
 
-		&:hover,
-		&.xts-installed,
-		&.xts-loading-item {
+		&:is(
+		:hover,
+		.xts-installed,
+		.xts-loading-item) {
 
 			.xts-import-item-image:before {
 				visibility: visible;
@@ -201,6 +204,11 @@
 				text-overflow: ellipsis;
 			}
 		}
+	}
+
+	.xts-import-cats-list-wrap {
+		position: sticky;
+		top: 52px;
 	}
 
 	.xts-import-cats-list {
@@ -293,10 +301,11 @@
 
 	[class*="xts-import-progress"] {
 		position: absolute;
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
+		inset: 0;
+		// top: 0;
+		// right: 0;
+		// bottom: 0;
+		// left: 0;
 		visibility: hidden;
 		opacity: 0;
 
@@ -447,9 +456,10 @@
 		flex-shrink: 0;
 
 		> .xts-import-remove-items {
-			margin-top: 5px;
+			margin-block: 5px;
+			// margin-top: 5px;
 			margin-inline-end: 5px;
-			margin-bottom: 5px;
+			// margin-bottom: 5px;
 			width: calc(50% - 5px);
 			font-weight: 600;
 

@@ -8,6 +8,7 @@
 namespace XTS\Modules\Layouts;
 
 use Elementor\Controls_Manager;
+use Elementor\Group_Control_Typography;
 use Elementor\Plugin;
 use Elementor\Widget_Base;
 use WC_Shortcode_Cart;
@@ -84,22 +85,13 @@ class Cart_Totals extends Widget_Base {
 		 */
 
 		/**
-		 * General settings.
+		 * Title settings.
 		 */
 		$this->start_controls_section(
-			'general_style_section',
+			'title_style_section',
 			array(
-				'label' => esc_html__( 'General', 'woodmart' ),
+				'label' => esc_html__( 'Title', 'woodmart' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
-			)
-		);
-
-		$this->add_control(
-			'css_classes',
-			array(
-				'type'         => 'wd_css_class',
-				'default'      => 'wd-cart-totals',
-				'prefix_class' => '',
 			)
 		);
 
@@ -115,10 +107,86 @@ class Cart_Totals extends Widget_Base {
 			)
 		);
 
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'title_typography',
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
+				'selector' => '{{WRAPPER}} .cart-totals-inner > h2',
+				'condition' => array(
+					'title' => 'show',
+				),
+			)
+		);
+
+		$this->add_control(
+			'title_color',
+			array(
+				'label'     => esc_html__( 'Color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .cart-totals-inner > h2' => 'color: {{VALUE}}',
+				),
+				'condition' => array(
+					'title' => 'show',
+				),
+			)
+		);
+
+		$this->add_control(
+			'title_alignment',
+			array(
+				'label'        => esc_html__( 'Alignment', 'woodmart' ),
+				'type'         => 'wd_buttons',
+				'options'      => array(
+					'left'   => array(
+						'title' => esc_html__( 'Left', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/left.jpg',
+					),
+					'center' => array(
+						'title' => esc_html__( 'Center', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/center.jpg',
+					),
+					'right'  => array(
+						'title' => esc_html__( 'Right', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/right.jpg',
+					),
+				),
+				'prefix_class' => 'text-',
+				'default'      => '',
+				'condition' => array(
+					'title' => 'show',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		/**
+		 * Button settings.
+		 */
+		$this->start_controls_section(
+			'general_style_section',
+			array(
+				'label' => esc_html__( 'Button', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_control(
+			'css_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-cart-totals',
+				'prefix_class' => '',
+			)
+		);
+
 		$this->add_control(
 			'button_alignment',
 			array(
-				'label'        => esc_html__( 'Button alignment', 'woodmart' ),
+				'label'        => esc_html__( 'Button position', 'woodmart' ),
 				'type'         => Controls_Manager::SELECT,
 				'options'      => array(
 					'left'       => esc_html__( 'Left', 'woodmart' ),
@@ -127,7 +195,7 @@ class Cart_Totals extends Widget_Base {
 					'full-width' => esc_html__( 'Full width', 'woodmart' ),
 				),
 				'prefix_class' => 'wd-btn-align-',
-				'default'      => 'left',
+				'default'      => '',
 			)
 		);
 

@@ -56,6 +56,7 @@ class Elementor extends Singleton {
 			'integrations/elementor/default-elements/accordion',
 			'integrations/elementor/default-elements/video',
 			'integrations/elementor/default-elements/container',
+			'integrations/elementor/default-elements/menu-anchor',
 
 			'integrations/elementor/elements/button/button',
 			'integrations/elementor/elements/button/global-button',
@@ -125,7 +126,7 @@ class Elementor extends Singleton {
 	 * @since 1.0.0
 	 */
 	public function register_widgets() {
-		if ( isset( $_GET['elementor_updater'] ) ) { //phpcs:ignore
+		if ( isset( $_GET['elementor_updater'] ) || isset( $_GET['elementor_pro_updater'] ) ) { //phpcs:ignore
 			$this->files_include();
 		}
 
@@ -170,6 +171,9 @@ class Elementor extends Singleton {
 			'integrations/elementor/elements/class-off-canvas-column-btn',
 			'integrations/elementor/elements/class-open-street-map',
 			'integrations/elementor/elements/class-table',
+			'integrations/elementor/elements/class-video',
+			'integrations/elementor/elements/class-marquee',
+			'integrations/elementor/elements/class-nested-carousel',
 		);
 
 		$woo_files = array(

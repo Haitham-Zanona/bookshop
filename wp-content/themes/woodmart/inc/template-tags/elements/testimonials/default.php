@@ -14,7 +14,7 @@
 
 ?>
 
-<div class="testimonial column<?php echo esc_attr( $item_classes ); ?>">
+<div class="testimonial<?php echo esc_attr( $item_classes ); ?>">
 	<div class="testimonial-inner">
 		<?php if ( $image ) : ?>
 			<div class="testimonial-avatar">

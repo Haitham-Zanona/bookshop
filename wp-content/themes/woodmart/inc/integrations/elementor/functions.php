@@ -10,6 +10,7 @@ use XTS\Elementor\Controls\Autocomplete;
 use XTS\Elementor\Controls\CSS_Class;
 use XTS\Elementor\Controls\Google_Json;
 use XTS\Elementor\Controls\Buttons;
+use XTS\Modules\Layouts\Main;
 
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit; // Direct access not allowed.
@@ -28,6 +29,21 @@ if ( ! function_exists( 'woodmart_elementor_maybe_init_cart' ) ) {
 	}
 
 	add_action( 'elementor/editor/before_enqueue_scripts', 'woodmart_elementor_maybe_init_cart' );
+}
+
+if ( ! function_exists( 'woodmart_elementor_enqueue_scripts' ) ) {
+	/**
+	 * Ini woo cart in elementor.
+	 */
+	function woodmart_elementor_enqueue_scripts() {
+		wp_enqueue_script( 'wd-nested-carousel', WOODMART_THEME_DIR . '/js/scripts/elements/wdNestedCarousel.js', array( 'nested-elements' ), woodmart_get_theme_info( 'Version' ), true );
+
+		if ( Main::is_layout_type( 'single_product' ) ) {
+			wp_enqueue_script( 'wd-single-gallery-fix', WOODMART_THEME_DIR . '/inc/integrations/elementor/assets/js/singleGalleryFix.js', array(), woodmart_get_theme_info( 'Version' ), true );
+		}
+	}
+
+	add_action( 'elementor/editor/before_enqueue_scripts', 'woodmart_elementor_enqueue_scripts' );
 }
 
 if ( ! function_exists( 'woodmart_elementor_register_elementor_locations' ) ) {
@@ -337,6 +353,7 @@ if ( ! function_exists( 'woodmart_add_custom_fonts_to_theme_group' ) ) {
 		$title_font        = woodmart_get_opt( 'text-font' );
 		$alt_font          = woodmart_get_opt( 'secondary-font' );
 		$custom_fonts_data = woodmart_get_opt( 'multi_custom_fonts' );
+		$typekit_fonts     = woodmart_get_opt( 'typekit_fonts' );
 
 		if ( isset( $content_font[0] ) && isset( $content_font[0]['font-family'] ) && $content_font[0]['font-family'] ) {
 			$theme_fonts[ $content_font[0]['font-family'] ] = 'wd_fonts';
@@ -361,6 +378,13 @@ if ( ! function_exists( 'woodmart_add_custom_fonts_to_theme_group' ) ) {
 				}
 
 				$theme_fonts[ $font['font-name'] ] = 'wd_fonts';
+			}
+		}
+
+		if ( $typekit_fonts ) {
+			$typekit = explode( ',', $typekit_fonts );
+			foreach ( $typekit as $font ) {
+				$theme_fonts[ ucfirst( trim( $font ) ) ] = 'wd_fonts';
 			}
 		}
 

@@ -33,6 +33,7 @@
 					$valueInput.attr('value', window.btoa(JSON.stringify($results)));
 				} else {
 					$valueInput.attr('value', '');
+                    $valueInput.siblings('.wp-picker-container').find('button').removeAttr('style');
 				}
 			}
 		});

@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -198,7 +198,7 @@ Options::add_field(
 		'id'          => 'sticky_footer',
 		'section'     => 'footer_section',
 		'name'        => esc_html__( 'Sticky footer', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'footer-sticky-footer.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'footer-sticky-footer.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'The footer will be displayed behind the content of the page and will be visible when user scrolls to the bottom on the page.', 'woodmart' ),
 		'group'       => esc_html__( 'Settings', 'woodmart' ),
 		'type'        => 'switcher',
@@ -212,7 +212,7 @@ Options::add_field(
 		'id'          => 'collapse_footer_widgets',
 		'section'     => 'footer_section',
 		'name'        => esc_html__( 'Collapse widgets on mobile', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'footer-collapse-widgets-on-mobile.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'footer-collapse-widgets-on-mobile.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Widgets added to the footer will be collapsed by default and opened when you click on their titles.', 'woodmart' ),
 		'group'       => esc_html__( 'Settings', 'woodmart' ),
 		'type'        => 'switcher',
@@ -228,7 +228,7 @@ Options::add_field(
 		'id'          => 'scroll_top_btn',
 		'section'     => 'footer_section',
 		'name'        => esc_html__( 'Scroll to top button', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'scroll-to-top-button.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'scroll-to-top-button.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'This button moves you to the top of the page when you click it.', 'woodmart' ),
 		'group'       => esc_html__( 'Settings', 'woodmart' ),
 		'type'        => 'switcher',
@@ -242,7 +242,7 @@ Options::add_field(
 		'id'          => 'disable_copyrights',
 		'section'     => 'copyrights_section',
 		'name'        => esc_html__( 'Copyrights', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Turn on/off a section with your copyrights under the footer.', 'woodmart' ),
 		'type'        => 'switcher',
 		'default'     => '1',
@@ -261,12 +261,12 @@ Options::add_field(
 		'options'     => array(
 			'two-columns' => array(
 				'name'  => esc_html__( 'Two columns', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights-2-column.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights-2-column.mp4" autoplay loop muted></video>',
 				'value' => 'two-columns',
 			),
 			'centered'    => array(
 				'name'  => esc_html__( 'Centered', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights-1-column.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'footer-copyrights-1-column.mp4" autoplay loop muted></video>',
 				'value' => 'centered',
 			),
 		),
@@ -284,7 +284,7 @@ Options::add_field(
 		'type'        => 'textarea',
 		'wysiwyg'     => false,
 		'description' => esc_html__( 'Place here text you want to see in the copyrights area. You can use shortocdes. Ex.: [social_buttons]', 'woodmart' ),
-		'default'     => '<small><a href="http://woodmart.xtemos.com"><strong>WOODMART</strong></a> <i class="fa fa-copyright"></i>  ' . date( 'Y' ) . ' CREATED BY <a href="http://xtemos.com"><strong>XTEMOS STUDIO</strong></a>. PREMIUM E-COMMERCE SOLUTIONS.</small>',
+		'default'     => 'Based on <a href="http://woodmart.xtemos.com"><strong>WoodMart</strong></a> theme<i class="fa fa-copyright"></i> ' . date( 'Y' ) . ' <a href="https://themeforest.net/item/woodmart-woocommerce-wordpress-theme/20264492"><strong>WooCommerce Themes</strong></a>.',
 		'section'     => 'copyrights_section',
 		'priority'    => 30,
 	)

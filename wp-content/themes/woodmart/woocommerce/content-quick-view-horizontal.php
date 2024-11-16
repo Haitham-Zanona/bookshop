@@ -42,28 +42,26 @@ if ( is_rtl() ) {
 
 <div id="product-<?php the_ID(); ?>" <?php post_class( $classes ); ?>>
 
-	<div class="row product-image-summary">
-		<div class="col-lg-6 col-md-6 col-12 product-images woocommerce-product-gallery">
+	<div class="wd-grid-g product-image-summary">
+		<div class="product-images woocommerce-product-gallery">
 			<?php woodmart_product_images_slider(); ?>
 		</div>
-		<div class="col-lg-6 col-md-6 col-12 summary entry-summary<?php echo esc_attr( $product_summary_class ); ?>">
-			<div class="wd-scroll">
-				<div class="summary-inner set-mb-l reset-last-child wd-scroll-content">
-					<?php
-						/**
-						 * woocommerce_single_product_summary hook
-						 *
-						 * @hooked woocommerce_template_single_title - 5
-						 * @hooked woocommerce_template_single_rating - 10
-						 * @hooked woocommerce_template_single_price - 10
-						 * @hooked woocommerce_template_single_excerpt - 20
-						 * @hooked woocommerce_template_loop_add_to_cart - 30
-						 * @hooked woocommerce_template_single_meta - 40
-						 * @hooked woocommerce_template_single_sharing - 50
-						 */
-						do_action( 'woocommerce_single_product_summary' );
-					?>
-				</div>
+		<div class="summary entry-summary wd-scroll<?php echo esc_attr( $product_summary_class ); ?>">
+			<div class="summary-inner set-mb-l reset-last-child wd-scroll-content">
+				<?php
+					/**
+					 * woocommerce_single_product_summary hook
+					 *
+					 * @hooked woocommerce_template_single_title - 5
+					 * @hooked woocommerce_template_single_rating - 10
+					 * @hooked woocommerce_template_single_price - 10
+					 * @hooked woocommerce_template_single_excerpt - 20
+					 * @hooked woocommerce_template_loop_add_to_cart - 30
+					 * @hooked woocommerce_template_single_meta - 40
+					 * @hooked woocommerce_template_single_sharing - 50
+					 */
+					do_action( 'woocommerce_single_product_summary' );
+				?>
 			</div>
 		</div><!-- .summary -->
 	</div>

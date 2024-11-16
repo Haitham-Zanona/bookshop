@@ -76,6 +76,8 @@
 
 		#wpbody-content {
 			position: relative;
+			// position: sticky;
+			// top: 32px;
 			padding-top: 151px;
 			// max-width: var(--xts-content-width);
 			width: calc(100% - 20px);
@@ -96,6 +98,10 @@
 			.wrap {
 				margin-right: 0;
 				margin-left: 0;
+			}
+
+			.xts-popup-opened & {
+				z-index: 9999;
 			}
 		}
 

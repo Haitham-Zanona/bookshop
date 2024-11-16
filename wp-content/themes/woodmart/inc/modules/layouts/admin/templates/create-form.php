@@ -25,6 +25,13 @@ if ( 'single_product' === $current_tab ) {
 
 if ( 'checkout' === $current_tab ) {
 	unset( $layout_types['cart'] );
+	unset( $layout_types['empty_cart'] );
+	unset( $layout_types['shop_archive'] );
+	unset( $layout_types['single_product'] );
+}
+if ( 'cart' === $current_tab ) {
+	unset( $layout_types['checkout_content'] );
+	unset( $layout_types['checkout_form'] );
 	unset( $layout_types['shop_archive'] );
 	unset( $layout_types['single_product'] );
 }
@@ -60,7 +67,7 @@ $wrapper_classes = ' xts-layout-type-' . $current_tab;
 			<label for="wd_layout_name">
 				<?php esc_html_e( 'Layout name', 'woodmart' ); ?>
 			</label>
-			<input class="xts-layout-name" id="wd_layout_name" name="wd_layout_name" type="text" placeholder="<?php esc_html_e( 'Enter layout name', 'woodmart' ); ?>" required value="<?php echo esc_attr( $layout_default_name ); ?>">
+			<input class="xts-layout-name" id="wd_layout_name" name="wd_layout_name" type="text" placeholder="<?php esc_attr_e( 'Enter layout name', 'woodmart' ); ?>" required value="<?php echo esc_attr( $layout_default_name ); ?>">
 		</div>
 	</div>
 

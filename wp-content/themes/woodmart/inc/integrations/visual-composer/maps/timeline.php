@@ -5,13 +5,9 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
-	function woodmart_vc_map_timeline_shortcode() {
-		if ( ! shortcode_exists( 'woodmart_timeline' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_timeline' ) ) {
+	function woodmart_get_vc_map_timeline() {
+		return array(
 			'name' => esc_html__( 'Timeline', 'woodmart' ),
 			'base' => 'woodmart_timeline',
 			'as_parent' => array( 'only' => 'woodmart_timeline_item, woodmart_timeline_breakpoint' ),
@@ -89,11 +85,22 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'param_name' => 'el_class',
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				woodmart_get_vc_responsive_spacing_map(),
 			),
 			'js_view' => 'VcColumnView'
-		) );
+		);
+	}
+}
 
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_timeline_item' ) ) {
+	function woodmart_get_vc_map_timeline_item() {
+		return array(
 			'name' => esc_html__( 'Timeline item', 'woodmart'),
 			'base' => 'woodmart_timeline_item',
 			'as_child' => array( 'only' => 'woodmart_timeline' ),
@@ -151,8 +158,8 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				),
 				/**
-				* Image
-				*/
+				 * Image
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -176,11 +183,10 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'param_name' => 'img_size_primary',
 					'hint' => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\' or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use \'thumbnail\' size.', 'woodmart' ),
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
-					'description' => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 				),
 				/**
-				* Content
-				*/
+				 * Content
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -204,8 +210,8 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'hint' => esc_html__( 'Provide the description for primary timeline item.', 'woodmart' )
 				),
 				/**
-				* Image
-				*/
+				 * Image
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -229,11 +235,10 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'param_name' => 'img_size_secondary',
 					'hint' => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\' or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use \'thumbnail\' size.', 'woodmart' ),
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
-					'description' => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 				),
 				/**
-				* Content
-				*/
+				 * Content
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -257,9 +262,13 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'hint' => esc_html__( 'Provide the description for secondary timeline item.', 'woodmart' )
 				)
 			),
-		) );
+		);
+	}
+}
 
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_timeline_breakpoint' ) ) {
+	function woodmart_get_vc_map_timeline_breakpoint() {
+		return array(
 			'name' => esc_html__( 'Timeline breakpoint', 'woodmart'),
 			'base' => 'woodmart_timeline_breakpoint',
 			'as_child' => array( 'only' => 'woodmart_timeline' ),
@@ -309,17 +318,16 @@ if( ! function_exists( 'woodmart_vc_map_timeline_shortcode' ) ) {
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				)
 			),
-		) );
-
-		// A must for container functionality, replace Wbc_Item with your base name from mapping for parent container
-		if( class_exists( 'WPBakeryShortCodesContainer' ) ){
-			class WPBakeryShortCode_woodmart_timeline extends WPBakeryShortCodesContainer {}
-		}
-
-		// Replace Wbc_Inner_Item with your base name from mapping for nested element
-		if( class_exists( 'WPBakeryShortCode' ) ){
-			class WPBakeryShortCode_woodmart_timeline_item extends WPBakeryShortCode {}
-		}
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_timeline_shortcode' );
+}
+
+// A must for container functionality, replace Wbc_Item with your base name from mapping for parent container
+if( class_exists( 'WPBakeryShortCodesContainer' ) ){
+	class WPBakeryShortCode_woodmart_timeline extends WPBakeryShortCodesContainer {}
+}
+
+// Replace Wbc_Inner_Item with your base name from mapping for nested element
+if( class_exists( 'WPBakeryShortCode' ) ){
+	class WPBakeryShortCode_woodmart_timeline_item extends WPBakeryShortCode {}
 }

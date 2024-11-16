@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -29,13 +29,13 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'                 => 'sticky_notifications',
-		'name'               => esc_html__( 'Sticky notifications', 'woodmart' ),
-		'type'               => 'switcher',
-		'section'            => 'other_section',
-		'default'            => '0',
-		'priority'           => 20,
-		'status'             => 'deprecated',
+		'id'       => 'sticky_notifications',
+		'name'     => esc_html__( 'Sticky notifications', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'other_section',
+		'default'  => '0',
+		'priority' => 20,
+		'status'   => 'deprecated',
 	)
 );
 
@@ -45,7 +45,7 @@ Options::add_field(
 		'name'     => esc_html__( 'Show comments on pages', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'other_section',
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-show-comments-on-pages.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-show-comments-on-pages.jpg" alt="">', true ),
 		'default'  => '1',
 		'on-text'  => esc_html__( 'Yes', 'woodmart' ),
 		'off-text' => esc_html__( 'No', 'woodmart' ),
@@ -72,7 +72,7 @@ Options::add_field(
 	array(
 		'id'          => 'widget_title_tag',
 		'name'        => esc_html__( 'Widget title tag', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'widget-title-tag.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'widget-title-tag.jpg" alt="">', true ),
 		'description' => esc_html__( 'Choose which HTML tag to use in widget title.', 'woodmart' ),
 		'type'        => 'select',
 		'section'     => 'other_section',
@@ -123,7 +123,7 @@ Options::add_field(
 	array(
 		'id'          => 'woodmart_slider',
 		'name'        => esc_html__( 'Enable custom slider', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-custom-slider.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-custom-slider.jpg" alt="">', true ),
 		'description' => esc_html__( 'If you enable this option, a new post type for sliders will be added to your Dashboard menu. You will be able to create sliders with page builder and place them on any page on your website.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'other_section',
@@ -131,6 +131,7 @@ Options::add_field(
 		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
 		'priority'    => 30,
+		'class'       => 'xts-preset-field-disabled',
 	)
 );
 
@@ -155,6 +156,7 @@ Options::add_field(
 		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
 		'priority'    => 40,
+		'class'       => 'xts-preset-field-disabled',
 	)
 );
 
@@ -165,7 +167,8 @@ Options::add_field(
 		'type'     => 'switcher',
 		'section'  => 'other_section',
 		'default'  => '0',
-		'priority' => 50,
+		'priority' => 60,
+		'class'    => 'xts-preset-field-disabled',
 	)
 );
 
@@ -173,7 +176,7 @@ Options::add_field(
 	array(
 		'id'          => 'site_viewport',
 		'name'        => esc_html__( 'Viewport tag', 'woodmart' ),
-		'description' => esc_html__( 'Default viewport tag:', 'woodmart' ) .  ' <code>' . htmlspecialchars( '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">' ) . '</code>',
+		'description' => esc_html__( 'Default viewport tag:', 'woodmart' ) . ' <code>' . htmlspecialchars( '<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">' ) . '</code>',
 		'type'        => 'select',
 		'section'     => 'other_section',
 		'default'     => 'not_scalable',
@@ -182,7 +185,7 @@ Options::add_field(
 				'name'  => esc_html__( 'Not scalable', 'woodmart' ),
 				'value' => 'not_scalable',
 			),
-			'scalable'   => array(
+			'scalable'     => array(
 				'name'  => esc_html__( 'Scalable', 'woodmart' ),
 				'value' => 'scalable',
 			),

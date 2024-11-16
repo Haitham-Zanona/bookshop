@@ -24,7 +24,7 @@ if ( $cross_sells ) : ?>
 	<div class="cross-sells">
 		
 		<?php if ( $heading ) : ?>
-			<h3 class="title slider-title"><span><?php echo esc_html( $heading ); ?></span></h3>
+			<h3 class="wd-el-title title slider-title"><span><?php echo esc_html( $heading ); ?></span></h3>
 		<?php endif; ?>
 
 		<?php
@@ -42,6 +42,9 @@ if ( $cross_sells ) : ?>
 				'products_with_background'     => woodmart_get_opt( 'products_with_background' ),
 				'products_shadow'              => woodmart_get_opt( 'products_shadow' ),
 				'products_color_scheme'        => woodmart_get_opt( 'products_color_scheme' ),
+				'spacing'                      => woodmart_get_opt( 'products_spacing' ),
+				'spacing_tablet'               => woodmart_get_opt( 'products_spacing_tablet', '' ),
+				'spacing_mobile'               => woodmart_get_opt( 'products_spacing_mobile', '' ),
 			);
 		
 			woodmart_set_loop_prop( 'products_view', 'carousel' );

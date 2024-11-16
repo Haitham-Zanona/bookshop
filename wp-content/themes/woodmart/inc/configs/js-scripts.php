@@ -34,7 +34,7 @@ return array(
 			'title'     => esc_html__( 'Scroll Bar', 'woodmart' ),
 			'name'      => 'scrollbar',
 			'file'      => '/js/scripts/global/scrollBar',
-			'in_footer' => true,
+			'in_footer' => false,
 		),
 	),
 	'animations'                       => array(
@@ -125,11 +125,11 @@ return array(
 			'in_footer' => true,
 		),
 	),
-	'owl-carousel'                     => array(
+	'swiper-carousel'                     => array(
 		array(
-			'title'     => esc_html__( 'OWL carousel', 'woodmart' ),
-			'name'      => 'owl-carousel',
-			'file'      => '/js/scripts/global/owlCarouselInit',
+			'title'     => esc_html__( 'Swiper carousel', 'woodmart' ),
+			'name'      => 'swiper-carousel',
+			'file'      => '/js/scripts/global/swiperInit',
 			'in_footer' => true,
 		),
 	),
@@ -184,6 +184,14 @@ return array(
 			'title'     => esc_html__( 'Sticky column', 'woodmart' ),
 			'name'      => 'sticky-column',
 			'file'      => '/js/scripts/global/stickyColumn',
+			'in_footer' => true,
+		),
+	),
+	'sticky-container'                 => array(
+		array(
+			'title'     => esc_html__( 'Sticky container', 'woodmart' ),
+			'name'      => 'sticky-container',
+			'file'      => '/js/scripts/global/stickyContainer',
 			'in_footer' => true,
 		),
 	),
@@ -343,11 +351,11 @@ return array(
 			'in_footer' => true,
 		),
 	),
-	'video-element'                    => array(
+	'video-poster-element'             => array(
 		array(
-			'title'     => esc_html__( 'Video element', 'woodmart' ),
-			'name'      => 'video-element',
-			'file'      => '/js/scripts/elements/video',
+			'title'     => esc_html__( 'Video poster element', 'woodmart' ),
+			'name'      => 'video-poster-element',
+			'file'      => '/js/scripts/elements/videoPoster',
 			'in_footer' => true,
 		),
 	),
@@ -380,6 +388,30 @@ return array(
 			'title'     => esc_html__( 'Single product layout element stock status', 'woodmart' ),
 			'name'      => 'stock-status',
 			'file'      => '/js/scripts/elements/stockStatus',
+			'in_footer' => true,
+		),
+	),
+	'video-element'                    => array(
+		array(
+			'title'     => esc_html__( 'Video element', 'woodmart' ),
+			'name'      => 'video-element',
+			'file'      => '/js/scripts/elements/videoElement',
+			'in_footer' => true,
+		),
+	),
+	'video-element-popup'              => array(
+		array(
+			'title'     => esc_html__( 'Video element popup', 'woodmart' ),
+			'name'      => 'video-element-popup',
+			'file'      => '/js/scripts/elements/videoElementPopup',
+			'in_footer' => true,
+		),
+	),
+	'menu-anchor'    => array(
+		array(
+			'title'     => esc_html__( 'Menu anchor', 'woodmart' ),
+			'name'      => 'menu-anchor',
+			'file'      => '/js/scripts/elements/menuAnchor',
 			'in_footer' => true,
 		),
 	),
@@ -441,7 +473,7 @@ return array(
 			'in_footer' => true,
 		),
 	),
-	'menu-overlay'                    => array(
+	'menu-overlay'                     => array(
 		array(
 			'title'     => esc_html__( 'Menu overlay', 'woodmart' ),
 			'name'      => 'menu-overlay',
@@ -465,7 +497,7 @@ return array(
 			'in_footer' => true,
 		),
 	),
-	'header-el-category-more-btn'           => array(
+	'header-el-category-more-btn'      => array(
 		array(
 			'title'     => esc_html__( 'More categories button', 'woodmart' ),
 			'name'      => 'header-el-category-more-btn',
@@ -595,7 +627,15 @@ return array(
 		array(
 			'title'     => esc_html__( 'Categories menu', 'woodmart' ),
 			'name'      => 'categories-menu',
-			'file'      => '/js/scripts/wc/categoriesMenu',
+			'file'      => '/js/scripts/menu/categoriesMenu',
+			'in_footer' => true,
+		),
+	),
+	'categories-menu-side-hidden'                  => array(
+		array(
+			'title'     => esc_html__( 'Categories menu side hidden', 'woodmart' ),
+			'name'      => 'categories-menu-side-hidden',
+			'file'      => '/js/scripts/menu/categoriesMenuSideHidden',
 			'in_footer' => true,
 		),
 	),
@@ -676,6 +716,14 @@ return array(
 			'title'     => esc_html__( 'Mini cart quantity', 'woodmart' ),
 			'name'      => 'mini-cart-quantity',
 			'file'      => '/js/scripts/wc/miniCartQuantity',
+			'in_footer' => true,
+		),
+	),
+	'checkout-fields'                  => array(
+		array(
+			'title'     => esc_html__( 'Checkout fields', 'woodmart' ),
+			'name'      => 'checkout-fields',
+			'file'      => '/js/scripts/wc/checkoutFields',
 			'in_footer' => true,
 		),
 	),
@@ -817,6 +865,14 @@ return array(
 			'in_footer' => true,
 		),
 	),
+	'quick-shop-with-form'             => array(
+		array(
+			'title'     => esc_html__( 'Quick shop variation form', 'woodmart' ),
+			'name'      => 'quick-shop-with-form',
+			'file'      => '/js/scripts/wc/quickShopVariationForm',
+			'in_footer' => true,
+		),
+	),
 	'quick-view'                       => array(
 		array(
 			'title'     => esc_html__( 'Quick view', 'woodmart' ),
@@ -860,6 +916,14 @@ return array(
 			'title'     => esc_html__( 'Single product tabs accordion', 'woodmart' ),
 			'name'      => 'single-product-tabs-accordion',
 			'file'      => '/js/scripts/wc/singleProductTabsAccordion',
+			'in_footer' => true,
+		),
+	),
+	'single-product-tabs-side-hidden'  => array(
+		array(
+			'title'     => esc_html__( 'Single product tabs side hidden', 'woodmart' ),
+			'name'      => 'single-product-tabs-side-hidden',
+			'file'      => '/js/scripts/wc/singleProductTabsSideHidden',
 			'in_footer' => true,
 		),
 	),
@@ -1039,6 +1103,38 @@ return array(
 			'in_footer' => true,
 		),
 	),
+	'dynamic-discounts-table'          => array(
+		array(
+			'title'     => esc_html__( 'Dynamic discounts table', 'woodmart' ),
+			'name'      => 'dynamic-discounts-table',
+			'file'      => '/js/scripts/wc/dynamicDiscountsTable',
+			'in_footer' => true,
+		),
+	),
+	'free-gifts-table'                 => array(
+		array(
+			'title'     => esc_html__( 'Free gifts table', 'woodmart' ),
+			'name'      => 'free-gifts-table',
+			'file'      => '/js/scripts/wc/freeGiftsTable',
+			'in_footer' => true,
+		),
+	),
+	'waitlist-subscribe-form'          => array(
+		array(
+			'title'     => esc_html__( 'Waitlist subscribe form', 'woodmart' ),
+			'name'      => 'waitlist-subscribe-form',
+			'file'      => '/js/scripts/wc/waitlistSubscribeForm',
+			'in_footer' => true,
+		),
+	),
+	'waitlist-table'                   => array(
+		array(
+			'title'     => esc_html__( 'Waitlist table in my account page', 'woodmart' ),
+			'name'      => 'waitlist-table',
+			'file'      => '/js/scripts/wc/waitlistTable',
+			'in_footer' => true,
+		),
+	),
 	// Single product.
 	'product-reviews'                  => array(
 		array(
@@ -1069,6 +1165,22 @@ return array(
 			'title'     => esc_html__( 'WooCommerce single product video image', 'woodmart' ),
 			'name'      => 'single-product-video-gallery',
 			'file'      => '/js/scripts/wc/productGalleryVideo',
+			'in_footer' => true,
+		),
+	),
+	'cart-quantity'                    => array(
+		array(
+			'title'     => esc_html__( 'WooCommerce cart quantity', 'woodmart' ),
+			'name'      => 'cart-quantity',
+			'file'      => '/js/scripts/wc/cartQuantity',
+			'in_footer' => true,
+		),
+	),
+	'track-product-recently-viewed'    => array(
+		array(
+			'title'     => esc_html__( 'Track recently viewed products', 'woodmart' ),
+			'name'      => 'track-product-recently-viewed',
+			'file'      => '/js/scripts/wc/trackProductViewed',
 			'in_footer' => true,
 		),
 	),

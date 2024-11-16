@@ -47,7 +47,7 @@ class Helper {
 	 * @return string
 	 */
 	public static function get_order_by_from_request() {
-		return ! empty( $_GET['order_by'] ) ? wp_unslash( $_GET['order_by'] ) : 'newest'; //phpcs:ignore.
+		return ! empty( $_GET['order_by'] ) ? wp_unslash( $_GET['order_by'] ) : 'default'; //phpcs:ignore.
 	}
 
 	/**

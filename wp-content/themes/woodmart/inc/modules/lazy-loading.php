@@ -353,11 +353,11 @@ if( ! function_exists( 'woodmart_get_placeholder_size' ) ) {
 
 		$x = $y = 10;
 
-		if( $x0 < $y0) {
+		if( $x0 && $x0 < $y0) {
 			$y = ($x * $y0) / $x0;
 		}
 
-		if( $x0 > $y0) {
+		if( $y0 && $x0 > $y0) {
 			$x = ($y * $x0) / $y0;
 		}
 
@@ -369,3 +369,18 @@ if( ! function_exists( 'woodmart_get_placeholder_size' ) ) {
 }
 
 /*=====  End of Lazy loading functions  ======*/
+
+if ( ! function_exists( 'woodmart_disable_default_lazy_loading' ) ) {
+	/**
+	 * Disable default lazy loading.
+	 *
+	 * @return void
+	 */
+	function woodmart_disable_default_lazy_loading() {
+		if ( woodmart_get_opt( 'disable_wordpress_lazy_loading' ) ) {
+			add_filter( 'wp_lazy_loading_enabled', '__return_false' );
+		}
+	}
+
+	add_action( 'init', 'woodmart_disable_default_lazy_loading', 120 );
+}

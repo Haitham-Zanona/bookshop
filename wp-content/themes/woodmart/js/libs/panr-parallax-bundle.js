@@ -65,7 +65,7 @@
                 mouseleaveVars;
 
             if (settings.scale || (!settings.scaleOnHover && settings.scale)) {
-                TweenMax.set(target.find('img'), { scale: settings.scaleTo });
+                TweenMax.set(target.find('img, video'), { scale: settings.scaleTo });
             }
 
             // moveTarget
@@ -93,14 +93,14 @@
                 panVars = $.extend({}, xPanVars, yPanVars);
 
                 // Pan element
-                TweenMax.to(target.find('img'), settings.panDuration, panVars);
+                TweenMax.to(target.find('img, video'), settings.panDuration, panVars);
             });
 
             // On mouseover
             settings.moveTarget.on('mouseenter', function (e) {
                 if (settings.scaleOnHover) {
                     // Scale up element
-                    TweenMax.to(target.find('img'), settings.scaleDuration, { scale: settings.scaleTo });
+                    TweenMax.to(target.find('img, video'), settings.scaleDuration, { scale: settings.scaleTo });
                 }
 
                 settings.onEnter(target);
@@ -121,7 +121,7 @@
 
                 var newDuration = settings.scaleDuration + 0.2;
 
-                TweenMax.to(target.find('img'), newDuration, mouseleaveVars);
+                TweenMax.to(target.find('img, video'), newDuration, mouseleaveVars);
 
                 settings.onLeave(target);
             });

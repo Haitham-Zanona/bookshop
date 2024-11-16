@@ -46,11 +46,47 @@ class Backend extends Singleton {
 		$this->include_files();
 
 		add_action( 'init', array( $this, 'delete_wishlists' ) );
+		add_action( 'init', array( $this, 'create_promotion' ) );
+
+		add_action( 'admin_notices', array( $this, 'show_notice' ) );
 		add_action( 'admin_menu', array( $this, 'register_wishlist_settings_page' ) );
 
 		add_action( 'wp_ajax_woodmart_json_search_users', array( $this, 'woodmart_json_search_users' ) );
 
-		add_filter('set-screen-option', array( $this, 'set_screen_option' ), 10, 3);
+		add_filter( 'set-screen-option', array( $this, 'set_screen_option' ), 10, 3);
+	}
+
+	public function show_notice() {
+		if ( ! isset( $_GET['page'] ) || 'xts-wishlist-settings-page' !== $_GET['page'] || ! isset( $_GET['tab'] ) || ! in_array( $_GET['tab'], array( 'xts-popular-products-in-wishlist', 'xts-users-popular-products' ), true ) || woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_promotional_email_settings', 'yes' ) ) {
+			return;
+		}
+
+		?>
+		<div class="notice notice-error is-dismissible">
+			<p>
+				<?php
+					printf(
+						'%s <a href="%s">%s</a>.',
+						esc_html__( 'Wishlist promotional email is currently disabled. You need to enable it if you want to send promotional emails to your customers. Find it in', 'woodmart' ),
+						esc_url( admin_url( 'admin.php?page=wc-settings&tab=email' ) ),
+						esc_html__( 'WooCommerce -> Settings -> Emails', 'woodmart' )
+					);
+				?>
+			</p>
+		</div>
+		<?php
+	}
+
+	public function create_promotion() {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! isset( $_REQUEST['product_id'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'woodmart_send_promotion_email' ) || ! woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_promotional_email_settings', 'yes' ) ) {
+			return;
+		}
+
+		$product_id     = $_REQUEST['product_id'];
+		$user_ids       = isset( $_REQUEST['user_id'] ) ? $_REQUEST['user_id'] : array_unique( Popular_Products::get_user_ids_by_product_id( $product_id ) );
+		$users_products = ! is_array( $user_ids ) ? array( $user_ids => $product_id ) : array_combine( $user_ids, array_fill( 0, count( $user_ids ), $product_id ) );
+
+		Sends_Promotional::update_promotion_data( $users_products );
 	}
 
 	/**
@@ -62,6 +98,26 @@ class Backend extends Singleton {
 			WOODMART_ASSETS . '/css/parts/page-wishlists.min.css',
 			array(),
 			woodmart_get_theme_info( 'Version' )
+		);
+
+		wp_enqueue_script(
+			'xts-admin-wishlist',
+			WOODMART_ASSETS . '/js/wishlist.js',
+			array(
+				'jquery',
+				'jquery-ui-datepicker',
+				'select2',
+			),
+			WOODMART_VERSION,
+			true
+		);
+
+		wp_localize_script(
+			'xts-admin-wishlist',
+			'xtsAdminWishlistSettings',
+			array(
+				'send_promotional_confirm_text' => esc_html__( 'Ready to send this promotional email?', 'woodmart' ),
+			)
 		);
 	}
 
@@ -148,16 +204,16 @@ class Backend extends Singleton {
 
 		$screen = get_current_screen();
 
-		if( ! is_object( $screen ) || $screen->id !== $wishlist_settings_page) {
+		if ( ! is_object( $screen ) || $screen->id !== $wishlist_settings_page ) {
 			return;
 		}
 
 		add_screen_option(
 			'per_page',
 			array(
-				'label'   => esc_html__('Number of items per page', 'woodmart'),
+				'label'   => esc_html__( 'Number of items per page', 'woodmart' ),
 				'default' => 20,
-				'option'  => 'wishlists_per_page'
+				'option'  => 'wishlists_per_page',
 			)
 		);
 	}
@@ -166,6 +222,8 @@ class Backend extends Singleton {
 		if ( 'wishlists_per_page' === $option ) {
 			return $value;
 		}
+
+		return $status;
 	}
 
 	/**
@@ -180,7 +238,7 @@ class Backend extends Singleton {
 			'edit.php?post_type=product',
 			esc_html__( 'Wishlists', 'woodmart' ),
 			esc_html__( 'Wishlists', 'woodmart' ),
-			'administrator',
+			apply_filters( 'woodmart_capability_menu_page', 'edit_products', 'xts-wishlist-settings-page' ),
 			'xts-wishlist-settings-page',
 			array( $this, 'render_wishlist_settings_page' )
 		);
@@ -196,7 +254,7 @@ class Backend extends Singleton {
 				'id'         => 'xts-wishlist-settings',
 				'parent'     => 'woocommerce-products',
 				'title'      => esc_html__( 'Wishlists', 'woodmart' ),
-				'capability' => 'administrator',
+				'capability' => apply_filters( 'woodmart_capability_menu_page', 'edit_products', 'xts-wishlist-settings' ),
 				'url'        => 'xts-wishlist-settings-page',
 			)
 		);
@@ -206,7 +264,7 @@ class Backend extends Singleton {
 				'id'         => 'xts-all-wishlists',
 				'parent'     => 'xts-wishlist-settings',
 				'title'      => esc_html__( 'All wishlists', 'woodmart' ),
-				'capability' => 'administrator',
+				'capability' => apply_filters( 'woodmart_capability_menu_page', 'edit_products', 'xts-all-wishlists' ),
 				'url'        => 'xts-wishlist-settings-page&tab=xts-all-wishlists',
 			)
 		);
@@ -216,7 +274,7 @@ class Backend extends Singleton {
 				'id'         => 'xts-popular-products-in-wishlist',
 				'parent'     => 'xts-wishlist-settings',
 				'title'      => esc_html__( 'Popular products', 'woodmart' ),
-				'capability' => 'administrator',
+				'capability' => apply_filters( 'woodmart_capability_menu_page', 'edit_products', 'xts-popular-products-in-wishlist' ),
 				'url'        => 'xts-wishlist-settings-page&tab=xts-popular-products-in-wishlist',
 			)
 		);
@@ -289,7 +347,10 @@ class Backend extends Singleton {
 					<h3><?php echo esc_html( $title ); ?></h3>
 				<?php endif; ?>
 
-				<form id="xts-wishlist-settings-page-form" method="post">
+				<form id="xts-wishlist-settings-page-form" method="get" action="">
+					<input type="hidden" name="page" value="xts-wishlist-settings-page" />
+					<input type="hidden" name="tab" value="<?php echo esc_attr( $current_tab ); ?>" />
+					<input type="hidden" name="post_type" value="product" />
 					<?php
 					if ( $list_table instanceof Wishlists ) {
 						$list_table->search_box( esc_html__( 'Search', 'woodmart' ), 'xts-search' );

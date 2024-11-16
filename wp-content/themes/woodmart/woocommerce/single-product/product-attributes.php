@@ -12,6 +12,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
+ * @var array $product_attributes List of product attributes.
  * @see https://docs.woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates
  * @version 3.6.0
@@ -49,24 +50,25 @@ if ( ! $product_attributes ) {
 
 		<tr class="woocommerce-product-attributes-item woocommerce-product-attributes-item--<?php echo esc_attr( $product_attribute_key ); ?>">
 			<th class="woocommerce-product-attributes-item__label">
-				<?php if ( ! empty( $thumb_id ) ) : ?>
-					<?php if ( woodmart_is_svg( wp_get_attachment_image_url( $thumb_id ) ) ) : ?>
-						<?php echo woodmart_get_svg_html( $thumb_id, $image_size, array( 'class' => 'wd-attr-img' ) ); //phpcs:ignore. ?>
-					<?php else : ?>
-						<?php echo wp_get_attachment_image( $thumb_id, $image_size, false, array( 'class' => 'wd-attr-img' ) ); ?>
+				<span class="wd-attr-name">
+					<?php if ( ! empty( $thumb_id ) ) : ?>
+						<?php if ( woodmart_is_svg( wp_get_attachment_image_url( $thumb_id ) ) ) : ?>
+							<?php echo woodmart_get_svg_html( $thumb_id, $image_size, array( 'class' => 'wd-attr-name-img' ) ); //phpcs:ignore. ?>
+						<?php else : ?>
+							<?php echo wp_get_attachment_image( $thumb_id, $image_size, false, array( 'class' => 'wd-attr-name-img' ) ); ?>
+						<?php endif; ?>
 					<?php endif; ?>
-				<?php endif; ?>
-
-				<span>
-					<?php echo wp_kses_post( $product_attribute['label'] ); ?>
-				</span>
-				<?php if ( $attribute_hint ) : ?>
-					<?php woodmart_enqueue_js_library( 'tooltips' ); ?>
-					<?php woodmart_enqueue_js_script( 'btns-tooltips' ); ?>
-					<span class="wd-hint wd-tooltip">
-						<?php echo wp_kses_post( $attribute_hint ); ?>
+					<span class="wd-attr-name-label">
+						<?php echo wp_kses_post( $product_attribute['label'] ); ?>
 					</span>
-				<?php endif; ?>
+					<?php if ( $attribute_hint ) : ?>
+						<?php woodmart_enqueue_js_library( 'tooltips' ); ?>
+						<?php woodmart_enqueue_js_script( 'btns-tooltips' ); ?>
+						<span class="wd-hint wd-tooltip">
+							<?php echo wp_kses_post( $attribute_hint ); ?>
+						</span>
+					<?php endif; ?>
+				</span>
 			</th>
 			<td class="woocommerce-product-attributes-item__value">
 				<?php echo wp_kses_post( $product_attribute['value'] ); ?>

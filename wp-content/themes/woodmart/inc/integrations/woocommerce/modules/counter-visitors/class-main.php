@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Visitor_Counter;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 use XTS\Modules\Layouts\Main as Builder;
 
@@ -43,6 +43,7 @@ class Main extends Singleton {
 				'name'     => esc_html__( 'Visitor counter', 'woodmart' ),
 				'priority' => 80,
 				'icon'     => 'xts-i-bag',
+				'class'    => 'xts-preset-section-disabled',
 			)
 		);
 
@@ -50,7 +51,7 @@ class Main extends Singleton {
 			array(
 				'id'          => 'counter_visitor_enabled',
 				'name'        => esc_html__( 'Visitor counter', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'visitor-counter.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'visitor-counter.jpg" alt="">', true ),
 				'description' => wp_kses( __( 'Show the number of visitors that are currently viewing a product on the single product page. Read more information in our <a href="https://xtemos.com/docs-topic/product-visitors-counter/">documentation</a>.', 'woodmart' ), 'default' ),
 				'type'        => 'switcher',
 				'section'     => 'counter_visitor',
@@ -195,16 +196,17 @@ class Main extends Singleton {
 	/**
 	 * Output count product visits in builder and single product.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $extra_classes Extra classes.
 	 */
-	public function output_count_visitors( $extra_classes = '' ) {
+	public function output_count_visitors( $extra_classes = '', $icon_output = '' ) {
 		if ( woodmart_get_opt( 'counter_visitor_enabled' ) && ( woodmart_get_opt( 'counter_visitor_ajax_update' ) || woodmart_get_opt( 'counter_visitor_live_mode' ) ) ) {
 			woodmart_enqueue_js_script( 'counter-product-visits' );
 		}
 
 		$product_visitors = $this->get_count_visits_in_db( get_the_ID() );
 
-		$this->get_count_content( $product_visitors, $extra_classes );
+		$this->get_count_content( $product_visitors, $extra_classes, $icon_output );
 	}
 
 	/**
@@ -336,12 +338,14 @@ class Main extends Singleton {
 	/**
 	 * Count visits content.
 	 *
+	 * @codeCoverageIgnore
 	 * @param integer $count Count visits.
 	 * @param string  $extra_classes Extra classes.
 	 *
 	 * @return void
 	 */
-	public function get_count_content( $count, $extra_classes = '' ) {
+	public function get_count_content( $count, $extra_classes = '', $icon_output = '' ) {
+		woodmart_enqueue_inline_style( 'woo-mod-product-count' );
 		woodmart_enqueue_inline_style( 'woo-opt-visits-count' );
 
 		$wrapper_classes = '';
@@ -354,10 +358,14 @@ class Main extends Singleton {
 			$wrapper_classes .= ' wd-hide';
 		}
 
+		if ( empty( $icon_output ) ) {
+			$icon_output = '<span class="wd-count-icon"></span>';
+		}
+
 		?>
-		<div class="wd-visits-count<?php echo esc_attr( $wrapper_classes ); ?>" data-product-id="<?php the_ID(); ?>">
-			<span class="wd-visits-count-icon"></span><span class="wd-visits-count-number"><?php echo esc_html( $count ); // Must be in one line. ?></span>
-			<span class="wd-visits-count-msg"><?php echo esc_html( _n( 'People watching this product now!', 'People watching this product now!', $count, 'woodmart' ) ); ?></span>
+		<div class="wd-product-count wd-visits-count<?php echo esc_attr( $wrapper_classes ); ?>" data-product-id="<?php the_ID(); ?>">
+			<?php echo $icon_output; // phpcs:ignore. ?><span class="wd-count-number"><?php echo esc_html( $count ); // Must be in one line. ?></span>
+			<span class="wd-count-msg"><?php echo esc_html( _n( 'People watching this product now!', 'People watching this product now!', $count, 'woodmart' ) ); ?></span>
 		</div>
 		<?php
 	}

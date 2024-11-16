@@ -64,7 +64,10 @@
 		}
 	}
 
-	#wp-admin-bar-xts_dashboard_external {
+	:is(
+	#wp-admin-bar-xts_dashboard-default,
+	#wp-admin-bar-xts_dashboard_external,
+	#wp-admin-bar-xts_theme_settings-default) {
 		
 		> li {
 

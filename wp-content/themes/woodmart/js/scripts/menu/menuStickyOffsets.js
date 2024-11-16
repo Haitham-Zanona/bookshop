@@ -1,6 +1,9 @@
 /* global woodmart_settings */
 (function($) {
 	woodmartThemeModule.menuStickyOffsets = function() {
+		var $stickyNav = $('.wd-sticky-nav');
+		var $side = $('.wd-close-side');
+
 		$('.wd-sticky-nav .wd-nav-sticky.wd-nav-vertical').each(function() {
 			var $menu = $(this);
 
@@ -10,7 +13,13 @@
 				}
 
 				$menu.find('> .menu-item-has-children').each(function() {
-					setOffset($(this));
+					var $menuItem = $(this);
+
+					if ($menuItem.find('> .wd-dropdown.wd-design-full-height').length) {
+						return;
+					}
+
+					setOffset($menuItem);
 				});
 
 				$menu.addClass('wd-offsets-calculated');
@@ -52,29 +61,39 @@
 			e.preventDefault();
 
 			var $stickyNavBtn = $(this);
-			var $stickyNav = $('.wd-sticky-nav');
-			var $side = $('.wd-close-side');
 
+			sideOpened( $stickyNavBtn, $stickyNavBtn.hasClass('wd-close-menu-mouseout') );
+		});
+
+		woodmartThemeModule.$document.on('mouseenter mousemove', '.wd-header-sticky-nav.wd-event-hover', function() {
+			sideOpened( $(this) );
+		});
+
+		woodmartThemeModule.$document.on('click', '.wd-close-side.wd-location-sticky-nav', function() {
+			closeSide();
+		});
+
+		function sideOpened( $stickyNavBtn, addMouseoutEvent = true ) {
 			$stickyNavBtn.addClass('wd-opened');
 			$stickyNav.addClass('wd-opened');
 			$side.addClass('wd-close-side-opened').addClass('wd-location-sticky-nav');
 
-			if ( $stickyNavBtn.hasClass('wd-close-menu-mouseout') ) {
-				$stickyNav.on('mouseout', function () {
-					$stickyNavBtn.removeClass('wd-opened');
-					$stickyNav.removeClass('wd-opened');
-					$side.removeClass('wd-close-side-opened').removeClass('wd-location-sticky-nav');
-
-					$stickyNav.off('mouseout');
-				});
+			if ( ! addMouseoutEvent ) {
+				return;
 			}
-		});
 
-		woodmartThemeModule.$document.on('click', '.wd-close-side.wd-location-sticky-nav', function() {
+			$stickyNav.on('mouseout', function () {
+				closeSide();
+
+				$stickyNav.off('mouseout');
+			});
+		}
+
+		function closeSide() {
 			$('.wd-header-sticky-nav').removeClass('wd-opened');
-			$('.wd-sticky-nav').removeClass('wd-opened');
-			$('.wd-close-side').removeClass('wd-close-side-opened').removeClass('wd-location-sticky-nav');
-		});
+			$stickyNav.removeClass('wd-opened');
+			$side.removeClass('wd-close-side-opened').removeClass('wd-location-sticky-nav');
+		}
 	};
 
 	$(document).ready(function() {

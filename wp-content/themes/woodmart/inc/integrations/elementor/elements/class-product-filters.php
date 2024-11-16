@@ -67,7 +67,7 @@ class Product_Filters extends Widget_Base {
 	 * @return array Widget categories.
 	 */
 	public function get_categories() {
-		return [ 'wd-elements' ];
+		return array( 'wd-elements' );
 	}
 
 	/**
@@ -79,9 +79,9 @@ class Product_Filters extends Widget_Base {
 	 * @return array Widget categories.
 	 */
 	public function get_attributes() {
-		$output = [
+		$output = array(
 			'' => esc_html__( 'Select', 'woodmart' ),
-		];
+		);
 
 		$taxonomies = wc_get_attribute_taxonomies();
 
@@ -110,9 +110,9 @@ class Product_Filters extends Widget_Base {
 		 */
 		$this->start_controls_section(
 			'general_content_section',
-			[
+			array(
 				'label' => esc_html__( 'General', 'woodmart' ),
-			]
+			)
 		);
 
 		$this->add_control(
@@ -158,27 +158,27 @@ class Product_Filters extends Widget_Base {
 		 */
 		$this->start_controls_section(
 			'filters_content_section',
-			[
+			array(
 				'label' => esc_html__( 'Filters', 'woodmart' ),
-			]
+			)
 		);
 
 		$repeater = new Repeater();
 
 		$repeater->add_control(
 			'filter_type',
-			[
+			array(
 				'label'   => esc_html__( 'Filter type', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => [
+				'options' => array(
 					'categories' => esc_html__( 'Categories', 'woodmart' ),
 					'attributes' => esc_html__( 'Attributes', 'woodmart' ),
 					'stock'      => esc_html__( 'Stock status', 'woodmart' ),
 					'price'      => esc_html__( 'Price', 'woodmart' ),
 					'orderby'    => esc_html__( 'Order by', 'woodmart' ),
-				],
+				),
 				'default' => 'categories',
-			]
+			)
 		);
 
 		/**
@@ -186,19 +186,19 @@ class Product_Filters extends Widget_Base {
 		 */
 		$repeater->add_control(
 			'categories_title',
-			[
+			array(
 				'label'     => esc_html__( 'Title', 'woodmart' ),
 				'type'      => Controls_Manager::TEXT,
 				'default'   => 'Categories',
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'categories',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'order_by',
-			[
+			array(
 				'label'     => esc_html__( 'Order by', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'name',
@@ -209,45 +209,45 @@ class Product_Filters extends Widget_Base {
 					'count' => esc_html__( 'Count', 'woodmart' ),
 					'order' => esc_html__( 'Category order', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'categories',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'hierarchical',
-			[
+			array(
 				'label'        => esc_html__( 'Show hierarchy', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '0',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'categories',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'hide_empty',
-			[
+			array(
 				'label'        => esc_html__( 'Hide empty categories', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '0',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'categories',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'show_categories_ancestors',
-			[
+			array(
 				'label'        => esc_html__( 'Show current category ancestors', 'woodmart' ),
 				'description'  => esc_html__( 'If you visit category Man, for example, only man\'s subcategories will be shown in the page title like T-shirts, Coats, Shoes etc.', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
@@ -255,10 +255,10 @@ class Product_Filters extends Widget_Base {
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'categories',
-				],
-			]
+				),
+			)
 		);
 
 		/**
@@ -266,49 +266,49 @@ class Product_Filters extends Widget_Base {
 		 */
 		$repeater->add_control(
 			'attributes_title',
-			[
+			array(
 				'label'     => esc_html__( 'Title', 'woodmart' ),
 				'type'      => Controls_Manager::TEXT,
 				'default'   => 'Filter by',
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'attribute',
-			[
+			array(
 				'label'     => esc_html__( 'Attribute', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'options'   => $this->get_attributes(),
 				'default'   => '',
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'categories',
-			[
+			array(
 				'label'       => esc_html__( 'Show in categories', 'woodmart' ),
 				'description' => esc_html__( 'Choose on which categories pages you want to display this filter. Or leave empty to show on all pages.', 'woodmart' ),
 				'type'        => 'wd_autocomplete',
 				'search'      => 'woodmart_get_taxonomies_by_query',
 				'render'      => 'woodmart_get_taxonomies_title_by_id',
-				'taxonomy'    => [ 'product_cat' ],
+				'taxonomy'    => array( 'product_cat' ),
 				'multiple'    => true,
 				'label_block' => true,
-				'condition'   => [
+				'condition'   => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'query_type',
-			[
+			array(
 				'label'     => esc_html__( 'Query type', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'and',
@@ -316,15 +316,15 @@ class Product_Filters extends Widget_Base {
 					'or'  => esc_html__( 'OR', 'woodmart' ),
 					'and' => esc_html__( 'AND', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'size',
-			[
+			array(
 				'label'     => esc_html__( 'Swatches size', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'normal',
@@ -333,34 +333,34 @@ class Product_Filters extends Widget_Base {
 					'normal' => esc_html__( 'Medium', 'woodmart' ),
 					'large'  => esc_html__( 'Large', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'shape',
-			[
+			array(
 				'label'     => esc_html__( 'Swatches shape', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'round',
 				'options'   => array(
-					
+
 					'inherit' => esc_html__( 'Inherit', 'woodmart' ),
 					'round'   => esc_html__( 'Round', 'woodmart' ),
 					'rounded' => esc_html__( 'Rounded', 'woodmart' ),
 					'square'  => esc_html__( 'Square', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'swatches_style',
-			[
+			array(
 				'label'     => esc_html__( 'Swatches style', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'default'   => 'inherit',
@@ -371,15 +371,15 @@ class Product_Filters extends Widget_Base {
 					'3'       => esc_html__( 'Style 3', 'woodmart' ),
 					'4'       => esc_html__( 'Style 4', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'display',
-			[
+			array(
 				'label'     => esc_html__( 'Layout', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'options'   => array(
@@ -387,26 +387,26 @@ class Product_Filters extends Widget_Base {
 					'double' => esc_html__( '2 columns', 'woodmart' ),
 					'inline' => esc_html__( 'Inline', 'woodmart' ),
 				),
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'attributes',
-				],
+				),
 				'default'   => 'list',
-			]
+			)
 		);
 
 		$repeater->add_control(
 			'labels',
-			[
+			array(
 				'label'        => esc_html__( 'Show labels', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '1',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'attributes',
-				],
-			]
+				),
+			)
 		);
 
 		/**
@@ -414,59 +414,59 @@ class Product_Filters extends Widget_Base {
 		 */
 		$repeater->add_control(
 			'stock_title',
-			[
+			array(
 				'label'     => esc_html__( 'Title', 'woodmart' ),
 				'type'      => Controls_Manager::TEXT,
 				'default'   => 'Stock status',
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'stock',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'onsale',
-			[
+			array(
 				'label'        => esc_html__( 'On Sale filter', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '1',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'stock',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'instock',
-			[
+			array(
 				'label'        => esc_html__( 'In Stock filter', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '1',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'stock',
-				],
-			]
+				),
+			)
 		);
 
 		$repeater->add_control(
 			'onbackorder',
-			[
+			array(
 				'label'        => esc_html__( 'On Backorder filter', 'woodmart' ),
 				'type'         => Controls_Manager::SWITCHER,
 				'default'      => '1',
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-				'condition'    => [
+				'condition'    => array(
 					'filter_type' => 'stock',
-				],
-			]
+				),
+			)
 		);
 
 		/**
@@ -474,14 +474,14 @@ class Product_Filters extends Widget_Base {
 		 */
 		$repeater->add_control(
 			'price_title',
-			[
+			array(
 				'label'     => esc_html__( 'Title', 'woodmart' ),
 				'type'      => Controls_Manager::TEXT,
 				'default'   => 'Filter by price',
-				'condition' => [
+				'condition' => array(
 					'filter_type' => 'price',
-				],
-			]
+				),
+			)
 		);
 
 		/**
@@ -489,25 +489,25 @@ class Product_Filters extends Widget_Base {
 		 */
 		$this->add_control(
 			'items',
-			[
+			array(
 				'type'        => Controls_Manager::REPEATER,
 				'title_field' => '{{{ filter_type }}}',
 				'fields'      => $repeater->get_controls(),
-				'default'     => [
-					[
+				'default'     => array(
+					array(
 						'filter_type' => 'categories',
-					],
-					[
+					),
+					array(
 						'filter_type' => 'attributes',
-					],
-					[
+					),
+					array(
 						'filter_type' => 'stock',
-					],
-					[
+					),
+					array(
 						'filter_type' => 'price',
-					],
-				],
-			]
+					),
+				),
+			)
 		);
 
 		$this->end_controls_section();
@@ -521,10 +521,10 @@ class Product_Filters extends Widget_Base {
 		 */
 		$this->start_controls_section(
 			'general_style_section',
-			[
+			array(
 				'label' => esc_html__( 'General', 'woodmart' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
-			]
+			)
 		);
 
 		$this->add_control(
@@ -570,9 +570,6 @@ class Product_Filters extends Widget_Base {
 						'step' => 1,
 					),
 				),
-				'selectors'   => array(
-					'{{WRAPPER}} [class*="wd-grid-col"]' => '--wd-col: {{SIZE}}',
-				),
 				'condition'   => array(
 					'display_grid' => 'number',
 				),
@@ -580,7 +577,7 @@ class Product_Filters extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'space_between',
 			array(
 				'label'       => esc_html__( 'Space between', 'woodmart' ),
@@ -595,21 +592,23 @@ class Product_Filters extends Widget_Base {
 				),
 				'default'     => 10,
 				'render_type' => 'template',
+				'devices'     => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'     => 'wd-hide-custom-breakpoints',
 			)
 		);
 
 		$this->add_control(
 			'woodmart_color_scheme',
-			[
+			array(
 				'label'   => esc_html__( 'Color Scheme', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => [
+				'options' => array(
 					''      => esc_html__( 'Inherit', 'woodmart' ),
 					'light' => esc_html__( 'Light', 'woodmart' ),
 					'dark'  => esc_html__( 'Dark', 'woodmart' ),
-				],
+				),
 				'default' => '',
-			]
+			)
 		);
 
 		$this->end_controls_section();
@@ -748,17 +747,21 @@ class Product_Filters extends Widget_Base {
 	protected function render() {
 		global $wp;
 
-		$default_settings = [
-			'woodmart_color_scheme' => 'dark',
-			'items'                 => array(),
-			'submit_form_on'        => 'click',
-			'show_selected_values'  => 'yes',
-			'show_dropdown_on'      => 'click',
-			'style'                 => 'form',
-			'display_grid'          => 'stretch',
-			'display_grid_col'      => '',
-			'space_between'         => '10',
-		];
+		$default_settings = array(
+			'woodmart_color_scheme'   => 'dark',
+			'items'                   => array(),
+			'submit_form_on'          => 'click',
+			'show_selected_values'    => 'yes',
+			'show_dropdown_on'        => 'click',
+			'style'                   => 'form',
+			'display_grid'            => 'stretch',
+			'display_grid_col'        => array( 'size' => 4 ),
+			'display_grid_col_tablet' => array( 'size' => '' ),
+			'display_grid_col_mobile' => array( 'size' => '' ),
+			'space_between'           => '10',
+			'space_between_tablet'    => '',
+			'space_between_mobile'    => '',
+		);
 
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 
@@ -768,45 +771,63 @@ class Product_Filters extends Widget_Base {
 			if ( '' === get_option( 'permalink_structure' ) ) {
 				$form_action = remove_query_arg( array( 'page', 'paged', 'product-page' ), add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
 			} else {
-				$form_action = preg_replace( '%\/page/[0-9]+%', '', home_url( trailingslashit( $wp->request ) ) );
-			}
-		}
+				if ( is_search() ) {
+					$home_url = add_query_arg( $wp->query_vars, home_url() );
+				} else {
+					$home_url = home_url( trailingslashit( $wp->request ) );
+				}
 
-		$display_grid = '';
-		if ( 'number' !== $settings['display_grid'] && ! empty( $settings['display_grid'] ) ) {
-			$display_grid = 'wd-grid-' . $settings['display_grid'];
-		} elseif ( 'number' === $settings['display_grid'] ) {
-			if ( ! empty( $settings['display_grid_col']['size'] ) ) {
-				$display_grid .= ' wd-grid-col-' . $settings['display_grid_col']['size'];
-			}
-			if ( ! empty( $settings['display_grid_col_tablet']['size'] ) ) {
-				$display_grid .= ' wd-grid-col-md-' . $settings['display_grid_col_tablet']['size'];
-			}
-			if ( ! empty( $settings['display_grid_col_mobile']['size'] ) ) {
-				$display_grid .= ' wd-grid-col-sm-' . $settings['display_grid_col_mobile']['size'];
+				$form_action = preg_replace( '%\/page/[0-9]+%', '', $home_url );
 			}
 		}
 
 		$this->add_render_attribute(
-			[
-				'wrapper' => [
-					'class'  => [
-						'wd-product-filters wd-items-middle',
+			array(
+				'wrapper' => array(
+					'class'  => array(
+						'wd-product-filters',
 						woodmart_get_old_classes( 'woodmart-product-filters' ),
 						'wd-style-' . $settings['style'],
-						'wd-spacing-' . $settings['space_between'],
-						$display_grid,
 						$settings['woodmart_color_scheme'] ? 'color-scheme-' . $settings['woodmart_color_scheme'] : '',
-					],
-					'action' => [
+					),
+					'action' => array(
 						$form_action,
-					],
-					'method' => [
+					),
+					'method' => array(
 						'GET',
-					],
-				],
-			]
+					),
+				),
+			)
 		);
+
+		if ( 'number' === $settings['display_grid'] ) {
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-grid-g' );
+
+			$this->add_render_attribute(
+				'wrapper',
+				'style',
+				woodmart_get_grid_attrs(
+					array(
+						'columns'        => $settings['display_grid_col']['size'],
+						'columns_tablet' => $settings['display_grid_col_tablet']['size'],
+						'columns_mobile' => $settings['display_grid_col_mobile']['size'],
+					)
+				)
+			);
+		} elseif ( 'inline' === $settings['display_grid'] ) {
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-grid-f-inline' );
+		} else {
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-grid-f-stretch' );
+		}
+
+		$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-lg:' . $settings['space_between'] . 'px;' );
+
+		if ( '' !== $settings['space_between_tablet'] ) {
+			$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-md:' . $settings['space_between_tablet'] . 'px;' );
+		}
+		if ( '' !== $settings['space_between_mobile'] ) {
+			$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-sm:' . $settings['space_between_mobile'] . 'px;' );
+		}
 
 		if ( woodmart_is_shop_archive() ) {
 			$this->add_render_attribute( 'wrapper', 'class', 'with-ajax' );
@@ -851,10 +872,10 @@ class Product_Filters extends Widget_Base {
 	}
 
 	public function price_filter_template( $settings ) {
-		$default_settings = [
+		$default_settings = array(
 			'price_title'      => esc_html__( 'Filter by price', 'woodmart' ),
 			'show_dropdown_on' => 'click',
-		];
+		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
 
@@ -863,23 +884,25 @@ class Product_Filters extends Widget_Base {
 		wp_localize_script(
 			'woodmart-theme',
 			'woocommerce_price_slider_params',
-			[
+			array(
 				'currency_format_num_decimals' => 0,
 				'currency_format_symbol'       => get_woocommerce_currency_symbol(),
 				'currency_format_decimal_sep'  => esc_attr( wc_get_price_decimal_separator() ),
 				'currency_format_thousand_sep' => esc_attr( wc_get_price_thousand_separator() ),
-				'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ),
-			]
+				'currency_format'              => esc_attr( str_replace( array( '%1$s', '%2$s' ), array( '%s', '%v' ), get_woocommerce_price_format() ) ),
+			)
 		);
 		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'wc-jquery-ui-touchpunch' );
 		wp_enqueue_script( 'accounting' );
 		wp_enqueue_script( 'wc-price-slider' );
 
+		$link = woodmart_filters_get_page_base_url();
+
 		$prices = woodmart_get_filtered_price_new();
 
-		$min = apply_filters( 'woocommerce_price_filter_widget_min_amount', floor( $prices->min_price ) );
-		$max = apply_filters( 'woocommerce_price_filter_widget_max_amount', ceil( $prices->max_price ) );
+		$min = apply_filters( 'woocommerce_price_filter_widget_min_amount', floor( ( $prices->min_price ? $prices->min_price : 0 ) ) );
+		$max = apply_filters( 'woocommerce_price_filter_widget_max_amount', ceil( ( $prices->max_price ? $prices->max_price : 0 ) ) );
 
 		if ( $min === $max ) {
 			return;
@@ -913,7 +936,7 @@ class Product_Filters extends Widget_Base {
 						<input type="hidden" class="max_price" name="max_price" value="<?php echo esc_attr( $max_price ); ?>" data-max="<?php echo esc_attr( $max ); ?>">
 
 						<?php if ( 'select' === $settings['submit_form_on'] ) : ?>
-							<button type="submit" class="button"><?php echo esc_html__( 'Filter', 'woodmart' ); ?></button>
+							<a href="<?php echo esc_url( $link ); ?>" class="button pf-value"><?php echo esc_html__( 'Filter', 'woodmart' ); ?></a>
 						<?php endif; ?>
 
 						<div class="price_label" style="display:none;">
@@ -928,16 +951,29 @@ class Product_Filters extends Widget_Base {
 	}
 
 	public function stock_filter_template( $settings ) {
-		$default_settings     = array(
+		$default_settings = array(
 			'stock_title'      => esc_html__( 'Stock status', 'woodmart' ),
 			'instock'          => 1,
 			'onsale'           => 1,
 			'onbackorder'      => 1,
 			'show_dropdown_on' => 'click',
 		);
-		$settings             = wp_parse_args( $settings, $default_settings );
-		$current_stock_status = isset( $_GET['stock_status'] ) ? explode( ',', $_GET['stock_status'] ) : array();
-		$result_value         = isset( $_GET['stock_status'] ) ? $_GET['stock_status'] : '';
+		$settings         = wp_parse_args( $settings, $default_settings );
+		$filter_name      = 'stock_status';
+		$current_filter   = isset( $_GET[ $filter_name ] ) ? explode( ',', $_GET[ $filter_name ] ) : array();
+		$result_value     = isset( $_GET[ $filter_name ] ) ? $_GET[ $filter_name ] : '';
+		$link             = woodmart_filters_get_page_base_url();
+		$options          = array(
+			'onsale'      => esc_html__( 'On sale', 'woodmart' ),
+			'instock'     => esc_html__( 'In stock', 'woodmart' ),
+			'onbackorder' => esc_html__( 'On backorder', 'woodmart' ),
+		);
+
+		foreach ( $options as $key => $value ) {
+			if ( ! $settings[ $key ] ) {
+				unset( $options[ $key ] );
+			}
+		}
 		?>
 		<div class="wd-pf-checkboxes wd-pf-stock multi_select wd-col wd-event-<?php echo esc_attr( $settings['show_dropdown_on'] ); ?>">
 			<input type="hidden" class="result-input" name="stock_status" value="<?php echo esc_attr( $result_value ); ?>">
@@ -948,36 +984,54 @@ class Product_Filters extends Widget_Base {
 				</span>
 
 				<?php if ( $settings['show_selected_values'] ) : ?>
-					<ul class="wd-pf-results"></ul>
+					<ul class="wd-pf-results">
+						<?php if ( isset( $current_filter ) && ! empty( $current_filter ) ) : ?>
+							<?php foreach ( $current_filter as $filter ) : ?>
+								<?php if ( isset( $options[ $filter ] ) ) : ?>
+									<li class="selected-value" data-title="<?php echo esc_attr( $filter ); ?>">
+										<?php echo esc_attr( $options[ $filter ] ); ?>
+									</li>
+								<?php endif; ?>
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</ul>
 				<?php endif; ?>
 			</div>
 
 			<div class="wd-pf-dropdown wd-dropdown">
 				<div class="wd-scroll">
 					<ul class="wd-scroll-content">
-						<?php if ( $settings['onsale'] ) : ?>
-							<li class="<?php echo in_array( 'onsale', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-								<a href="#" rel="nofollow noopener" class="pf-value" data-val="onsale" data-title="<?php esc_html_e( 'On sale', 'woodmart' ); ?>">
-									<?php esc_html_e( 'On sale', 'woodmart' ); ?>
-								</a>
-							</li>
-						<?php endif; ?>
+						<?php foreach ( $options as $slug => $name ) : ?>
+							<?php
+							$current_filter   = ! empty( $_GET[ $filter_name ] ) ? explode( ',', $_GET[ $filter_name ] ) : array();
+							$is_active_filter = in_array( $slug, $current_filter, true );
+							$link             = remove_query_arg( $filter_name, $link );
 
-						<?php if ( $settings['instock'] ) : ?>
-							<li class="<?php echo in_array( 'instock', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-								<a href="#" rel="nofollow noopener" class="pf-value" data-val="instock" data-title="<?php esc_html_e( 'In stock', 'woodmart' ); ?>">
-									<?php esc_html_e( 'In stock', 'woodmart' ); ?>
-								</a>
-							</li>
-						<?php endif; ?>
+							if ( $is_active_filter ) {
+								$remove_key = array_search( $slug, $current_filter, true );
+								unset( $current_filter[ $remove_key ] );
+							} else {
+								$current_filter[] = $slug;
+							}
 
-						<?php if ( $settings['onbackorder'] ) : ?>
-							<li class="<?php echo in_array( 'onbackorder', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-								<a href="#" rel="nofollow noopener" class="pf-value" data-val="onbackorder" data-title="<?php esc_html_e( 'On backorder', 'woodmart' ); ?>">
-									<?php esc_html_e( 'On backorder', 'woodmart' ); ?>
+							if ( ! empty( $current_filter ) ) {
+								$link = add_query_arg(
+									array(
+										$filter_name => implode( ',', $current_filter ),
+									),
+									$link
+								);
+							}
+
+							$link = str_replace( '%2C', ',', $link );
+							?>
+
+							<li class="<?php echo $is_active_filter ? esc_attr( 'wd-active' ) : ''; ?>">
+								<a href="<?php echo esc_url( $link ); ?>" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $slug ); ?>" data-title="<?php echo esc_attr( $name ); ?>">
+									<?php echo esc_html( $name ); ?>
 								</a>
 							</li>
-						<?php endif; ?>
+						<?php endforeach; ?>
 					</ul>
 				</div>
 			</div>
@@ -998,14 +1052,15 @@ class Product_Filters extends Widget_Base {
 			)
 		);
 
-		$default_settings     = array(
+		$default_settings = array(
 			'show_dropdown_on' => 'click',
 		);
-		$settings             = wp_parse_args( $settings, $default_settings );
-		$current_stock_status = isset( $_GET['orderby'] ) ? $_GET['orderby'] : '';
+		$settings         = wp_parse_args( $settings, $default_settings );
+		$current_filter   = isset( $_GET['orderby'] ) ? wc_clean( wp_unslash( $_GET['orderby'] ) ) : '';
+		$link             = woodmart_filters_get_page_base_url();
 		?>
 		<div class="wd-pf-checkboxes wd-pf-sortby wd-col wd-event-<?php echo esc_attr( $settings['show_dropdown_on'] ); ?>">
-			<input type="hidden" class="result-input" name="orderby">
+			<input type="hidden" class="result-input" name="orderby" value="<?php echo ! empty( $current_filter ) ? esc_attr( $current_filter ) : ''; ?>">
 
 			<div class="wd-pf-title">
 				<span class="title-text">
@@ -1013,7 +1068,13 @@ class Product_Filters extends Widget_Base {
 				</span>
 
 				<?php if ( $settings['show_selected_values'] ) : ?>
-					<ul class="wd-pf-results"></ul>
+					<ul class="wd-pf-results">
+						<?php if ( ! empty( $current_filter ) && array_key_exists( $current_filter, $options ) ) : ?>
+							<li class="selected-value" data-title="<?php echo esc_attr( $current_filter ); ?>">
+								<?php echo esc_attr( $options[ $current_filter ] ); ?>
+							</li>
+						<?php endif; ?>
+					</ul>
 				<?php endif; ?>
 			</div>
 
@@ -1021,8 +1082,25 @@ class Product_Filters extends Widget_Base {
 				<div class="wd-scroll">
 					<ul class="wd-scroll-content">
 						<?php foreach ( $options as $key => $value ) : ?>
-							<li class="<?php echo $key === $current_stock_status ? esc_attr( 'wd-active' ) : ''; ?>">
-								<a href="#" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $value ); ?>">
+							<?php
+							$is_active_filter = $key === $current_filter;
+							$link             = add_query_arg(
+								array(
+									'orderby' => $key,
+								),
+								$link
+							);
+
+							if ( $is_active_filter ) {
+								$link = remove_query_arg(
+									'orderby',
+									$link
+								);
+							}
+							?>
+
+							<li class="<?php echo $is_active_filter ? esc_attr( 'wd-active' ) : ''; ?>">
+								<a href="<?php echo esc_url( $link ); ?>" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $value ); ?>">
 									<?php echo esc_html( $value ); ?>
 								</a>
 							</li>
@@ -1035,7 +1113,7 @@ class Product_Filters extends Widget_Base {
 	}
 
 	public function attributes_filter_template( $settings ) {
-		$default_settings = [
+		$default_settings = array(
 			'attributes_title'     => esc_html__( 'Filter by', 'woodmart' ),
 			'attribute'            => '',
 			'categories'           => '',
@@ -1047,7 +1125,7 @@ class Product_Filters extends Widget_Base {
 			'labels'               => 1,
 			'show_selected_values' => 'yes',
 			'show_dropdown_on'     => 'yes',
-		];
+		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
 
@@ -1063,7 +1141,7 @@ class Product_Filters extends Widget_Base {
 				'labels'               => $settings['labels'],
 				'display'              => $settings['display'],
 				'filter-title'         => $settings['attributes_title'],
-				'categories'           => $settings['categories'] ? $settings['categories'] : [],
+				'categories'           => $settings['categories'] ? $settings['categories'] : array(),
 				'show_selected_values' => isset( $settings['show_selected_values'] ) ? $settings['show_selected_values'] : 'yes',
 				'show_dropdown_on'     => isset( $settings['show_dropdown_on'] ) ? $settings['show_dropdown_on'] : 'click',
 			),
@@ -1077,17 +1155,17 @@ class Product_Filters extends Widget_Base {
 	public function categories_filter_template( $settings ) {
 		global $wp_query;
 
-		$default_settings = [
+		$default_settings = array(
 			'categories_title'          => esc_html__( 'Categories', 'woodmart' ),
 			'hierarchical'              => 1,
 			'order_by'                  => 'name',
 			'hide_empty'                => '',
 			'show_categories_ancestors' => '',
-		];
+		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
 
-		$list_args = [
+		$list_args = array(
 			'hierarchical'       => $settings['hierarchical'],
 			'taxonomy'           => 'product_cat',
 			'hide_empty'         => $settings['hide_empty'],
@@ -1096,14 +1174,14 @@ class Product_Filters extends Widget_Base {
 			'use_desc_for_title' => false,
 			'orderby'            => $settings['order_by'],
 			'echo'               => false,
-		];
+		);
 
 		if ( 'order' === $settings['order_by'] ) {
 			$list_args['orderby']  = 'meta_value_num';
 			$list_args['meta_key'] = 'order';
 		}
 
-		$cat_ancestors = [];
+		$cat_ancestors = array();
 
 		if ( is_tax( 'product_cat' ) ) {
 			$current_cat   = $wp_query->queried_object;
@@ -1115,7 +1193,9 @@ class Product_Filters extends Widget_Base {
 		} else {
 			$list_args['current_category'] = '';
 		}
+
 		$list_args['current_category_ancestors'] = $cat_ancestors;
+		$list_args['active_filter_url']          = woodmart_filters_get_page_base_url();
 
 		if ( $settings['show_categories_ancestors'] && isset( $current_cat ) ) {
 			$is_cat_has_children = get_term_children( $current_cat->term_id, 'product_cat' );
@@ -1135,7 +1215,13 @@ class Product_Filters extends Widget_Base {
 				</span>
 
 				<?php if ( $settings['show_selected_values'] ) : ?>
-					<ul class="wd-pf-results"></ul>
+					<ul class="wd-pf-results">
+						<?php if ( isset( $current_cat ) && ! is_null( $current_cat ) ) : ?>
+							<li class="selected-value" data-title="<?php echo esc_attr( $current_cat->slug ); ?>">
+								<?php echo esc_attr( $current_cat->name ); ?>
+							</li>
+						<?php endif; ?>
+					</ul>
 				<?php endif; ?>
 			</div>
 

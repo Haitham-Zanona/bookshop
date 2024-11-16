@@ -5,22 +5,22 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_twitter' ) ) {
-	function woodmart_vc_map_twitter() {
-		if ( ! shortcode_exists( 'woodmart_twitter' ) ) {
-			return;
-		}
-
-		vc_map( array(
-			'name' => esc_html__( 'Twitter', 'woodmart' ),
+if ( ! function_exists( 'woodmart_get_vc_map_twitter' ) ) {
+	function woodmart_get_vc_map_twitter() {
+		return array(
+			'name' => esc_html__( 'X (Twitter)', 'woodmart' ),
 			'base' => 'woodmart_twitter',
 			'category' => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
-			'description' => esc_html__( 'Shows tweets from any twitter account', 'woodmart' ),
-        	'icon' => WOODMART_ASSETS . '/images/vc-icon/twitter.svg',
+			'description' => esc_html__( 'Shows posts from any X account', 'woodmart' ),
+			'icon' => WOODMART_ASSETS . '/images/vc-icon/twitter.svg',
 			'params' => array(
+				array(
+					'param_name' => 'woodmart_css_id',
+					'type'       => 'woodmart_css_id',
+				),
 				/**
-				* Widget settings
-				*/
+				 * Widget settings
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -29,14 +29,14 @@ if( ! function_exists( 'woodmart_vc_map_twitter' ) ) {
 				),
 				array(
 					'type' => 'textfield',
-					'heading' => esc_html__( 'Twitter Name (without @ symbol)', 'woodmart' ),
+					'heading' => esc_html__( 'X Name (without @ symbol)', 'woodmart' ),
 					'param_name' => 'name',
-					'value' => 'Twitter',
+					'value' => 'x',
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				array(
 					'type' => 'textfield',
-					'heading' => esc_html__( 'Number of Tweets', 'woodmart' ),
+					'heading' => esc_html__( 'Number of posts', 'woodmart' ),
 					'param_name' => 'num_tweets',
 					'value' => 5,
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
@@ -67,8 +67,8 @@ if( ! function_exists( 'woodmart_vc_map_twitter' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Access settings
-				*/
+				 * Access settings
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -100,8 +100,8 @@ if( ! function_exists( 'woodmart_vc_map_twitter' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Extra
-				*/
+				 * Extra
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -114,8 +114,14 @@ if( ! function_exists( 'woodmart_vc_map_twitter' ) ) {
 					'param_name' => 'el_class',
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				woodmart_get_vc_responsive_spacing_map(),
 			)
-		) );
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_twitter' );
 }

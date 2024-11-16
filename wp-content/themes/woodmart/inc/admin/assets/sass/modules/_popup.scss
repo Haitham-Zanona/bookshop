@@ -6,7 +6,7 @@
 
 	.xts-popup {
 		position: fixed;
-		top: 0;
+		top: 32px;
 		right: 0;
 		bottom: 0;
 		left: 0;
@@ -55,12 +55,13 @@
 		font-size: 18px;
 	}
 
-	.xts-popup-content {
+	:is(
+	.xts-popup-content,
+	.xts-popup-content-inn) {
 		overflow-x: hidden;
 		overflow-y: auto;
 		padding: 20px;
 		max-height: 60vh;
-		// transition: all .25s ease;
 
 		@include xts-bg-loader;
 
@@ -89,6 +90,18 @@
 		}
 	}
 
+	// @media not all and (min-resolution:.001dpcm) {
+
+		// .xts-popup-content {
+		// 	margin-right: calc(-50vw + 325px);
+		// 	// border-right: calc(50vw - 325px) solid transparent;
+
+		// 	// &::-webkit-scrollbar {
+		// 	// 	width: calc(50vw - 325px);
+		// 	// }
+		// }
+	// }
+
 	.xts-popup-actions {
 		margin: 0;
 		padding: 20px;
@@ -103,12 +116,15 @@
 		position: fixed;
 		top: 0;
 		left: 0;
-		z-index: 1400;
+		// z-index: 1400;
+		z-index: 9998;
 		visibility: hidden;
 		width: 100%;
 		height: 100%;
 		background-color: rgba(0, 0, 0, .54);
 		opacity: 0;
+		backdrop-filter: blur(1px);
+		-webkit-backdrop-filter: blur(1px);
 	}
 
 	.xts-popup-close {
@@ -173,6 +189,96 @@
 	}
 
 	// ------------------------------------------------------------------------------------
+	// XTS TOOLTIPS
+	// ------------------------------------------------------------------------------------
+
+	// .xts-popup {
+
+	// 	.xts-field { // NOTE TOOLTIP FIX
+
+	// 		.xts-hint {
+	// 			position: static;
+	// 		}
+	
+	// 		&:hover {
+	// 			z-index: 10;
+	// 		}
+	// 	}
+
+	// 	.xts-tooltip {
+
+	// 		:is(
+	// 		img,
+	// 		video) {
+	// 			max-height: calc(100vh - 60px);
+	// 			// min-height: 200px;
+	// 		}
+
+	// 		&.xts-right {
+	// 			display: flex;
+	// 			align-items: center;
+	// 			justify-content: center;
+	// 			position: fixed;
+	// 			top: calc(50% + 16px);
+	// 			inset-inline-start: calc(50% + 350px);
+	// 			bottom: auto;
+	// 			inset-inline-end: auto;
+	// 			transform: translate(0, -50%);
+	// 			// width: calc((100vw - 750px) / 2);
+	// 			width: #{"min(var(--xts-tooltip-width), calc((100vw - 750px) / 2))"};
+	// 			min-height: #{"min(308px, 17.5vw)"};
+
+	// 			&:after {
+	// 				top: calc(50% - 5px);
+	// 			}
+	// 		}
+	// 	}
+
+	// 	.rtl & {
+
+	// 		.xts-tooltip {
+	
+	// 			&.xts-right {
+
+	// 				&:after {
+	// 					left: auto;
+	// 					right: -6px;
+	// 					transform: rotate(135deg);
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+
+	// 	// .xts-tooltip.xts-top {
+	// 	// 	inset-inline-start: 0;
+	// 	// 	// max-width: 150%;
+	// 	// 	// width: min(150%, var(--xts-tooltip-width));
+	// 	// 	width: #{"min(121%, var(--xts-tooltip-width))"};
+	// 	// 	--xts-tooltip-sp: 10px !important; 
+	// 	// }
+	
+	// 	// .xts-gallery_video_size-field {
+	
+	// 	// 	.xts-tooltip.xts-top {
+	// 	// 		inset-inline-start: auto;
+	// 	// 		inset-inline-end: 0;
+	
+	// 	// 		&:after {
+	// 	// 			inset-inline-start: auto;
+	// 	// 			inset-inline-end: 10px;
+	// 	// 		}
+	// 	// 	}
+	// 	// }
+	// }
+
+	// .whb-popup {
+
+	// 	.xts-tooltip {
+	// 		animation: wd-fadeIn .4s ease both;
+	// 	}
+	// }
+
+	// ------------------------------------------------------------------------------------
 	// XTS POPUP
 	// ------------------------------------------------------------------------------------
 
@@ -206,6 +312,47 @@
 
 		[type="checkbox"] {
 			margin-inline-start: 4px !important;
+		}
+	}
+
+	// ------------------------------------------------------------------------------------
+	// XTS ABSOLUYE TOOLTIP
+	// ------------------------------------------------------------------------------------
+
+	.xts-hint-wrapper {
+		position: fixed;
+		pointer-events: none;
+		z-index: 99999;
+
+		.xts-tooltip {
+			visibility: visible;
+			opacity: 1;
+			pointer-events: none;
+			animation: wd-fadeIn .3s ease both;
+			min-height: 308px;
+
+			img {
+				width: 100%;
+				// min-height: 280px;
+			}
+
+			&.xts-bottom {
+				transform: translateY(15px);
+			}
+		}
+	}
+
+	.rtl {
+
+		> .xts-hint-wrapper {
+
+			.xts-tooltip {
+				transform: translateX(15px);
+
+				&.xts-bottom {
+					transform: translate(15px, 15px);
+				}
+			}
 		}
 	}
 

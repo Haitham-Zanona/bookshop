@@ -50,9 +50,7 @@ do_action( 'woocommerce_before_shop_loop_item' );
 		woodmart_product_brands_links();
 		?>
 		<?php if ( 0 < $product->get_average_rating() || woodmart_get_opt( 'show_empty_star_rating' ) ) : ?>
-			<div class="wd-star-rating">
-				<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
-			</div>
+			<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
 		<?php endif; ?>
 
 		<?php woodmart_stock_status_after_title(); ?>

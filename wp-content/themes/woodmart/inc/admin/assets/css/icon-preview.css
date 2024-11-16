@@ -47,7 +47,7 @@
 	content: "\f101";
 }
 .wd-icon-pause-button:before {
-	content: "\e908";
+	content: "\f101a";
 }
 .wd-icon-360-deg:before {
 	content: "\f102";
@@ -94,6 +94,9 @@
 .wd-icon-heart:before {
 	content: "\f106";
 }
+.wd-icon-waitlist:before {
+	content: "\f186";
+}
 .wd-icon-user:before {
 	content: "\f124";
 }
@@ -133,6 +136,9 @@
 .wd-icon-blog:before {
 	content: "\f145";
 }
+.wd-icon-external-link:before {
+	content: "\f11c";
+}
 .wd-icon-shop:before {
 	content: "\f146";
 }
@@ -140,7 +146,7 @@
 	content: "\f147";
 }
 .wd-icon-cart-verified:before {
-	content: "\e911";
+	content: "\f147a";
 }
 .wd-icon-star:before {
 	content: "\f148";
@@ -166,6 +172,9 @@
 .wd-icon-bundle:before {
 	content: "\f182";
 }
+.wd-icon-gift:before {
+	content: "\f11e";
+}
 .wd-icon-vertical-menu:before {
 	content: "\f161";
 }
@@ -173,16 +182,13 @@
 	content: "\f183";
 }
 .wd-icon-like:before {
-	content: "\e906";
+	content: "\f183a";
 }
 .wd-icon-dislike:before {
-	content: "\e907";
+	content: "\f183b";
 }
-.wd-icon-speaker:before {
-	content: "\e909";
-}
-.wd-icon-speaker-mute:before {
-	content: "\e910";
+.wd-icon-fire:before {
+	content: "\f11d";
 }
 .wd-icon-eye:before {
 	content: "\f11a";
@@ -191,25 +197,31 @@
 	content: "\f11b";
 }
 .wd-icon-list-view:before {
-	content: "\e900";
+	content: "\f12a";
+}
+.wd-icon-grid-view-1:before {
+	content: "\f13";
 }
 .wd-icon-grid-view-2:before {
-	content: "\e901";
+	content: "\f12b";
 }
 .wd-icon-grid-view-3:before {
-	content: "\e902";
+	content: "\f12c";
 }
 .wd-icon-grid-view-4:before {
-	content: "\e903";
+	content: "\f12d";
 }
 .wd-icon-grid-view-5:before {
-	content: "\e904";
+	content: "\f12e";
 }
 .wd-icon-grid-view-6:before {
-	content: "\e905";
+	content: "\f12f";
 }
 .wd-icon-account-wishlist:before {
 	content: "\f134";
+}
+.wd-icon-account-waitlist:before {
+	content: "\f185";
 }
 .wd-icon-account-details:before {
 	content: "\f135";
@@ -315,4 +327,10 @@
 }
 .wd-icon-caret-right:before {
 	content: "\f153";
+}
+.wd-icon-discord-brands:before {
+	content: "\f184";
+}
+.wd-icon-yelp-brands:before {
+	content: "\f187";
 }

@@ -57,6 +57,15 @@ class Breadcrumb extends Widget_Base {
 	}
 
 	/**
+	 * Show in panel.
+	 *
+	 * @return bool Whether to show the widget in the panel or not.
+	 */
+	public function show_in_panel() {
+		return woodmart_woocommerce_installed();
+	}
+
+	/**
 	 * Register the widget controls.
 	 */
 	protected function register_controls() {
@@ -146,7 +155,7 @@ class Breadcrumb extends Widget_Base {
 		Main::setup_preview();
 
 		if ( ! empty( $settings['nowrap_md'] ) ) {
-			woodmart_enqueue_inline_style( 'woo-el-breadcrumbs' );
+			woodmart_enqueue_inline_style( 'woo-el-breadcrumbs-builder' );
 		}
 
 		woodmart_current_breadcrumbs( 'shop' );

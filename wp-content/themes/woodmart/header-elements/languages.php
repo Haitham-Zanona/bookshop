@@ -17,6 +17,8 @@ if ( $languages ) {
 	}
 }
 
+woodmart_enqueue_js_script( 'menu-setup' );
+
 $extra_class = ' wd-event-' . $params['mouse_event'];
 ?>
 

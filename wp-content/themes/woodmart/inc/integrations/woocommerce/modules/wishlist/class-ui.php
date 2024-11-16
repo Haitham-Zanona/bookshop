@@ -35,7 +35,7 @@ class Ui extends Singleton {
 	/**
 	 * Wishlist group object.
 	 *
-	 * @var boolean
+	 * @var Wishlists_Group
 	 */
 	private $wishlist_group = null;
 
@@ -57,9 +57,11 @@ class Ui extends Singleton {
 	 * @since 1.0.0
 	 */
 	public function init() {
+		// @codeCoverageIgnoreStart
 		if ( ! woodmart_woocommerce_installed() ) {
 			return false;
 		}
+		// @codeCoverageIgnoreEnd
 
 		add_action( 'init', array( $this, 'hooks' ), 100 );
 		add_action( 'init', array( $this, 'button_hooks' ), 200 );
@@ -71,7 +73,7 @@ class Ui extends Singleton {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @return boolean
+	 * @return false|void
 	 */
 	public function hooks() {
 		if ( ! woodmart_get_opt( 'wishlist', 1 ) ) {
@@ -88,7 +90,7 @@ class Ui extends Singleton {
 			$this->wishlist = new Wishlist();
 		}
 
-		if ( woodmart_get_opt( 'wishlist_expanded' ) && is_user_logged_in() && $this->is_editable() && empty( $_GET['opauth'] ) ) { //phpcs:ignore
+		if ( woodmart_get_opt( 'wishlist_expanded' ) && class_exists( 'XTS\WC_Wishlist\Wishlists_Group' ) && is_user_logged_in() && $this->is_editable() && empty( $_GET['opauth'] ) ) { //phpcs:ignore
 			$this->wishlist_group = Wishlists_Group::get_instance();
 		}
 	}
@@ -133,6 +135,7 @@ class Ui extends Singleton {
 	/**
 	 * Wishlist page shortcode output.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 */
 	public function wishlist_page() {
@@ -154,7 +157,7 @@ class Ui extends Singleton {
 			<?php return; ?>
 		<?php endif; ?>
 
-		<?php if ( is_user_logged_in() && $this->is_editable() && apply_filters( 'woodmart_my_account_wishlist', true ) ) : ?>
+		<?php if ( woodmart_woocommerce_installed() && is_user_logged_in() && $this->is_editable() && apply_filters( 'woodmart_my_account_wishlist', true ) ) : ?>
 			<?php do_action( 'woocommerce_account_navigation' ); ?>
 		<?php endif; ?>
 
@@ -173,6 +176,7 @@ class Ui extends Singleton {
 	/**
 	 * Content of the wishlist page with products.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 *
 	 * @param object $wishlist Wishlist object.
@@ -231,6 +235,10 @@ class Ui extends Singleton {
 			$wrapper_classes .= ' wd-group-enable';
 		}
 
+		woodmart_set_loop_prop( 'is_wishlist', true );
+
+		add_action( 'woocommerce_product_query_tax_query', array( $this, 'out_out_stock_products_fix' ) );
+
 		ob_start();
 
 		?>
@@ -255,12 +263,17 @@ class Ui extends Singleton {
 			</div>
 		<?php
 
+		remove_action( 'woocommerce_product_query_tax_query', array( $this, 'out_out_stock_products_fix' ) );
+
+		woodmart_set_loop_prop( 'is_wishlist', false );
+
 		return ob_get_clean();
 	}
 
 	/**
 	 * Wishlist content title.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $args Arguments.
 	 *
 	 * @return void
@@ -363,6 +376,7 @@ class Ui extends Singleton {
 	/**
 	 * Wishlist empty content.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $show_wishlist_empty_text Show text is wishlist empty.
 	 * @return void
 	 */
@@ -402,6 +416,7 @@ class Ui extends Singleton {
 	/**
 	 * Remove button HTML.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 */
 	public function output_settings_btn() {
@@ -455,6 +470,7 @@ class Ui extends Singleton {
 	/**
 	 * Add to wishlist button.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 *
 	 * @param string $classes Extra classes.
@@ -469,6 +485,7 @@ class Ui extends Singleton {
 		$added        = false;
 		$link_classes = '';
 		$text         = esc_html__( 'Add to wishlist', 'woodmart' );
+		$product_id   = apply_filters( 'wpml_object_id', get_the_ID(), 'product', true, apply_filters( 'wpml_default_language', null ) );
 
 		if ( $this->wishlist && $this->wishlist->get_all() && woodmart_get_opt( 'wishlist_save_button_state', '0' ) ) {
 			$products = $this->wishlist->get_all();
@@ -488,7 +505,7 @@ class Ui extends Singleton {
 
 		?>
 			<div class="wd-wishlist-btn <?php echo esc_attr( $classes ); ?>">
-				<a class="<?php echo esc_attr( $link_classes ); ?>" href="<?php echo esc_url( woodmart_get_wishlist_page_url() ); ?>" data-key="<?php echo esc_attr( wp_create_nonce( 'woodmart-wishlist-add' ) ); ?>" data-product-id="<?php echo esc_attr( get_the_ID() ); ?>" rel="nofollow" data-added-text="<?php esc_html_e( 'Browse Wishlist', 'woodmart' ); ?>">
+				<a class="<?php echo esc_attr( $link_classes ); ?>" href="<?php echo esc_url( woodmart_get_wishlist_page_url() ); ?>" data-key="<?php echo esc_attr( wp_create_nonce( 'woodmart-wishlist-add' ) ); ?>" data-product-id="<?php echo esc_attr( $product_id ); ?>" rel="nofollow" data-added-text="<?php esc_attr_e( 'Browse Wishlist', 'woodmart' ); ?>">
 					<span><?php echo esc_html( $text ); ?></span>
 				</a>
 			</div>
@@ -572,5 +589,19 @@ class Ui extends Singleton {
 	 */
 	public function is_editable() {
 		return $this->editable;
+	}
+
+	/**
+	 * Output out of stock product with enabled woocommerce_hide_out_of_stock_items options.
+	 *
+	 * @param array $query Request query.
+	 * @return array
+	 */
+	public function out_out_stock_products_fix( $query ) {
+		if ( apply_filters( 'woodmart_output_out_of_stock_product_in_wishlist', true ) && 'yes' === get_option( 'woocommerce_hide_out_of_stock_items' ) ) {
+			return array();
+		}
+
+		return $query;
 	}
 }

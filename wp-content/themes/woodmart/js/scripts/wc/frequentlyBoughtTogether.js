@@ -21,15 +21,17 @@
 					btn.removeClass('wd-disabled');
 				}
 
-				var $carousel = $form.parents('.wd-fbt').find('.owl-carousel')
+				var $carousel = $form.parents('.wd-fbt').find('.wd-carousel');
 				var index = $this.parents('.wd-fbt-product').index();
 
-				if ( !$($carousel.find('.owl-item')[index]).hasClass('active') ) {
-					if ( 1 === index && 'undefined' !== typeof $carousel.data('owl.carousel') && 1 < $carousel.data('owl.carousel').settings.items ) {
+				if ( 'undefined' !== typeof $carousel[0].swiper && ! $($carousel.find('.wd-carousel-item')[index]).hasClass('wd-active') ) {
+					if ( 1 === index && 1 < $carousel[0].swiper.slides.length ) {
 						index = 0;
 					}
 
-					$carousel.trigger('to.owl.carousel', [index, 500, true]);
+					if ( 'undefined' !== typeof $carousel[0].swiper.slideTo ) {
+						$carousel[0].swiper.slideTo(index, 500);
+					}
 				}
 
 				clearTimeout(timeout);
@@ -37,6 +39,25 @@
 				timeout = setTimeout(function () {
 					updatePrice($form, productsID);
 				}, 1000);
+			});
+
+			$form.on('change', '.wd-fbt-product select', function () {
+				var $this = $(this);
+				var productID = $this.parents('.wd-fbt-product').data('id');
+				var productWrapper = $this.parents('.wd-fbt').find('.wd-product[data-id=' + productID + ']');
+				var $img = productWrapper.find('.product-image-link > img, .product-image-link > picture > img');
+				var imageSrc = $this.find('option:selected').data('image-src');
+				var imageSrcset = $this.find('option:selected').data('image-srcset');
+
+				if ( $img.attr('srcset') ) {
+					if ( ! imageSrcset ) {
+						imageSrcset = imageSrc;
+					}
+
+					$img.attr('srcset', imageSrcset);
+				}
+
+				$img.attr('src', imageSrc);
 			});
 
 			$form.on('click', '.wd-fbt-purchase-btn', function (e) {
@@ -67,7 +88,6 @@
 						products_id   : productsID,
 						main_product  : mainProduct,
 						bundle_id     : bundlesId,
-						key           : woodmart_settings.frequently_bought,
 					},
 					method  : 'POST',
 					success : function(response) {
@@ -128,7 +148,7 @@
 						}
 
 						productWrapper.find('.product.post-' + productId ).removeClass('wd-disabled-fbt');
-					} else {
+					} else if ( ! $input.parents('.wd-fbt-form').hasClass('wd-checkbox-uncheck') ) {
 						productWrapper.find('.product.post-' + productId).addClass('wd-disabled-fbt');
 					}
 				} else {
@@ -156,7 +176,6 @@
 					products_id : productsID,
 					main_product: mainProduct,
 					bundle_id   : bundleId,
-					key         : woodmart_settings.frequently_bought,
 				},
 				method  : 'POST',
 				success : function(response) {

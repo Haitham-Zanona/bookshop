@@ -23,9 +23,11 @@ class Wishlists_Group extends Singleton {
 	 * Init.
 	 */
 	public function init() {
+		// @codeCoverageIgnoreStart
 		if ( ! woodmart_woocommerce_installed() ) {
 			return;
 		}
+		// @codeCoverageIgnoreEnd
 
 		add_action( 'admin_init', array( $this, 'upgrade_database_wishlist' ), 110 );
 
@@ -90,9 +92,7 @@ class Wishlists_Group extends Singleton {
 
 		$response['wishlist_content'] = Ui::get_instance()->wishlist_page_content( $wishlist );
 
-		echo wp_json_encode( $response );
-
-		exit;
+		wp_send_json( $response );
 	}
 
 	/**
@@ -110,15 +110,13 @@ class Wishlists_Group extends Singleton {
 		$group_id = woodmart_clean( $_GET['group_id'] ); //phpcs:ignore
 		$title    = woodmart_clean( $_GET['title'] ); //phpcs:ignore
 
-		echo wp_json_encode(
+		wp_send_json(
 			array(
 				'status'    => $this->get_wishlist( $group_id )->rename_group( $group_id, $title ) ? 'success' : 'error',
 				'fragments' => apply_filters( 'woodmart_get_update_wishlist_fragments', array() ),
 				'hash'      => apply_filters( 'woodmart_get_wishlist_hash', '' ),
 			)
 		);
-
-		exit;
 	}
 
 	/**
@@ -147,9 +145,7 @@ class Wishlists_Group extends Singleton {
 
 		$response['wishlist_content'] = Ui::get_instance()->wishlist_page_content( $wishlist );
 
-		echo wp_json_encode( $response );
-
-		exit;
+		wp_send_json( $response );
 	}
 
 	/**
@@ -194,9 +190,7 @@ class Wishlists_Group extends Singleton {
 
 		$response['wishlist_content'] = Ui::get_instance()->wishlist_page_content( $wishlist );
 
-		echo wp_json_encode( $response );
-
-		exit;
+		wp_send_json( $response );
 	}
 
 	/**
@@ -271,6 +265,7 @@ class Wishlists_Group extends Singleton {
 	/**
 	 * Set wishlist cookies
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function set_cookies() {
@@ -323,6 +318,7 @@ class Wishlists_Group extends Singleton {
 	/**
 	 * Create group popup.
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function wishlist_create_group_popup() {
@@ -343,7 +339,7 @@ class Wishlists_Group extends Singleton {
 		$wishlist_groups = woodmart_get_wishlist_groups();
 
 		?>
-		<div class="mfp-with-anim wd-popup wd-close-btn-inset wd-popup-wishlist">
+		<div class="wd-popup wd-popup-wishlist">
 			<div class="wd-wishlist-back-btn wd-action-btn wd-style-text">
 				<a href="#">
 					<?php esc_html_e( 'Back to list', 'woodmart' ); ?>
@@ -385,7 +381,7 @@ class Wishlists_Group extends Singleton {
 					<?php esc_html_e( 'Back to shop', 'woodmart' ); ?>
 				</a>
 			</div>
-			<a href="#" data-group-id="save" class="btn btn-color-primary btn-full-width wd-wishlist-save-btn" data-added-text="<?php esc_html_e( 'Add to wishlist', 'woodmart' ); ?>" data-create-text="<?php esc_html_e( 'Create wishlist', 'woodmart' ); ?>" data-move-text="<?php esc_html_e( 'Move to wishlist', 'woodmart' ); ?>">
+			<a href="#" data-group-id="save" class="btn btn-color-primary btn-full-width wd-wishlist-save-btn" data-added-text="<?php esc_attr_e( 'Add to wishlist', 'woodmart' ); ?>" data-create-text="<?php esc_attr_e( 'Create wishlist', 'woodmart' ); ?>" data-move-text="<?php esc_attr_e( 'Move to wishlist', 'woodmart' ); ?>">
 				<?php esc_html_e( 'Add to wishlist', 'woodmart' ); ?>
 			</a>
 		</div>
@@ -395,6 +391,8 @@ class Wishlists_Group extends Singleton {
 
 	/**
 	 * Output header for wishlist groups.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function output_header_for_wishlist_groups() {
 		woodmart_enqueue_inline_style( 'page-wishlist-group' );
@@ -415,6 +413,7 @@ class Wishlists_Group extends Singleton {
 	/**
 	 * Render wishlist groups.
 	 *
+	 * @codeCoverageIgnore
 	 * @param object $wishlist Object wishlist class.
 	 * @param array  $wishlist_groups Wishlist groups.
 	 * @param array  $args Default arguments.

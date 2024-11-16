@@ -6,7 +6,8 @@
 
 	:is(
 	.xts-theme-style,
-	div.vc_ui-panel-content) {
+	div.vc_ui-panel-content,
+	.menu-item-settings) {
 
 		select,
 		textarea,
@@ -28,7 +29,7 @@
 
 		select {
 			background: #FFF url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAOCAYAAAAfSC3RAAAABmJLR0QA/wD/AP+gvaeTAAAAXklEQVQokdXOsQ2DMBBA0ac0LmOxaXZApAIGYoJQMBONr0mCZUp/6RrfPcl01Yh84z5jfCBha8S53KZ4eOPAUEFPfLB+L2r4EkXTHxxoqfzmBzejaMZeZm5F0atM753w4BGTsxsSOgAAAABJRU5ErkJggg==');
-			background-position: right 10px top 12px;
+			background-position: right 10px top calc((var(--xts-input-height) / 2) - 6px);
 			background-size: 11px;
 			background-repeat: no-repeat;
 			text-align: start !important;
@@ -50,7 +51,7 @@
 			}
 
 			.rtl & {
-				background-position: left 10px top 12px;
+				background-position: left 10px top calc((var(--xts-input-height) / 2) - 6px);
 				// text-align: right !important;
 			}
 		}
@@ -146,8 +147,9 @@
 					align-items: center;
 					justify-content: center;
 					box-sizing: border-box;
-					padding-right: 2px;
-					padding-left: 2px;
+					// padding-right: 2px;
+					// padding-left: 2px;
+					padding-inline: 2px;
 					width: 30px;
 					height: var(--xts-input-height);
 					border: 1px solid var(--xts-option-border-color);
@@ -217,7 +219,7 @@
 
 %textarea-style {
 	min-height: 150px;
-	max-width: 100%;
+	max-width: 100% !important;
 	height: auto;
 	line-height: 1.4;
 }

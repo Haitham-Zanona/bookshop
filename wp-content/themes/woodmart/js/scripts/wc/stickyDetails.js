@@ -15,7 +15,7 @@
 			var $column = $(this),
 			    offset  = parseInt(woodmart_settings.sticky_product_details_offset),
 			    $inner  = $column.find('.summary-inner'),
-			    $images = $column.parent().find('.product-images-inner');
+			    $images = $column.parent().find('.woocommerce-product-gallery');
 
 			$inner.trigger('sticky_kit:detach');
 			$images.trigger('sticky_kit:detach');

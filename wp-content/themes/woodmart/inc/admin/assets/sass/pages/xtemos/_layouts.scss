@@ -70,21 +70,23 @@
 		}
 	}
 
-	.xts-layout-fields:not(.xts-layout-type-checkout):not(.xts-layout-type-all) .xts-layout-type-select {
+	.xts-layout-fields:not(.xts-layout-type-checkout):not(.xts-layout-type-cart):not(.xts-layout-type-all) .xts-layout-type-select {
 		display: none;
 	}
 
 	.xts-layout-predefined-layouts {
-		margin-top: 10px;
-		margin-bottom: 20px;
+		// margin-top: 10px;
+		// margin-bottom: 20px;
+		margin-block: 10px 20px;
 		padding-top: 15px;
 		border-top: 1px solid var(--xts-option-border-color);
 
 		.xts-import-item-preview {
-			top: auto;
-			left: auto;
-			bottom: 10px;
-			right: 10px;
+			// top: auto;
+			// right: 10px;
+			// bottom: 10px;
+			// left: auto;
+			inset: auto 10px 10px auto;
 			transform: none;
 		}
 	}
@@ -102,10 +104,11 @@
 
 	.xts-import-preview-wrap {
 		position: absolute;
-		top: 0;
-		right: 6px;
-		bottom: 0;
-		left: 6px;
+		inset: 0 6px 0 6px;
+		// top: 0;
+		// right: 6px;
+		// bottom: 0;
+		// left: 6px;
 		visibility: hidden;
 		border-radius: var(--xts-option-border-radius);
 		opacity: 0;
@@ -125,26 +128,29 @@
 		.xts-layout-submit-wrap {
 			position: sticky;
 			bottom: -20px;
-			z-index: 10;
-			margin-top: 15px;
-			margin-right: -20px;
-			margin-bottom: -20px;
-			margin-left: -20px;
+			z-index: 99999; // NOT FOR SELECT 2 IN POPUP
+			margin: 15px -20px -20px -20px;
+			// margin-top: 15px;
+			// margin-right: -20px;
+			// margin-bottom: -20px;
+			// margin-left: -20px;
 			background-color: #FFF;
 		}
 	}
 
 	.xts-layout-fields {
 		display: flex;
-		margin-right: -6px;
-		margin-left: -6px;
+		// margin-right: -6px;
+		// margin-left: -6px;
+		margin-inline: -6px;
 	}
 
 	.xts-layout-field {
 		flex: 1 1 50%;
 		margin-bottom: 15px;
-		padding-right: 6px;
-		padding-left: 6px;
+		// padding-right: 6px;
+		// padding-left: 6px;
+		padding-inline: 6px;
 
 		+ .xts-layout-conditions {
 			margin-top: 20px;

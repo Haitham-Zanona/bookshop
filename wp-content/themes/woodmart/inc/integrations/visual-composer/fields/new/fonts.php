@@ -5,7 +5,7 @@
  * @package Woodmart.
  */
 
-use XTS\Google_Fonts;
+use XTS\Admin\Modules\Options\Google_Fonts;
 
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );

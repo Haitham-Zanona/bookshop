@@ -24,7 +24,7 @@
 					let $from = $('div[data-vc-shortcode-param-name="' + settings.transfer + '"]');
 					let $value = $from.find('.wpb_vc_param_value');
 
-					if ($value.val() && 0 !== parseInt( $value.val() )) {
+					if (!$valueInput.val() && $value.val() && 0 !== parseInt( $value.val() )) {
 						$this.attr('data-value', $value.val());
 						initSlider(device, unit, $value.val());
 						$value.val('');

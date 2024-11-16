@@ -8,24 +8,18 @@
 
 if( ! function_exists( 'woodmart_shortcode_3d_view' ) ) {
 	function woodmart_shortcode_3d_view( $atts, $content ) {
-		if( ! function_exists( 'wpb_getImageBySize' ) ) return;
 		$click = $output = $class = '';
 		extract( shortcode_atts( array(
 			'images' => '',
 			'img_size' => 'full',
 			'title' => '',
-			'link' => '',
 			'style' => '',
-			'el_class' => ''
+			'el_class' => '',
 		), $atts ) );
 
 		$id = rand( 100, 999 );
 
 		$images = explode( ',', $images );
-
-		if( $link != '' ) {
-			$class .= ' cursor-pointer';
-		}
 
 		$class .= ' ' . $el_class;
 
@@ -47,15 +41,15 @@ if( ! function_exists( 'woodmart_shortcode_3d_view' ) ) {
 		);
 
 		foreach ( $images as $img_id ) {
-			$img = wpb_getImageBySize( array( 'attach_id' => $img_id, 'thumb_size' => $img_size, 'class' => 'threed-view-image' ) );
+			$img = wp_get_attachment_image_src( $img_id, $img_size );
 
-			$args['width']    = isset( $img['p_img_large'][1] ) ? $img['p_img_large'][1] : '';
-			$args['height']   = isset( $img['p_img_large'][2] ) ? $img['p_img_large'][2] : '';
-			$args['images'][] = isset( $img['p_img_large'][0] ) ? $img['p_img_large'][0] : '';
+			$args['width']    = isset( $img[1] ) ? $img[1] : '';
+			$args['height']   = isset( $img[2] ) ? $img[2] : '';
+			$args['images'][] = isset( $img[0] ) ? $img[0] : '';
 		}
 
 		?>
-			<div class="wd-threed-view<?php echo esc_attr( $class ); ?> threed-id-<?php echo esc_attr( $id ); ?>" <?php if( ! empty( $link ) ): ?>onclick="window.location.href='<?php echo esc_js( $link ) ?>'"<?php endif; ?> data-args='<?php echo wp_json_encode( $args ); ?>'>
+			<div class="wd-threed-view<?php echo esc_attr( $class ); ?> threed-id-<?php echo esc_attr( $id ); ?>" data-args='<?php echo wp_json_encode( $args ); ?>'>
 				<?php if ( ! empty( $title ) ): ?>
 					<h3 class="threed-title"><span><?php echo wp_kses( $title, woodmart_get_allowed_html() ); ?></span></h3>
 				<?php endif ?>

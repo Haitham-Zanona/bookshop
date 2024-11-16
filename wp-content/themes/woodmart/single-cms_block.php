@@ -5,7 +5,7 @@
  * @package xts
  */
 
-if ( ! current_user_can( apply_filters( 'woodmart_html_block_access', 'administrator' ) ) ) {
+if ( ! current_user_can( apply_filters( 'woodmart_html_block_access', 'edit_posts' ) ) ) {
 	wp_die( 'You do not have access.', '', array( 'back_link' => true ) );
 }
 
@@ -17,7 +17,7 @@ get_header();
 		<div class="wd-html-block-scheme-dark" data-color="#ffffff">
 			<?php esc_html_e( 'Dark', 'woodmart' ); ?>
 		</div>
-	
+
 		<div class="wd-html-block-scheme-light" data-color="#212121">
 			<?php esc_html_e( 'Light', 'woodmart' ); ?>
 		</div>
@@ -26,7 +26,16 @@ get_header();
 	<script type="text/javascript">
 		jQuery(document).ready(function() {
 			jQuery('.wd-html-block-scheme-switcher > div').on('click', function() {
-				jQuery('.website-wrapper').css('background-color', jQuery(this).data('color'));
+				var color          = jQuery(this).data('color');
+				var websiteWrapper = jQuery('.website-wrapper');
+
+				websiteWrapper.css('background-color', color);
+
+				if ( '#212121' === color && ! websiteWrapper.hasClass('color-scheme-light') ) {
+					websiteWrapper.addClass('color-scheme-light');
+				} else if ( '#ffffff' === color ) {
+					websiteWrapper.removeClass('color-scheme-light');
+				}
 			});
 		});
 	</script>

@@ -14,7 +14,7 @@
 			return;
 		}
 
-		var btnSelector = '.product-grid-item.product-type-variable .add_to_cart_button';
+		var btnSelector = '.wd-product.product-type-variable .add_to_cart_button';
 
 		woodmartThemeModule.$document.on('click', btnSelector, function(e) {
 				e.preventDefault();

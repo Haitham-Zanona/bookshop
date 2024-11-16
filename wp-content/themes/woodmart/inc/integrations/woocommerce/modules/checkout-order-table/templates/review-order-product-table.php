@@ -16,7 +16,26 @@ foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 	$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
 	if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
-		if ( $_product->is_sold_individually() || ! woodmart_get_opt( 'checkout_product_quantity' ) || ( ! empty( $cart_item['wd_fbt_parent_keys'] ) && isset( WC()->cart->cart_contents[ $cart_item['wd_fbt_parent_keys'] ] ) ) ) {
+		$sku_output = '';
+
+		if ( woodmart_get_opt( 'show_sku_in_checkout_page' ) ) {
+			$sku = $_product->get_sku() ? $_product->get_sku() : esc_html__( 'N/A', 'woocommerce' ) ;
+
+			ob_start();
+			?>
+			<div class="wd-product-sku">
+				<span class="wd-label">
+					<?php echo esc_html__( 'SKU:', 'woodmart' ); ?>
+				</span>
+				<span>
+					<?php echo esc_html( $sku ); ?>
+				</span>
+			</div>
+			<?php		
+			$sku_output = ob_get_clean();
+		}
+
+		if ( $_product->is_sold_individually() || ! woodmart_get_opt( 'checkout_product_quantity' ) || isset( $cart_item['wd_is_free_gift'] ) || ( ! empty( $cart_item['wd_fbt_parent_keys'] ) && isset( WC()->cart->cart_contents[ $cart_item['wd_fbt_parent_keys'] ] ) ) ) {
 			ob_start();
 			?>
 			<strong class="product-quantity">
@@ -24,11 +43,15 @@ foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 			</strong>
 			<input type="hidden" name="cart[<?php echo esc_attr( $cart_item_key ); ?>][qty]" value="<?php echo esc_attr( $cart_item['quantity'] ); ?>" />
 			<?php
+			echo $sku_output;
+
 			$product_quantity = ob_get_clean();
 		} else {
+			$product_quantity = $sku_output;
+
 			woodmart_enqueue_js_script( 'checkout-quantity' );
 
-			$product_quantity = woocommerce_quantity_input(
+			$product_quantity .= woocommerce_quantity_input(
 				array(
 					'input_name'   => "cart[{$cart_item_key}][qty]",
 					'input_value'  => $cart_item['quantity'],
@@ -44,11 +67,11 @@ foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
 		$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 		$product_image     = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key );
 		$product_title     = wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) );
-		$product_title     = sprintf( '<span>%s</span>', $product_title );
+		$product_title     = sprintf( '<span class="cart-product-label">%s</span>', $product_title );
 
 		if ( $product_permalink && woodmart_get_opt( 'checkout_link_to_product' ) ) {
 			$product_image = sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $product_image );
-			$product_title = sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $product_title );
+			$product_title = sprintf( '<a class="cart-product-label-link" href="%s">%s</a>', esc_url( $product_permalink ), $product_title );
 		}
 
 		?>

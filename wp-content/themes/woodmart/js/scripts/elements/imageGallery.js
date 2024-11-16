@@ -14,7 +14,7 @@
 			return;
 		}
 
-		var $container = $('.view-masonry .gallery-images');
+		var $container = $('.wd-images-gallery .wd-masonry');
 
 		$container.imagesLoaded(function() {
 			$container.isotope({
@@ -26,8 +26,8 @@
 	};
 
 	woodmartThemeModule.imagesGalleryJustified = function() {
-		$('.view-justified').each(function() {
-			$(this).find('.gallery-images').justifiedGallery({
+		$('.wd-images-gallery .wd-justified').each(function() {
+			$(this).justifiedGallery({
 				margins     : 1,
 				cssAnimation: true
 			});

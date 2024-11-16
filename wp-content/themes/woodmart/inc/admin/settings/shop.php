@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -16,12 +16,12 @@ Options::add_field(
 		'options'     => array(
 			'popup'   => array(
 				'name'  => esc_html__( 'Show popup', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'action-after-add-to-cart-show-popup.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'action-after-add-to-cart-show-popup.mp4" autoplay loop muted></video>',
 				'value' => 'popup',
 			),
 			'widget'  => array(
 				'name'  => esc_html__( 'Display widget', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'action-after-add-to-cart-display-widget.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'action-after-add-to-cart-display-widget.mp4" autoplay loop muted></video>',
 				'value' => 'widget',
 			),
 			'nothing' => array(
@@ -89,7 +89,7 @@ Options::add_field(
 	array(
 		'id'          => 'mini_cart_quantity',
 		'name'        => esc_html__( 'Quantity input on shopping cart widget', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'quantity-input-shopping-cart-widget.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'quantity-input-shopping-cart-widget.jpg" alt="">', true ),
 		'description' => esc_html__( 'Give your customers an ability to change the number of products in the cart directly from the shopping cart widget.', 'woodmart' ),
 		'group'       => esc_html__( 'Shopping cart widget', 'woodmart' ),
 		'type'        => 'switcher',
@@ -104,7 +104,7 @@ Options::add_field(
 	array(
 		'id'       => 'show_sku_in_mini_cart',
 		'name'     => esc_html__( 'Show SKU in mini cart', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-mini-cart.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-mini-cart.jpg" alt="">', true ),
 		'group'    => esc_html__( 'SKU', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'shop_section',
@@ -118,8 +118,8 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'show_sku_in_cart',
-		'name'     => esc_html__( 'Show SKU in cart page', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-cart-page.jpg" alt="">', 'woodmart' ), true ),
+		'name'     => esc_html__( 'Show SKU on cart page', 'woodmart' ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-cart-page.jpg" alt="">', true ),
 		'group'    => esc_html__( 'SKU', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'shop_section',
@@ -132,9 +132,39 @@ Options::add_field(
 
 Options::add_field(
 	array(
+		'id'       => 'show_sku_in_checkout_page',
+		'name'     => esc_html__( 'Show SKU on checkout page', 'woodmart' ),
+		'group'    => esc_html__( 'SKU', 'woodmart' ),
+		'hint'     => '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-checkout-page.jpg" alt="">',
+		'type'     => 'switcher',
+		'section'  => 'shop_section',
+		'default'  => false,
+		'on-text'  => esc_html__( 'Yes', 'woodmart' ),
+		'off-text' => esc_html__( 'No', 'woodmart' ),
+		'priority' => 63,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'show_sku_in_thank_you_page',
+		'name'     => esc_html__( 'Show SKU on thank you page', 'woodmart' ),
+		'group'    => esc_html__( 'SKU', 'woodmart' ),
+		'hint'     => '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-thank-you-page.jpg" alt="">',
+		'type'     => 'switcher',
+		'section'  => 'shop_section',
+		'default'  => false,
+		'on-text'  => esc_html__( 'Yes', 'woodmart' ),
+		'off-text' => esc_html__( 'No', 'woodmart' ),
+		'priority' => 65,
+	)
+);
+
+Options::add_field(
+	array(
 		'id'       => 'show_sku_in_email_order',
 		'name'     => esc_html__( 'Show SKU in customer order received email', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-customer-order-received-email.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-in-customer-order-received-email.jpg" alt="">', true ),
 		'group'    => esc_html__( 'SKU', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'shop_section',
@@ -149,7 +179,7 @@ Options::add_field(
 	array(
 		'id'       => 'show_sku_on_ajax',
 		'name'     => esc_html__( 'Show SKU on search AJAX results', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-on-search-ajax-results.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-sku-on-search-ajax-results.jpg" alt="">', true ),
 		'group'    => esc_html__( 'SKU', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'shop_section',
@@ -187,7 +217,7 @@ Options::add_field(
 	array(
 		'id'          => 'size_guides',
 		'name'        => esc_html__( 'Enable size guides', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-size-guides.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'enable-size-guides.mp4" autoplay loop muted></video>',
 		'description' => wp_kses(
 			__( 'Turn on the size guide feature on the website. Read more information about this function in <a href="https://xtemos.com/docs/woodmart/faq-guides/create-size-guide-table/" target="_blank">our documentation</a>.', 'woodmart' ),
 			array(
@@ -213,28 +243,13 @@ Options::add_field(
 	array(
 		'id'          => 'login_prices',
 		'name'        => esc_html__( 'Login to see add to cart and prices', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'login-to-see-add-to-cart-and-prices.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'login-to-see-add-to-cart-and-prices.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'You can restrict shopping functions only for logged in customers.', 'woodmart' ),
 		'group'       => esc_html__( 'Hide add to cart and price', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'shop_section',
 		'default'     => false,
 		'priority'    => 110,
-	)
-);
-
-Options::add_field(
-	array(
-		'id'          => 'empty_cart_text',
-		'name'        => esc_html__( 'Empty cart text', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-cart-text.jpg" alt="">', 'woodmart' ), true ),
-		'description' => esc_html__( 'Text will be displayed if user don\'t add any products to cart', 'woodmart' ),
-		'group'       => esc_html__( 'Cart page', 'woodmart' ),
-		'type'        => 'textarea',
-		'wysiwyg'     => false,
-		'section'     => 'shop_section',
-		'default'     => 'Before proceed to checkout you must add some products to your shopping cart.<br> You will find a lot of interesting products on our "Shop" page.',
-		'priority'    => 120,
 	)
 );
 
@@ -252,9 +267,9 @@ Options::add_field(
 	array(
 		'id'          => 'quick_shop_variable',
 		'name'        => esc_html__( '"Quick shop" for variable products', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'quick-shop-for-variable-products.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'quick-shop-for-variable-products.jpg" alt="">', true ),
 		'description' => esc_html__( 'Allow your users to purchase variable products directly from the shop page.', 'woodmart' ),
-		'group'       => esc_html__( 'General', 'woodmart' ),
+		'group'       => esc_html__( 'Quick shop', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'variable_products_section',
 		'default'     => '1',
@@ -264,39 +279,73 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'          => 'swatches_scroll_top_desktop',
-		'name'        => esc_html__( 'Scroll to top on variation select [desktop]', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'scroll-top-on-variation-select.gif" alt="">', 'woodmart' ), true ),
-		'description' => esc_html__( 'When you turn on this option and click on some variation with image, the page will be scrolled up to show that variation image in the main product gallery.', 'woodmart' ),
-		'group'       => esc_html__( 'General', 'woodmart' ),
-		'type'        => 'switcher',
+		'id'          => 'quick_shop_variable_type',
+		'name'        => esc_html__( '"Quick shop" type', 'woodmart' ),
+		'group'       => esc_html__( 'Quick shop', 'woodmart' ),
+		'description' => esc_html__( 'Choose the type of adding product variation to the cart on the product grid.', 'woodmart' ),
+		'type'        => 'buttons',
 		'section'     => 'variable_products_section',
-		't_tab'       => [
-			'id'    => 'swatches_scroll_top_tabs',
-			'tab'   => esc_html__( 'Desktop', 'woodmart' ),
-			'icon'  => 'xts-i-desktop',
-			'style' => 'devices',
-		],
-		'default'     => false,
-		'priority'    => 20,
+		'options'     => array(
+			'select_options' => array(
+				'name'  => esc_html__( 'On "Select options" click', 'woodmart' ),
+				'hint'  => '<video data-src="' . WOODMART_TOOLTIP_URL . 'quick_shop_variable_type_select.mp4" autoplay loop muted></video>',
+				'value' => 'select_options',
+			),
+			'variation_form' => array(
+				'name'  => esc_html__( 'On variation click', 'woodmart' ),
+				'hint'  => '<video data-src="' . WOODMART_TOOLTIP_URL . 'quick_shop_variable_type_variation.mp4" autoplay loop muted></video>',
+				'value' => 'variation_form',
+			),
+		),
+		'requires'    => array(
+			array(
+				'key'     => 'quick_shop_variable',
+				'compare' => 'equals',
+				'value'   => '1',
+			),
+		),
+		'default'     => 'select_options',
+		'priority'    => 11,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'          => 'swatches_scroll_top_mobile',
-		'name'        => esc_html__( 'Scroll to top on variation select [mobile]', 'woodmart' ),
-		'description' => esc_html__( 'When you turn on this option and click on some variation with image, the page will be scrolled up to show that variation image in the main product gallery.', 'woodmart' ),
-		'group'       => esc_html__( 'General', 'woodmart' ),
-		'type'        => 'switcher',
-		'section'     => 'variable_products_section',
-		't_tab'       => [
-			'id'   => 'swatches_scroll_top_tabs',
-			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
-			'icon' => 'xts-i-phone',
-		],
-		'default'     => false,
-		'priority'    => 30,
+		'id'       => 'quick_shop_clear_action',
+		'name'     => esc_html__( 'Clear variation', 'woodmart' ),
+		'group'    => esc_html__( 'Quick shop', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'variable_products_section',
+		'options'  => array(
+			'none'   => array(
+				'name'  => esc_html__( 'None', 'woodmart' ),
+				'value' => 'none',
+			),
+			'btn'    => array(
+				'name'  => esc_html__( 'Clear button', 'woodmart' ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'quick_shop_clear_action_button.mp4" autoplay loop muted></video>',
+				'value' => 'btn',
+			),
+			'double' => array(
+				'name'  => esc_html__( 'On second click', 'woodmart' ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'quick_shop_clear_action_click.mp4" autoplay loop muted></video>',
+				'value' => 'double',
+			),
+		),
+		'requires' => array(
+			array(
+				'key'     => 'quick_shop_variable',
+				'compare' => 'equals',
+				'value'   => '1',
+			),
+			array(
+				'key'     => 'quick_shop_variable_type',
+				'compare' => 'equals',
+				'value'   => 'variation_form',
+			),
+		),
+		'default'  => 'none',
+		'priority' => 12,
 	)
 );
 
@@ -304,12 +353,12 @@ Options::add_field(
 	array(
 		'id'           => 'grid_swatches_attribute',
 		'name'         => esc_html__( 'Grid swatch attribute to display', 'woodmart' ),
-		'hint'         => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'grid-swatch-attribute-to-display.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'grid-swatch-attribute-to-display.mp4" autoplay loop muted></video>',
 		'description'  => esc_html__( 'Choose the attribute that will be shown on the product grid.', 'woodmart' ),
 		'group'        => esc_html__( 'Attribute swatches', 'woodmart' ),
 		'type'         => 'select',
 		'section'      => 'variable_products_section',
-		'options'      => woodmart_product_attributes_array(),
+		'callback'     => 'woodmart_product_attributes_array',
 		'priority'     => 40,
 		'empty_option' => true,
 	)
@@ -319,7 +368,7 @@ Options::add_field(
 	array(
 		'id'          => 'swatches_limit',
 		'name'        => esc_html__( 'Limit swatches on grid', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'limit-swatches-on-grid.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'limit-swatches-on-grid.jpg" alt="">', true ),
 		'description' => esc_html__( 'Collapse swatches list on the product grid to save space in case a product has too many variations.', 'woodmart' ),
 		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
 		'type'        => 'switcher',
@@ -334,7 +383,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'swatches_limit_count',
-		'name'     => esc_html__( 'Number of visible swatches', 'woodmart' ),
+		'name'     => esc_html__( 'Number of visible swatches on grid', 'woodmart' ),
 		'type'     => 'range',
 		'section'  => 'variable_products_section',
 		'group'    => esc_html__( 'Attribute swatches', 'woodmart' ),
@@ -356,9 +405,48 @@ Options::add_field(
 
 Options::add_field(
 	array(
+		'id'          => 'single_product_swatches_limit',
+		'name'        => esc_html__( 'Limit swatches on single product', 'woodmart' ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'single_product_swatches_limit.jpg" alt="">', true ),
+		'description' => esc_html__( 'Collapse swatches list on the single product to save space in case a product has too many variations.', 'woodmart' ),
+		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'variable_products_section',
+		'default'     => false,
+		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
+		'off-text'    => esc_html__( 'No', 'woodmart' ),
+		'priority'    => 61,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_swatches_limit_count',
+		'name'     => esc_html__( 'Number of visible swatches on single product', 'woodmart' ),
+		'type'     => 'range',
+		'section'  => 'variable_products_section',
+		'group'    => esc_html__( 'Attribute swatches', 'woodmart' ),
+		'default'  => 10,
+		'min'      => 1,
+		'step'     => 1,
+		'max'      => 30,
+		'priority' => 62,
+		'requires' => array(
+			array(
+				'key'     => 'single_product_swatches_limit',
+				'compare' => 'equals',
+				'value'   => true,
+			),
+		),
+		'unit'     => 'swatch',
+	)
+);
+
+Options::add_field(
+	array(
 		'id'          => 'swatches_use_variation_images',
 		'name'        => esc_html__( 'Use images from product variations', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'use-images-from-product-variations.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'use-images-from-product-variations.jpg" alt="">', true ),
 		'description' => esc_html__( 'Swatches buttons will be filled with images chosen for product variations and not with images uploaded to attribute terms.', 'woodmart' ),
 		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
 		'type'        => 'switcher',
@@ -374,7 +462,7 @@ Options::add_field(
 	array(
 		'id'          => 'swatches_labels_name',
 		'name'        => esc_html__( 'Show selected option name on desktop and tablet', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-selected-option-name-on-desktop-and-tablet.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-selected-option-name-on-desktop-and-tablet.jpg" alt="">', true ),
 		'description' => esc_html__( 'Replace the variation swatch tooltip with the text label next to the attribute title.', 'woodmart' ),
 		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
 		'type'        => 'switcher',
@@ -388,9 +476,47 @@ Options::add_field(
 
 Options::add_field(
 	array(
+		'id'          => 'swatches_scroll_top_desktop',
+		'name'        => esc_html__( 'Scroll to top on variation select [desktop]', 'woodmart' ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'scroll-top-on-variation-select.mp4" autoplay loop muted></video>',
+		'description' => esc_html__( 'When you turn on this option and click on some variation with image, the page will be scrolled up to show that variation image in the main product gallery.', 'woodmart' ),
+		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'variable_products_section',
+		't_tab'       => [
+			'id'    => 'swatches_scroll_top_tabs',
+			'tab'   => esc_html__( 'Desktop', 'woodmart' ),
+			'icon'  => 'xts-i-desktop',
+			'style' => 'devices',
+		],
+		'default'     => false,
+		'priority'    => 90,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'swatches_scroll_top_mobile',
+		'name'        => esc_html__( 'Scroll to top on variation select [mobile]', 'woodmart' ),
+		'description' => esc_html__( 'When you turn on this option and click on some variation with image, the page will be scrolled up to show that variation image in the main product gallery.', 'woodmart' ),
+		'group'       => esc_html__( 'Attribute swatches', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'variable_products_section',
+		't_tab'       => [
+			'id'   => 'swatches_scroll_top_tabs',
+			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
+			'icon' => 'xts-i-phone',
+		],
+		'default'     => false,
+		'priority'    => 95,
+	)
+);
+
+Options::add_field(
+	array(
 		'id'          => 'variation_gallery',
 		'name'        => esc_html__( 'Additional variations images', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'additional-variations-images.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'additional-variations-images.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Add an ability to upload additional images for each variation in variable products.', 'woodmart' ),
 		'group'       => esc_html__( 'Variations images', 'woodmart' ),
 		'type'        => 'switcher',
@@ -458,7 +584,7 @@ Options::add_field(
 	array(
 		'id'          => 'hide_larger_price',
 		'name'        => esc_html__( 'Hide "to" price', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'hide-to-price.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'hide-to-price.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'This option will hide a higher price for variable products and leave only a small one.', 'woodmart' ),
 		'group'       => esc_html__( 'Price', 'woodmart' ),
 		'type'        => 'switcher',
@@ -475,7 +601,7 @@ Options::add_field(
 		'id'          => 'single_product_variations_price',
 		'type'        => 'switcher',
 		'name'        => esc_html__( 'Remove duplicate price for variable product', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'remove-duplicate-price-for-variable-product.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'remove-duplicate-price-for-variable-product.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'When you will select any variation, the price on the single product page will be updated with an actual variation price.', 'woodmart' ),
 		'group'       => esc_html__( 'Price', 'woodmart' ),
 		'section'     => 'variable_products_section',
@@ -538,7 +664,7 @@ Options::add_field(
 		'type'        => 'color',
 		'section'     => 'product_labels_section',
 		'selector_bg' => '.product-labels .product-label.onsale',
-		'default'     => '',
+		'default'     => array(),
 		'priority'    => 30,
 		'class'       => 'xts-col-6',
 	)
@@ -552,7 +678,7 @@ Options::add_field(
 		'type'     => 'color',
 		'section'  => 'product_labels_section',
 		'selector' => '.product-labels .product-label.onsale',
-		'default'  => '',
+		'default'  => array(),
 		'priority' => 40,
 		'class'    => 'xts-col-6',
 	)
@@ -596,7 +722,7 @@ Options::add_field(
 		'type'        => 'color',
 		'section'     => 'product_labels_section',
 		'selector_bg' => '.product-labels .product-label.new',
-		'default'     => '',
+		'default'     => array(),
 		'priority'    => 60,
 		'class'       => 'xts-col-6',
 	)
@@ -610,7 +736,7 @@ Options::add_field(
 		'type'     => 'color',
 		'section'  => 'product_labels_section',
 		'selector' => '.product-labels .product-label.new',
-		'default'  => '',
+		'default'  => array(),
 		'priority' => 70,
 		'class'    => 'xts-col-6',
 	)
@@ -637,7 +763,7 @@ Options::add_field(
 		'type'        => 'color',
 		'section'     => 'product_labels_section',
 		'selector_bg' => '.product-labels .product-label.featured',
-		'default'     => '',
+		'default'     => array(),
 		'priority'    => 90,
 		'class'       => 'xts-col-6',
 	)
@@ -651,7 +777,7 @@ Options::add_field(
 		'type'     => 'color',
 		'section'  => 'product_labels_section',
 		'selector' => '.product-labels .product-label.featured',
-		'default'  => '',
+		'default'  => array(),
 		'priority' => 100,
 		'class'    => 'xts-col-6',
 	)
@@ -665,7 +791,7 @@ Options::add_field(
 		'type'        => 'color',
 		'section'     => 'product_labels_section',
 		'selector_bg' => '.product-labels .product-label.out-of-stock',
-		'default'     => '',
+		'default'     => array(),
 		'priority'    => 110,
 		'class'       => 'xts-col-6',
 	)
@@ -679,7 +805,7 @@ Options::add_field(
 		'type'     => 'color',
 		'section'  => 'product_labels_section',
 		'selector' => '.product-labels .product-label.out-of-stock',
-		'default'  => '',
+		'default'  => array(),
 		'priority' => 120,
 		'class'    => 'xts-col-6',
 	)
@@ -693,7 +819,7 @@ Options::add_field(
 		'type'        => 'color',
 		'section'     => 'product_labels_section',
 		'selector_bg' => '.product-labels .product-label.attribute-label:not(.label-with-img)',
-		'default'     => '',
+		'default'     => array(),
 		'priority'    => 130,
 		'class'       => 'xts-col-6',
 	)
@@ -707,7 +833,7 @@ Options::add_field(
 		'type'     => 'color',
 		'section'  => 'product_labels_section',
 		'selector' => '.product-labels .product-label.attribute-label:not(.label-with-img)',
-		'default'  => '',
+		'default'  => array(),
 		'priority' => 140,
 		'class'    => 'xts-col-6',
 	)
@@ -723,7 +849,7 @@ Options::add_field(
 		'description'  => wp_kses( __( 'If you want to show brand image on your product page select desired attribute here. Read more information in our <a href="https://xtemos.com/docs-topic/product-brands/" target="_blank">documentation</a>.', 'woodmart' ), true ),
 		'type'         => 'select',
 		'section'      => 'brands_section',
-		'options'      => woodmart_product_attributes_array(),
+		'callback'     => 'woodmart_product_attributes_array',
 		'priority'     => 10,
 		'default'      => 'pa_brand',
 		'empty_option' => true,
@@ -754,12 +880,12 @@ Options::add_field(
 		'options'     => array(
 			'about_title' => array(
 				'name'  => esc_html__( 'Aligned on the right of the product title', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'brand-position-the-product-page-right.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'brand-position-the-product-page-right.jpg" alt="">', true ),
 				'value' => 'about_title',
 			),
 			'sidebar'     => array(
 				'name'  => esc_html__( 'Sidebar', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'brand-position-the-product-page-sidebar.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'brand-position-the-product-page-sidebar.jpg" alt="">', true ),
 				'value' => 'sidebar',
 			),
 		),
@@ -772,7 +898,7 @@ Options::add_field(
 	array(
 		'id'          => 'brand_tab',
 		'name'        => esc_html__( 'Show tab with brand information', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-tab-with-brand-information.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-tab-with-brand-information.jpg" alt="">', true ),
 		'description' => esc_html__( ' If enabled you will see an additional tab with brand description on the single product page. Text will be taken from the "Description" field for each brand (attribute term).', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'brands_section',
@@ -811,7 +937,7 @@ Options::add_field(
 	array(
 		'id'          => 'quick_view',
 		'name'        => esc_html__( 'Quick view', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-quick-view.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'shop-quick-view.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable Quick view option. Ability to see the product information with AJAX.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'quick_view_section',
@@ -858,6 +984,11 @@ Options::add_field(
 		'step'        => 10,
 		'max'         => 1200,
 		'priority'    => 30,
+		'selectors'   => array(
+			'.wd-popup.popup-quick-view' => array(
+				'--wd-popup-width: {{VALUE}}px;',
+			),
+		),
 		'unit'        => 'px',
 	)
 );
@@ -866,7 +997,7 @@ Options::add_field(
 	array(
 		'id'          => 'quick_view_variable',
 		'name'        => esc_html__( 'Show variations on quick view', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-variations-on-quick-view.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'show-variations-on-quick-view.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable Quick view option for variable products. Will allow your users to purchase variable products directly from the quick view.', 'woodmart' ),
 		'group'       => esc_html__( 'Settings', 'woodmart' ),
 		'type'        => 'switcher',
@@ -885,7 +1016,7 @@ Options::add_field(
 	array(
 		'id'          => 'compare',
 		'name'        => esc_html__( 'Enable compare', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-compare.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-compare.jpg" alt="">', true ),
 		'description' => wp_kses( __( 'Enable compare functionality built in with the theme. Read more information in our <a href="https://xtemos.com/docs/woodmart/woodmart-compare/">documentation</a>.', 'woodmart' ), true ),
 		'type'        => 'switcher',
 		'section'     => 'compare_section',
@@ -912,33 +1043,17 @@ Options::add_field(
 	)
 );
 
-
-Options::add_field(
-	array(
-		'id'          => 'compare_on_grid',
-		'name'        => esc_html__( 'Show button on product grid', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-button-on-product-grid.jpg" alt="">', 'woodmart' ), true ),
-		'description' => esc_html__( 'Display compare product button on all products grids and lists.', 'woodmart' ),
-		'type'        => 'switcher',
-		'section'     => 'compare_section',
-		'default'     => '1',
-		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
-		'off-text'    => esc_html__( 'No', 'woodmart' ),
-		'priority'    => 25,
-	)
-);
-
 Options::add_field(
 	array(
 		'id'          => 'fields_compare',
 		'name'        => esc_html__( 'Select fields for compare table', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'select-fields-for-compare-table.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'select-fields-for-compare-table.jpg" alt="">', true ),
 		'description' => esc_html__( 'Choose which fields should be presented on the product compare page with table.', 'woodmart' ),
 		'type'        => 'select',
 		'multiple'    => true,
 		'select2'     => true,
 		'section'     => 'compare_section',
-		'options'     => woodmart_compare_available_fields( true ),
+		'callback'    => 'woodmart_compare_available_fields',
 		'default'     => array(
 			'description',
 			'sku',
@@ -952,9 +1067,9 @@ Options::add_field(
 	array(
 		'id'          => 'empty_compare_text',
 		'name'        => esc_html__( 'Empty compare text', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-compare-text.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-compare-text.jpg" alt="">', true ),
 		'description' => esc_html__( 'Text will be displayed if user don\'t add any products to compare', 'woodmart' ),
-		'default'     => 'No products added in the compare list. You must add some products to compare them.<br> You will find a lot of interesting products on our "Shop" page.',
+		'default'     => 'No products added in the compare list. You must add some products to compare them. You will find a lot of interesting products on our "Shop" page.',
 		'type'        => 'textarea',
 		'wysiwyg'     => false,
 		'section'     => 'compare_section',
@@ -964,10 +1079,40 @@ Options::add_field(
 
 Options::add_field(
 	array(
+		'id'          => 'compare_on_grid',
+		'name'        => esc_html__( 'Show button on product grid', 'woodmart' ),
+		'hint'        => '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-button-on-product-grid.jpg" alt="">',
+		'group'       => esc_html__( 'Buttons', 'woodmart' ),
+		'description' => esc_html__( 'Display compare product button on all products grids and lists.', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'compare_section',
+		'default'     => '1',
+		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
+		'off-text'    => esc_html__( 'No', 'woodmart' ),
+		'priority'    => 45,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'compare_save_button_state',
+		'type'     => 'switcher',
+		'name'     => esc_html__( 'Save button state after adding in compare list', 'woodmart' ),
+		'group'    => esc_html__( 'Buttons', 'woodmart' ),
+		'section'  => 'compare_section',
+		'default'  => '0',
+		'on-text'  => esc_html__( 'Yes', 'woodmart' ),
+		'off-text' => esc_html__( 'No', 'woodmart' ),
+		'priority' => 46,
+	)
+);
+
+Options::add_field(
+	array(
 		'id'          => 'compare_by_category',
 		'name'        => esc_html__( 'Enable compare by category', 'woodmart' ),
 		'group'       => esc_html__( 'Compare by category', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'compare-by-category.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'compare-by-category.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Group the products added to the compare list in order to compare them according to their categories.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'compare_section',
@@ -982,7 +1127,7 @@ Options::add_field(
 	array(
 		'id'          => 'show_more_products_btn',
 		'name'        => esc_html__( 'Show "Compare more products" buttons', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-compare-more-products-buttons.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-compare-more-products-buttons.jpg" alt="">', true ),
 		'group'       => esc_html__( 'Compare by category', 'woodmart' ),
 		'description' => esc_html__( 'Display a button that leads to the selected category.', 'woodmart' ),
 		'type'        => 'switcher',
@@ -1006,13 +1151,43 @@ Options::add_field(
  */
 
 /**
- * Thank you page.
- */
+* Cart.
+*/
+Options::add_field(
+	array(
+		'id'          => 'update_cart_quantity_change',
+		'name'        => esc_html__( 'Update cart on quantity change', 'woodmart' ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'update_cart_quantity_change.mp4" autoplay loop muted></video>',
+		'description' => esc_html__( 'When this option is enabled the cart will be refreshed automatically when you increase/decrease the product quantity.', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'cart_section',
+		'default'     => false,
+		'priority'    => 10,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'empty_cart_text',
+		'name'        => esc_html__( 'Empty cart text', 'woodmart' ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-cart-text.jpg" alt="">', true ),
+		'description' => esc_html__( 'Text will be displayed if user don\'t add any products to cart', 'woodmart' ),
+		'type'        => 'textarea',
+		'wysiwyg'     => false,
+		'section'     => 'cart_section',
+		'default'     => 'Before proceed to checkout you must add some products to your shopping cart. You will find a lot of interesting products on our "Shop" page.',
+		'priority'    => 20,
+	)
+);
+
+/**
+* Thank you page.
+*/
 Options::add_field(
 	array(
 		'id'       => 'thank_you_page_content_type',
 		'name'     => esc_html__( 'Extra content for "Thank you page"', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-for-thank-you-page.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'extra-content-for-thank-you-page.jpg" alt="">', true ),
 		'type'     => 'buttons',
 		'section'  => 'thank_you_page_section',
 		'options'  => array(
@@ -1078,7 +1253,7 @@ Options::add_field(
 	array(
 		'id'          => 'thank_you_page_default_content',
 		'name'        => esc_html__( 'Default "Thank you page" content', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'default-thank-you-page-content.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'default-thank-you-page-content.jpg" alt="">', true ),
 		'description' => esc_html__( 'If you use custom extra content you can disable default WooCommerce order details on the thank you page', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'thank_you_page_section',

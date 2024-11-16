@@ -131,6 +131,49 @@ class Slider extends Widget_Base {
 			]
 		);
 
+		$this->add_control(
+			'carousel_sync',
+			array(
+				'label'   => esc_html__( 'Synchronization', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					''       => esc_html__( 'Disabled', 'woodmart' ),
+					'parent' => esc_html__( 'As parent', 'woodmart' ),
+					'child'  => esc_html__( 'As child', 'woodmart' ),
+				),
+				'default' => '',
+			)
+		);
+
+		$this->add_control(
+			'sync_parent_id',
+			array(
+				'label'     => esc_html__( 'ID', 'woodmart' ),
+				'type'      => Controls_Manager::TEXT,
+				'default'   => 'wd_' . uniqid(),
+				'ai'        => array(
+					'active' => false,
+				),
+				'condition' => array(
+					'carousel_sync' => array( 'parent' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'sync_child_id',
+			array(
+				'label'     => esc_html__( 'ID', 'woodmart' ),
+				'type'      => Controls_Manager::TEXT,
+				'ai'        => array(
+					'active' => false,
+				),
+				'condition' => array(
+					'carousel_sync' => array( 'child' ),
+				),
+			)
+		);
+
 		$this->end_controls_section();
 	}
 

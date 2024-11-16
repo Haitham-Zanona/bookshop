@@ -36,14 +36,17 @@
 	<?php if ( woodmart_loop_prop( 'stretch_product_desktop' ) || woodmart_loop_prop( 'stretch_product_tablet' ) || woodmart_loop_prop( 'stretch_product_mobile' ) ) : ?>
 	<div class="product-element-bottom">
 	<?php endif; ?>
-		<?php
-			/**
-			 * woocommerce_shop_loop_item_title hook
-			 *
-			 * @hooked woocommerce_template_loop_product_title - 10
-			 */
-			do_action( 'woocommerce_shop_loop_item_title' );
-		?>
+		<div class="wd-product-header">
+			<?php
+				/**
+				 * woocommerce_shop_loop_item_title hook
+				 *
+				 * @hooked woocommerce_template_loop_product_title - 10
+				 */
+				do_action( 'woocommerce_shop_loop_item_title' );
+			?>
+			<?php echo wp_kses_post( woodmart_get_product_rating( 'simple', 1 ) ); ?>
+		</div>
 		<?php
 			woodmart_product_categories();
 			woodmart_product_brands_links();
@@ -53,7 +56,6 @@
 		<div class="wrap-price">
 			<div class="swap-wrapp">
 				<div class="swap-elements">
-					<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
 					<?php
 						/**
 						 * woocommerce_after_shop_loop_item_title hook
@@ -80,7 +82,7 @@
 		<?php endif ?>
 
 		<?php if ( woodmart_loop_prop( 'timer' ) ): ?>
-			<?php woodmart_product_sale_countdown(); ?>
+			<?php woodmart_product_sale_countdown( array( 'products_hover' => 'alt' ) ); ?>
 		<?php endif ?>
 	<?php if ( woodmart_loop_prop( 'stretch_product_desktop' ) || woodmart_loop_prop( 'stretch_product_tablet' ) || woodmart_loop_prop( 'stretch_product_mobile' ) ) : ?>
 	</div>

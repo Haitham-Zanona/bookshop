@@ -8,7 +8,6 @@
 namespace XTS\Modules\Unit_Of_Measure;
 
 use WC_Product;
-use XTS\Options;
 use XTS\Singleton;
 
 /**

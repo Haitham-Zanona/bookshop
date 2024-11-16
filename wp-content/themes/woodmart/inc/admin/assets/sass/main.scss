@@ -92,11 +92,17 @@
 
 @import "pages/xtemos/frequently-bought-together";
 
+@import "pages/xtemos/dynamic-discounts";
+
+@import "pages/xtemos/checkout-fields-manager";
+
 @import "pages/xtemos/status";
 
 @import "pages/xtemos/backups";
 
 @import "pages/xtemos/wishlists";
+
+@import "pages/xtemos/waitlists";
 
 // ------------------------------------------
 // PAGES WORDPRESS
@@ -126,6 +132,8 @@
 
 @import "controls/color-picker";
 
+@import "controls/group-options";
+
 @import "controls/images-set";
 
 @import "controls/range-slider";
@@ -147,6 +155,8 @@
 @import "controls/responsive-input";
 
 @import "controls/dimension";
+
+@import "controls/table-controls";
 
 // ------------------------------------------------------------------------------------------------
 // MODULES
@@ -194,6 +204,8 @@
 
 @import "modules/pagination";
 
+@import "modules/sticky-save";
+
 // ------------------------------------------------------------------------------------------------
 // INTEGRATIONS
 // ------------------------------------------------------------------------------------------------
@@ -203,6 +215,8 @@
 @import "integrations/wpbakery/pages/general-tab";
 
 @import "integrations/wpbakery/pages/design-options-tab";
+
+@import "integrations/wpbakery/pages/responsive-options";
 
 @import "integrations/wpbakery/pages/tamplates-library";
 

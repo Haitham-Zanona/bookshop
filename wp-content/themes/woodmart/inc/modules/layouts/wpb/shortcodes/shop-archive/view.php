@@ -31,9 +31,12 @@ if ( ! function_exists( 'woodmart_shortcode_shop_archive_view' ) ) {
 			$wrapper_classes .= ' ' . vc_shortcode_custom_css_class( $settings['css'] );
 		}
 
-		$settings['products_view']               = woodmart_new_get_shop_view( '', true );
-		$settings['products_columns']            = woodmart_new_get_products_columns_per_row( '', true );
-		$settings['products_columns_variations'] = woodmart_vc_get_control_data( $settings['products_columns_variations'], 'desktop' );
+		$settings['products_view']    = woodmart_new_get_shop_view( '', true );
+		$settings['products_columns'] = woodmart_new_get_products_columns_per_row( '', true );
+
+		if ( ! is_array( $settings['products_columns_variations'] ) ) {
+			$settings['products_columns_variations'] = woodmart_vc_get_control_data( $settings['products_columns_variations'], 'desktop' );
+		}
 
 		ob_start();
 

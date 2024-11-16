@@ -11,11 +11,11 @@
 			preloader      : false,
 			tClose         : woodmart_settings.close,
 			tLoading       : woodmart_settings.loading,
-			fixedContentPos: false,
-			removalDelay   : 500,
+			fixedContentPos: true,
+			removalDelay   : 600,
 			callbacks      : {
 				beforeOpen: function() {
-					this.st.mainClass = 'mfp-move-horizontal';
+					this.wrap.addClass('wd-popup-slide-from-left');
 				},
 				open      : function() {
 					woodmartThemeModule.$window.trigger('resize');

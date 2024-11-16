@@ -81,6 +81,7 @@ class NMI_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 		$width         = get_post_meta( $item_id, '_menu_item_width', true );
 		$icon          = get_post_meta( $item_id, '_menu_item_icon', true );
 		$height        = get_post_meta( $item_id, '_menu_item_height', true );
+		$padding       = get_post_meta( $item_id, '_menu_item_padding', true );
 		$scroll        = get_post_meta( $item_id, '_menu_item_scroll', true );
 		$event         = get_post_meta( $item_id, '_menu_item_event', true );
 		$label         = get_post_meta( $item_id, '_menu_item_label', true );
@@ -93,161 +94,175 @@ class NMI_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 
 		?>
 			<h4 class="description-wide nmi-dropdown-title"><?php esc_html_e( 'Dropdown settings', 'woodmart' ); ?></h4>
-			<p class="description description-wide nmi-design">
-				<label for="edit-menu-item-design-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Design', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-design-<?php echo esc_attr( $item_id ); ?>" data-field="nmi-design" class="widefat" name="menu-item-design[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="default" <?php selected( $design, 'default' ); ?>><?php esc_html_e( 'Default', 'woodmart' ); ?></option>
-						<option value="full-width" <?php selected( $design, 'full-width' ); ?>><?php esc_html_e( 'Full width', 'woodmart' ); ?></option>
-						<option value="full-height" <?php selected( $design, 'full-height' ); ?>><?php esc_html_e( 'Full height', 'woodmart' ); ?></option>
-						<option value="sized" <?php selected( $design, 'sized' ); ?>><?php esc_html_e( 'Set sizes', 'woodmart' ); ?></option>
-						<option value="aside" <?php selected( $design, 'aside' ); ?>><?php esc_html_e( 'Aside', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-			<p class="description description-wide nmi-style-aside">
-				<label for="edit-menu-item-style-aside-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Aside style', 'woodmart' ); ?><br>
-					<select id="edit-menu-style-aside-<?php echo esc_attr( $item_id ); ?>" data-field="nmi-style-aside" class="widefat" name="menu-item-style_aside[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="default" <?php selected( $style_aside, 'default' ); ?>><?php esc_html_e( 'Default', 'woodmart' ); ?></option>
-						<option value="with-bg" <?php selected( $style_aside, 'with-bg' ); ?>><?php esc_html_e( 'With background', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-			<p class="description description-thin nmi-width">
-				<label for="edit-menu-item-width-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Dropdown width', 'woodmart' ); ?><br>
-					<input type="number" id="edit-menu-item-width-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-width[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $width ); ?>">
-				</label>
-			</p>
-			<p class="description description-thin nmi-height">
-				<label for="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Dropdown height', 'woodmart' ); ?><br>
-					<input type="number" id="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-height[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $height ); ?>">
-				</label>
-			</p>
-			<p class="description description-wide nmi-scroll">
-				<label for="edit-menu-item-scroll-<?php echo esc_attr( $item_id ); ?>">
-					<span class="xts-menu-title"><?php esc_html_e( 'Enable scroll', 'woodmart' ); ?><span class="xts-hint"><span class="xts-tooltip xts-top"><?php esc_html_e( 'Select "Yes" to limit the dropdown height to the value specified in the "Dropdown height" input. If "No" the "Dropdown height" will specify only the minimum height and the real dropdown height will depend on the actual height of the content.', 'woodmart' ); ?></span></span></span><br>
-					<select id="edit-menu-item-scroll-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-scroll[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="no" <?php selected( $scroll, 'no' ); ?>><?php esc_html_e( 'No', 'woodmart' ); ?></option>
-						<option value="yes" <?php selected( $scroll, 'yes' ); ?>><?php esc_html_e( 'Yes', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-			<p class="description description-wide nmi-block">
-				<label for="edit-menu-item-block-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'HTML Block for the dropdown', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-block-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-block[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="" <?php selected( $block, '' ); ?>><?php esc_html_e( 'None', 'woodmart' ); ?></option>
-						<?php foreach ( $blocks as $title => $id ) : ?>
-							<option value="<?php echo esc_attr( $id ); ?>" data-edit-link="<?php echo esc_url( admin_url( 'post.php?post=' . $id . '&action=edit' ) ); ?>" <?php selected( $block, $id ); ?>><?php echo esc_html( $title ); ?></option>
-						<?php endforeach ?>
-					</select>
-					<?php echo wp_kses( woodmart_get_html_block_links(), true ); ?>
-				</label>
-			</p>
-			<p class="description description-wide nmi-dropdown-ajax">
-				<label for="edit-menu-item-dropdown-ajax-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Load HTML dropdown with AJAX', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-dropdown-ajax-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-dropdown-ajax[<?php echo esc_attr( $item_id ); ?>]">
-						<option></option>
-						<option value="yes" <?php selected( $dropdown_ajax, 'yes' ); ?>><?php esc_html_e( 'Yes', 'woodmart' ); ?></option>
-						<option value="no" <?php selected( $dropdown_ajax, 'no' ); ?>><?php esc_html_e( 'No', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-			<p class="description description-wide nmi-color-scheme">
-				<label for="edit-menu-item-colorscheme-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Dropdown text color scheme', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-colorscheme-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-colorscheme[<?php echo esc_attr( $item_id ); ?>]">
-						<option value=""></option>
-						<option value="light" <?php selected( $color_scheme, 'light' ); ?>><?php esc_html_e( 'Light', 'woodmart' ); ?></option>
-						<option value="dark" <?php selected( $color_scheme, 'dark' ); ?>><?php esc_html_e( 'Dark', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-			<p class="description description-wide nmi-event">
-				<label for="edit-menu-item-event-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Open on mouse event', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-event-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-event[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="hover" <?php selected( $event, 'hover' ); ?>><?php esc_html_e( 'Hover', 'woodmart' ); ?></option>
-						<option value="click" <?php selected( $event, 'click' ); ?>><?php esc_html_e( 'Click', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
+			<span class="xts-wp-menu-group">
+				<p class="description description-wide nmi-design">
+					<label for="edit-menu-item-design-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Design', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-design-<?php echo esc_attr( $item_id ); ?>" data-field="nmi-design" class="widefat" name="menu-item-design[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="default" <?php selected( $design, 'default' ); ?>><?php esc_html_e( 'Default', 'woodmart' ); ?></option>
+							<option value="full-width" <?php selected( $design, 'full-width' ); ?>><?php esc_html_e( 'Full width', 'woodmart' ); ?></option>
+							<option value="full-height" <?php selected( $design, 'full-height' ); ?>><?php esc_html_e( 'Full height', 'woodmart' ); ?></option>
+							<option value="sized" <?php selected( $design, 'sized' ); ?>><?php esc_html_e( 'Set sizes', 'woodmart' ); ?></option>
+							<option value="aside" <?php selected( $design, 'aside' ); ?>><?php esc_html_e( 'Aside', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<p class="description description-wide nmi-style-aside">
+					<label for="edit-menu-item-style-aside-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Aside style', 'woodmart' ); ?><br>
+						<select id="edit-menu-style-aside-<?php echo esc_attr( $item_id ); ?>" data-field="nmi-style-aside" class="widefat" name="menu-item-style_aside[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="default" <?php selected( $style_aside, 'default' ); ?>><?php esc_html_e( 'Default', 'woodmart' ); ?></option>
+							<option value="with-bg" <?php selected( $style_aside, 'with-bg' ); ?>><?php esc_html_e( 'With background', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<p class="description description-thin nmi-width">
+					<label for="edit-menu-item-width-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Dropdown width', 'woodmart' ); ?><br>
+						<span class="xts-input-append">
+							<input type="number" id="edit-menu-item-width-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-width[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $width ); ?>">
+							<span class="add-on">px</span>
+						</span>
+					</label>
+				</p>
+				<p class="description description-thin nmi-height">
+					<label for="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Dropdown height', 'woodmart' ); ?><br>
+						<span class="xts-input-append">
+							<input type="number" id="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-height[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $height ); ?>">
+							<span class="add-on">px</span>
+						</span>
+					</label>
+				</p>
+				<p class="description description-wide nmi-padding">
+					<label for="edit-menu-item-padding-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Dropdown padding', 'woodmart' ); ?><br>
+						<span class="xts-input-append">
+						<input type="number" id="edit-menu-item-padding-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-padding[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $padding ); ?>">
+						<span class="add-on">px</span>
+						</span>
+					</label>
+				</p>
+				<p class="description description-wide nmi-scroll">
+					<label for="edit-menu-item-scroll-<?php echo esc_attr( $item_id ); ?>">
+						<span class="xts-menu-title"><?php esc_html_e( 'Enable scroll', 'woodmart' ); ?><span class="xts-hint"><span class="xts-tooltip xts-top"><?php esc_html_e( 'Select "Yes" to limit the dropdown height to the value specified in the "Dropdown height" input. If "No" the "Dropdown height" will specify only the minimum height and the real dropdown height will depend on the actual height of the content.', 'woodmart' ); ?></span></span></span><br>
+						<select id="edit-menu-item-scroll-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-scroll[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="no" <?php selected( $scroll, 'no' ); ?>><?php esc_html_e( 'No', 'woodmart' ); ?></option>
+							<option value="yes" <?php selected( $scroll, 'yes' ); ?>><?php esc_html_e( 'Yes', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<p class="description description-wide nmi-block">
+					<label for="edit-menu-item-block-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'HTML Block for the dropdown', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-block-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-block[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="" <?php selected( $block, '' ); ?>><?php esc_html_e( 'None', 'woodmart' ); ?></option>
+							<?php foreach ( $blocks as $title => $id ) : ?>
+								<option value="<?php echo esc_attr( $id ); ?>" data-edit-link="<?php echo esc_url( admin_url( 'post.php?post=' . $id . '&action=edit' ) ); ?>" <?php selected( $block, $id ); ?>><?php echo esc_html( $title ); ?></option>
+							<?php endforeach ?>
+						</select>
+						<?php echo wp_kses( woodmart_get_html_block_links(), true ); ?>
+					</label>
+				</p>
+				<p class="description description-wide nmi-dropdown-ajax">
+					<label for="edit-menu-item-dropdown-ajax-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Load HTML dropdown with AJAX', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-dropdown-ajax-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-dropdown-ajax[<?php echo esc_attr( $item_id ); ?>]">
+							<option></option>
+							<option value="yes" <?php selected( $dropdown_ajax, 'yes' ); ?>><?php esc_html_e( 'Yes', 'woodmart' ); ?></option>
+							<option value="no" <?php selected( $dropdown_ajax, 'no' ); ?>><?php esc_html_e( 'No', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<p class="description description-thin nmi-color-scheme">
+					<label for="edit-menu-item-colorscheme-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Dropdown color scheme', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-colorscheme-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-colorscheme[<?php echo esc_attr( $item_id ); ?>]">
+							<option value=""></option>
+							<option value="light" <?php selected( $color_scheme, 'light' ); ?>><?php esc_html_e( 'Light', 'woodmart' ); ?></option>
+							<option value="dark" <?php selected( $color_scheme, 'dark' ); ?>><?php esc_html_e( 'Dark', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+				<p class="description description-thin nmi-event">
+					<label for="edit-menu-item-event-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Open on mouse event', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-event-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-event[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="hover" <?php selected( $event, 'hover' ); ?>><?php esc_html_e( 'Hover', 'woodmart' ); ?></option>
+							<option value="click" <?php selected( $event, 'click' ); ?>><?php esc_html_e( 'Click', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+			</span>
 
 			<h4 class="description-wide"><?php esc_html_e( 'Label settings', 'woodmart' ); ?></h4>
-			<p class="description description-thin nmi-label-text">
-				<label for="edit-menu-item-label-text-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Label text', 'woodmart' ); ?><br>
-					<input type="text" id="edit-menu-item-label-text-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-label-text[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $label_text ); ?>">
-				</label>
-			</p>
-			<p class="description description-thin nmi-label">
-				<label for="edit-menu-item-label-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Label color', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-label-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-label[<?php echo esc_attr( $item_id ); ?>]">
-						<option value=""></option>
-						<option value="primary" <?php selected( $label, 'primary' ); ?>><?php esc_html_e( 'Primary Color', 'woodmart' ); ?></option>
-						<option value="secondary" <?php selected( $label, 'secondary' ); ?>><?php esc_html_e( 'Secondary', 'woodmart' ); ?></option>
-						<option value="red" <?php selected( $label, 'red' ); ?>><?php esc_html_e( 'Red', 'woodmart' ); ?></option>
-						<option value="green" <?php selected( $label, 'green' ); ?>><?php esc_html_e( 'Green', 'woodmart' ); ?></option>
-						<option value="blue" <?php selected( $label, 'blue' ); ?>><?php esc_html_e( 'Blue', 'woodmart' ); ?></option>
-						<option value="orange" <?php selected( $label, 'orange' ); ?>><?php esc_html_e( 'Orange', 'woodmart' ); ?></option>
-						<option value="grey" <?php selected( $label, 'grey' ); ?>><?php esc_html_e( 'Grey', 'woodmart' ); ?></option>
-						<option value="black" <?php selected( $label, 'black' ); ?>><?php esc_html_e( 'Black', 'woodmart' ); ?></option>
-						<option value="white" <?php selected( $label, 'white' ); ?>><?php esc_html_e( 'White', 'woodmart' ); ?></option>
-					</select>
-				</label>
-			</p>
-
+			<span class="xts-wp-menu-group">
+				<p class="description description-thin nmi-label-text">
+					<label for="edit-menu-item-label-text-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Label text', 'woodmart' ); ?><br>
+						<input type="text" id="edit-menu-item-label-text-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-label-text[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $label_text ); ?>">
+					</label>
+				</p>
+				<p class="description description-thin nmi-label">
+					<label for="edit-menu-item-label-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Label color', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-label-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-label[<?php echo esc_attr( $item_id ); ?>]">
+							<option value=""></option>
+							<option value="primary" <?php selected( $label, 'primary' ); ?>><?php esc_html_e( 'Primary Color', 'woodmart' ); ?></option>
+							<option value="secondary" <?php selected( $label, 'secondary' ); ?>><?php esc_html_e( 'Secondary', 'woodmart' ); ?></option>
+							<option value="red" <?php selected( $label, 'red' ); ?>><?php esc_html_e( 'Red', 'woodmart' ); ?></option>
+							<option value="green" <?php selected( $label, 'green' ); ?>><?php esc_html_e( 'Green', 'woodmart' ); ?></option>
+							<option value="blue" <?php selected( $label, 'blue' ); ?>><?php esc_html_e( 'Blue', 'woodmart' ); ?></option>
+							<option value="orange" <?php selected( $label, 'orange' ); ?>><?php esc_html_e( 'Orange', 'woodmart' ); ?></option>
+							<option value="grey" <?php selected( $label, 'grey' ); ?>><?php esc_html_e( 'Grey', 'woodmart' ); ?></option>
+							<option value="black" <?php selected( $label, 'black' ); ?>><?php esc_html_e( 'Black', 'woodmart' ); ?></option>
+							<option value="white" <?php selected( $label, 'white' ); ?>><?php esc_html_e( 'White', 'woodmart' ); ?></option>
+						</select>
+					</label>
+				</p>
+			</span>
 			<h4 class="description-wide"><?php esc_html_e( 'Image settings', 'woodmart' ); ?></h4>
-			<p class="description description-wide nmi-image-type">
-				<label for="edit-menu-item-image-type-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Use image as', 'woodmart' ); ?><br>
-					<select id="edit-menu-item-image-type-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-image-type[<?php echo esc_attr( $item_id ); ?>]">
-						<option value="background" <?php selected( $image_type, 'background', true ); ?>>
-							<?php esc_html_e( 'Dropdown background', 'woodmart' ); ?>
-						</option>
-						<option value="image" <?php selected( $image_type, 'image', true ); ?>>
-							<?php esc_html_e( 'Menu item icon', 'woodmart' ); ?>
-						</option>
-					</select>
-				</label>
-			</p>
-			<?php if ( has_post_thumbnail( $item_id ) ) : ?>
-				<?php $link_text = esc_html__( 'Change image', 'woodmart' ); ?>
-				<div class="nmi-current-image nmi-div nmi-change-image" style="display: none;">
-					<a href="<?php echo esc_url( $upload_url ); ?>" data-id="<?php echo esc_attr( $item_id ); ?>" class="thickbox add_media link-with-image">
-						<?php echo get_the_post_thumbnail( $item_id, 'thumb' ); ?>
-					</a>
-				</div>
-			<?php else : ?>
-				<?php $link_text = esc_html__( 'Upload image', 'woodmart' ); ?>
-				<div class="nmi-current-image nmi-div nmi-upload-image" style="display: none;"></div>
-			<?php endif; ?>
-
-			<div class="nmi-upload-link nmi-div" style="display: none;">
-				<a href="<?php echo esc_url( $upload_url ); ?>" data-id="<?php echo esc_attr( $item_id ); ?>" class="thickbox add_media">
-					<?php echo esc_html( $link_text ); ?>
-				</a>
-				<?php if ( has_post_thumbnail( $item_id ) && version_compare( $wp_version, '3.5', '>=' ) ) : ?>
-					|
-					<a href="#" data-id="<?php echo esc_attr( $item_id ); ?>" class="nmi_remove" onclick="NMIRemoveThumbnail('<?php echo esc_attr( wp_create_nonce( 'set_post_thumbnail-' . $item_id ) ); ?>','<?php echo esc_attr( $item_id ); ?>');return false;">
-						<?php echo esc_html__( 'Remove image', 'woodmart' ); ?>
-					</a>
+			<span class="xts-wp-menu-group">
+				<p class="description description-wide nmi-image-type">
+					<label for="edit-menu-item-image-type-<?php echo esc_attr( $item_id ); ?>">
+						<?php esc_html_e( 'Use image as', 'woodmart' ); ?><br>
+						<select id="edit-menu-item-image-type-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-image-type[<?php echo esc_attr( $item_id ); ?>]">
+							<option value="image" <?php selected( $image_type, 'image', true ); ?>>
+								<?php esc_html_e( 'Menu item icon', 'woodmart' ); ?>
+							</option>
+							<option value="background" <?php selected( $image_type, 'background', true ); ?>>
+								<?php esc_html_e( 'Dropdown background', 'woodmart' ); ?>
+							</option>
+						</select>
+					</label>
+				</p>
+				<?php if ( has_post_thumbnail( $item_id ) ) : ?>
+					<?php $link_text = esc_html__( 'Change image', 'woodmart' ); ?>
+					<div class="nmi-current-image nmi-div nmi-change-image" style="display: none;">
+						<a href="<?php echo esc_url( $upload_url ); ?>" data-id="<?php echo esc_attr( $item_id ); ?>" class="thickbox add_media link-with-image">
+							<?php echo get_the_post_thumbnail( $item_id, 'thumb' ); ?>
+						</a>
+					</div>
+				<?php else : ?>
+					<?php $link_text = esc_html__( 'Upload image', 'woodmart' ); ?>
+					<div class="nmi-current-image nmi-div nmi-upload-image" style="display: none;"></div>
 				<?php endif; ?>
-			</div>
-			<p class="description description-wide nmi-icon">
-				<label for="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>">
-					<?php esc_html_e( 'Icon name (from FontAwesome set)', 'woodmart' ); ?><br>
-					<input type="text" id="edit-menu-item-icon-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-icon[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $icon ); ?>">
-				</label>
-				<span class="description"><?php esc_html_e( 'The name of icon from Font Awesome 5 list.', 'woodmart' ); ?><br><?php esc_html_e( 'For example:', 'woodmart' ); ?> <code>envelope-open fas</code></span>
-			</p>
 
-			<h4 class="description-wide"><?php esc_html_e( 'Page anchor (for one-page menu)', 'woodmart' ); ?></h4>
+				<div class="nmi-upload-link nmi-div" style="display: none;">
+					<a href="<?php echo esc_url( $upload_url ); ?>" data-id="<?php echo esc_attr( $item_id ); ?>" class="thickbox add_media">
+						<?php echo esc_html( $link_text ); ?>
+					</a>
+					<?php if ( has_post_thumbnail( $item_id ) && version_compare( $wp_version, '3.5', '>=' ) ) : ?>
+						|
+						<a href="#" data-id="<?php echo esc_attr( $item_id ); ?>" class="nmi_remove" onclick="NMIRemoveThumbnail('<?php echo esc_attr( wp_create_nonce( 'set_post_thumbnail-' . $item_id ) ); ?>','<?php echo esc_attr( $item_id ); ?>');return false;">
+							<?php echo esc_html__( 'Remove image', 'woodmart' ); ?>
+						</a>
+					<?php endif; ?>
+				</div>
+			</span>
+
+			<h4 class="description-wide"><?php esc_html_e( 'Extra options', 'woodmart' ); ?></h4>
+			<span class="xts-menu-title"><?php esc_html_e( 'Page anchor (for one-page menu)', 'woodmart' ); ?><span class="xts-hint"><span class="xts-tooltip xts-top"><?php esc_html_e( 'Enable this to use one page navigation menu. If enabled you need to set the link for this item to be like this: http://your_site.com/home_page/#anchor_id where anchor_id will be the ID of the ROW on your home page.', 'woodmart' ); ?></span></span></span><br>
 			<p class="description description-wide nmi-opanchor">
 				<label for="edit-menu-item-opanchor-<?php echo esc_attr( $item_id ); ?>">
 					<select id="edit-menu-item-opanchor-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-opanchor[<?php echo esc_attr( $item_id ); ?>]">
@@ -255,11 +270,22 @@ class NMI_Walker_Nav_Menu_Edit extends Walker_Nav_Menu_Edit {
 						<option value="enable" <?php selected( $opanchor, 'enable' ); ?>><?php esc_html_e( 'Enable', 'woodmart' ); ?></option>
 						<option value="disable" <?php selected( $opanchor, 'disable' ); ?>><?php esc_html_e( 'Disable', 'woodmart' ); ?></option>
 					</select>
-					<span class="description"><?php esc_html_e( 'Enable this to use one page navigation menu. If enabled you need to set the link for this item to be like this: http://your_site.com/home_page/#anchor_id where anchor_id will be the ID of the ROW on your home page.', 'woodmart' ); ?></span>
 				</label>
 			</p>
 
-			<h4 class="description-wide"><?php esc_html_e( 'Extra options', 'woodmart' ); ?></h4>
+			<p class="description description-wide nmi-icon">
+				<label for="edit-menu-item-height-<?php echo esc_attr( $item_id ); ?>">
+					<?php esc_html_e( 'Icon name (from FontAwesome 5 set)', 'woodmart' ); ?>
+					<span class="xts-field-status xts-status-deprecated">
+						<span class="xts-status-label">
+							<?php esc_html_e( 'Deprecated', 'woodmart' ); ?>
+						</span>
+					</span>
+					<br>
+					<input type="text" id="edit-menu-item-icon-<?php echo esc_attr( $item_id ); ?>" class="widefat" name="menu-item-icon[<?php echo esc_attr( $item_id ); ?>]" value="<?php echo esc_attr( $icon ); ?>">
+				</label>
+				<span class="description"><?php esc_html_e( 'The icon code from FontAwesome 5 list.', 'woodmart' ); ?><?php esc_html_e( ' Example:', 'woodmart' ); ?> <code>envelope-open fas</code></span>
+			</p>
 		<?php
 		$output .= ob_get_contents();
 		ob_end_clean();

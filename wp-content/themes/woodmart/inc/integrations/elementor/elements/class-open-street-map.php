@@ -242,6 +242,15 @@ class Open_Street_Map extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'marker_list',
 			array(
 				'label'       => esc_html__( 'Marker list', 'woodmart' ),
@@ -746,7 +755,7 @@ class Open_Street_Map extends Widget_Base {
 
 		// Placeholder settings.
 		if ( isset( $settings['map_init_placeholder']['id'] ) && $settings['map_init_placeholder']['id'] ) {
-			$placeholder = woodmart_get_image_html( $settings, 'map_init_placeholder' );
+			$placeholder = woodmart_otf_get_image_html( $settings['map_init_placeholder']['id'], $settings['map_init_placeholder_size'], $settings['map_init_placeholder_custom_dimension'] );
 		} else {
 			$placeholder = '<img src="' . WOODMART_ASSETS_IMAGES . '/google-map-placeholder.jpg">';
 		}
@@ -769,7 +778,7 @@ class Open_Street_Map extends Widget_Base {
 			<?php if ( 'button' === $settings['init_type'] ) : ?>
 				<div class="wd-init-map-wrap wd-fill">
 					<a href="#" rel="nofollow" class="btn btn-color-white wd-init-map">
-						<span><?php esc_attr_e( 'Show map', 'woodmart' ); ?></span>
+						<span><?php esc_html_e( 'Show map', 'woodmart' ); ?></span>
 					</a>
 				</div>
 			<?php endif ?>

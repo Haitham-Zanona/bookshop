@@ -41,15 +41,16 @@ class Client extends Singleton {
 	/**
 	 * Transient name.
 	 *
-	 * @var array
+	 * @var string
 	 */
-	public $transient_name = 'xts_patches_map';
+	public $transient_name = '';
 
 	/**
 	 * Register hooks and load base data.
 	 */
 	public function init() {
-		$this->theme_version = WOODMART_VERSION;
+		$this->theme_version  = WOODMART_VERSION;
+		$this->transient_name = 'xts_patches_map_' . $this->theme_version;
 	}
 
 	/**
@@ -62,8 +63,12 @@ class Client extends Singleton {
 
 		$patches_maps = get_transient( $this->transient_name );
 
-		if ( 'admin.php' === $pagenow && isset( $_GET['page'] ) && ( 'xts_dashboard' === $_GET['page'] || 'xts_theme_settings' === $_GET['page'] ) ) { //phpcs:ignore
-			$patches_maps = $this->get_patches_maps();
+		if ( 'admin.php' === $pagenow && isset( $_GET['page'] ) ) { //phpcs:ignore.
+			if ( in_array( $_GET['page'], array( 'xts_dashboard', 'xts_theme_settings' ), true ) ) { //phpcs:ignore.
+				$patches_maps = $this->get_patches_maps();
+			} else if ( 'xts_patcher' === $_GET['page'] ) { //phpcs:ignore.
+				$patches_maps = $this->get_patches_maps_from_server();
+			}
 		}
 
 		if ( ! $patches_maps || ! is_array( $patches_maps ) ) {
@@ -99,9 +104,11 @@ class Client extends Singleton {
 	 */
 	public function render() {
 		wp_enqueue_script( 'woodmart-patcher-scripts', WOODMART_ASSETS . '/js/patcher.js', array(), WOODMART_VERSION, true );
+		wp_localize_script( 'woodmart-patcher-scripts', 'woodmart_patch_notice', $this->add_localized_settings() );
 
-		$patches         = $this->get_patches_maps_from_server();
-		$patch_installed = get_option( 'xts_successfully_installed_patches' );
+		$patches               = $this->get_patches_maps();
+		$patch_installed       = get_option( 'xts_successfully_installed_patches' );
+		$all_patches_installed = empty( array_diff( array_keys( $patches ), isset( $patch_installed[ $this->theme_version ] ) ? array_keys( $patch_installed[ $this->theme_version ] ) : array() ) );
 
 		?>
 		<div class="xts-box xts-theme-style">
@@ -109,6 +116,16 @@ class Client extends Singleton {
 				<h3>
 					<?php esc_html_e( 'Patcher', 'woodmart' ); ?>
 				</h3>
+				<?php if ( $patches && $this->check_filesystem_api() ) : ?>
+					<div class="xts-patch-button-wrapper <?php echo $all_patches_installed ? 'xts-applied' : ''; ?>">
+						<a href="#" class="xts-btn xts-color-primary xts-patch-apply-all xts-i-check">
+							<?php esc_html_e( 'Apply all', 'woodmart' ); ?>
+						</a>
+						<span class="xts-patch-label-applied xts-i-check">
+							<?php esc_html_e( 'All applied', 'woodmart' ); ?>
+						</span>
+					</div>
+				<?php endif; ?>
 			</div>
 
 			<div class="xts-box-content">
@@ -306,5 +323,19 @@ class Client extends Singleton {
 		}
 
 		return 'direct' === $wp_filesystem->method;
+	}
+
+	/**
+	 * Add localized settings.
+	 *
+	 * @return array
+	 */
+	public function add_localized_settings() {
+		return array(
+			'single_patch_confirm' => esc_html__( 'These files will be updated:', 'woodmart' ),
+			'all_patches_confirm'  => esc_html__( 'Are you sure you want to download all patches?', 'woodmart' ),
+			'all_patches_applied'  => esc_html__( 'All patches are applied.', 'woodmart' ),
+			'ajax_error'           => esc_html__( 'Something wrong with removing data. Please, try to remove data manually or contact our support center for further assistance.', 'woodmart' ),
+		);
 	}
 }

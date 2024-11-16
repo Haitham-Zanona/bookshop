@@ -24,15 +24,33 @@
 
 				if (param.wd_dependency) {
 					if (param.wd_dependency.element === name) {
-						if (param.wd_dependency.value[0] === value) {
-							$this.show();
-							if ($this.parents('.wd-typography-wrapper')) {
-								$this.parents('.wd-typography-wrapper').show();
+						if ('undefined' !== typeof param.wd_dependency.value) {
+							if (param.wd_dependency.value.includes(value)) {
+								$this.show();
+								if ($this.parents('.wd-typography-wrapper')) {
+									$this.parents('.wd-typography-wrapper').show();
+								}
+							} else {
+								$this.hide();
+								if ($this.parents('.wd-typography-wrapper')) {
+									$this.parents('.wd-typography-wrapper').hide();
+								}
 							}
-						} else {
-							$this.hide();
-							if ($this.parents('.wd-typography-wrapper')) {
-								$this.parents('.wd-typography-wrapper').hide();
+						}
+
+						if ('undefined' !== typeof param.wd_dependency.value_not_equal_to) {
+							if (param.wd_dependency.value_not_equal_to.includes(value)) {
+								$this.hide();
+
+								if ($this.parents('.wd-typography-wrapper')) {
+									$this.parents('.wd-typography-wrapper').hide();
+								}
+							} else {
+								$this.show();
+
+								if ($this.parents('.wd-typography-wrapper')) {
+									$this.parents('.wd-typography-wrapper').show();
+								}
 							}
 						}
 					}
@@ -110,8 +128,8 @@
 			}
 		});
 
-		$panel.find('.xts-tooltip').on('hover mouseover', function() {
-			var $hint = $(this);
+		$panel.find('.xts-hint').on('hover mouseover', function() {
+			var $hint = $(this).find('.xts-tooltip');
 
 			$hint.removeClass('xts-right xts-left');
 

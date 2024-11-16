@@ -145,3 +145,20 @@ if ( ! function_exists( 'woodmart_get_unsubscribe_link' ) ) {
 		return apply_filters( 'woodmart_send_wishlist_unsubscribe_url', add_query_arg( 'unsubscribe_send_wishlist_product', $unsubscribe_token, get_permalink( wc_get_page_id( 'shop' ) ) ), $user_id, $unsubscribe_token, $unsubscribe_token_expiration );
 	}
 }
+
+if ( ! function_exists( 'woodmart_check_this_email_notification_is_enabled' ) ) {
+	/**
+	 * Check this email notification is enabled in woocommerce.
+	 *
+	 * @param string $option Name option.
+	 * @param string $default Default option value. If the $option is not saved in the database, then $default will be taken.
+	 *
+	 * @return bool
+	 */
+	function woodmart_check_this_email_notification_is_enabled( $option, $default = 'no' ) {
+		$settings   = get_option( $option, array() );
+		$option_val = ! isset( $settings['enabled'] ) ? $default : $settings['enabled'];
+
+		return 'yes' === $option_val || isset( $_GET['page'] ) && 'digthis-woocommerce-preview-emails' === $_GET['page'];
+	}
+}

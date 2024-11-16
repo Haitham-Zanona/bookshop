@@ -16,6 +16,7 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 				array(
 					'title'                         => 'GO',
 					'link'                          => '',
+					'link_nofollow'                 => false,
 					'color'                         => 'default',
 					'style'                         => 'default',
 					'shape'                         => 'rectangle',
@@ -37,6 +38,8 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 
 					'css_animation'                 => 'none',
 					'el_class'                      => '',
+					'wrapper_class'                 => '',
+					'btn_classes'                   => '',
 
 					'icon_fontawesome'              => '',
 					'icon_openiconic'               => '',
@@ -52,6 +55,8 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 					'img_size'                      => '25x25',
 
 					'wd_button_collapsible_content' => 'no',
+
+					'is_header_button'              => false,
 				),
 				$atts
 			)
@@ -63,6 +68,10 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 
 		if ( function_exists( 'vc_shortcode_custom_css_class' ) ) {
 			$wrap_class .= ' ' . vc_shortcode_custom_css_class( $css );
+		}
+
+		if ( ! empty( $wrapper_class ) ) {
+			$wrap_class .= ' ' . $wrapper_class;
 		}
 
 		$attributes = woodmart_get_link_attributes( $link, $popup );
@@ -79,17 +88,25 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 		$wrap_class .= woodmart_get_old_classes( ' woodmart-button-wrapper' );
 		$wrap_class .= woodmart_get_css_animation( $css_animation );
 
-		if ( $bg_color || $bg_color_hover ) {
-			$btn_class .= ' btn-scheme-' . $color_scheme;
-			$btn_class .= ' btn-scheme-hover-' . $color_scheme_hover;
-		} else {
-			$btn_class .= ' btn-color-' . $color;
+		if ( ! $is_header_button ) {
+			if ( $bg_color || $bg_color_hover ) {
+				$btn_class .= ' btn-scheme-' . $color_scheme;
+				$btn_class .= ' btn-scheme-hover-' . $color_scheme_hover;
+			} else {
+				$btn_class .= ' btn-color-' . $color;
+			}
 		}
+
 		$btn_class .= ' btn-style-' . $style;
 		$btn_class .= ' btn-style-' . $shape;
 		$btn_class .= ' btn-size-' . $size;
+
 		if ( $full_width == 'yes' ) {
 			$btn_class .= ' btn-full-width';
+		}
+
+		if ( ! empty( $btn_classes ) ) {
+			$btn_class .= ' ' . $btn_classes;
 		}
 
 		if ( 'yes' === $button_smooth_scroll ) {
@@ -119,24 +136,25 @@ if ( ! function_exists( 'woodmart_shortcode_button' ) ) {
 		if ( 'icon' === $icon_type && ${'icon_' . $icon_library} ) {
 			$btn_class .= ' btn-icon-pos-' . $icon_position;
 			$icon       = '<span class="wd-btn-icon"><span class="wd-icon ' . ${'icon_' . $icon_library} . '"></span></span>';
-		} elseif ( function_exists( 'wpb_getImageBySize' ) && 'image' === $icon_type && ! empty( $image ) ) {
-			$btn_class   .= ' btn-icon-pos-' . $icon_position;
+		} elseif ( 'image' === $icon_type && ! empty( $image ) ) {
+			$btn_class .= ' btn-icon-pos-' . $icon_position;
 
 			if ( woodmart_is_svg( wp_get_attachment_image_url( $image ) ) ) {
 				$image_output = woodmart_get_svg_html( $image, $img_size );
+			} elseif ( ! empty( $image['id'] ) ) {
+				$image_output = woodmart_otf_get_image_html( $image['id'], $img_size );
 			} else {
-				$image_output = wpb_getImageBySize(
-					array(
-						'attach_id'  => $image,
-						'thumb_size' => $img_size,
-					)
-				)['thumbnail'];
+				$image_output = woodmart_otf_get_image_html( $image, $img_size );
 			}
 
 			$icon = '<span class="wd-btn-icon">' . $image_output .  '</span>';
 		}
 
 		$attributes .= ' class="' . $btn_class . '"';
+
+		if ( $link_nofollow ) {
+			$attributes .= ' rel="nofollow"';
+		}
 
 		$output = '<div id="' . esc_attr( $id ) . '" class="' . esc_attr( $wrap_class ) . '"' . $wrapper_attrs . '><a ' . $attributes . '>' . esc_html( $title ) . $icon . '</a>';
 

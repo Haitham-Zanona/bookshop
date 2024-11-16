@@ -4,7 +4,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -28,7 +28,7 @@ Options::add_field(
 	array(
 		'id'          => 'sticky_toolbar',
 		'name'        => esc_html__( 'Enable sticky navbar', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-sticky-navbar.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-sticky-navbar.jpg" alt="">', true ),
 		'description' => esc_html__( 'Sticky navigation toolbar will be shown at the bottom on mobile devices.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'general_navbar_section',
@@ -36,7 +36,7 @@ Options::add_field(
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
 		'default'     => true,
 		'priority'    => 10,
-		'class'    => 'xts-tooltip-bordered',
+		'class'       => 'xts-tooltip-bordered',
 	)
 );
 
@@ -44,7 +44,7 @@ Options::add_field(
 	array(
 		'id'          => 'sticky_toolbar_label',
 		'name'        => esc_html__( 'Navbar labels', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'navbar-labels.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'navbar-labels.jpg" alt="">', true ),
 		'description' => esc_html__( 'Show/hide labels under icons in the mobile navbar.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'general_navbar_section',
@@ -81,12 +81,12 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button URL', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'    => 'button_tabs',
 			'tab'   => esc_html__( 'Button [1]', 'woodmart' ),
 			'title' => esc_html__( 'Custom buttons', 'woodmart' ),
 			'style' => 'default',
-		],
+		),
 		'priority' => 50,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -98,10 +98,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button text', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [1]', 'woodmart' ),
-		],
+		),
 		'priority' => 60,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -113,10 +113,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button icon', 'woodmart' ),
 		'type'     => 'upload',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [1]', 'woodmart' ),
-		],
+		),
 		'priority' => 70,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -128,10 +128,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button URL', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [2]', 'woodmart' ),
-		],
+		),
 		'priority' => 80,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -143,10 +143,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button text', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [2]', 'woodmart' ),
-		],
+		),
 		'priority' => 90,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -158,10 +158,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button icon', 'woodmart' ),
 		'type'     => 'upload',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [2]', 'woodmart' ),
-		],
+		),
 		'priority' => 100,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -173,10 +173,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button URL', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [3]', 'woodmart' ),
-		],
+		),
 		'priority' => 110,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -188,10 +188,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button text', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [3]', 'woodmart' ),
-		],
+		),
 		'priority' => 120,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -203,10 +203,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button icon', 'woodmart' ),
 		'type'     => 'upload',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [3]', 'woodmart' ),
-		],
+		),
 		'priority' => 130,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -218,10 +218,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button URL', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [4]', 'woodmart' ),
-		],
+		),
 		'priority' => 140,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -233,10 +233,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button text', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [4]', 'woodmart' ),
-		],
+		),
 		'priority' => 150,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -248,10 +248,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button icon', 'woodmart' ),
 		'type'     => 'upload',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [4]', 'woodmart' ),
-		],
+		),
 		'priority' => 160,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -263,10 +263,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button URL', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [5]', 'woodmart' ),
-		],
+		),
 		'priority' => 170,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -278,10 +278,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button text', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [5]', 'woodmart' ),
-		],
+		),
 		'priority' => 180,
 		'class'    => 'xts-tab-field xts-col-6',
 	)
@@ -293,10 +293,10 @@ Options::add_field(
 		'name'     => esc_html__( 'Custom button icon', 'woodmart' ),
 		'type'     => 'upload',
 		'section'  => 'general_navbar_section',
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'button_tabs',
 			'tab' => esc_html__( 'Button [5]', 'woodmart' ),
-		],
+		),
 		'priority' => 190,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -309,7 +309,7 @@ Options::add_field(
 	array(
 		'id'       => 'age_verify',
 		'name'     => esc_html__( 'Enable age verification popup', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-enable-age-verification-popup.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-enable-age-verification-popup.jpg" alt="">', true ),
 		'type'     => 'switcher',
 		'section'  => 'age_verify_section',
 		'default'  => false,
@@ -356,7 +356,7 @@ Options::add_field(
 		'type'     => 'background',
 		'section'  => 'age_verify_section',
 		'group'    => esc_html__( 'Style', 'woodmart' ),
-		'selector' => 'div.wd-popup.wd-age-verify',
+		'selector' => '.wd-popup.wd-age-verify',
 		'priority' => 40,
 	)
 );
@@ -385,17 +385,22 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'       => 'age_verify_width',
-		'name'     => esc_html__( 'Width', 'woodmart' ),
-		'type'     => 'range',
-		'section'  => 'age_verify_section',
-		'group'    => esc_html__( 'Style', 'woodmart' ),
-		'default'  => 500,
-		'min'      => 400,
-		'step'     => 10,
-		'max'      => 1000,
-		'priority' => 60,
-		'unit'     => 'px',
+		'id'        => 'age_verify_width',
+		'name'      => esc_html__( 'Width', 'woodmart' ),
+		'type'      => 'range',
+		'section'   => 'age_verify_section',
+		'group'     => esc_html__( 'Style', 'woodmart' ),
+		'default'   => 500,
+		'min'       => 400,
+		'step'      => 10,
+		'max'       => 1000,
+		'priority'  => 60,
+		'selectors' => array(
+			'.wd-popup.wd-age-verify' => array(
+				'--wd-popup-width: {{VALUE}}px;',
+			),
+		),
+		'unit'      => 'px',
 	)
 );
 
@@ -406,7 +411,7 @@ Options::add_field(
 	array(
 		'id'          => 'promo_popup',
 		'name'        => esc_html__( 'Enable promo popup', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-enable-promo-popup.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-enable-promo-popup.jpg" alt="">', true ),
 		'description' => esc_html__( 'Show promo popup to users when they enter the site.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'promo_popup_section',
@@ -447,7 +452,7 @@ Options::add_field(
 		'name'     => esc_html__( 'Text', 'woodmart' ),
 		'wysiwyg'  => true,
 		'section'  => 'promo_popup_section',
-		'group'       => esc_html__( 'Content', 'woodmart' ),
+		'group'    => esc_html__( 'Content', 'woodmart' ),
 		'requires' => array(
 			array(
 				'key'     => 'promo_popup_content_type',
@@ -465,7 +470,7 @@ Options::add_field(
 		'type'         => 'select',
 		'section'      => 'promo_popup_section',
 		'name'         => esc_html__( 'HTML Block', 'woodmart' ),
-		'group'       => esc_html__( 'Content', 'woodmart' ),
+		'group'        => esc_html__( 'Content', 'woodmart' ),
 		'select2'      => true,
 		'empty_option' => true,
 		'autocomplete' => array(
@@ -563,7 +568,48 @@ Options::add_field(
 		'step'        => 10,
 		'max'         => 1000,
 		'priority'    => 70,
+		'selectors'   => array(
+			'.wd-popup.wd-promo-popup' => array(
+				'--wd-popup-width: {{VALUE}}px;',
+			),
+		),
 		'unit'        => 'px',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'            => 'popup_padding',
+		'name'          => esc_html__( 'Popup padding', 'woodmart' ),
+		'description'   => esc_html__( 'Set padding of the promo popup in pixels or percentages. The default value is 30px.', 'woodmart' ),
+		'type'          => 'responsive_range',
+		'group'         => esc_html__( 'Style', 'woodmart' ),
+		'section'       => 'promo_popup_section',
+		'selectors'     => array(
+			'.wd-popup.wd-promo-popup' => array(
+				'--wd-popup-padding: {{VALUE}}{{UNIT}};',
+			),
+		),
+		'generate_zero' => true,
+		'devices'       => array(
+			'desktop' => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+		),
+		'range'         => array(
+			'px' => array(
+				'min'  => 0,
+				'max'  => 200,
+				'step' => 1,
+			),
+			'%'  => array(
+				'min'  => 0,
+				'max'  => 100,
+				'step' => 1,
+			),
+		),
+		'priority'      => 75,
 	)
 );
 
@@ -587,7 +633,7 @@ Options::add_field(
 		'id'       => 'popup_event',
 		'name'     => esc_html__( 'Show popup after', 'woodmart' ),
 		'type'     => 'buttons',
-		'group'       => esc_html__( 'Settings', 'woodmart' ),
+		'group'    => esc_html__( 'Settings', 'woodmart' ),
 		'section'  => 'promo_popup_section',
 		'default'  => 'time',
 		'options'  => array(
@@ -668,7 +714,7 @@ Options::add_field(
 	array(
 		'id'          => 'cookies_info',
 		'name'        => esc_html__( 'Show cookies info', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-cookies-notice.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'general-cookies-notice.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Under EU privacy regulations, websites must make it clear to visitors what information about them is being stored. This specifically includes cookies. Turn on this option and user will see info box at the bottom of the page that your web-site is using cookies.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'cookie_section',
@@ -676,7 +722,7 @@ Options::add_field(
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
 		'default'     => false,
 		'priority'    => 10,
-		'class'    => 'xts-tooltip-bordered',
+		'class'       => 'xts-tooltip-bordered',
 	)
 );
 
@@ -733,7 +779,7 @@ Options::add_field(
 	array(
 		'id'          => 'header_banner',
 		'name'        => esc_html__( 'Header banner', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'general-header-banner.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'general-header-banner.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Display a thin line above the header with your custom content. Useful for promotions and global messages.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'header_banner_section',
@@ -832,6 +878,13 @@ Options::add_field(
 		'type'     => 'background',
 		'section'  => 'header_banner_section',
 		'selector' => '.header-banner',
+		'requires' => array(
+			array(
+				'key'     => 'header_banner',
+				'compare' => 'equals',
+				'value'   => '1',
+			),
+		),
 		'priority' => 40,
 	)
 );
@@ -871,12 +924,31 @@ Options::add_field(
 		'min'         => 0,
 		'step'        => 1,
 		'max'         => 200,
-		't_tab'       => [
-			'id'    => 'header_banner_height_tabs',
-			'tab'   => esc_html__( 'Desktop', 'woodmart' ),
-			'icon'  => 'xts-i-desktop',
-			'style' => 'devices',
-		],
+		'selectors'   => array(
+			':root' => array(
+				'--wd-header-banner-h: {{VALUE}}px;',
+			),
+		),
+		't_tab'       => array(
+			'id'       => 'header_banner_height_tabs',
+			'tab'      => esc_html__( 'Desktop', 'woodmart' ),
+			'icon'     => 'xts-i-desktop',
+			'style'    => 'devices',
+			'requires' => array(
+				array(
+					'key'     => 'header_banner',
+					'compare' => 'equals',
+					'value'   => '1',
+				),
+			),
+		),
+		'requires'    => array(
+			array(
+				'key'     => 'header_banner',
+				'compare' => 'equals',
+				'value'   => '1',
+			),
+		),
 		'priority'    => 60,
 		'unit'        => 'px',
 	)
@@ -894,11 +966,31 @@ Options::add_field(
 		'min'         => 0,
 		'step'        => 1,
 		'max'         => 200,
-		't_tab'       => [
-			'id'   => 'header_banner_height_tabs',
-			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
-			'icon' => 'xts-i-phone',
-		],
+		'css_device'  => 'tablet',
+		'selectors'   => array(
+			':root' => array(
+				'--wd-header-banner-h: {{VALUE}}px;',
+			),
+		),
+		't_tab'       => array(
+			'id'       => 'header_banner_height_tabs',
+			'tab'      => esc_html__( 'Mobile', 'woodmart' ),
+			'icon'     => 'xts-i-phone',
+			'requires' => array(
+				array(
+					'key'     => 'header_banner',
+					'compare' => 'equals',
+					'value'   => '1',
+				),
+			),
+		),
+		'requires'    => array(
+			array(
+				'key'     => 'header_banner',
+				'compare' => 'equals',
+				'value'   => '1',
+			),
+		),
 		'priority'    => 70,
 		'unit'        => 'px',
 	)
@@ -908,7 +1000,7 @@ Options::add_field(
 	array(
 		'id'          => 'header_close_btn',
 		'name'        => esc_html__( 'Close button', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'header-close-button.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'header-close-button.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Show close banner button', 'woodmart' ),
 		'group'       => esc_html__( 'Settings', 'woodmart' ),
 		'type'        => 'switcher',
@@ -949,7 +1041,7 @@ Options::add_field(
 	array(
 		'id'          => 'enqueue_posts_results',
 		'name'        => esc_html__( 'Display results from blog', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'display-results-from-blog.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'display-results-from-blog.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable this option to show search results from the blog below the product results.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'general_search',
@@ -1014,7 +1106,7 @@ Options::add_field(
 	array(
 		'id'          => 'popular_requests',
 		'name'        => esc_html__( 'Popular requests', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'popular-requests.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'popular-requests.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Show quick buttons under the search form with popular search requests. Separate words with new lines.', 'woodmart' ),
 		'group'       => esc_html__( 'Full screen search', 'woodmart' ),
 		'type'        => 'textarea',
@@ -1027,14 +1119,14 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'          => 'full_search_content_type',
-		'name'        => esc_html__( 'Full screen search extra content', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'full-screen-search-extra-content.gif" alt="">', 'woodmart' ), true ),
-		'type'        => 'buttons',
-		'section'     => 'general_search',
-		'group'       => esc_html__( 'Full screen search', 'woodmart' ),
-		'default'     => 'content',
-		'options'     => array(
+		'id'       => 'full_search_content_type',
+		'name'     => esc_html__( 'Full screen search extra content', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'full-screen-search-extra-content.mp4" autoplay loop muted></video>',
+		'type'     => 'buttons',
+		'section'  => 'general_search',
+		'group'    => esc_html__( 'Full screen search', 'woodmart' ),
+		'default'  => 'content',
+		'options'  => array(
 			'text'    => array(
 				'name'  => esc_html__( 'Text', 'woodmart' ),
 				'value' => 'text',
@@ -1044,28 +1136,28 @@ Options::add_field(
 				'value' => 'content',
 			),
 		),
-		'priority'    => 60,
-		'class'       => 'xts-html-block-switch',
+		'priority' => 60,
+		'class'    => 'xts-html-block-switch',
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'full_search_content_text',
-		'type'     => 'textarea',
-		'name'     => esc_html__( 'Full-screen search text', 'woodmart' ),
+		'id'          => 'full_search_content_text',
+		'type'        => 'textarea',
+		'name'        => esc_html__( 'Full-screen search text', 'woodmart' ),
 		'description' => esc_html__( 'You can display some products, posts, banners or other information in the full screen search.', 'woodmart' ),
 		'group'       => esc_html__( 'Full screen search', 'woodmart' ),
-		'wysiwyg'  => true,
-		'section'  => 'general_search',
-		'requires' => array(
+		'wysiwyg'     => true,
+		'section'     => 'general_search',
+		'requires'    => array(
 			array(
 				'key'     => 'full_search_content_type',
 				'compare' => 'equals',
 				'value'   => 'text',
 			),
 		),
-		'priority' => 70,
+		'priority'    => 70,
 	)
 );
 
@@ -1073,8 +1165,8 @@ Options::add_field(
 	array(
 		'id'           => 'full_search_content_html_block',
 		'name'         => esc_html__( 'Full screen search custom content', 'woodmart' ),
-		'description' => esc_html__( 'You can display some products, posts, banners or other information in the full screen search.', 'woodmart' ),
-		'group'       => esc_html__( 'Full screen search', 'woodmart' ),
+		'description'  => esc_html__( 'You can display some products, posts, banners or other information in the full screen search.', 'woodmart' ),
+		'group'        => esc_html__( 'Full screen search', 'woodmart' ),
 		'type'         => 'select',
 		'section'      => 'general_search',
 		'select2'      => true,

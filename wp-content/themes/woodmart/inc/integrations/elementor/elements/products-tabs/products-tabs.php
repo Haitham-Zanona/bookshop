@@ -24,12 +24,16 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 			'tabs_style'                    => 'underline',
 			'icon_alignment'                => 'left',
 			'icon_alignment_design_default' => 'center',
+			'enable_heading_bg'             => 'no',
 
 			// Layout.
 			'layout'                        => 'grid',
 			'pagination'                    => '',
+			'pagination_arrows_position'    => '',
 			'items_per_page'                => 12,
 			'spacing'                       => woodmart_get_opt( 'products_spacing' ),
+			'spacing_tablet'                => woodmart_get_opt( 'products_spacing_tablet' ),
+			'spacing_mobile'                => woodmart_get_opt( 'products_spacing_mobile' ),
 			'columns'                       => [ 'size' => 4 ],
 			'products_masonry'              => woodmart_get_opt( 'products_masonry' ),
 			'products_different_sizes'      => woodmart_get_opt( 'products_different_sizes' ),
@@ -78,8 +82,18 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 		// Wrapper classes.
 		$wrapper_classes .= ' tabs-design-' . $settings['design'];
 
+		if ( 'yes' === $settings['enable_heading_bg'] ) {
+			$wrapper_classes .= ' wd-header-with-bg';
+		}
+
 		if ( 'simple' === $settings['design'] ) {
 			$settings['tabs_style'] = 'default';
+
+			if ( 'grid' === $settings['layout'] && empty( $settings['pagination_arrows_position'] ) ) {
+				$settings['pagination_arrows_position'] = 'together';
+			} elseif ( 'carousel' === $settings['layout'] && empty( $settings['carousel_arrows_position'] ) ) {
+				$settings['carousel_arrows_position'] = 'together';
+			}
 		}
 
 		$wd_nav_classes .= ' wd-style-' . $settings['tabs_style'];
@@ -93,16 +107,22 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 		}
 
 		// Image settings.
-		$custom_image_size = isset( $settings['image_custom_dimension']['width'] ) && $settings['image_custom_dimension']['width'] ? $settings['image_custom_dimension'] : [
+		$custom_image_size         = isset( $settings['image_custom_dimension']['width'] ) && $settings['image_custom_dimension']['width'] ? $settings['image_custom_dimension'] : [
 			'width'  => 128,
 			'height' => 128,
 		];
+		$render_svg_with_image_tag = apply_filters( 'woodmart_render_svg_with_image_tag', true );
 
 		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$image_output = '<span class="img-wrapper">' . woodmart_get_image_html( $settings, 'image' ) . '</span>';
+			$image_output = '<span class="img-wrapper">' . woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] ) . '</span>';
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ) ) ) {
-				$image_output = '<span class="svg-icon img-wrapper" style="width:' . esc_attr( $custom_image_size['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ), rand( 999, 9999 ) ) . '</span>';
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
+				if ( $render_svg_with_image_tag ) {
+					$custom_image_size = 'custom' !== $settings['image_size'] && 'full' !== $settings['image_size'] ? $settings['image_size'] : $custom_image_size;
+					$image_output      = '<span class="img-wrapper">' .  woodmart_get_svg_html( $settings['image']['id'], $custom_image_size ) . '</span>';
+				} else {
+					$image_output = '<span class="svg-icon img-wrapper" style="width:' . esc_attr( $custom_image_size['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( $settings['image']['url'], rand( 999, 9999 ) ) . '</span>';
+				}
 			}
 		}
 
@@ -127,8 +147,6 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 		?>
 		<div class="wd-tabs wd-products-tabs<?php echo esc_attr( $wrapper_classes ); ?>">
 			<div class="wd-tabs-header<?php echo esc_attr( $header_classes ); ?>">
-				<div class="wd-tabs-loader"><span class="wd-loader"></span></div>
-
 				<?php if ( $settings['title'] ) : ?>
 					<div class="tabs-name title">
 						<?php if ( $image_output ) : ?>
@@ -168,9 +186,9 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 							];
 
 							if ( ( ! $item['icon_type'] || 'image' === $item['icon_type'] ) && isset( $item['image']['id'] ) && $item['image']['id'] ) {
-								$icon_output = woodmart_get_image_html( $item, 'image' );
+								$icon_output = woodmart_otf_get_image_html( $item['image']['id'], $item['image_size'], $item['image_custom_dimension'] );
 
-								if ( woodmart_is_svg( woodmart_get_image_url( $item['image']['id'], 'image', $item ) ) ) {
+								if ( woodmart_is_svg( $item['image']['url'] ) ) {
 									$icon_output = woodmart_get_svg_html( $item['image']['id'], $custom_icon_size, array( 'class' => 'svg-icon' ) );
 								}
 							} elseif ( 'icon' === $item['icon_type'] && isset( $item['icon'] ) && $item['icon'] ) {
@@ -181,9 +199,9 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 							<li data-atts="<?php echo esc_attr( $encoded_settings ); ?>" class="<?php echo esc_attr( $li_classes ); ?>">
 								<a href="#" class="wd-nav-link">
 									<?php if ( $icon_output ) : ?>
-										<div class="img-wrapper">
+										<span class="img-wrapper">
 											<?php echo $icon_output; //phpcs:ignore ?>
-										</div>
+										</span>
 									<?php endif; ?>
 
 									<span class="tab-label nav-link-text">
@@ -206,7 +224,7 @@ if ( ! function_exists( 'woodmart_elementor_products_tabs_template' ) ) {
 
 if ( ! function_exists( 'woodmart_elementor_products_tab_template' ) ) {
 	function woodmart_elementor_products_tab_template( $settings ) {
-		$is_ajax = woodmart_is_woo_ajax();
+		$is_ajax = ( defined( 'DOING_AJAX' ) && DOING_AJAX && ! woodmart_elementor_is_edit_mode() );
 
 		$settings = wp_parse_args(
 			$settings,
@@ -219,7 +237,12 @@ if ( ! function_exists( 'woodmart_elementor_products_tab_template' ) ) {
 			)
 		);
 
-		$settings['force_not_ajax']     = 'yes';
+		$settings['force_not_ajax']  = 'yes';
+		$settings['wrapper_classes'] = ' wd-tab-content';
+
+		if ( ! $is_ajax ) {
+			$settings['wrapper_classes'] .= ' wd-active wd-in';
+		}
 
 		if ( $is_ajax ) {
 			ob_start();
@@ -230,6 +253,7 @@ if ( ! function_exists( 'woodmart_elementor_products_tab_template' ) ) {
 		?>
 		<?php if ( ! $is_ajax ) : ?>
 			<div class="wd-tab-content-wrapper<?php echo woodmart_get_old_classes( ' woodmart-tab-content' ); ?>">
+			<?php woodmart_sticky_loader(); ?>
 		<?php endif; ?>
 
 		<?php echo woodmart_elementor_products_template( $settings ); ?>

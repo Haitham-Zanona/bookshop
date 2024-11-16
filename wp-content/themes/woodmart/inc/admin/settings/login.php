@@ -1,13 +1,13 @@
 <?php if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
 		'id'          => 'login_tabs',
 		'name'        => esc_html__( 'Login page tabs', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'login-page-tabs.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'login-page-tabs.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable tabs for login and register forms', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'login_section',
@@ -73,7 +73,7 @@ Options::add_field(
 	array(
 		'id'          => 'my_account_links',
 		'name'        => esc_html__( 'Dashboard icons menu', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'dashboard-icons-menu.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'dashboard-icons-menu.jpg" alt="">', true ),
 		'description' => esc_html__( 'Adds icons blocks to the my account page as a navigation.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'dashboard_section',

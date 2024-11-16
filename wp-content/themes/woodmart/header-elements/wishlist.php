@@ -41,7 +41,7 @@ woodmart_enqueue_js_script( 'wishlist' );
 ?>
 
 <div class="wd-header-wishlist wd-tools-element<?php echo esc_attr( $extra_class ); ?>" title="<?php echo esc_attr__( 'My Wishlist', 'woodmart' ); ?>">
-	<a href="<?php echo esc_url( woodmart_get_wishlist_page_url() ); ?>">
+	<a href="<?php echo esc_url( woodmart_get_wishlist_page_url() ); ?>" title="<?php echo esc_attr__( 'Wishlist products', 'woodmart' ); ?>">
 		<?php if ( '8' === $params['icon_design'] || ( isset( $params['wrap_type'], $params['design'], $params['icon_design'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['design'] && in_array( $params['icon_design'], array( '6', '7' ), true ) ) ) : ?>
 			<span class="wd-tools-inner">
 		<?php endif; ?>

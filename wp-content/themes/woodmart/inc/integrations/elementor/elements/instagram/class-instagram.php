@@ -5,6 +5,7 @@
 
 namespace XTS\Elementor;
 
+use Elementor\Group_Control_Typography;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Plugin;
@@ -89,6 +90,15 @@ class Instagram extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'data_source',
 			[
 				'label'       => esc_html__( 'Source type', 'woodmart' ),
@@ -105,15 +115,6 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'images' => esc_html__( 'Images', 'woodmart' ),
 				],
 				'default'     => 'scrape',
-			]
-		);
-
-		$this->add_control(
-			'username',
-			[
-				'label'   => esc_html__( 'Username', 'woodmart' ),
-				'type'    => Controls_Manager::TEXT,
-				'default' => 'flickr',
 			]
 		);
 
@@ -212,6 +213,35 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 			]
 		);
 
+		$this->end_controls_section();
+
+		/**
+		 * Link settings.
+		 */
+		$this->start_controls_section(
+			'link_section',
+			[
+				'label' => esc_html__( 'Link', 'woodmart' ),
+			]
+		);
+
+		$this->add_control(
+			'username',
+			[
+				'label'   => esc_html__( 'Username', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => 'flickr',
+			]
+		);
+
+		$this->add_control(
+			'link',
+			[
+				'label' => esc_html__( 'Link text', 'woodmart' ),
+				'type'  => Controls_Manager::TEXT,
+			]
+		);
+
 		$this->add_control(
 			'target',
 			[
@@ -222,14 +252,6 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'_blank' => esc_html__( 'New window (_blank)', 'woodmart' ),
 				],
 				'default' => '_self',
-			]
-		);
-
-		$this->add_control(
-			'link',
-			[
-				'label' => esc_html__( 'Link text', 'woodmart' ),
-				'type'  => Controls_Manager::TEXT,
 			]
 		);
 
@@ -257,7 +279,7 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 				'type'    => Controls_Manager::SELECT,
 				'options' => [
 					'grid'   => esc_html__( 'Grid', 'woodmart' ),
-					'slider' => esc_html__( 'Slider', 'woodmart' ),
+					'slider' => esc_html__( 'Carousel', 'woodmart' ),
 				],
 				'default' => 'grid',
 			]
@@ -279,6 +301,8 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 						'step' => 1,
 					],
 				],
+				'devices'    => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'    => 'wd-hide-custom-breakpoints',
 			]
 		);
 
@@ -294,10 +318,13 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 				'range'      => [
 					'px' => [
 						'min'  => 1,
-						'max'  => 12,
+						'max'  => 25,
 						'step' => 1,
 					],
 				],
+				'condition'  => array(
+					'data_source!' => 'images',
+				),
 			]
 		);
 
@@ -313,7 +340,7 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'spacing_custom',
 			[
 				'label'     => esc_html__( 'Space between', 'woodmart' ),
@@ -330,6 +357,8 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 				'condition' => [
 					'spacing' => '1',
 				],
+				'devices'   => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'   => 'wd-hide-custom-breakpoints',
 			]
 		);
 
@@ -342,52 +371,6 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
 				'label_off'    => esc_html__( 'No', 'woodmart' ),
 				'return_value' => '1',
-			]
-		);
-
-		$this->add_control(
-			'hide_pagination_control',
-			[
-				'label'        => esc_html__( 'Hide pagination control', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-				'condition'    => [
-					'design' => [ 'slider' ],
-				],
-			]
-		);
-
-		$this->add_control(
-			'hide_prev_next_buttons',
-			[
-				'label'        => esc_html__( 'Hide prev/next buttons', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-				'condition'    => [
-					'design' => [ 'slider' ],
-				],
-			]
-		);
-
-		$this->add_control(
-			'scroll_carousel_init',
-			[
-				'label'        => esc_html__( 'Init carousel on scroll', 'woodmart' ),
-				'description'  => esc_html__( 'This option allows you to init carousel script only when visitor scroll the page to the slider. Useful for performance optimization.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-				'condition'    => [
-					'design' => [ 'slider' ],
-				],
 			]
 		);
 
@@ -430,6 +413,9 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 				'selectors' => array(
 					'{{WRAPPER}}' => '--wd-brd-radius: {{VALUE}}px;',
 				),
+				'condition' => array(
+					'rounded!' => '1',
+				),
 			)
 		);
 
@@ -455,8 +441,88 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'{{WRAPPER}}' => '--wd-brd-radius: {{SIZE}}{{UNIT}};',
 				),
 				'condition'  => array(
+					'rounded!'      => '1',
 					'rounding_size' => array( 'custom' ),
 				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'content_style_section',
+			array(
+				'label' => esc_html__( 'Content', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			)
+		);
+
+		$this->add_responsive_control(
+			'content_width',
+			array(
+				'label'      => esc_html__( 'Content width', 'woodmart' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( '%', 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min'  => 1,
+						'max'  => 1000,
+						'step' => 1,
+					),
+					'%'  => array(
+						'min'  => 1,
+						'max'  => 100,
+						'step' => 1,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .wd-insta-cont-inner' => 'max-width: {{SIZE}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'content_color_scheme',
+			array(
+				'label'   => esc_html__( 'Color Scheme', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					''      => esc_html__( 'Inherit', 'woodmart' ),
+					'light' => esc_html__( 'Light', 'woodmart' ),
+					'dark'  => esc_html__( 'Dark', 'woodmart' ),
+				),
+				'default' => '',
+			)
+		);
+
+		$this->add_control(
+			'content_color',
+			array(
+				'label'     => esc_html__( 'Text color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-insta-cont-inner' => 'color: {{VALUE}}',
+				),
+			)
+		);
+
+		$this->add_control(
+			'content_bg_color',
+			array(
+				'label'     => esc_html__( 'Background color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-insta-cont-inner' => 'background-color: {{VALUE}}',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Typography::get_type(),
+			array(
+				'name'     => 'content_typography',
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
+				'selector' => '{{WRAPPER}} .wd-insta-cont-inner',
 			)
 		);
 

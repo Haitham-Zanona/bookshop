@@ -25,7 +25,7 @@
 
 			$filer.find('.wd-active').removeClass('wd-active');
 			$this.addClass('wd-active');
-			$this.parents('.portfolio-filter').siblings('.masonry-container.wd-portfolio-holder').isotope({
+			$this.parents('.portfolio-filter').siblings('.wd-masonry.wd-projects').isotope({
 				filter: filterValue
 			});
 		});

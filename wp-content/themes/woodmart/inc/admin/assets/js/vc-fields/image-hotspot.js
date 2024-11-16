@@ -5,7 +5,12 @@
 
         if (shortcode != 'woodmart_image_hotspot' && shortcode != 'woodmart_hotspot') return;
 
+        var params = vc.shortcodes.findWhere({ id: vc.active_panel.model.attributes.parent_id }).attributes.params;
         var _background_id = vc.shortcodes.findWhere({ id: vc.active_panel.model.attributes.parent_id }).attributes.params.img;
+
+        if ( 'undefined' !== typeof params.source_type && 'video' === params.source_type ) {
+            _background_id = vc.shortcodes.findWhere({ id: vc.active_panel.model.attributes.parent_id }).attributes.params.video;
+        }
 
         $('.xts-image-hotspot-preview').each(function () {
             var $preview = $(this);

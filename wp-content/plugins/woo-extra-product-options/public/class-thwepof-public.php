@@ -51,7 +51,10 @@ class THWEPOF_Public {
 		$hp_add_item_data = apply_filters('thwepo_add_cart_item_data_hook_priority', 10);
 		$hp_quickview_section_pr = apply_filters('thwepof_quickview_section_hook_priority', 1);
 
-		$hn_before_single_product = apply_filters('thwepof_hook_name_before_single_product', 'woocommerce_before_single_product');
+		$hn_before_single_product = apply_filters('thwepof_hook_name_before_single_product', 'woocommerce_before_add_to_cart_form');
+		if (function_exists('wp_is_block_theme') && wp_is_block_theme() && apply_filters('thwepof_change_hook_name_in_prodcut_block', true)){
+		    $hn_before_single_product = apply_filters('thwepof_hook_name_before_single_product', 'woocommerce_before_add_to_cart_form');
+		}
 		$hn_before_add_to_cart_button = apply_filters('thwepof_hook_name_before_add_to_cart_button', 'woocommerce_before_add_to_cart_button');
 		$hn_after_add_to_cart_button = apply_filters('thwepof_hook_name_after_add_to_cart_button', 'woocommerce_after_add_to_cart_button');
 

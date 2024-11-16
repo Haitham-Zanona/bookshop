@@ -55,6 +55,7 @@ class Redirect extends Singleton {
 	/**
 	 * Update WooCommerce message when active buy now.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string  $message Message.
 	 * @param array   $products Product ID list or single product ID.
 	 * @param integer $show_qty Should quantities be shown? Added in 2.6.0.

@@ -17,6 +17,20 @@ if ( '8' === $params['icon_design'] ) {
 	woodmart_enqueue_inline_style( 'mod-tools-design-8' );
 }
 
+if ( ! empty( $params['menu_layout'] ) ) {
+	if ( 'dropdown' === $params['menu_layout'] ) {
+		woodmart_enqueue_inline_style( 'header-mobile-nav-dropdown' );
+	} elseif ( 'drilldown' === $params['menu_layout'] ) {
+		woodmart_enqueue_inline_style( 'header-mobile-nav-drilldown' );
+
+		if ( 'slide' === $params['drilldown_animation'] ) {
+			woodmart_enqueue_inline_style( 'header-mobile-nav-drilldown-slide' );
+		} elseif ( 'fade-in' === $params['drilldown_animation'] ) {
+			woodmart_enqueue_inline_style( 'header-mobile-nav-drilldown-fade-in' );
+		}
+	}
+}
+
 if ( isset( $params['wrap_type'], $params['style'], $params['icon_design'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['style'] && in_array( $params['icon_design'], array( '6', '7' ), true ) ) {
 	$extra_class .= ' wd-with-wrap';
 }
@@ -29,7 +43,7 @@ $extra_class .= woodmart_get_old_classes( ' woodmart-burger-icon' );
 
 ?>
 <div class="wd-tools-element wd-header-mobile-nav<?php echo esc_attr( $extra_class ); ?>">
-	<a href="#" rel="nofollow" aria-label="<?php esc_html_e( 'Open mobile menu', 'woodmart' ); ?>">
+	<a href="#" rel="nofollow" aria-label="<?php esc_attr_e( 'Open mobile menu', 'woodmart' ); ?>">
 		<?php if ( '8' === $params['icon_design'] || ( isset( $params['wrap_type'], $params['style'], $params['icon_design'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['style'] && in_array( $params['icon_design'], array( '6', '7' ), true ) ) ) : ?>
 			<span class="wd-tools-inner">
 		<?php endif; ?>

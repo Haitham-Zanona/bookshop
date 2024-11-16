@@ -43,9 +43,111 @@
 
 	.woodmart-td-title {
 		width: 100%;
-
 		@extend %group-title;
 	}
+
+	// .xts-accordion {
+	// 	margin-bottom: 0 !important;
+
+	// 	> .vc_column {
+	// 		margin-bottom: 0 !important;
+	// 	}
+
+	// 	.woodmart-td-title {
+	// 		position: relative;
+	// 		padding-top: 15px;
+	// 		padding-bottom: 15px;
+	// 		transition: all .3s ease;
+	// 		cursor: pointer;
+		
+	// 		&:before {
+	// 			content: "\e907";
+	// 			font-weight: 400;
+	// 			font-family: "xts-icon-font";
+	// 			position: absolute;
+	// 			top: calc(50% - 10px);
+	// 			inset-inline-end: 0;
+	// 			display: block;
+	// 			width: 20px;
+	// 			height: 20px;
+	// 			font-size: 16px;
+	// 			transition: all .3s ease;
+	// 			text-align: center;
+	// 		}
+
+	// 		&:hover {
+	// 			opacity: .7;
+	// 		}
+	// 	}
+
+	// 	.woodmart-td-content {
+	// 		// display: flex !important;
+	// 		opacity: 0;
+	// 		transition: opacity .5s ease;
+	// 		// overflow: hidden;
+
+	// 		// > div {
+	// 		// 	opacity: 0;
+	// 		// }
+	// 	}
+
+	// 	&.xts-active {
+
+	// 		.woodmart-td-title {
+				
+	// 			&:before {
+	// 				transform: rotate(180deg);
+	// 			}
+	// 		}
+
+	// 		.woodmart-td-content {
+	// 			opacity: 1;
+	// 		}
+	// 	}
+
+	// 	// &:not(.xts-active) {
+
+	// 	// 	.woodmart-td-content {
+	// 	// 		height: 0;
+	// 	// 		padding: 0;
+	// 	// 		margin: 0;
+	// 	// 	}
+	// 	// }
+
+	// 	&:not(:last-child) {
+			
+	// 		.woodmart-td-title {
+
+	// 			&:after {
+	// 				content: "";
+	// 				display: block;
+	// 				position: absolute;
+	// 				bottom: 0;
+	// 				height: 1px;
+	// 				left: 0;
+	// 				right: 0;
+	// 				width: 100%;
+	// 				background-color: var(--xts-option-border-color);
+	// 			}
+	// 		}
+
+	// 		&.xts-active {
+
+	// 			.woodmart-td-title {
+
+	// 				&:after {
+	// 					opacity: 0;
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// }
+
+	// .xts-accordion:first-child,
+	// [data-vc-shortcode-param-name="woodmart_css_id"] + .xts-accordion {
+	// 	margin-top: -15px;
+	// }
+
 
 	:is(
 	.vc_param_group-wrapper,
@@ -166,19 +268,48 @@
 	.whb-option-fields {
 		display: flex;
 		flex-wrap: wrap;
-		margin-bottom: 20px;
-		padding: 20px 20px 5px 20px;
+		// margin-bottom: 20px;
+		// padding: 20px 20px 5px 20px;
 
-		gap: 0 15px;
+		gap: 30px 15px; // GAVE THIS GAP INSTEAD OF MARGIN FOR "whb-background-select"
 
 		> .whb-field-description {
 			margin-top: 0 !important;
-			margin-bottom: 15px;
+			// margin-bottom: 15px;
 		}
 
 		&:last-child {
 			margin-bottom: 0;
 		}
+	}
+
+	.whb-popup-content {
+		--xts-group-sp: 30px;
+		padding: 0;
+		overflow: unset;
+		max-height: none;
+
+		:is(
+		.xts-group-title,
+		.xts-group) {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		.xts-group {
+			padding: 30px 10px 0px 10px;
+
+			&:last-child {
+				margin-bottom: 20px;
+			}
+		}
+
+		// .xts-popup-content-inn {
+		// 	padding: 20px;
+		// 	overflow-x: hidden;
+		// 	overflow-y: auto;
+		// 	max-height: 60vh;
+		// }
 	}
 
 } // END IF

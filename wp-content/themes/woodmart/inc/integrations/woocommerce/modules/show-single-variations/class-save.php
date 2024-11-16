@@ -98,6 +98,10 @@ class Save extends Singleton {
 				$this->update_variation_option( $variation_id );
 			}
 
+			if ( isset( $this->request_data()['_woodmart_exclude_show_single_variation'] ) && ( $this->request_data()['_woodmart_exclude_show_single_variation'] || get_post_meta( $post_id, '_woodmart_exclude_show_single_variation', true ) ) ) {
+				update_post_meta( $variation_id, '_wd_show_variation', 'on' === $this->request_data()['_woodmart_exclude_show_single_variation'] ? 'no' : '' );
+			}
+
 			$variation = new WC_Product_Variation( $variation_id );
 			$variation->set_menu_order( $post->menu_order );
 			$variation->save();
@@ -118,13 +122,23 @@ class Save extends Singleton {
 			return;
 		}
 
-		if ( isset( $request_data['wd_additional_variation_images'][ $variation_id ] ) ) {
+		if ( 'new' === woodmart_get_opt( 'variation_gallery_storage_method' ) && isset( $request_data['wd_additional_variation_images'][ $variation_id ] ) ) {
 			update_post_meta( $variation_id, '_product_image_gallery', $request_data['wd_additional_variation_images'][ $variation_id ] );
+		} elseif ( isset( $request_data['woodmart_variation_gallery'][ $variation_id ] ) ) {
+			update_post_meta( $variation_id, '_product_image_gallery', $request_data['woodmart_variation_gallery'][ $variation_id ] );
 		}
 
 		if ( isset( $request_data['variation_title'][ $i ] ) ) {
 			update_post_meta( $variation_id, 'variation_title', $request_data['variation_title'][ $i ] );
 		}
+
+		$show_variation = 'no';
+
+		if ( isset( $request_data['wd_show_variation'][ $i ] ) ) {
+			$show_variation = $request_data['wd_show_variation'][ $i ];
+		}
+
+		update_post_meta( $variation_id, '_wd_show_variation', $show_variation );
 
 		foreach ( $request_data as $key => $data ) {
 			if ( 'attribute_' !== substr( $key, 0, 10 ) ) {

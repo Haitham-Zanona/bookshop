@@ -5,23 +5,23 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_menu_price' ) ) {
-	function woodmart_vc_map_menu_price() {
-		if ( ! shortcode_exists( 'woodmart_menu_price' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_menu_price' ) ) {
+	function woodmart_get_vc_map_menu_price() {
+		return array(
 			'name' => esc_html__( 'Menu price', 'woodmart' ),
 			'base' => 'woodmart_menu_price',
 			'class' => '',
 			'category' => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
 			'description' => esc_html__( 'Showcase your menu', 'woodmart' ),
-        	'icon' => WOODMART_ASSETS . '/images/vc-icon/menu-price.svg',
+			'icon' => WOODMART_ASSETS . '/images/vc-icon/menu-price.svg',
 			'params' => array(
+				array(
+					'type'       => 'woodmart_css_id',
+					'param_name' => 'woodmart_css_id',
+				),
 				/**
-				* Content
-				*/
+				 * Content
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -62,8 +62,8 @@ if( ! function_exists( 'woodmart_vc_map_menu_price' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Extra
-				*/
+				 * Extra
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -76,9 +76,15 @@ if( ! function_exists( 'woodmart_vc_map_menu_price' ) ) {
 					'heading' => esc_html__( 'Extra class name', 'woodmart' ),
 					'param_name' => 'el_class',
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
-				)
+				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				woodmart_get_vc_responsive_spacing_map(),
 			)
-		) );
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_menu_price' );
 }

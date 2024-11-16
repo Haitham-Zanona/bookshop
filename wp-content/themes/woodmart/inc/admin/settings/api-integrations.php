@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -16,6 +16,17 @@ Options::add_field(
 		'type'        => 'instagram_api',
 		'section'     => 'instagram_api_section',
 		'priority'    => 10,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'insta_delete_outdated_images',
+		'name'        => esc_html__( 'Delete outdated images', 'woodmart' ),
+		'description' => esc_html__( 'This option will delete outdated images from the Media library automatically and keep only the latest from your account. Works with images added to the Media library starting from WoodMart 7.2 version.', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'instagram_api_section',
+		'priority'    => 20,
 	)
 );
 

@@ -5,25 +5,27 @@
 	do_action( 'woocommerce_before_shop_loop_item' ); 
 ?>
 <div class="product-wrapper">
-	<div class="product-element-top wd-quick-shop">
-		<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
-			<?php
-			/**
-			 * Hook woocommerce_before_shop_loop_item_title.
-			 *
-			 * @hooked woodmart_template_loop_product_thumbnails_gallery - 5
-			 * @hooked woocommerce_show_product_loop_sale_flash - 10
-			 * @hooked woodmart_template_loop_product_thumbnail - 10
-			 */
-			do_action( 'woocommerce_before_shop_loop_item_title' );
-			?>
-		</a>
+	<div class="product-element">
+		<div class="product-element-top wd-quick-shop">
+			<a href="<?php echo esc_url( get_permalink() ); ?>" class="product-image-link">
+				<?php
+				/**
+				 * Hook woocommerce_before_shop_loop_item_title.
+				 *
+				 * @hooked woodmart_template_loop_product_thumbnails_gallery - 5
+				 * @hooked woocommerce_show_product_loop_sale_flash - 10
+				 * @hooked woodmart_template_loop_product_thumbnail - 10
+				 */
+				do_action( 'woocommerce_before_shop_loop_item_title' );
+				?>
+			</a>
 
-		<?php
-		if ( 'no' === woodmart_loop_prop( 'grid_gallery' ) || ! woodmart_loop_prop( 'grid_gallery' ) ) {
-			woodmart_hover_image();
-		}
-		?>
+			<?php
+			if ( 'no' === woodmart_loop_prop( 'grid_gallery' ) || ! woodmart_loop_prop( 'grid_gallery' ) ) {
+				woodmart_hover_image();
+			}
+			?>
+		</div>
 
 		<div class="top-information wd-fill">
 
@@ -62,19 +64,19 @@
 			</div>
 		</div>
 
-		<div class="wd-buttons wd-pos-r-t color-scheme-light<?php echo woodmart_get_old_classes( ' woodmart-buttons' ); ?>">
+		<div class="wd-buttons wd-pos-r-t<?php echo woodmart_get_old_classes( ' woodmart-buttons' ); ?>">
 			<?php woodmart_enqueue_js_script( 'btns-tooltip' ); ?>
 			<?php woodmart_add_to_compare_loop_btn(); ?>
 			<?php woodmart_quick_view_btn( get_the_ID() ); ?>
 			<?php do_action( 'woodmart_product_action_buttons' ); ?>
 		</div>
 	</div>
-
 	<?php if ( woodmart_loop_prop( 'progress_bar' ) ): ?>
-		<?php woodmart_stock_progress_bar(); ?>
+	<?php woodmart_stock_progress_bar(); ?>
 	<?php endif ?>
 
 	<?php if ( woodmart_loop_prop( 'timer' ) ): ?>
-		<?php woodmart_product_sale_countdown(); ?>
+		<?php woodmart_product_sale_countdown( array( 'products_hover' => 'info-alt' ) ); ?>
 	<?php endif ?>
 </div>
+

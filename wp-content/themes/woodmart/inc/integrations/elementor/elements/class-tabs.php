@@ -335,7 +335,7 @@ class Tabs extends Widget_Base {
 		$this->add_control(
 			'tabs_title_color',
 			array(
-				'label'     => esc_html__( 'Heading color', 'woodmart' ),
+				'label'     => esc_html__( 'Title color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
 					'{{WRAPPER}} .tabs-name' => 'color: {{VALUE}}',
@@ -347,7 +347,7 @@ class Tabs extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			array(
 				'name'     => 'tabs_heading_typography',
-				'label'    => esc_html__( 'Heading typography', 'woodmart' ),
+				'label'    => esc_html__( 'Title typography', 'woodmart' ),
 				'selector' => '{{WRAPPER}} .wd-tabs .tabs-name',
 			)
 		);
@@ -376,6 +376,32 @@ class Tabs extends Widget_Base {
 				),
 				'condition' => array(
 					'design' => array( 'simple' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'enable_heading_bg',
+			array(
+				'label'        => esc_html__( 'Heading background', 'woodmart' ),
+				'type'         => Controls_Manager::SWITCHER,
+				'default'      => 'no',
+				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
+				'label_off'    => esc_html__( 'No', 'woodmart' ),
+				'return_value' => 'yes',
+			)
+		);
+
+		$this->add_control(
+			'heading_bg',
+			array(
+				'label'     => esc_html__( 'Custom background color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-tabs.wd-header-with-bg .wd-tabs-header' => 'background-color: {{VALUE}}',
+				),
+				'condition' => array(
+					'enable_heading_bg' => 'yes',
 				),
 			)
 		);
@@ -602,8 +628,10 @@ class Tabs extends Widget_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}} .wd-tabs-header' => 'margin-bottom: {{SIZE}}px;',
+					'{{WRAPPER}} .wd-tabs' => '--wd-header-sp: {{SIZE}}px;',
 				),
+				'devices'   => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'   => 'wd-hide-custom-breakpoints',
 				'condition' => array(
 					'design!' => array( 'aside' ),
 				),
@@ -680,6 +708,10 @@ class Tabs extends Widget_Base {
 			$tabs_parent_settings['tabs_alignment'] = 'center';
 		}
 
+		if ( 'yes' === $tabs_parent_settings['enable_heading_bg'] ) {
+			$wrapper_classes .= ' wd-header-with-bg';
+		}
+
 		$nav_tabs_wrapper_classes = ' text-' . $tabs_parent_settings['tabs_alignment'];
 
 		$image_output = '';
@@ -691,10 +723,16 @@ class Tabs extends Widget_Base {
 		);
 
 		if ( isset( $tabs_parent_settings['image']['id'] ) && $tabs_parent_settings['image']['id'] ) {
-			$image_output = '<span class="img-wrapper">' . woodmart_get_image_html( $tabs_parent_settings, 'image' ) . '</span>';
+			$image_output              = '<span class="img-wrapper">' . woodmart_otf_get_image_html( $tabs_parent_settings['image']['id'], $tabs_parent_settings['image_size'], $tabs_parent_settings['image_custom_dimension'] ) . '</span>';
+			$render_svg_with_image_tag = apply_filters( 'woodmart_render_svg_with_image_tag', true );
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $tabs_parent_settings['image']['id'], 'image', $tabs_parent_settings ) ) ) {
-				$image_output = '<span class="svg-icon img-wrapper" style="width:' . esc_attr( $tabs_parent_settings['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( woodmart_get_image_url( $tabs_parent_settings['image']['id'], 'image', $tabs_parent_settings ), wp_rand( 999, 9999 ) ) . '</span>';
+			if ( woodmart_is_svg( $tabs_parent_settings['image']['url'] ) ) {
+				if ( $render_svg_with_image_tag ) {
+					$custom_image_size = 'custom' !== $tabs_parent_settings['image_size'] && 'full' !== $tabs_parent_settings['image_size'] ? $tabs_parent_settings['image_size'] : $custom_image_size;
+					$image_output      = '<span class="img-wrapper">' .  woodmart_get_svg_html( $tabs_parent_settings['image']['id'], $custom_image_size ) . '</span>';
+				} else {
+					$image_output = '<span class="svg-icon img-wrapper" style="width:' . esc_attr( $custom_image_size['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( $tabs_parent_settings['image']['url'], wp_rand( 999, 9999 ) ) . '</span>';
+				}
 			}
 		}
 
@@ -748,9 +786,9 @@ class Tabs extends Widget_Base {
 							$icon_output = '';
 
 							if ( 'image' === $tab['icon_type'] && isset( $tab['image']['id'] ) && $tab['image']['id'] ) {
-								$icon_output = woodmart_get_image_html( $tab, 'image' );
+								$icon_output = woodmart_otf_get_image_html( $tab['image']['id'], $tab['image_size'], $tab['image_custom_dimension'] );
 
-								if ( woodmart_is_svg( woodmart_get_image_url( $tab['image']['id'], 'image', $tab ) ) ) {
+								if ( woodmart_is_svg( $tab['image']['url'] ) ) {
 									$icon_output = woodmart_get_svg_html( $tab['image']['id'], $image_size, array( 'class' => 'svg-icon' ) );
 								}
 							} elseif ( 'icon' === $tab['icon_type'] && $tab['icon'] ) {
@@ -761,9 +799,9 @@ class Tabs extends Widget_Base {
 							<li>
 								<a href="#" class="wd-nav-link">
 									<?php if ( ! empty( $icon_output ) ) : ?>
-										<div class="img-wrapper">
+										<span class="img-wrapper">
 											<?php echo $icon_output; // phpcs:ignore ?>
-										</div>
+										</span>
 									<?php endif; ?>
 
 									<span class="nav-link-text wd-tabs-title">

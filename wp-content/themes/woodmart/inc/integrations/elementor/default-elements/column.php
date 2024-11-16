@@ -246,11 +246,12 @@ if ( ! function_exists( 'woodmart_add_column_custom_controls' ) ) {
 				'options'      => array(
 					'left'  => array(
 						'title' => esc_html__( 'Left', 'woodmart' ),
-						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/left.jpg',
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/sidebar-layout/left.png',
+						'style' => 'col-2',
 					),
 					'right' => array(
 						'title' => esc_html__( 'Right', 'woodmart' ),
-						'image' => WOODMART_ASSETS_IMAGES . '/settings/align/right.jpg',
+						'image' => WOODMART_ASSETS_IMAGES . '/settings/sidebar-layout/right.png',
 					),
 				),
 				'condition'    => array(
@@ -457,7 +458,7 @@ if ( ! function_exists( 'woodmart_add_column_custom_controls' ) ) {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}}.wd-collapsible-content > .elementor-widget-wrap' => 'max-height: {{SIZE}}px',
+					'{{WRAPPER}}.wd-collapsible-content > .elementor-column-wrap > .elementor-widget-wrap, {{WRAPPER}}.wd-collapsible-content > .elementor-widget-wrap' => 'max-height: {{SIZE}}px',
 				),
 				'default'   => array(
 					'size' => 300,
@@ -475,7 +476,7 @@ if ( ! function_exists( 'woodmart_add_column_custom_controls' ) ) {
 				'label'     => esc_html__( 'Fade out color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}}.wd-collapsible-content:not(.wd-opened) > .elementor-widget-wrap:after' => 'color: {{VALUE}}',
+					'{{WRAPPER}}.wd-collapsible-content:not(.wd-opened) > .elementor-column-wrap > .elementor-widget-wrap:after, {{WRAPPER}}.wd-collapsible-content:not(.wd-opened) > .elementor-widget-wrap:after' => 'color: {{VALUE}}',
 				),
 				'condition' => array(
 					'wd_collapsible_content_switcher' => array( 'collapsible-content' ),

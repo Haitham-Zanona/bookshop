@@ -14,7 +14,7 @@ return apply_filters(
 	[
 		'main'                  => [
 			'title'      => 'Woodmart Main',
-			'process'    => 'xml,home,options,widgets,headers,sliders,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/home/',
@@ -29,9 +29,214 @@ return apply_filters(
 				],
 			],
 		],
+		'vegetables'            => [
+			'title'      => 'Vegetables',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'vegetables_base',
+			'link'       => 'https://woodmart.xtemos.com/vegetables/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'pottery'            => [
+			'title'      => 'Pottery',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'pottery_base',
+			'link'       => 'https://woodmart.xtemos.com/pottery/',
+			'categories' => [
+				[
+					'name' => 'Furniture',
+					'slug' => 'furniture',
+				],
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'pills'            => [
+			'title'      => 'Pills',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'pills_base',
+			'link'       => 'https://woodmart.xtemos.com/pills/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'organic-farm'            => [
+			'title'      => 'Organic Farm',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'organic-farm_base',
+			'link'       => 'https://woodmart.xtemos.com/organic-farm/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'kids'            => [
+			'title'      => 'Kids',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'kids_base',
+			'link'       => 'https://woodmart.xtemos.com/kids/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'plants'            => [
+			'title'      => 'Plants',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'plants_base',
+			'link'       => 'https://woodmart.xtemos.com/plants/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'games-light'            => [
+			'title'      => 'Games',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'games_base-light',
+			'link'       => 'https://woodmart.xtemos.com/games/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'games-dark'            => [
+			'title'      => 'Games Dark',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'games_base-dark',
+			'link'       => 'https://woodmart.xtemos.com/games/home-dark/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'furniture2'            => [
+			'title'      => 'Furniture 2',
+			'process'    => 'xml,home,options,widgets,headers',
+			'type'       => 'version',
+			'base'       => 'furniture2_base',
+			'link'       => 'https://woodmart.xtemos.com/furniture2/',
+			'categories' => [
+				[
+					'name' => 'Shop',
+					'slug' => 'shop',
+				],
+				[
+					'name' => 'Furniture',
+					'slug' => 'furniture',
+				],
+			],
+		],
+		'food-delivery'            => [
+			'title'      => 'Food Delivery',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'base',
+			'categories' => [
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'event-agency'            => [
+			'title'      => 'Event Agency',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'base',
+			'categories' => [
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'developer'            => [
+			'title'      => 'Developer',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'base',
+			'categories' => [
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
+		'architecture-studio'            => [
+			'title'      => 'Architecture Studio',
+			'process'    => 'xml,home,options,widgets,headers,images',
+			'type'       => 'version',
+			'base'       => 'base',
+			'categories' => [
+				[
+					'name' => 'Business',
+					'slug' => 'business',
+				],
+			],
+		],
 		'mega-electronics'            => [
 			'title'      => 'Mega Electronics',
-			'process'    => 'xml,home,options,widgets,headers,sliders',
+			'process'    => 'xml,home,options,widgets,headers',
 			'type'       => 'version',
 			'base'       => 'mega-electronics_base',
 			'link'       => 'https://woodmart.xtemos.com/mega-electronics/',
@@ -52,7 +257,7 @@ return apply_filters(
 		],
 		'megamarket'            => [
 			'title'      => 'Megamarket',
-			'process'    => 'xml,home,options,widgets,headers,sliders',
+			'process'    => 'xml,home,options,widgets,headers',
 			'type'       => 'version',
 			'base'       => 'megamarket_base',
 			'link'       => 'https://woodmart.xtemos.com/megamarket/',
@@ -69,7 +274,7 @@ return apply_filters(
 		],
 		'accessories'            => [
 			'title'      => 'Accessories',
-			'process'    => 'xml,home,options,widgets,headers,sliders',
+			'process'    => 'xml,home,options,widgets,headers',
 			'type'       => 'version',
 			'base'       => 'accessories_base',
 			'link'       => 'https://woodmart.xtemos.com/accessories/',
@@ -158,7 +363,7 @@ return apply_filters(
 		],
 		'sweets-bakery'         => [
 			'title'   => 'Sweets Bakery',
-			'process' => 'xml,home,options,widgets,headers,sliders,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -202,7 +407,7 @@ return apply_filters(
 		],
 		'books'                 => [
 			'title'   => 'Books',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -214,7 +419,7 @@ return apply_filters(
 		],
 		'shoes'                 => [
 			'title'      => 'Shoes',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -258,7 +463,7 @@ return apply_filters(
 		],
 		'electronics'           => [
 			'title'      => 'Electronics',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -274,7 +479,7 @@ return apply_filters(
 		],
 		'fashion-color'         => [
 			'title'      => 'Fashion Color',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/demo-fashion-colored/demo/fashion-colored/',
@@ -291,7 +496,7 @@ return apply_filters(
 		],
 		'fashion-minimalism'    => [
 			'title'      => 'Fashion Minimalism',
-			'process'    => 'xml,home,options,widgets,headers,sliders,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -327,7 +532,7 @@ return apply_filters(
 		],
 		'grocery'               => [
 			'title'   => 'Grocery',
-			'process' => 'xml,home,options,widgets,headers,sliders,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -339,7 +544,7 @@ return apply_filters(
 		],
 		'lingerie'              => [
 			'title'      => 'Lingerie',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -359,7 +564,7 @@ return apply_filters(
 		],
 		'glasses'               => [
 			'title'      => 'Glasses',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -379,7 +584,7 @@ return apply_filters(
 		],
 		'black-friday'          => [
 			'title'      => 'Black Friday',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -480,7 +685,7 @@ return apply_filters(
 		],
 		'drinks'                => [
 			'title'   => 'Drinks',
-			'process' => 'xml,home,options,widgets,headers,images,sliders',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -492,7 +697,7 @@ return apply_filters(
 		],
 		'medical-marijuana'     => [
 			'title'   => 'Medical Marijuana',
-			'process' => 'xml,home,options,widgets,headers,sliders,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -504,7 +709,7 @@ return apply_filters(
 		],
 		'electronics-2'         => [
 			'title'      => 'Electronics 2',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -520,7 +725,7 @@ return apply_filters(
 		],
 		'fashion'               => [
 			'title'      => 'Fashion',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -536,7 +741,7 @@ return apply_filters(
 		],
 		'medical'               => [
 			'title'   => 'Medical',
-			'process' => 'xml,home,options,widgets,headers,sliders,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -604,7 +809,7 @@ return apply_filters(
 		],
 		'fashion-flat'          => [
 			'title'      => 'Fashion Flat',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/demo-fashion-flat/demo/flat/',
@@ -633,7 +838,7 @@ return apply_filters(
 		],
 		'wine'                  => [
 			'title'   => 'Wine',
-			'process' => 'xml,home,options,widgets,headers,sliders,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -677,7 +882,7 @@ return apply_filters(
 		],
 		'corporate'             => [
 			'title'   => 'Corporate',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -702,7 +907,7 @@ return apply_filters(
 		],
 		'hardware'              => [
 			'title'      => 'Hardware',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/demo-hardware/?opt=hardware',
@@ -719,7 +924,7 @@ return apply_filters(
 		],
 		'food'                  => [
 			'title'   => 'Food',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -731,7 +936,7 @@ return apply_filters(
 		],
 		'cosmetics'             => [
 			'title'      => 'Cosmetics',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -763,7 +968,7 @@ return apply_filters(
 		],
 		'sport'                 => [
 			'title'   => 'Sport',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -775,7 +980,7 @@ return apply_filters(
 		],
 		'minimalism'            => [
 			'title'      => 'Minimalism',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -795,7 +1000,7 @@ return apply_filters(
 		],
 		'organic'               => [
 			'title'   => 'Organic',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -807,7 +1012,7 @@ return apply_filters(
 		],
 		'watches'               => [
 			'title'      => 'Watches',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/demo-watches/demo/watch/',
@@ -828,7 +1033,7 @@ return apply_filters(
 		],
 		'digitals'              => [
 			'title'      => 'Digital',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -844,7 +1049,7 @@ return apply_filters(
 		],
 		'jewellery'             => [
 			'title'      => 'Jewellery',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'categories' => [
@@ -864,7 +1069,7 @@ return apply_filters(
 		],
 		'toys'                  => [
 			'title'   => 'Toys',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -876,7 +1081,7 @@ return apply_filters(
 		],
 		'mobile-app'            => [
 			'title'      => 'Mobile App',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/demo-mobile-app/?opt=mobile_app',
@@ -897,7 +1102,7 @@ return apply_filters(
 		],
 		'christmas'             => [
 			'title'   => 'Christmas',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'categories' => [
@@ -909,7 +1114,7 @@ return apply_filters(
 		],
 		'dark'                  => [
 			'title'   => 'Dark',
-			'process' => 'xml,home,options,widgets,sliders,headers,images',
+			'process' => 'xml,home,options,widgets,headers,images',
 			'type'    => 'version',
 			'base'    => 'base',
 			'link'    => 'https://woodmart.xtemos.com/demo-dark/?opt=dark',
@@ -935,26 +1140,9 @@ return apply_filters(
 		],
 		'furniture'             => [
 			'title'      => 'Furniture',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
-			'type'       => 'version',
-			'base'       => 'base',
-			'categories' => [
-				[
-					'name' => 'Furniture',
-					'slug' => 'furniture',
-				],
-				[
-					'name' => 'Shop',
-					'slug' => 'shop',
-				],
-			],
-		],
-		'base-light'            => [
-			'title'      => 'Base Light',
 			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
-			'link'       => 'https://woodmart.xtemos.com/demo-light/?opt=light',
 			'categories' => [
 				[
 					'name' => 'Furniture',
@@ -968,10 +1156,10 @@ return apply_filters(
 		],
 		'base-rtl'              => [
 			'title'      => 'Base rtl',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
-			'link'       => 'https://woodmart.xtemos.com/home-rtl/?rtl/',
+			'link'       => 'https://woodmart.xtemos.com/home-rtl/?rtl',
 			'categories' => [
 				[
 					'name' => 'Furniture',
@@ -985,7 +1173,7 @@ return apply_filters(
 		],
 		'basic'                 => [
 			'title'      => 'Basic',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-basic/?opt=layout_basic',
@@ -1002,7 +1190,7 @@ return apply_filters(
 		],
 		'boxed'                 => [
 			'title'      => 'Boxed',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-boxed/?opt=layout_boxed',
@@ -1053,7 +1241,7 @@ return apply_filters(
 		],
 		'lookbook'              => [
 			'title'      => 'Lookbook',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-lookbook/?opt=layout_lookbook',
@@ -1070,7 +1258,7 @@ return apply_filters(
 		],
 		'fullscreen'            => [
 			'title'      => 'Fullscreen',
-			'process'    => 'xml,home,widgets,sliders,headers,images,options',
+			'process'    => 'xml,home,widgets,headers,images,options',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-fullscreen/?opt=layout_fullscreen',
@@ -1087,7 +1275,7 @@ return apply_filters(
 		],
 		'video'                 => [
 			'title'      => 'Video',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-video/?opt=layout_video',
@@ -1104,7 +1292,7 @@ return apply_filters(
 		],
 		'parallax'              => [
 			'title'      => 'Parallax',
-			'process'    => 'xml,home,options,widgets,sliders,headers,images',
+			'process'    => 'xml,home,options,widgets,headers,images',
 			'type'       => 'version',
 			'base'       => 'base',
 			'link'       => 'https://woodmart.xtemos.com/layout-parallax/?opt=layout_parallax',
@@ -1190,7 +1378,52 @@ return apply_filters(
 			'process' => 'xml,xml_images,widgets,options,headers',
 			'type'    => 'base',
 		],
-
+		'furniture2_base' => [
+			'title'   => 'Base content furniture 2 (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'plants_base' => [
+			'title'   => 'Base content plants (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'kids_base' => [
+			'title'   => 'Base content kids (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'games_base-light' => [
+			'title'   => 'Base content games-light (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'games_base-dark' => [
+			'title'   => 'Base content games-dark (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'organic-farm_base' => [
+			'title'   => 'Base content organic-farm (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'pills_base' => [
+			'title'   => 'Base content pills (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'pottery_base' => [
+			'title'   => 'Base content pottery (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		'vegetables_base' => [
+			'title'   => 'Base content vegetables (required)',
+			'process' => 'xml,xml_images,widgets,options,headers',
+			'type'    => 'base',
+		],
+		
 		/**
 		 * Pages.
 		 */

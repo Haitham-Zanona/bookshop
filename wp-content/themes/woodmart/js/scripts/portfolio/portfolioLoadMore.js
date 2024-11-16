@@ -33,7 +33,7 @@
 
 			process = true;
 
-			var holder   = $this.parent().parent().find('.wd-portfolio-holder'),
+			var holder   = $this.parent().parent().find('.wd-projects'),
 			    source   = holder.data('source'),
 			    action   = 'woodmart_get_portfolio_' + source,
 			    ajaxurl  = woodmart_settings.ajaxurl,
@@ -44,6 +44,7 @@
 			    paged    = holder.data('paged');
 
 			$this.addClass('loading');
+			holder.addClass('wd-loading');
 
 			var data = {
 				atts  : atts,
@@ -67,7 +68,7 @@
 						var items = $(html);
 
 						if (items) {
-							if (holder.hasClass('masonry-container')) {
+							if (holder.hasClass('wd-masonry')) {
 								holder.append(items).isotope('appended', items);
 								holder.imagesLoaded().progress(function() {
 									holder.isotope('layout');
@@ -106,6 +107,7 @@
 				},
 				complete: function() {
 					$this.removeClass('loading');
+					holder.removeClass('wd-loading');
 					process = false;
 				}
 			});

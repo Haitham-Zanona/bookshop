@@ -23,8 +23,9 @@ if ( ! function_exists( 'woodmart_shortcode_checkout_billing_details_form' ) ) {
 		}
 
 		$default_settings = array(
-			'css'        => '',
-			'show_title' => 'yes',
+			'css'             => '',
+			'show_title'      => 'yes',
+			'title_alignment' => '',
 		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
@@ -37,6 +38,10 @@ if ( ! function_exists( 'woodmart_shortcode_checkout_billing_details_form' ) ) {
 
 		if ( 'yes' === $settings['show_title'] ) {
 			$wrapper_classes .= ' wd-title-show';
+		}
+
+		if ( $settings['title_alignment'] ) {
+			$wrapper_classes .= ' text-' . $settings['title_alignment'];
 		}
 
 		ob_start();

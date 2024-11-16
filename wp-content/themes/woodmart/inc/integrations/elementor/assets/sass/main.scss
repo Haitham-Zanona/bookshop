@@ -16,6 +16,14 @@
 
 @import "elements/stock-status";
 
+@import "elements/product-count";
+
+@import "elements/product-meta";
+
+@import "elements/empty-cart";
+
+@import "elements/button";
+
 @import "elements/notices";
 
 // ------------------------------------------------------------------------------------------------
@@ -150,7 +158,9 @@ div[id*="elementor-panel-category-wd-"] {
 	.elementor-add-new-section {
 		position: absolute;
 		top: 0;
-		left: calc(50% - 44px);
+		left: 50%;
+		transform: translateX(-50%);
+
 	}
 
 	.elementor-add-section-close {
@@ -230,7 +240,7 @@ div[id*="elementor-panel-category-wd-"] {
 .wd-html-block-scheme-switcher {
 	position: fixed;
 	top: 0;
-	right: 0;
+	inset-inline-end: 0;
 	z-index: $z-layer-1;
 	margin: 8px;
 
@@ -289,6 +299,13 @@ div[id*="elementor-panel-category-wd-"] {
 			z-index: 99999;
 		}
 	}
+
+	.wd-sidebar-opener {
+
+		&.wd-not-on-shop {
+			display: none !important;
+		}
+	}
 }
 
 //**** FIX LAST CHILD WITH ELEMENTOR INLINE EDITING ****//
@@ -297,12 +314,39 @@ div[id*="elementor-panel-category-wd-"] {
 	margin-bottom: 0;
 }
 
+//**** HIDE CUSTOM BRAKEPOINTS IN CAROUSEL CONTROKS ****//
+
+.wd-hide-custom-breakpoints {
+
+	:is(
+	[data-device="widescreen"],
+	[data-device="laptop"],
+	[data-device="tablet_extra"],
+	[data-device="mobile_extra"]) {
+		display: none;
+	}
+}
+
+.wd-hide-tablet-breakpoint {
+
+	[data-device="tablet"] {
+		display: none;
+	}
+}
+
+// .wd-hide-mobile-breakpoint {
+
+// 	[data-device="mobile"] {
+// 		display: none;
+// 	}
+// }
+
 // ------------------------------------------------------------------------------------------------
 // XTEMOS TEMPLATES
 // ------------------------------------------------------------------------------------------------
 
 .xts-library-modal-btn {
-	margin-left: 5px;
+	// margin-left: 5px;
 	background-color: #0F4C81;
 	vertical-align: top;
 	font-size: 0 !important;
@@ -336,7 +380,7 @@ div[id*="elementor-panel-category-wd-"] {
 	#xts-library-modal {
 
 		.xts-elementor-template-library-template-name {
-			color: #333;
+			color: #FFF;
 		}
 	}
 }
@@ -345,10 +389,10 @@ div[id*="elementor-panel-category-wd-"] {
 // RTL
 // ------------------------------------------------------------------------------------------------
 
-.rtl {
+// .rtl {
 
-	.wd-html-block-scheme-switcher {
-		right: auto;
-		left: 0;
-	}
-}
+// 	.wd-html-block-scheme-switcher {
+// 		right: auto;
+// 		left: 0;
+// 	}
+// }

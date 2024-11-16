@@ -18,7 +18,7 @@
 			return;
 		}
 
-		var $container = $('.masonry-container');
+		var $container = $('.wd-masonry');
 
 		$container.imagesLoaded(function() {
 			$container.isotope({

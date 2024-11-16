@@ -40,7 +40,7 @@ class Twitter extends Widget_Base {
 	 * @return string Widget title.
 	 */
 	public function get_title() {
-		return esc_html__( 'Twitter', 'woodmart' );
+		return esc_html__( 'X (Twitter)', 'woodmart' );
 	}
 
 	/**
@@ -123,16 +123,16 @@ class Twitter extends Widget_Base {
 		$this->add_control(
 			'name',
 			[
-				'label'   => esc_html__( 'Twitter Name (without @ symbol)', 'woodmart' ),
+				'label'   => esc_html__( 'X Name (without @ symbol)', 'woodmart' ),
 				'type'    => Controls_Manager::TEXT,
-				'default' => 'Twitter',
+				'default' => 'x',
 			]
 		);
 
 		$this->add_control(
 			'num_tweets',
 			[
-				'label'   => esc_html__( 'Number of Tweets', 'woodmart' ),
+				'label'   => esc_html__( 'Number of posts', 'woodmart' ),
 				'type'    => Controls_Manager::NUMBER,
 				'default' => 5,
 			]
@@ -200,7 +200,7 @@ class Twitter extends Widget_Base {
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 		
 		if ( ! $settings['name'] || ! $settings['consumer_key'] || ! $settings['consumer_secret'] || ! $settings['access_token'] || ! $settings['accesstoken_secret'] ) {
-			echo '<div class="wd-notice wd-info">' . esc_html__( 'You need to enter your Consumer key and secret to display your recent twitter feed.', 'woodmart' ) . '</div>';
+			echo '<div class="wd-notice wd-info">' . esc_html__( 'You need to enter your Consumer key and secret to display your recent X (Twitter) feed.', 'woodmart' ) . '</div>';
 			return;
 		}
 

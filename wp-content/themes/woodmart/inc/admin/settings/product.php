@@ -9,7 +9,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 /**
  * Product page
@@ -49,7 +49,7 @@ Options::add_field(
 	array(
 		'id'          => 'full_height_sidebar',
 		'name'        => esc_html__( 'Full height sidebar', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'full-height-sidebar.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'full-height-sidebar.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'If you have a lot of widgets added to the sidebar your single product page layout may look inconsistent. Try to enable this option in this situation.', 'woodmart' ),
 		'group'       => esc_html__( 'Sidebar', 'woodmart' ),
 		'type'        => 'switcher',
@@ -95,6 +95,49 @@ Options::add_field(
 	)
 );
 
+/**
+ * Images.
+ */
+Options::add_field(
+	array(
+		'id'          => 'single_product_style',
+		'name'        => esc_html__( 'Product page layout', 'woodmart' ),
+		'description' => esc_html__( 'You can choose different page layout depending on the product image size you need', 'woodmart' ),
+		'group'       => esc_html__( 'Layout', 'woodmart' ),
+		'type'        => 'buttons',
+		'section'     => 'single_product_section',
+		'options'     => array(
+			1 => array(
+				'name'  => esc_html__( 'Small image', 'woodmart' ),
+				'value' => 1,
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/small.jpg',
+			),
+			2 => array(
+				'name'  => esc_html__( 'Medium', 'woodmart' ),
+				'value' => 2,
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/medium.jpg',
+			),
+			3 => array(
+				'name'  => esc_html__( 'Large', 'woodmart' ),
+				'value' => 3,
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/large.jpg',
+			),
+			4 => array(
+				'name'  => esc_html__( 'Full width (container)', 'woodmart' ),
+				'value' => 4,
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/fw-container.jpg',
+			),
+			5 => array(
+				'name'  => esc_html__( 'Full width (window)', 'woodmart' ),
+				'value' => 5,
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/fw-window.jpg',
+			),
+		),
+		'default'     => 2,
+		'priority'    => 40,
+	)
+);
+
 Options::add_field(
 	array(
 		'id'          => 'product_design',
@@ -116,7 +159,7 @@ Options::add_field(
 			),
 		),
 		'default'     => 'default',
-		'priority'    => 40,
+		'priority'    => 45,
 	)
 );
 
@@ -124,7 +167,7 @@ Options::add_field(
 	array(
 		'id'          => 'product_sticky',
 		'name'        => esc_html__( 'Sticky product', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'sticky-product.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'sticky-product.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'If you turn on this option, the section with description will be sticky when you scroll the page. In case when the description is higher than images, the images section will be fixed instead.', 'woodmart' ),
 		'group'       => esc_html__( 'Layout', 'woodmart' ),
 		'type'        => 'switcher',
@@ -138,7 +181,7 @@ Options::add_field(
 	array(
 		'id'          => 'product_summary_shadow',
 		'name'        => esc_html__( 'Add shadow to product summary block', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'add-shadow-to-product-summary-block.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'add-shadow-to-product-summary-block.jpg" alt="">', true ),
 		'description' => esc_html__( 'Useful when you set background color for the single product page to gray for example.', 'woodmart' ),
 		'group'       => esc_html__( 'Layout', 'woodmart' ),
 		'type'        => 'switcher',
@@ -196,49 +239,7 @@ Options::add_field(
 			'render' => 'woodmart_get_post_by_ids_autocomplete',
 		),
 		'priority'     => 110,
-	)
-);
-
-/**
- * Images.
- */
-Options::add_field(
-	array(
-		'id'          => 'single_product_style',
-		'name'        => esc_html__( 'Product image width', 'woodmart' ),
-		'description' => esc_html__( 'You can choose different page layout depending on the product image size you need', 'woodmart' ),
-		'group'       => esc_html__( 'Main image', 'woodmart' ),
-		'type'        => 'buttons',
-		'section'     => 'product_images',
-		'options'     => array(
-			1 => array(
-				'name'  => esc_html__( 'Small image', 'woodmart' ),
-				'value' => 1,
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/small.jpg',
-			),
-			2 => array(
-				'name'  => esc_html__( 'Medium', 'woodmart' ),
-				'value' => 2,
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/medium.jpg',
-			),
-			3 => array(
-				'name'  => esc_html__( 'Large', 'woodmart' ),
-				'value' => 3,
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/large.jpg',
-			),
-			4 => array(
-				'name'  => esc_html__( 'Full width (container)', 'woodmart' ),
-				'value' => 4,
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/fw-container.jpg',
-			),
-			5 => array(
-				'name'  => esc_html__( 'Full width (window)', 'woodmart' ),
-				'value' => 5,
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image-width/fw-window.jpg',
-			),
-		),
-		'default'     => 2,
-		'priority'    => 10,
+		'class'        => 'xts-preset-field-disabled',
 	)
 );
 
@@ -253,12 +254,12 @@ Options::add_field(
 		'options'     => array(
 			'zoom'  => array(
 				'name'  => esc_html__( 'Zoom', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'main-image-click-action-zoom.gif" alt="">', 'woodmart' ), true ),
+				'hint'  => '<video data-src="' . WOODMART_TOOLTIP_URL . 'main-image-click-action-zoom.mp4" autoplay loop muted></video>',
 				'value' => 'zoom',
 			),
 			'popup' => array(
 				'name'  => esc_html__( 'Photoswipe popup', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'main-image-click-action-photoswipe.gif" alt="">', 'woodmart' ), true ),
+				'hint'  => '<video data-src="' . WOODMART_TOOLTIP_URL . 'main-image-click-action-photoswipe.mp4" autoplay loop muted></video>',
 				'value' => 'popup',
 			),
 			'none'  => array(
@@ -267,7 +268,7 @@ Options::add_field(
 			),
 		),
 		'default'     => 'zoom',
-		'priority'    => 20,
+		'priority'    => 170,
 	)
 );
 
@@ -275,7 +276,7 @@ Options::add_field(
 	array(
 		'id'          => 'photoswipe_icon',
 		'name'        => esc_html__( 'Show "Click to enlarge" icon', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-zoom-image-icon.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'show-zoom-image-icon.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Click to open image in popup and swipe to zoom', 'woodmart' ),
 		'group'       => esc_html__( 'Main image', 'woodmart' ),
 		'type'        => 'switcher',
@@ -283,7 +284,7 @@ Options::add_field(
 		'default'     => '1',
 		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
-		'priority'    => 30,
+		'priority'    => 180,
 	)
 );
 
@@ -291,13 +292,26 @@ Options::add_field(
 	array(
 		'id'          => 'product_slider_auto_height',
 		'name'        => esc_html__( 'Main carousel auto height', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'main-carousel-auto-height.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'main-carousel-auto-height.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Useful when you have product images with different height.', 'woodmart' ),
 		'group'       => esc_html__( 'Main image', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'product_images',
 		'default'     => false,
-		'priority'    => 40,
+		'priority'    => 190,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'pagination_main_gallery',
+		'name'     => esc_html__( 'Main carousel with pagination', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'pagination-main-gallery.mp4" autoplay loop muted></video>',
+		'group'    => esc_html__( 'Main image', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'product_images',
+		'default'  => false,
+		'priority' => 210,
 	)
 );
 
@@ -305,145 +319,122 @@ Options::add_field(
 	array(
 		'id'          => 'product_images_captions',
 		'name'        => esc_html__( 'Images captions on Photo Swipe lightbox', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'images-captions-on-photo-swipe-lightbox.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'images-captions-on-photo-swipe-lightbox.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Display caption texts below images when you open the photoswipe popup. Captions can be added to your images via the Media library.', 'woodmart' ),
 		'group'       => esc_html__( 'Main image', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'product_images',
 		'default'     => false,
-		'priority'    => 50,
+		'priority'    => 220,
 	)
 );
 
 Options::add_field(
 	array(
 		'id'       => 'thums_position',
-		'name'     => esc_html__( 'Thumbnails position', 'woodmart' ),
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
+		'name'     => esc_html__( 'Gallery layout', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
 		'type'     => 'buttons',
 		'section'  => 'product_images',
 		'options'  => array(
-			'left'                 => array(
-				'name'  => esc_html__( 'Left (vertical position)', 'woodmart' ),
+			'left'              => array(
+				'name'  => esc_html__( 'Thumbnails left', 'woodmart' ),
 				'value' => 'left',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/left.jpg',
 			),
-			'bottom'               => array(
-				'name'  => esc_html__( 'Bottom (horizontal carousel)', 'woodmart' ),
+			'bottom'            => array(
+				'name'  => esc_html__( 'Thumbnails bottom', 'woodmart' ),
 				'value' => 'bottom',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom.jpg',
 			),
-			'bottom_column'        => array(
-				'name'  => esc_html__( 'Bottom (1 column)', 'woodmart' ),
-				'value' => 'left',
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom_column.jpg',
+			'without'           => array(
+				'name'  => esc_html__( 'Carousel', 'woodmart' ),
+				'value' => 'without',
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/without.jpg',
 			),
-			'bottom_grid'          => array(
-				'name'  => esc_html__( 'Bottom (2 columns)', 'woodmart' ),
+			'bottom_column'     => array(
+				'name'  => esc_html__( 'Grid', 'woodmart' ),
+				'value' => 'left',
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/grid.jpg',
+			),
+			'bottom_grid'       => array(
+				'name'  => esc_html__( 'Bottom grid', 'woodmart' ),
 				'value' => 'left',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom_grid.jpg',
 			),
-			'carousel_two_columns' => array(
-				'name'  => esc_html__( 'Carousel (2 columns)', 'woodmart' ),
-				'value' => 'carousel_two_columns',
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/carousel_two_columns.jpg',
-			),
-			'bottom_combined'      => array(
-				'name'  => esc_html__( 'Combined grid', 'woodmart' ),
+			'bottom_combined'   => array(
+				'name'  => esc_html__( 'Combined grid 1', 'woodmart' ),
 				'value' => 'bottom_combined',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom_combined.jpg',
 			),
-			'centered'             => array(
-				'name'  => esc_html__( 'Centered', 'woodmart' ),
-				'value' => 'centered',
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/centered.jpg',
+			'bottom_combined_2' => array(
+				'name'  => esc_html__( 'Combined grid 2', 'woodmart' ),
+				'value' => 'bottom_combined_2',
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom_combined_2.jpg',
 			),
-			'without'              => array(
-				'name'  => esc_html__( 'Without', 'woodmart' ),
-				'value' => 'without',
-				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/without.jpg',
+			'bottom_combined_3' => array(
+				'name'  => esc_html__( 'Combined grid 3', 'woodmart' ),
+				'value' => 'bottom_combined_3',
+				'image' => WOODMART_ASSETS_IMAGES . '/settings/single-product-image/bottom_combined_3.jpg',
 			),
 		),
 		'default'  => 'left',
 		'priority' => 60,
+		'class'    => 'xts-thumbnails-position',
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'pagination_main_gallery',
-		'name'     => esc_html__( 'Pagination in main gallery', 'woodmart' ),
-		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'pagination-main-gallery.mp4" autoplay loop muted></video>',
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
-		'type'     => 'switcher',
-		'section'  => 'product_images',
-		'default'  => false,
-		'requires' => array(
-			array(
-				'key'     => 'thums_position',
-				'compare' => 'equals',
-				'value'   => array( 'left', 'bottom', 'carousel_two_columns', 'centered', 'without' ),
+		'id'            => 'single_product_grid_columns_gap',
+		'name'          => esc_html__( 'Gallery gap', 'woodmart' ),
+		'type'          => 'responsive_range',
+		'section'       => 'product_images',
+		'group'         => esc_html__( 'Image gallery', 'woodmart' ),
+		'hint'          => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-gallery-gap.mp4" autoplay loop muted></video>',
+		'selectors'     => array(
+			'.woocommerce-product-gallery' => array(
+				'--wd-gallery-gap: {{VALUE}}{{UNIT}};',
 			),
 		),
-		'priority' => 61,
+		'devices'       => array(
+			'desktop' => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'tablet'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'mobile'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+		),
+		'range'         => array(
+			'px' => array(
+				'min'  => 0,
+				'max'  => 50,
+				'step' => 1,
+			),
+		),
+		'generate_zero' => true,
+		'priority'      => 65,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'single_product_thumbnails_vertical_items',
-		'name'     => esc_html__( 'Thumbnails per slide', 'woodmart' ),
-		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-vertical-items.mp4" autoplay loop muted></video>',
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
+		'id'       => 'single_product_grid_column_desktop',
+		'name'     => esc_html__( 'Columns on desktop', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
 		'type'     => 'buttons',
 		'section'  => 'product_images',
 		'options'  => array(
-			'default' => array(
-				'name'  => esc_html__( 'Default', 'woodmart' ),
-				'value' => 'default',
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
 			),
-			2         => array(
-				'name'  => 2,
-				'value' => 2,
-			),
-			3         => array(
-				'name'  => 3,
-				'value' => 3,
-			),
-			4         => array(
-				'name'  => 4,
-				'value' => 4,
-			),
-			5         => array(
-				'name'  => 5,
-				'value' => 5,
-			),
-			6         => array(
-				'name'  => 6,
-				'value' => 6,
-			),
-		),
-		'default'  => 3,
-		'priority' => 64,
-		'requires' => array(
-			array(
-				'key'     => 'thums_position',
-				'compare' => 'equals',
-				'value'   => array( 'left' ),
-			),
-		),
-	)
-);
-
-Options::add_field(
-	array(
-		'id'       => 'single_product_thumbnails_items_desktop',
-		'name'     => esc_html__( 'Thumbnails per slide on desktop', 'woodmart' ),
-		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-items-desktop.mp4" autoplay loop muted></video>',
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
-		'type'     => 'buttons',
-		'section'  => 'product_images',
-		'options'  => array(
 			2 => array(
 				'name'  => 2,
 				'value' => 2,
@@ -465,8 +456,403 @@ Options::add_field(
 				'value' => 6,
 			),
 		),
+		'default'  => '',
+		'priority' => 70,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom_column', 'bottom_grid' ),
+			),
+		),
+		't_tab'    => array(
+			'id'       => 'single_product_grid_column_tabs',
+			'tab'      => esc_html__( 'Desktop', 'woodmart' ),
+			'title'    => esc_html__( 'Thumbnails columns', 'woodmart' ),
+			'icon'     => 'xts-i-desktop',
+			'style'    => 'devices',
+			'requires' => array(
+				array(
+					'key'     => 'thums_position',
+					'compare' => 'equals',
+					'value'   => array( 'bottom_column', 'bottom_grid' ),
+				),
+			),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_grid_column_tablet',
+		'name'     => esc_html__( 'Columns on tablet', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'product_images',
+		'options'  => array(
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
+			),
+			2 => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3 => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4 => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5 => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6 => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'  => '',
+		'priority' => 71,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom_column', 'bottom_grid' ),
+			),
+		),
+		't_tab'    => array(
+			'id'    => 'single_product_grid_column_tabs',
+			'icon'  => 'xts-i-tablet',
+			'style' => 'devices',
+			'tab'   => esc_html__( 'Tablet', 'woodmart' ),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_grid_column_mobile',
+		'name'     => esc_html__( 'Columns on mobile', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'product_images',
+		'options'  => array(
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
+			),
+			2 => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3 => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4 => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5 => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6 => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'  => '',
+		'priority' => 72,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom_column', 'bottom_grid' ),
+			),
+		),
+		't_tab'    => array(
+			'id'    => 'single_product_grid_column_tabs',
+			'icon'  => 'xts-i-phone',
+			'style' => 'devices',
+			'tab'   => esc_html__( 'Mobile', 'woodmart' ),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_gallery_column_desktop',
+		'name'     => esc_html__( 'Columns on desktop', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'product_images',
+		'options'  => array(
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
+			),
+			2 => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3 => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4 => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5 => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6 => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'  => 1,
+		'priority' => 80,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'without' ),
+			),
+		),
+		't_tab'    => array(
+			'id'       => 'single_product_gallery_column_tabs',
+			'tab'      => esc_html__( 'Desktop', 'woodmart' ),
+			'title'    => esc_html__( 'Thumbnails columns', 'woodmart' ),
+			'icon'     => 'xts-i-desktop',
+			'style'    => 'devices',
+			'requires' => array(
+				array(
+					'key'     => 'thums_position',
+					'compare' => 'equals',
+					'value'   => array( 'without' ),
+				),
+			),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'         => 'single_product_gallery_column_tablet',
+		'name'       => esc_html__( 'Columns on tablet', 'woodmart' ),
+		'group'      => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'       => 'buttons',
+		'section'    => 'product_images',
+		'selectors'  => array(
+			'[class*="thumbs-grid-bottom"] .woocommerce-product-gallery__wrapper.wd-grid' => array(
+				'--wd-col: {{VALUE}};',
+			),
+		),
+		'css_device' => 'tablet',
+		'options'    => array(
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
+			),
+			2 => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3 => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4 => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5 => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6 => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'    => '',
+		'priority'   => 81,
+		'requires'   => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'without' ),
+			),
+		),
+		't_tab'      => array(
+			'id'    => 'single_product_gallery_column_tabs',
+			'icon'  => 'xts-i-tablet',
+			'style' => 'devices',
+			'tab'   => esc_html__( 'Tablet', 'woodmart' ),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'         => 'single_product_gallery_column_mobile',
+		'name'       => esc_html__( 'Columns on mobile', 'woodmart' ),
+		'group'      => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'       => 'buttons',
+		'section'    => 'product_images',
+		'selectors'  => array(
+			'[class*="thumbs-grid-bottom"] .woocommerce-product-gallery__wrapper.wd-grid' => array(
+				'--wd-col: {{VALUE}};',
+			),
+		),
+		'css_device' => 'mobile',
+		'options'    => array(
+			1 => array(
+				'name'  => 1,
+				'value' => 1,
+			),
+			2 => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3 => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4 => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5 => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6 => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'    => '',
+		'priority'   => 82,
+		'requires'   => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'without' ),
+			),
+		),
+		't_tab'      => array(
+			'id'    => 'single_product_gallery_column_tabs',
+			'icon'  => 'xts-i-phone',
+			'style' => 'devices',
+			'tab'   => esc_html__( 'Mobile', 'woodmart' ),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_thumbnails_vertical_items',
+		'name'     => esc_html__( 'Thumbnails per slide on desktop', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-vertical-items.mp4" autoplay loop muted></video>',
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'product_images',
+		'options'  => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3      => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4      => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5      => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6      => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		'default'  => 3,
+		'priority' => 90,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'left' ),
+			),
+		),
+		't_tab'    => array(
+			'id'       => 'single_product_thumbnails_items_tabs',
+			'tab'      => esc_html__( 'Desktop', 'woodmart' ),
+			'title'    => esc_html__( 'Thumbnails columns', 'woodmart' ),
+			'icon'     => 'xts-i-desktop',
+			'style'    => 'devices',
+			'requires' => array(
+				array(
+					'key'     => 'thums_position',
+					'compare' => 'equals',
+					'value'   => array( 'bottom', 'left' ),
+				),
+			),
+		),
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_thumbnails_items_desktop',
+		'name'     => esc_html__( 'Thumbnails per slide on desktop', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-items-desktop.mp4" autoplay loop muted></video>',
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'buttons',
+		'section'  => 'product_images',
+		'options'  => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3      => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4      => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5      => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6      => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
 		'default'  => 4,
-		'priority' => 65,
+		'priority' => 91,
 		'requires' => array(
 			array(
 				'key'     => 'thums_position',
@@ -484,7 +870,7 @@ Options::add_field(
 				array(
 					'key'     => 'thums_position',
 					'compare' => 'equals',
-					'value'   => array( 'bottom' ),
+					'value'   => array( 'bottom', 'left' ),
 				),
 			),
 		),
@@ -495,38 +881,42 @@ Options::add_field(
 	array(
 		'id'       => 'single_product_thumbnails_items_tablet',
 		'name'     => esc_html__( 'Thumbnails per slide on tablet', 'woodmart' ),
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
 		'type'     => 'buttons',
 		'section'  => 'product_images',
 		'options'  => array(
-			2 => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
 				'name'  => 2,
 				'value' => 2,
 			),
-			3 => array(
+			3      => array(
 				'name'  => 3,
 				'value' => 3,
 			),
-			4 => array(
+			4      => array(
 				'name'  => 4,
 				'value' => 4,
 			),
-			5 => array(
+			5      => array(
 				'name'  => 5,
 				'value' => 5,
 			),
-			6 => array(
+			6      => array(
 				'name'  => 6,
 				'value' => 6,
 			),
 		),
 		'default'  => 4,
-		'priority' => 66,
+		'priority' => 92,
 		'requires' => array(
 			array(
 				'key'     => 'thums_position',
 				'compare' => 'equals',
-				'value'   => array( 'bottom' ),
+				'value'   => array( 'bottom', 'left' ),
 			),
 		),
 		't_tab'    => array(
@@ -542,38 +932,42 @@ Options::add_field(
 	array(
 		'id'       => 'single_product_thumbnails_items_mobile',
 		'name'     => esc_html__( 'Thumbnails per slide on mobile', 'woodmart' ),
-		'group'    => esc_html__( 'Thumbnails', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
 		'type'     => 'buttons',
 		'section'  => 'product_images',
 		'options'  => array(
-			2 => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
 				'name'  => 2,
 				'value' => 2,
 			),
-			3 => array(
+			3      => array(
 				'name'  => 3,
 				'value' => 3,
 			),
-			4 => array(
+			4      => array(
 				'name'  => 4,
 				'value' => 4,
 			),
-			5 => array(
+			5      => array(
 				'name'  => 5,
 				'value' => 5,
 			),
-			6 => array(
+			6      => array(
 				'name'  => 6,
 				'value' => 6,
 			),
 		),
 		'default'  => 3,
-		'priority' => 67,
+		'priority' => 93,
 		'requires' => array(
 			array(
 				'key'     => 'thums_position',
 				'compare' => 'equals',
-				'value'   => array( 'bottom' ),
+				'value'   => array( 'bottom', 'left' ),
 			),
 		),
 		't_tab'    => array(
@@ -587,6 +981,203 @@ Options::add_field(
 
 Options::add_field(
 	array(
+		'id'       => 'main_gallery_on_tablet',
+		'name'     => esc_html__( 'Carousel on tablet', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'product_images',
+		'default'  => true,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom_column', 'bottom_grid', 'bottom_combined', 'bottom_combined_2', 'bottom_combined_3' ),
+			),
+		),
+		't_tab'    => array(
+			'id'       => 'single_product_carousel_tabs',
+			'tab'      => esc_html__( 'Tablet', 'woodmart' ),
+			'title'    => esc_html__( 'Thumbnails columns', 'woodmart' ),
+			'icon'     => 'xts-i-tablet',
+			'style'    => 'devices',
+			'requires' => array(
+				array(
+					'key'     => 'thums_position',
+					'compare' => 'equals',
+					'value'   => array( 'bottom_column', 'bottom_grid', 'bottom_combined', 'bottom_combined_2', 'bottom_combined_3' ),
+				),
+			),
+		),
+		'priority' => 100,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'main_gallery_on_mobile',
+		'name'     => esc_html__( 'Carousel on mobile', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'product_images',
+		'default'  => true,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom_column', 'bottom_grid', 'bottom_combined', 'bottom_combined_2', 'bottom_combined_3' ),
+			),
+		),
+		't_tab'    => array(
+			'id'    => 'single_product_carousel_tabs',
+			'icon'  => 'xts-i-phone',
+			'style' => 'devices',
+			'tab'   => esc_html__( 'Mobile', 'woodmart' ),
+		),
+		'priority' => 101,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'main_gallery_center_mode',
+		'name'     => esc_html__( 'Center mode in main gallery', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-gallery-center-mode.mp4" autoplay loop muted></video>',
+		'type'     => 'switcher',
+		'section'  => 'product_images',
+		'default'  => false,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'without' ),
+			),
+		),
+		'priority' => 105,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'single_product_thumbnails_wrap_in_mobile_devices',
+		'name'     => esc_html__( 'Thumbnails position bottom on mobile devices', 'woodmart' ),
+		'group'    => esc_html__( 'Image gallery', 'woodmart' ),
+		'hint'     => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-bottom-in-mobile-devices.mp4" autoplay loop muted></video>',
+		'type'     => 'switcher',
+		'section'  => 'product_images',
+		'default'  => true,
+		'requires' => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'left' ),
+			),
+		),
+		'priority' => 110,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'            => 'single_product_thumbnails_gallery_width',
+		'name'          => esc_html__( 'Thumbnails gallery width', 'woodmart' ),
+		'group'         => esc_html__( 'Image gallery', 'woodmart' ),
+		'hint'          => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-gallery-width.mp4" autoplay loop muted></video>',
+		'type'          => 'responsive_range',
+		'section'       => 'product_images',
+		'selectors'     => array(
+			'.woocommerce-product-gallery.thumbs-position-left' => array(
+				'--wd-thumbs-width: {{VALUE}}{{UNIT}};',
+			),
+		),
+		'generate_zero' => true,
+		'devices'       => array(
+			'desktop' => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'tablet'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'mobile'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+		),
+		'range'         => array(
+			'px' => array(
+				'min'  => 0,
+				'max'  => 1000,
+				'step' => 1,
+			),
+			'%'  => array(
+				'min'  => 0,
+				'max'  => 100,
+				'step' => 1,
+			),
+		),
+		'requires'      => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'left' ),
+			),
+		),
+		'class'         => 'xts-col-6',
+		'priority'      => 140,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'            => 'single_product_thumbnails_gallery_height',
+		'name'          => esc_html__( 'Thumbnails gallery height', 'woodmart' ),
+		'group'         => esc_html__( 'Image gallery', 'woodmart' ),
+		'hint'          => '<video data-src="' . WOODMART_TOOLTIP_URL . 'single-product-thumbnails-gallery-height.mp4" autoplay loop muted></video>',
+		'type'          => 'responsive_range',
+		'section'       => 'product_images',
+		'selectors'     => array(
+			'.woocommerce-product-gallery.thumbs-position-left' => array(
+				'--wd-thumbs-height: {{VALUE}}{{UNIT}};',
+			),
+		),
+		'generate_zero' => true,
+		'devices'       => array(
+			'desktop' => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'tablet'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+			'mobile'  => array(
+				'value' => '',
+				'unit'  => 'px',
+			),
+		),
+		'range'         => array(
+			'px' => array(
+				'min'  => 0,
+				'max'  => 1000,
+				'step' => 1,
+			),
+		),
+		'requires'      => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'left' ),
+			),
+		),
+		'class'         => 'xts-col-6',
+		'priority'      => 150,
+	)
+);
+
+Options::add_field(
+	array(
 		'id'          => 'single_product_thumbnails_gallery_image_width',
 		'type'        => 'text_input',
 		'attributes'  => array(
@@ -595,9 +1186,16 @@ Options::add_field(
 		'section'     => 'product_images',
 		'name'        => esc_html__( 'Thumbnails image width', 'woodmart' ),
 		'description' => __( 'IMPORTANT: You need to regenerate all thumbnails to apply the changes. Use the following <a href="https://wordpress.org/plugins/regenerate-thumbnails/" target="_blank">plugin</a> for this.', 'woodmart' ),
-		'group'       => esc_html__( 'Thumbnails', 'woodmart' ),
+		'group'       => esc_html__( 'Image gallery', 'woodmart' ),
 		'default'     => 150,
-		'priority'    => 70,
+		'priority'    => 160,
+		'requires'    => array(
+			array(
+				'key'     => 'thums_position',
+				'compare' => 'equals',
+				'value'   => array( 'bottom', 'left' ),
+			),
+		),
 	)
 );
 
@@ -608,7 +1206,7 @@ Options::add_field(
 	array(
 		'id'          => 'single_ajax_add_to_cart',
 		'name'        => esc_html__( 'AJAX Add to cart', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'ajax-add-to-cart.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'ajax-add-to-cart.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Turn on the AJAX add to cart option on the single product page. Will not work with plugins that add some custom fields to the add to cart form.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'single_product_add_to_cart_section',
@@ -621,7 +1219,7 @@ Options::add_field(
 	array(
 		'id'          => 'single_sticky_add_to_cart',
 		'name'        => esc_html__( 'Sticky add to cart', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'sticky-add-to-cart.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'sticky-add-to-cart.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Add to cart section will be displayed at the bottom of your screen when you scroll down the page.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'single_product_add_to_cart_section',
@@ -652,22 +1250,27 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'       => 'sticky_add_to_cart_height_desktop',
-		'type'     => 'range',
-		'section'  => 'single_product_add_to_cart_section',
-		'name'     => esc_html__( 'Height on desktop', 'woodmart' ),
-		'default'  => 95,
-		'min'      => 60,
-		'max'      => 200,
-		'step'     => 1,
-		'requires' => array(
+		'id'        => 'sticky_add_to_cart_height_desktop',
+		'type'      => 'range',
+		'section'   => 'single_product_add_to_cart_section',
+		'name'      => esc_html__( 'Height on desktop', 'woodmart' ),
+		'default'   => 95,
+		'min'       => 60,
+		'max'       => 200,
+		'step'      => 1,
+		'selectors' => array(
+			':root' => array(
+				'--wd-sticky-btn-height: {{VALUE}}px;',
+			),
+		),
+		'requires'  => array(
 			array(
 				'key'     => 'single_sticky_add_to_cart',
 				'compare' => 'equals',
 				'value'   => '1',
 			),
 		),
-		't_tab'    => [
+		't_tab'     => array(
 			'id'       => 'sticky_add_to_cart_tabs',
 			'tab'      => esc_html__( 'Desktop', 'woodmart' ),
 			'icon'     => 'xts-i-desktop',
@@ -679,63 +1282,75 @@ Options::add_field(
 					'value'   => '1',
 				),
 			),
-		],
-		'priority' => 180,
-		'unit'     => 'px',
+		),
+		'priority'  => 180,
+		'unit'      => 'px',
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'sticky_add_to_cart_height_tablet',
-		'type'     => 'range',
-		'section'  => 'single_product_add_to_cart_section',
-		'name'     => esc_html__( 'Height on tablet', 'woodmart' ),
-		'default'  => 95,
-		'min'      => 60,
-		'max'      => 200,
-		'step'     => 1,
-		'requires' => array(
+		'id'         => 'sticky_add_to_cart_height_tablet',
+		'type'       => 'range',
+		'section'    => 'single_product_add_to_cart_section',
+		'name'       => esc_html__( 'Height on tablet', 'woodmart' ),
+		'default'    => 95,
+		'min'        => 60,
+		'max'        => 200,
+		'step'       => 1,
+		'css_device' => 'tablet',
+		'selectors'  => array(
+			':root' => array(
+				'--wd-sticky-btn-height: {{VALUE}}px;',
+			),
+		),
+		'requires'   => array(
 			array(
 				'key'     => 'single_sticky_add_to_cart',
 				'compare' => 'equals',
 				'value'   => '1',
 			),
 		),
-		't_tab'    => [
+		't_tab'      => array(
 			'id'   => 'sticky_add_to_cart_tabs',
 			'tab'  => esc_html__( 'Tablet', 'woodmart' ),
 			'icon' => 'xts-i-tablet',
-		],
-		'priority' => 190,
-		'unit'     => 'px',
+		),
+		'priority'   => 190,
+		'unit'       => 'px',
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'sticky_add_to_cart_height_mobile',
-		'type'     => 'range',
-		'section'  => 'single_product_add_to_cart_section',
-		'name'     => esc_html__( 'Height on mobile', 'woodmart' ),
-		'default'  => 42,
-		'min'      => 40,
-		'max'      => 120,
-		'step'     => 1,
-		'requires' => array(
+		'id'         => 'sticky_add_to_cart_height_mobile',
+		'type'       => 'range',
+		'section'    => 'single_product_add_to_cart_section',
+		'name'       => esc_html__( 'Height on mobile', 'woodmart' ),
+		'default'    => 42,
+		'min'        => 40,
+		'max'        => 120,
+		'step'       => 1,
+		'css_device' => 'mobile',
+		'selectors'  => array(
+			':root' => array(
+				'--wd-sticky-btn-height: {{VALUE}}px;',
+			),
+		),
+		'requires'   => array(
 			array(
 				'key'     => 'single_sticky_add_to_cart',
 				'compare' => 'equals',
 				'value'   => '1',
 			),
 		),
-		't_tab'    => [
+		't_tab'      => array(
 			'id'   => 'sticky_add_to_cart_tabs',
 			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
 			'icon' => 'xts-i-phone',
-		],
-		'priority' => 200,
-		'unit'     => 'px',
+		),
+		'priority'   => 200,
+		'unit'       => 'px',
 	)
 );
 
@@ -883,23 +1498,23 @@ Options::add_field(
 		'id'          => 'single_breadcrumbs_position',
 		'name'        => esc_html__( 'Position', 'woodmart' ),
 		'description' => esc_html__( 'Set different position for breadcrumbs section on your product\'s page.', 'woodmart' ),
-		'group'        => esc_html__( 'Breadcrumbs & Products navigation', 'woodmart' ),
+		'group'       => esc_html__( 'Breadcrumbs & Products navigation', 'woodmart' ),
 		'type'        => 'buttons',
 		'section'     => 'product_elements',
 		'options'     => array(
 			'default'      => array(
 				'name'  => esc_html__( 'Default', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-default.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-default.jpg" alt="">', true ),
 				'value' => 'default',
 			),
 			'below_header' => array(
 				'name'  => esc_html__( 'Below header', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-below-header.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-below-header.jpg" alt="">', true ),
 				'value' => 'below_header',
 			),
 			'summary'      => array(
 				'name'  => esc_html__( 'Product summary', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-default.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'breadcrumbs-product-page-position-default.jpg" alt="">', true ),
 				'value' => 'summary',
 			),
 		),
@@ -913,7 +1528,7 @@ Options::add_field(
 		'id'       => 'product_page_breadcrumbs',
 		'name'     => esc_html__( 'Breadcrumbs on product page', 'woodmart' ),
 		'group'    => esc_html__( 'Breadcrumbs & Products navigation', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'single-product-breadcrumbs.jpg" alt="">', 'woodmart' ), true ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'single-product-breadcrumbs.jpg" alt="">', true ),
 		'type'     => 'switcher',
 		'section'  => 'product_elements',
 		'default'  => '1',
@@ -923,14 +1538,14 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'          => 'products_nav',
-		'name'        => esc_html__( 'Products navigation', 'woodmart' ),
-		'group'       => esc_html__( 'Breadcrumbs & Products navigation', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'single-product-products-navigation.jpg" alt="">', 'woodmart' ), true ),
-		'type'        => 'switcher',
-		'section'     => 'product_elements',
-		'default'     => '1',
-		'priority'    => 30,
+		'id'       => 'products_nav',
+		'name'     => esc_html__( 'Products navigation', 'woodmart' ),
+		'group'    => esc_html__( 'Breadcrumbs & Products navigation', 'woodmart' ),
+		'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'single-product-products-navigation.jpg" alt="">', true ),
+		'type'     => 'switcher',
+		'section'  => 'product_elements',
+		'default'  => '1',
+		'priority' => 30,
 	)
 );
 
@@ -938,7 +1553,7 @@ Options::add_field(
 	array(
 		'id'          => 'product_short_description',
 		'name'        => esc_html__( 'Enable short description', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-short-description.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-short-description.jpg" alt="">', true ),
 		'description' => esc_html__( 'Enable/disable short description text in the product\'s summary block.', 'woodmart' ),
 		'group'       => esc_html__( 'Short description', 'woodmart' ),
 		'type'        => 'switcher',
@@ -954,7 +1569,7 @@ Options::add_field(
 	array(
 		'id'          => 'attr_after_short_desc',
 		'name'        => esc_html__( 'Show attributes table after short description', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-attributes-table-after-short-description.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-attributes-table-after-short-description.jpg" alt="">', true ),
 		'description' => esc_html__( 'You can display attributes table after of short description.', 'woodmart' ),
 		'group'       => esc_html__( 'Short description', 'woodmart' ),
 		'type'        => 'switcher',
@@ -975,12 +1590,12 @@ Options::add_field(
 		'section'  => 'product_elements',
 		'default'  => 'default',
 		'options'  => array(
-			'default' => array(
+			'default'  => array(
 				'name'  => esc_html__( 'Default', 'woodmart' ),
 				'value' => 'default',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/stock-status/default.jpg',
 			),
-			'with-bg' => array(
+			'with-bg'  => array(
 				'name'  => esc_html__( 'With background', 'woodmart' ),
 				'value' => 'with-bg',
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/stock-status/background.jpg',
@@ -992,7 +1607,7 @@ Options::add_field(
 			),
 		),
 		'priority' => 60,
-		'class'       => 'xts-col-6',
+		'class'    => 'xts-col-6',
 	)
 );
 
@@ -1000,7 +1615,7 @@ Options::add_field(
 	array(
 		'id'          => 'single_stock_progress_bar',
 		'name'        => esc_html__( 'Stock progress bar', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'stock-progress-bar.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'stock-progress-bar.jpg" alt="">', true ),
 		'description' => esc_html__( 'Display a number of sold and in stock products as a progress bar.', 'woodmart' ),
 		'group'       => esc_html__( 'Stock status', 'woodmart' ),
 		'type'        => 'switcher',
@@ -1014,7 +1629,7 @@ Options::add_field(
 	array(
 		'id'          => 'product_countdown',
 		'name'        => esc_html__( 'Countdown timer', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'countdown-timer.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'countdown-timer.jpg" alt="">', true ),
 		'description' => esc_html__( 'Show timer for products that have scheduled date for the sale price', 'woodmart' ),
 		'group'       => esc_html__( 'Countdown timer', 'woodmart' ),
 		'type'        => 'switcher',
@@ -1055,12 +1670,12 @@ Options::add_field(
 		'options'     => array(
 			'add_to_cart' => array(
 				'name'  => esc_html__( 'After "Add to cart" button', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-product-meta-affter-add-to-cart.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-product-meta-affter-add-to-cart.jpg" alt="">', true ),
 				'value' => 'add_to_cart',
 			),
 			'after_tabs'  => array(
 				'name'  => esc_html__( 'After tabs', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-product-meta-affter-tabs.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-product-meta-affter-tabs.jpg" alt="">', true ),
 				'value' => 'after_tabs',
 			),
 			'hide'        => array(
@@ -1079,7 +1694,7 @@ Options::add_field(
 	array(
 		'id'          => 'product_share',
 		'name'        => esc_html__( 'Show share buttons', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-share-buttons.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-share-buttons.jpg" alt="">', true ),
 		'description' => esc_html__( 'Display share buttons icons on the single product page.', 'woodmart' ),
 		'group'       => esc_html__( 'Share buttons', 'woodmart' ),
 		'type'        => 'switcher',
@@ -1132,7 +1747,7 @@ Options::add_field(
 	array(
 		'id'          => 'related_products',
 		'name'        => esc_html__( 'Show related products', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-related-products.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-related-products.jpg" alt="">', true ),
 		'description' => esc_html__( 'Related products is a section that pulls products from your store that share the same tags or categories as the current product.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'single_product_related_section',
@@ -1153,12 +1768,12 @@ Options::add_field(
 		'options'     => array(
 			'standard' => array(
 				'name'  => esc_html__( 'Standard', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'upsells-products-position-standart.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'upsells-products-position-standart.jpg" alt="">', true ),
 				'value' => 'standard',
 			),
 			'sidebar'  => array(
 				'name'  => esc_html__( 'Sidebar', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'upsells-products-position-sidebar.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'upsells-products-position-sidebar.jpg" alt="">', true ),
 				'value' => 'sidebar',
 			),
 			'hide'     => array(
@@ -1184,7 +1799,7 @@ Options::add_field(
 				'value' => 'grid',
 			),
 			'slider' => array(
-				'name'  => esc_html__( 'Slider', 'woodmart' ),
+				'name'  => esc_html__( 'Carousel', 'woodmart' ),
 				'value' => 'slider',
 			),
 		),
@@ -1223,8 +1838,102 @@ Options::add_field(
 				'value' => 6,
 			),
 		),
+		't_tab'       => array(
+			'id'    => 'related_product_columns_tabs',
+			'tab'   => esc_html__( 'Desktop', 'woodmart' ),
+			'icon'  => 'xts-i-desktop',
+			'style' => 'devices',
+		),
 		'default'     => 4,
 		'priority'    => 40,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'related_product_columns_tablet',
+		'name'        => esc_html__( 'Product columns', 'woodmart' ),
+		'description' => esc_html__( 'How many products you want to show per row.', 'woodmart' ),
+		'group'       => esc_html__( 'Layout', 'woodmart' ),
+		'type'        => 'buttons',
+		'section'     => 'single_product_related_section',
+		'options'     => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3      => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4      => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5      => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6      => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		't_tab'       => array(
+			'id'   => 'related_product_columns_tabs',
+			'icon' => 'xts-i-tablet',
+			'tab'  => esc_html__( 'Tablet', 'woodmart' ),
+		),
+		'default'     => 'auto',
+		'priority'    => 41,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'related_product_columns_mobile',
+		'name'        => esc_html__( 'Product columns', 'woodmart' ),
+		'description' => esc_html__( 'How many products you want to show per row.', 'woodmart' ),
+		'group'       => esc_html__( 'Layout', 'woodmart' ),
+		'type'        => 'buttons',
+		'section'     => 'single_product_related_section',
+		'options'     => array(
+			'auto' => array(
+				'name'  => esc_html__( 'Auto', 'woodmart' ),
+				'value' => 'auto',
+			),
+			2      => array(
+				'name'  => 2,
+				'value' => 2,
+			),
+			3      => array(
+				'name'  => 3,
+				'value' => 3,
+			),
+			4      => array(
+				'name'  => 4,
+				'value' => 4,
+			),
+			5      => array(
+				'name'  => 5,
+				'value' => 5,
+			),
+			6      => array(
+				'name'  => 6,
+				'value' => 6,
+			),
+		),
+		't_tab'       => array(
+			'id'   => 'related_product_columns_tabs',
+			'icon' => 'xts-i-phone',
+			'tab'  => esc_html__( 'Mobile', 'woodmart' ),
+		),
+		'default'     => 'auto',
+		'priority'    => 42,
 	)
 );
 
@@ -1257,12 +1966,12 @@ Options::add_field(
 		'options'     => array(
 			'tabs'      => array(
 				'name'  => esc_html__( 'Tabs', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-tabs.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-tabs.jpg" alt="">', true ),
 				'value' => 'tabs',
 			),
 			'accordion' => array(
 				'name'  => esc_html__( 'Accordion', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', true ),
 				'value' => 'accordion',
 			),
 		),
@@ -1280,12 +1989,12 @@ Options::add_field(
 		'options'  => array(
 			'standard' => array(
 				'name'  => esc_html__( 'Standard', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', true ),
 				'value' => 'standard',
 			),
 			'summary'  => array(
 				'name'  => esc_html__( 'After "Add to cart" button', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-location-after-dd-to-cart-button.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-location-after-dd-to-cart-button.jpg" alt="">', true ),
 				'value' => 'summary',
 			),
 		),
@@ -1310,12 +2019,12 @@ Options::add_field(
 		'options'  => array(
 			'first'      => array(
 				'name'  => esc_html__( 'First opened', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion.jpg" alt="">', true ),
 				'value' => 'first',
 			),
 			'all_closed' => array(
 				'name'  => esc_html__( 'All closed', 'woodmart' ),
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion-all-closed.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'tabs-layout-accordion-all-closed.jpg" alt="">', true ),
 				'value' => 'all_closed',
 			),
 		),
@@ -1335,7 +2044,7 @@ Options::add_field(
 	array(
 		'id'          => 'hide_tabs_titles',
 		'name'        => esc_html__( 'Hide tabs headings', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'hide-tabs-headings.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'hide-tabs-headings.jpg" alt="">', true ),
 		'description' => esc_html__( 'Don\'t show duplicated titles for product tabs.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'product_tabs',
@@ -1354,12 +2063,12 @@ Options::add_field(
 		'type'        => 'text_input',
 		'default'     => 'Shipping & Delivery',
 		'section'     => 'product_tabs',
-		't_tab'       => [
+		't_tab'       => array(
 			'id'    => 'additional_tabs_control_tabs',
 			'tab'   => esc_html__( 'Tab [1]', 'woodmart' ),
 			'title' => esc_html__( 'Additional tabs', 'woodmart' ),
 			'style' => 'default',
-		],
+		),
 		'priority'    => 60,
 		'class'       => 'xts-tab-field',
 	)
@@ -1381,10 +2090,10 @@ Options::add_field(
 				'value' => 'html_block',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [1]', 'woodmart' ),
-		],
+		),
 		'default'  => 'text',
 		'priority' => 61,
 		'class'    => 'xts-html-block-switch',
@@ -1406,10 +2115,10 @@ Options::add_field(
 				'value'   => 'text',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [1]', 'woodmart' ),
-		],
+		),
 		'priority' => 62,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -1436,10 +2145,10 @@ Options::add_field(
 				'value'   => 'html_block',
 			),
 		),
-		't_tab'        => [
+		't_tab'        => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [1]', 'woodmart' ),
-		],
+		),
 		'priority'     => 63,
 		'class'        => 'xts-tab-field xts-last-tab-field',
 	)
@@ -1452,10 +2161,10 @@ Options::add_field(
 		'description' => esc_html__( 'Leave empty to disable custom tab', 'woodmart' ),
 		'type'        => 'text_input',
 		'section'     => 'product_tabs',
-		't_tab'       => [
+		't_tab'       => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-		],
+		),
 		'priority'    => 70,
 		'class'       => 'xts-tab-field',
 	)
@@ -1477,10 +2186,10 @@ Options::add_field(
 				'value' => 'html_block',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-		],
+		),
 		'default'  => 'text',
 		'priority' => 71,
 		'class'    => 'xts-html-block-switch',
@@ -1502,10 +2211,10 @@ Options::add_field(
 				'value'   => 'text',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-		],
+		),
 		'priority' => 72,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -1532,10 +2241,10 @@ Options::add_field(
 				'value'   => 'html_block',
 			),
 		),
-		't_tab'        => [
+		't_tab'        => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [2]', 'woodmart' ),
-		],
+		),
 		'priority'     => 73,
 		'class'        => 'xts-tab-field xts-last-tab-field',
 	)
@@ -1548,10 +2257,10 @@ Options::add_field(
 		'description' => esc_html__( 'Leave empty to disable custom tab', 'woodmart' ),
 		'type'        => 'text_input',
 		'section'     => 'product_tabs',
-		't_tab'       => [
+		't_tab'       => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [3]', 'woodmart' ),
-		],
+		),
 		'priority'    => 80,
 		'class'       => 'xts-tab-field',
 	)
@@ -1573,10 +2282,10 @@ Options::add_field(
 				'value' => 'html_block',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [3]', 'woodmart' ),
-		],
+		),
 		'default'  => 'text',
 		'priority' => 81,
 		'class'    => 'xts-html-block-switch',
@@ -1598,10 +2307,10 @@ Options::add_field(
 				'value'   => 'text',
 			),
 		),
-		't_tab'    => [
+		't_tab'    => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [3]', 'woodmart' ),
-		],
+		),
 		'priority' => 82,
 		'class'    => 'xts-tab-field xts-last-tab-field',
 	)
@@ -1628,10 +2337,10 @@ Options::add_field(
 				'value'   => 'html_block',
 			),
 		),
-		't_tab'        => [
+		't_tab'        => array(
 			'id'  => 'additional_tabs_control_tabs',
 			'tab' => esc_html__( 'Tab [3]', 'woodmart' ),
-		],
+		),
 		'priority'     => 83,
 		'class'        => 'xts-tab-field xts-last-tab-field',
 	)

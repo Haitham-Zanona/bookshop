@@ -140,7 +140,11 @@ class View_3d extends Widget_Base {
 		];
 
 		foreach ( $settings['images'] as $key => $image ) {
-			$args['images'][] = woodmart_get_image_url( $image['id'], 'images', $settings );
+			$args['images'][] = woodmart_otf_get_image_url(
+				$image['id'],
+				$settings['images_size'],
+				$settings['images_custom_dimension']
+			);
 		}
 
 		?>

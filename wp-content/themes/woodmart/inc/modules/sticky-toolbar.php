@@ -1,5 +1,8 @@
 <?php
 
+use XTS\Modules\Layouts\Global_Data;
+use XTS\Modules\Layouts\Main as Builder;
+
 if ( ! function_exists( 'woodmart_get_sticky_toolbar_fields' ) ) {
 	/**
 	 * All available fields for Theme Settings sorter option.
@@ -33,6 +36,10 @@ if ( ! function_exists( 'woodmart_get_sticky_toolbar_fields' ) ) {
 				'mobile' => array(
 					'name'  => esc_html__( 'Mobile menu', 'woodmart' ),
 					'value' => 'mobile',
+				),
+				'mobile_categories' => array(
+					'name'  => esc_html__( 'Mobile categories menu', 'woodmart' ),
+					'value' => 'mobile_categories',
 				),
 				'home' => array(
 					'name'  => esc_html__( 'Home page', 'woodmart' ),
@@ -125,7 +132,7 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_template' ) ) {
 			unset( $fields['enabled']['placebo'] );
 		}
 
-		$enabled_fields = class_exists( 'XTS\Options' ) ? $fields : $fields['enabled'];
+		$enabled_fields = class_exists( 'XTS\Admin\Modules\Options' ) ? $fields : $fields['enabled'];
 
 		if ( ! woodmart_get_opt( 'sticky_toolbar' ) || ! $enabled_fields || is_admin() || defined( 'IFRAME_REQUEST' ) ) {
 			return;
@@ -145,7 +152,7 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_template' ) ) {
 		<div class="wd-toolbar<?php echo esc_attr( $classes ); ?>">
 			<?php
 			foreach ( $enabled_fields as $key => $value ) {
-				$key = class_exists( 'XTS\Options' ) ? $value : $key;
+				$key = class_exists( 'XTS\Admin\Modules\Options' ) ? $value : $key;
 				switch ( $key ) {
 					case 'wishlist':
 						woodmart_sticky_toolbar_wishlist_template();
@@ -164,6 +171,9 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_template' ) ) {
 						break;
 					case 'mobile':
 						woodmart_sticky_toolbar_mobile_menu_template();
+						break;
+					case 'mobile_categories':
+						woodmart_sticky_toolbar_mobile_categories_menu_template();
 						break;
 					case 'sidebar':
 						woodmart_sticky_sidebar_button( false, true );
@@ -246,12 +256,17 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_cart_template' ) ) {
 			return;
 		}
 
-		$settings = whb_get_settings();
-		$opener   = false;
-		$classes  = '';
+		$settings     = whb_get_settings();
+		$opener       = false;
+		$classes      = '';
+		$icon_classes = ' wd-icon-alt';
 
 		if ( isset( $settings['cart']['position'] ) ) {
 			$opener = $settings['cart']['position'] == 'side';
+		}
+
+		if ( ! empty( $settings['cart']['icon_type'] ) && 'cart' === $settings['cart']['icon_type'] ) {
+			$icon_classes = '';
 		}
 
 		if ( $opener ) {
@@ -267,7 +282,7 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_cart_template' ) ) {
 		?>
 		<div class="wd-header-cart wd-tools-element wd-design-5<?php echo esc_attr( $classes ); ?>" title="<?php echo esc_attr__( 'My cart', 'woodmart' ); ?>">
 			<a href="<?php echo esc_url( wc_get_cart_url() ); ?>">
-				<span class="wd-tools-icon wd-icon-alt">
+				<span class="wd-tools-icon<?php echo esc_attr( $icon_classes ); ?>">
 					<?php woodmart_cart_count(); ?>
 				</span>
 				<span class="wd-toolbar-label">
@@ -330,7 +345,7 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_search_template' ) ) {
 		woodmart_enqueue_js_script( 'mobile-search' );
 		?>
 		<div class="wd-header-search wd-header-search-mobile<?php echo woodmart_get_old_classes( ' mobile-search-icon search-button' ); ?>">
-			<a href="#" rel="nofollow" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>">
+			<a href="#" rel="nofollow" aria-label="<?php esc_attr_e( 'Search', 'woodmart' ); ?>">
 				<span class="wd-tools-icon<?php echo woodmart_get_old_classes( ' search-button-icon' ); ?>"></span>
 				<span class="wd-toolbar-label">
 					<?php esc_html_e( 'Search', 'woodmart' ); ?>
@@ -473,6 +488,51 @@ if ( ! function_exists( 'woodmart_sticky_toolbar_mobile_menu_template' ) ) {
 				<span class="wd-tools-icon<?php echo woodmart_get_old_classes( ' woodmart-burger' ); ?>"></span>
 				<span class="wd-toolbar-label">
 					<?php esc_html_e( 'Menu', 'woodmart' ); ?>
+				</span>
+			</a>
+		</div>
+		<?php
+	}
+}
+
+if ( ! function_exists( 'woodmart_sticky_toolbar_mobile_categories_menu_template' ) ) {
+	/**
+	 * Sticky toolbar mobile categories menu template.
+	 */
+	function woodmart_sticky_toolbar_mobile_categories_menu_template() {
+		$is_side_hidden_layout     = Global_Data::get_instance()->get_data( 'mobile_categories_is_side_hidden' ) ? Global_Data::get_instance()->get_data( 'mobile_categories_is_side_hidden' ) : 'side-hidden' === woodmart_get_opt( 'mobile_categories_layout', 'accordion' );
+		$shop_categories_ancestors = Global_Data::get_instance()->get_data( 'shop_categories_ancestors' ) ? Global_Data::get_instance()->get_data( 'shop_categories_ancestors' ) : woodmart_get_opt( 'shop_categories_ancestors' );
+
+		if ( in_array( $is_side_hidden_layout, array( 'no', false ), true ) ) {
+			return '';
+		}
+
+		$classes       = '';
+		$data_settings = '';
+
+		if ( in_array( $shop_categories_ancestors, array( 'yes', '1', true ), true ) ) {
+			$data_settings = array(
+				'shop_categories_ancestors' => $shop_categories_ancestors,
+			);
+
+			if ( Global_Data::get_instance()->get_data( 'mobile_categories_is_empty' ) ) {
+				$classes = 'wd-hide';
+			}
+		}
+
+		if ( ! empty( $data_settings ) ) {
+			$data_settings = sprintf(
+				'data-settings=%s',
+				wp_json_encode( $data_settings )
+			);
+		}
+
+		?>
+		<div class="wd-toolbar-shop-cat wd-tools-element <?php echo esc_attr( $classes ); ?>" <?php echo esc_attr( $data_settings ); ?>>
+			<a href="#" rel="nofollow">
+				<span class="wd-tools-icon"></span>
+				<span class="wd-toolbar-label">
+					<?php esc_html_e( 'Categories', 'woodmart' ); ?>
 				</span>
 			</a>
 		</div>

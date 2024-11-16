@@ -23,7 +23,6 @@
 		var $wrapper = $('.xts-import-items');
 
 		var noticeTimeout;
-		var errorTimeout;
 		var interval;
 
 		$importBtn.on('click', async function(e) {
@@ -123,7 +122,7 @@
 								endProgress();
 								clearProgressBar();
 								clearNotices();
-								printNotice('error', 'AJAX import error. Try to disable all external plugins and run the import again. If it doesn\'t help, contact our support center for further assistance.');
+								printNotice('error', 'The import could not be completed due to a low timeout limit on the server. You need to contact your hosting provider and ask them to increase it to 300 seconds.');
 							},
 							success: function(response) {
 								if (process === 'other') {
@@ -279,11 +278,6 @@
 			noticeTimeout = setTimeout(function() {
 				printNotice('info', 'Please, wait. The theme needs a bit more time than expected to import all the attachments.');
 			}, 150000);
-
-			errorTimeout = setTimeout(function() {
-				clearNotices();
-				printNotice('error', 'Something is wrong with the import and it can\'t be complete. Try to disable all external plugins and run the import again. If it doesn\'t help, contact our support center for further assistance.');
-			}, 300000);
 		}
 
 		function updateProgress(progress) {
@@ -316,7 +310,6 @@
 
 		function endProgress() {
 			clearTimeout(noticeTimeout);
-			clearTimeout(errorTimeout);
 			clearInterval(interval);
 		}
 

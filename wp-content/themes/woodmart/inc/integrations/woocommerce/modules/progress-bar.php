@@ -34,6 +34,50 @@ if ( ! function_exists( 'woodmart_stock_progress_bar' ) ) {
 	}
 }
 
+if ( ! function_exists( 'woodmart_total_stock_quantity_output_control_in_bulk_edit' ) ) {
+	function woodmart_total_stock_quantity_output_control_in_bulk_edit() {
+		?>
+			<div class="inline-edit-group dimensions">
+				<label class="alignleft">
+				<span class="title">
+					<?php esc_html_e( 'Initial number in stock', 'woodmart' ); ?>
+				</span>
+					<span class="input-text-wrap">
+					<select class="change_dimensions change_to" name="change_woodmart_total_stock_quantity">
+						<option value=""><?php esc_html_e( '— No change —', 'woocommerce' ); ?></option>
+						<option value="1"><?php esc_html_e( 'Change to:', 'woocommerce' ); ?></option>
+					</select>
+				</span>
+				</label>
+				<label class="change-input">
+					<input type="text" name="woodmart_total_stock_quantity" class="text stock woodmart_total_stock_quantity" placeholder="<?php esc_attr_e( 'Initial number in stock', 'woodmart' ); ?>" value="">
+				</label>
+			</div>
+		<?php
+	}
+
+	add_action( 'woocommerce_product_bulk_edit_end', 'woodmart_total_stock_quantity_output_control_in_bulk_edit' );
+}
+
+if ( ! function_exists( 'woodmart_total_stock_quantity_save_control_in_bulk_edit' ) ) {
+	function woodmart_total_stock_quantity_save_control_in_bulk_edit() {
+		if ( ! isset( $_GET['post'] ) || ! isset( $_GET['change_woodmart_total_stock_quantity'] ) || ! $_GET['change_woodmart_total_stock_quantity'] || ! isset( $_GET['woodmart_total_stock_quantity'] ) ) { //phpcs:ignore
+			return;
+		}
+
+		$posts_id = woodmart_clean( $_GET['post'] ); //phpcs:ignore
+		$option   = wp_kses( $_GET['woodmart_total_stock_quantity'], true ); //phpcs:ignore
+
+		if ( $posts_id ) {
+			foreach ( $posts_id as $id ) {
+				update_post_meta( $id, 'woodmart_total_stock_quantity', $option );
+			}
+		}
+	}
+
+	add_action( 'save_post_product', 'woodmart_total_stock_quantity_save_control_in_bulk_edit' );
+}
+
 if ( ! function_exists( 'woodmart_total_stock_quantity_input' ) ) {
 	function woodmart_total_stock_quantity_input() {
 		echo '<div class="options_group">';

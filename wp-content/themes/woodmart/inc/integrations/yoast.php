@@ -32,3 +32,19 @@ if ( ! function_exists( 'woodmart_layout_post_type_filter' ) ) {
 
 	add_filter( 'wpseo_accessible_post_types', 'woodmart_layout_post_type_filter' );
 }
+
+if ( ! function_exists( 'woodmart_indexable_excluded_post_types' ) ) {
+	/**
+	 * Exclude woodmart layout from Optimize SEO.
+	 *
+	 * @param array $post_types Post type.
+	 * @return mixed
+	 */
+	function woodmart_indexable_excluded_post_types( $post_types ) {
+		$post_types[] = 'woodmart_layout';
+
+		return $post_types;
+	}
+
+	add_filter( 'wpseo_indexable_excluded_post_types', 'woodmart_indexable_excluded_post_types' );
+}

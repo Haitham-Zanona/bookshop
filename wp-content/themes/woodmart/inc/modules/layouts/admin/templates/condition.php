@@ -45,8 +45,14 @@
 			<option value="filtered_product_term">
 				<?php esc_html_e( 'Filtered by attribute', 'woodmart' ); ?>
 			</option>
+			<option value="filtered_product_by_term">
+				<?php esc_html_e( 'Filtered by term', 'woodmart' ); ?>
+			</option>
 			<option value="filtered_product_term_any">
 				<?php esc_html_e( 'Filtered by any attribute', 'woodmart' ); ?>
+			</option>
+			<option value="filtered_product_stock_status">
+				<?php esc_html_e( 'Filtered by stock status', 'woodmart' ); ?>
 			</option>
 		</select>
 
@@ -92,8 +98,14 @@
 			</option>
 		</select>
 
+		<select class="xts-layout-condition-type" name="wd_layout_condition_type" data-type="empty_cart" aria-label="<?php esc_attr_e( 'Condition type', 'woodmart' ); ?>">
+			<option value="empty_cart">
+				<?php esc_html_e( 'Empty cart page', 'woodmart' ); ?>
+			</option>
+		</select>
+
 		<select class="xts-layout-condition-query xts-hidden" name="wd_layout_condition_query" placeholder="<?php echo esc_attr__( 'Start typing...', 'woodmart' ); ?>" aria-label="<?php esc_attr_e( 'Condition query', 'woodmart' ); ?>"></select>
 
-		<a href="javascript:void(0);" class="xts-layout-condition-remove xts-bordered-btn xts-color-warning xts-style-icon xts-i-close" title="<?php esc_html_e( 'Remove condition', 'woodmart' ); ?>"></a>
+		<a href="javascript:void(0);" class="xts-layout-condition-remove xts-bordered-btn xts-color-warning xts-style-icon xts-i-close" title="<?php esc_attr_e( 'Remove condition', 'woodmart' ); ?>"></a>
 	</div>
 </div>

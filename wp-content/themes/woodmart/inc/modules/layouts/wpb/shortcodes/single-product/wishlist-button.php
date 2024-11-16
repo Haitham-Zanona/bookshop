@@ -27,7 +27,7 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_wishlist_button' ) ) 
 
 		$settings = wp_parse_args( $settings, $default_settings );
 
-		if ( ! woodmart_get_opt( 'wishlist' ) ) {
+		if ( ! woodmart_get_opt( 'wishlist' ) || ! is_user_logged_in() && woodmart_get_opt( 'wishlist_logged' ) ) {
 			return '';
 		}
 

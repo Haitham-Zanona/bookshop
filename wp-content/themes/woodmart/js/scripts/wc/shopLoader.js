@@ -6,7 +6,7 @@
 
 	woodmartThemeModule.shopLoader = function() {
 		var loaderVerticalPosition = function() {
-			var $products = $('.products[data-source="main_loop"], .wd-portfolio-holder[data-source="main_loop"]');
+			var $products = $('.products[data-source="main_loop"], .wd-projects[data-source="main_loop"]');
 			var $loader = $products.parent().find('.wd-sticky-loader');
 
 			if ($products.length < 1) {

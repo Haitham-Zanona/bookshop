@@ -50,6 +50,7 @@
 			font-weight: 600;
 			line-height: var(--xts-input-height) - 3px;
 			user-select: none;
+			box-sizing: border-box; // NOTE FOR WP MENUS CONTROLS
 
 			border-start-end-radius: var(--xts-option-border-radius);
 			border-end-end-radius: var(--xts-option-border-radius);
@@ -71,6 +72,16 @@
 	.wpb_el_type_woodmart_responsive_size {
 		flex: 1 1 auto !important;
 		// width: auto !important; // overwright theme styles
+
+		.xts-input-append-wrap {
+
+			.xts-i-tablet {
+
+				&:before {
+					transform: rotate(270deg);
+				}
+			}
+		}
 	}
 
 	.woodmart-rs-wrapper {

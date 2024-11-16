@@ -3,11 +3,13 @@
         <custom-type translate="1">cms_block</custom-type>
         <custom-type translate="1">portfolio</custom-type>
         <custom-type translate="0">woodmart_sidebar</custom-type>
+        <custom-type translate="1">woodmart_slide</custom-type>
     </custom-types>
     <taxonomies>
         <taxonomy translate="1">categories</taxonomy>
         <taxonomy translate="1">project-cat</taxonomy>
         <taxonomy translate="1">tag</taxonomy>
+        <taxonomy translate="0">woodmart_slider</taxonomy>
     </taxonomies>
     <admin-texts>
         <key name="whb_main_header"/>
@@ -16,6 +18,7 @@
             <key name="compare_page"/>
             <key name="default_header"/>
             <key name="popup_text"/>
+            <key name="popup_html_block"/>
             <key name="reg_text"/>
             <key name="login_text"/>
             <key name="cookies_text"/>
@@ -42,6 +45,8 @@
             <key name="reg_title"/>
             <key name="login_title"/>
             <key name="header_banner_shortcode"/>
+            <key name="header_banner_html_block"/>
+            <key name="header_banner_link"/>
             <key name="grid_swatches_attribute"/>
             <key name="wishlist_empty_text"/>
             <key name="thank_you_page_extra_content"/>
@@ -55,17 +60,78 @@
             <key name="link_3_url"/>
             <key name="link_4_url"/>
             <key name="link_5_url"/>
+            <key name="link_1_icon"/>
+            <key name="link_2_icon"/>
+            <key name="link_3_icon"/>
+            <key name="link_4_icon"/>
+            <key name="link_5_icon"/>
             <key name="age_verify_text"/>
             <key name="age_verify_text_error"/>
             <key name="shipping_progress_bar_message_initial"/>
             <key name="shipping_progress_bar_message_success"/>
+            <key name="main_layout"/>
+            <key name="popular_requests"/>
+            <key name="full_search_content_text"/>
+            <key name="full_search_content_html_block"/>
+            <key name="sticky_navigation_title"/>
+            <key name="sticky_navigation_area"/>
+            <key name="sticky_navigation_html_block"/>
+            <key name="reviews_rating_summary_criteria_1"/>
+            <key name="reviews_rating_summary_criteria_1_slug"/>
+            <key name="reviews_rating_summary_criteria_2"/>
+            <key name="reviews_rating_summary_criteria_2_slug"/>
+            <key name="reviews_rating_summary_criteria_3"/>
+            <key name="reviews_rating_summary_criteria_3_slug"/>
+            <key name="reviews_rating_summary_criteria_4"/>
+            <key name="reviews_rating_summary_criteria_4_slug"/>
+            <key name="reviews_rating_summary_criteria_5"/>
+            <key name="reviews_rating_summary_criteria_5_slug"/>
+            <key name="reviews_rating_summary_criteria_6"/>
+            <key name="reviews_rating_summary_criteria_6_slug"/>
+            <key name="fb_link"/>
+            <key name="twitter_link"/>
+            <key name="isntagram_link"/>
+            <key name="pinterest_link"/>
+            <key name="youtube_link"/>
+            <key name="tumblr_link"/>
+            <key name="linkedin_link"/>
+            <key name="vimeo_link"/>
+            <key name="flickr_link"/>
+            <key name="github_link"/>
+            <key name="dribbble_link"/>
+            <key name="behance_link"/>
+            <key name="soundcloud_link"/>
+            <key name="spotify_link"/>
+            <key name="ok_link"/>
+            <key name="vk_link"/>
+            <key name="whatsapp_link"/>
+            <key name="snapchat_link"/>
+            <key name="tg_link"/>
+            <key name="tiktok_link"/>
         </key>
     </admin-texts>
     <custom-fields>
         <custom-field action="translate" label="Extra content">_woodmart_extra_content</custom-field>
         <custom-field action="translate" label="Custom tab title">_woodmart_product_custom_tab_title</custom-field>
         <custom-field action="translate" label="Custom tab content">_woodmart_product_custom_tab_content</custom-field>
+        <custom-field action="translate" label="Custom tab 2 title">_woodmart_product_custom_tab_title_2</custom-field>
+        <custom-field action="translate" label="Custom tab 2 content">_woodmart_product_custom_tab_content_2</custom-field>
     </custom-fields>
+    <custom-term-fields>
+        <custom-term-field action="translate" label="Extra description">category_extra_description_text</custom-term-field>
+    </custom-term-fields>
+    <custom-fields>
+        <custom-field action="translate">woodmart_wc_video_gallery</custom-field>
+    </custom-fields>
+    <custom-fields-texts>
+        <key name="woodmart_wc_video_gallery">
+            <key name="*">
+                <key name="upload_video_url" />
+                <key name="youtube_url" />
+                <key name="vimeo_url" />
+            </key>
+        </key>
+    </custom-fields-texts>
     <shortcodes>
         <shortcode>
             <tag>woodmart_popup</tag>
@@ -154,7 +220,7 @@
                 <attribute>icon_text</attribute>
                 <attribute type="link" encoding="vc_link">link</attribute>
                 <attribute>btn_text</attribute>
-                <attribute>title</attribute>
+                <attribute encoding="allow_html_tags">title</attribute>
                 <attribute>subtitle</attribute>
                 <attribute>content</attribute>
             </attributes>
@@ -311,6 +377,13 @@
         </shortcode>
 
         <shortcode>
+            <tag>woodmart_marquee</tag>
+            <attributes>
+                <attribute type="area" encoding ="urlencoded_json">marquee_contents</attribute>
+            </attributes>
+        </shortcode>
+
+        <shortcode>
             <tag>vc_progress_bar</tag>
             <attributes>
                 <attribute encoding="allow_html_tags">title</attribute>
@@ -394,6 +467,20 @@
         </shortcode>
 
         <shortcode>
+            <tag>woodmart_table</tag>
+            <attributes>
+                <attribute type="area" encoding ="urlencoded_json">table_column</attribute>
+            </attributes>
+        </shortcode>
+
+        <shortcode>
+            <tag>woodmart_open_street_map</tag>
+            <attributes>
+                <attribute type="area" encoding ="urlencoded_json">marker_list</attribute>
+            </attributes>
+        </shortcode>
+
+        <shortcode>
             <tag>woodmart_single_product_brands</tag>
             <attributes>
                 <attribute>label_text</attribute>
@@ -402,6 +489,20 @@
 
         <shortcode>
             <tag>woodmart_single_product_countdown</tag>
+            <attributes>
+                <attribute>title</attribute>
+            </attributes>
+        </shortcode>
+
+        <shortcode>
+            <tag>woodmart_single_product_additional_info_table</tag>
+            <attributes>
+                <attribute>title</attribute>
+            </attributes>
+        </shortcode>
+
+        <shortcode>
+            <tag>woodmart_single_product_fbt_products</tag>
             <attributes>
                 <attribute>title</attribute>
             </attributes>
@@ -565,6 +666,10 @@
                 <field type="[Woodmart] Google Map - Text" editor_type="LINE">marker_text</field>
                 <field type="[Woodmart] Google Map - Content" editor_type="LINE">content</field>
             </fields>
+            <fields-in-item items_of="marker_list">
+                <field type="[Woodmart] Google Map - Title" editor_type="LINE">marker_title</field>
+                <field type="[Woodmart] Google Map - Title" editor_type="AREA">marker_description</field>
+            </fields-in-item>
         </widget>
 
         <widget name="wd_image_hotspot">
@@ -663,10 +768,27 @@
             </fields>
         </widget>
 
+        <widget name="wd_images_gallery">
+            <conditions>
+                <condition key="widgetType">wd_images_gallery</condition>
+            </conditions>
+            <fields>
+                <field type="[Woodmart] Images gallery - Images ID" editor_type="LINE">ids</field>
+            </fields>
+            <fields-in-item items_of="ids">
+                <field type="[Woodmart] Images gallery - Image ID" editor_type="LINE">id</field>
+                <field type="[Woodmart] Images gallery - Image URL">url</field>
+            </fields-in-item>
+        </widget>
+
         <widget name="wd_tabs">
             <conditions>
                 <condition key="widgetType">wd_tabs</condition>
             </conditions>
+            <fields>
+                <field type="[Woodmart] Tabs - Tabs title" editor_type="LINE">title</field>
+                <field type="[Woodmart] Tabs - Tabs description" editor_type="AREA">description</field>
+            </fields>
             <fields-in-item items_of="tabs">
                 <field type="[Woodmart] Tabs - Title" editor_type="LINE">tab_title</field>
                 <field type="[Woodmart] Tabs - Text" editor_type="AREA">content_text</field>
@@ -707,6 +829,7 @@
             </conditions>
             <fields>
                 <field type="[Woodmart] AJAX Products tabs - Title" editor_type="LINE">title</field>
+                <field type="[Woodmart] AJAX Products tabs - Description" editor_type="AREA">description</field>
             </fields>
             <fields-in-item items_of="tabs_items">
                 <field type="[Woodmart] AJAX Products tabs - Tab title" editor_type="LINE">title</field>
@@ -734,6 +857,40 @@
             </fields>
         </widget>
 
+        <widget name="wd_open_street_map">
+            <conditions>
+                <condition key="widgetType">wd_open_street_map</condition>
+            </conditions>
+            <fields-in-item items_of="marker_list">
+                <field type="Woodmart] Open street map - Title" editor_type="LINE">marker_title</field>
+                <field type="[Woodmart] Open street map - Description" editor_type="AREA">marker_description</field>
+                <field type="[Woodmart] Open street map - Button text" editor_type="LINE">button_text</field>
+                <field type="[Woodmart] Open street map - Button link" editor_type="LINK" key_of="link">button_url</field>
+            </fields-in-item>
+            <fields>
+                <field type="[Woodmart] Open street map - Content" editor_type="AREA">text</field>
+            </fields>
+        </widget>
+
+        <widget name="wd_table">
+            <conditions>
+                <condition key="widgetType">wd_table</condition>
+            </conditions>
+            <fields-in-item items_of="heading_items">
+                <field type="[Woodmart] Table - Heading text" editor_type="LINE">heading_cell_text</field>
+            </fields-in-item>
+            <fields-in-item items_of="body_items">
+                <field type="[Woodmart] Table - Body text" editor_type="LINE">body_cell_text</field>
+            </fields-in-item>
+        </widget>
+
+        <widget name="wd_marquee">
+            <fields-in-item items_of="marquee_contents">
+                <field type="[Woodmart] Marquee - Content" editor_type="LINE">text</field>
+                <field type="[Woodmart] Marquee - Link">link>url</field>
+            </fields-in-item>
+        </widget>
+
         <widget name="wd_single_product_brands">
             <conditions>
                 <condition key="widgetType">wd_single_product_brands</condition>
@@ -749,6 +906,24 @@
             </conditions>
             <fields>
                 <field type="[Woodmart] Product countdown - Element title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+
+        <widget name="wd_single_product_additional_info_table">
+            <conditions>
+                <condition key="widgetType">wd_single_product_additional_info_table</condition>
+            </conditions>
+            <fields>
+                <field type="[Woodmart] Product additional information table - Element title" editor_type="LINE">title</field>
+            </fields>
+        </widget>
+
+        <widget name="wd_single_product_fbt_products">
+            <conditions>
+                <condition key="widgetType">wd_single_product_fbt_products</condition>
+            </conditions>
+            <fields>
+                <field type="[Woodmart] Product additional information table - Element title" editor_type="LINE">title</field>
             </fields>
         </widget>
     </elementor-widgets>

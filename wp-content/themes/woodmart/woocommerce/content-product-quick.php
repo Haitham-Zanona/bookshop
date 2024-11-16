@@ -31,17 +31,18 @@
 			<?php do_action( 'woodmart_product_action_buttons' ); ?>
 		</div>
 
-		<?php if ( has_action( 'woodmart_add_loop_btn' ) || ( woodmart_loop_prop( 'product_quantity' ) && ! woodmart_get_opt( 'catalog_mode' ) ) ) : ?>
+		<?php if ( has_action( 'woodmart_add_loop_btn' ) ) : ?>
 			<div class="wd-add-btn wd-add-btn-replace<?php echo woodmart_get_old_classes( ' woodmart-add-btn' ); ?>">
 				<?php if ( woodmart_loop_prop( 'product_quantity' )): ?>
 					<?php woodmart_product_quantity( $product ); ?>
 				<?php endif ?>
 
 				<?php do_action( 'woodmart_add_loop_btn' ); ?>
+				<?php echo woodmart_get_thumbnails_gallery_pagin(); ?>
 			</div>
+		<?php else : ?>
+			<?php echo woodmart_get_thumbnails_gallery_pagin(); ?>
 		<?php endif; ?>
-
-		<?php echo woodmart_get_thumbnails_gallery_pagin(); ?>
 	</div>
 	<?php if ( woodmart_loop_prop( 'stretch_product_desktop' ) || woodmart_loop_prop( 'stretch_product_tablet' ) || woodmart_loop_prop( 'stretch_product_mobile' ) ) : ?>
 	<div class="product-element-bottom">
@@ -65,9 +66,7 @@
 		woodmart_stock_status_after_title();
 	?>
 	<?php if ( 0 < $product->get_average_rating() || woodmart_get_opt( 'show_empty_star_rating' ) ) : ?>
-		<div class="wd-star-rating">
-			<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
-		</div>
+		<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
 	<?php endif; ?>
 	<?php
 		/**
@@ -86,7 +85,7 @@
 	<?php endif ?>
 
 	<?php if ( woodmart_loop_prop( 'timer' ) ): ?>
-		<?php woodmart_product_sale_countdown(); ?>
+		<?php woodmart_product_sale_countdown( array( 'products_hover' => 'quick' ) ); ?>
 	<?php endif ?>
 	<?php if ( woodmart_loop_prop( 'stretch_product_desktop' ) || woodmart_loop_prop( 'stretch_product_tablet' ) || woodmart_loop_prop( 'stretch_product_mobile' ) ) : ?>
 	</div>

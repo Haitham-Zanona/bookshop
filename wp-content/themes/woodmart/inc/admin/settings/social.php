@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -104,7 +104,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'twitter_link',
-		'name'     => esc_html__( 'Twitter link', 'woodmart' ),
+		'name'     => esc_html__( 'X link', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '#',
@@ -140,7 +140,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'youtube_link',
-		'name'     => esc_html__( 'Youtube link', 'woodmart' ),
+		'name'     => esc_html__( 'YouTube link', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '#',
@@ -259,36 +259,12 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'       => 'ok_link',
-		'name'     => esc_html__( 'OK link', 'woodmart' ),
-		'type'     => 'text_input',
-		'section'  => 'social_links',
-		'default'  => '',
-		'priority' => 140,
-		'class'    => 'xts-col-6',
-	)
-);
-
-Options::add_field(
-	array(
-		'id'       => 'vk_link',
-		'name'     => esc_html__( 'VK link', 'woodmart' ),
-		'type'     => 'text_input',
-		'section'  => 'social_links',
-		'default'  => '',
-		'priority' => 150,
-		'class'    => 'xts-col-6',
-	)
-);
-
-Options::add_field(
-	array(
 		'id'       => 'whatsapp_link',
 		'name'     => esc_html__( 'WhatsApp link', 'woodmart' ),
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '',
-		'priority' => 160,
+		'priority' => 140,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -300,7 +276,7 @@ Options::add_field(
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '',
-		'priority' => 170,
+		'priority' => 150,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -312,7 +288,7 @@ Options::add_field(
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '',
-		'priority' => 180,
+		'priority' => 160,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -324,7 +300,55 @@ Options::add_field(
 		'type'     => 'text_input',
 		'section'  => 'social_links',
 		'default'  => '',
+		'priority' => 170,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'discord_link',
+		'name'     => esc_html__( 'Discord link', 'woodmart' ),
+		'type'     => 'text_input',
+		'section'  => 'social_links',
+		'default'  => '',
+		'priority' => 180,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'yelp_link',
+		'name'     => esc_html__( 'Yelp link', 'woodmart' ),
+		'type'     => 'text_input',
+		'section'  => 'social_links',
+		'default'  => '',
 		'priority' => 190,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'vk_link',
+		'name'     => esc_html__( 'VK link', 'woodmart' ),
+		'type'     => 'text_input',
+		'section'  => 'social_links',
+		'default'  => '',
+		'priority' => 200,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'ok_link',
+		'name'     => esc_html__( 'OK link', 'woodmart' ),
+		'type'     => 'text_input',
+		'section'  => 'social_links',
+		'default'  => '',
+		'priority' => 210,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -336,7 +360,7 @@ Options::add_field(
 		'type'     => 'switcher',
 		'section'  => 'social_links',
 		'default'  => false,
-		'priority' => 200,
+		'priority' => 220,
 		'status'   => 'deprecated',
 	)
 );
@@ -359,7 +383,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'share_fb',
-		'name'     => esc_html__( 'Share in facebook', 'woodmart' ),
+		'name'     => esc_html__( 'Share in Facebook', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => '1',
@@ -371,7 +395,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'share_twitter',
-		'name'     => esc_html__( 'Share in twitter', 'woodmart' ),
+		'name'     => esc_html__( 'Share in X', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => '1',
@@ -383,7 +407,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'share_pinterest',
-		'name'     => esc_html__( 'Share in pinterest', 'woodmart' ),
+		'name'     => esc_html__( 'Share in Pinterest', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => '1',
@@ -395,7 +419,7 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'       => 'share_linkedin',
-		'name'     => esc_html__( 'Share in linkedin', 'woodmart' ),
+		'name'     => esc_html__( 'Share in LinkedIn', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => '1',
@@ -406,36 +430,12 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'       => 'share_ok',
-		'name'     => esc_html__( 'Share in OK', 'woodmart' ),
+		'id'       => 'share_whatsapp',
+		'name'     => esc_html__( 'Share in Whatsapp', 'woodmart' ),
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => false,
 		'priority' => 50,
-		'class'    => 'xts-col-6',
-	)
-);
-
-Options::add_field(
-	array(
-		'id'       => 'share_whatsapp',
-		'name'     => esc_html__( 'Share in whatsapp', 'woodmart' ),
-		'type'     => 'switcher',
-		'section'  => 'social_share',
-		'default'  => false,
-		'priority' => 60,
-		'class'    => 'xts-col-6',
-	)
-);
-
-Options::add_field(
-	array(
-		'id'       => 'share_vk',
-		'name'     => esc_html__( 'Share in VK', 'woodmart' ),
-		'type'     => 'switcher',
-		'section'  => 'social_share',
-		'default'  => false,
-		'priority' => 70,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -447,7 +447,7 @@ Options::add_field(
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => '1',
-		'priority' => 90,
+		'priority' => 60,
 		'class'    => 'xts-col-6',
 	)
 );
@@ -459,7 +459,31 @@ Options::add_field(
 		'type'     => 'switcher',
 		'section'  => 'social_share',
 		'default'  => false,
-		'priority' => 100,
+		'priority' => 70,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'share_vk',
+		'name'     => esc_html__( 'Share in VK', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'social_share',
+		'default'  => false,
+		'priority' => 80,
+		'class'    => 'xts-col-6',
+	)
+);
+
+Options::add_field(
+	array(
+		'id'       => 'share_ok',
+		'name'     => esc_html__( 'Share in OK', 'woodmart' ),
+		'type'     => 'switcher',
+		'section'  => 'social_share',
+		'default'  => false,
+		'priority' => 90,
 		'class'    => 'xts-col-6',
 	)
 );

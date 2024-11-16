@@ -1,4 +1,6 @@
 <?php
+use XTS\Modules\Mega_Menu_Walker;
+
 if ( $params['menu_id'] == '' ) {
 	return;
 }
@@ -67,9 +69,10 @@ $dropdowns_classes .= woodmart_get_old_classes( ' categories-menu-dropdown' );
 woodmart_enqueue_js_script( 'header-categories-menu' );
 woodmart_enqueue_inline_style( 'header-categories-nav' );
 woodmart_enqueue_inline_style( 'mod-nav-vertical' );
+woodmart_enqueue_inline_style( 'mod-nav-vertical-design-' . $params['design'] );
 ?>
 
-<div class="wd-header-cats<?php echo esc_attr( $extra_class ); ?>" role="navigation" aria-label="<?php esc_html_e( 'Header categories navigation', 'woodmart' ); ?>">
+<div class="wd-header-cats<?php echo esc_attr( $extra_class ); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Header categories navigation', 'woodmart' ); ?>">
 	<span class="menu-opener <?php echo esc_attr( $class ); ?>">
 		<?php if ( $icon_type == 'custom' ) : ?>
 			<span class="<?php echo esc_attr( $icon_classes ); ?> custom-icon"><?php echo whb_get_custom_icon( $params['custom_icon'] ); ?></span>
@@ -88,7 +91,7 @@ woodmart_enqueue_inline_style( 'mod-nav-vertical' );
 				'container'  => '',
 				'menu'       => $params['menu_id'],
 				'menu_class' => 'menu wd-nav wd-nav-vertical' . $menu_class,
-				'walker'     => new WOODMART_Mega_Menu_Walker(),
+				'walker'     => new Mega_Menu_Walker(),
 				'items_wrap' => '<ul id="%1$s" class="%2$s">%3$s' . $html . '</ul>',
 			)
 		);

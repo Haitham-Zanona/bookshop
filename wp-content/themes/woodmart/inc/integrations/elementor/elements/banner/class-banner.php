@@ -9,6 +9,7 @@ namespace XTS\Elementor;
 
 use Elementor\Group_Control_Image_Size;
 use Elementor\Group_Control_Typography;
+use Elementor\Modules\DynamicTags\Module as TagsModule;
 use Elementor\Utils;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
@@ -115,17 +116,76 @@ class Banner extends Widget_Base {
 		$this->start_controls_section(
 			'image_content_section',
 			array(
-				'label' => esc_html__( 'Image', 'woodmart' ),
+				'label' => esc_html__( 'Background', 'woodmart' ),
+			)
+		);
+
+		$this->add_control(
+			'source_type',
+			array(
+				'label'   => esc_html__( 'Source', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'image' => esc_html__( 'Image', 'woodmart' ),
+					'video' => esc_html__( 'Video', 'woodmart' ),
+				),
+				'default' => 'image',
+			)
+		);
+
+		$this->add_control(
+			'video',
+			array(
+				'label'      => esc_html__( 'Choose video', 'woodmart' ),
+				'type'       => Controls_Manager::MEDIA,
+				'media_type' => 'video',
+				'condition'  => array(
+					'source_type' => 'video',
+				),
+			)
+		);
+
+		$this->add_control(
+			'video_poster',
+			array(
+				'label'     => esc_html__( 'Fallback image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'condition' => array(
+					'source_type' => 'video',
+				),
+			)
+		);
+
+		$this->add_group_control(
+			Group_Control_Image_Size::get_type(),
+			array(
+				'name'           => 'video_poster',
+				'fields_options' => array(
+					'size'             => array(
+						'label' => esc_html__( 'Fallback image size', 'woodmart' ),
+					),
+					'custom_dimension' => array(
+						'label' => esc_html__( 'Fallback image Dimension', 'woodmart' ),
+					),
+				),
+				'default'        => 'full',
+				'separator'      => 'none',
+				'condition'      => array(
+					'source_type' => 'video',
+				),
 			)
 		);
 
 		$this->add_control(
 			'image',
 			array(
-				'label'   => esc_html__( 'Choose image', 'woodmart' ),
-				'type'    => Controls_Manager::MEDIA,
-				'default' => array(
+				'label'     => esc_html__( 'Choose image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'default'   => array(
 					'url' => Utils::get_placeholder_image_src(),
+				),
+				'condition' => array(
+					'source_type' => 'image',
 				),
 			)
 		);
@@ -136,6 +196,9 @@ class Banner extends Widget_Base {
 				'name'      => 'image',
 				'default'   => 'thumbnail',
 				'separator' => 'none',
+				'condition' => array(
+					'source_type' => 'image',
+				),
 			)
 		);
 
@@ -154,7 +217,7 @@ class Banner extends Widget_Base {
 		$this->add_responsive_control(
 			'image_height',
 			array(
-				'label'     => esc_html__( 'Image height', 'woodmart' ),
+				'label'     => esc_html__( 'Banner height', 'woodmart' ),
 				'type'      => Controls_Manager::SLIDER,
 				'default'   => array(
 					'size' => 340,
@@ -193,6 +256,7 @@ class Banner extends Widget_Base {
 				),
 				'condition' => array(
 					'custom_height' => array( 'Yes' ),
+					'source_type'   => 'image',
 				),
 			)
 		);
@@ -272,9 +336,9 @@ class Banner extends Widget_Base {
 		$this->add_control(
 			'date',
 			array(
-				'label'   => esc_html__( 'Date', 'woodmart' ),
-				'type'    => Controls_Manager::DATE_TIME,
-				'default' => date( 'Y-m-d', strtotime( ' +2 months' ) ),
+				'label'     => esc_html__( 'Date', 'woodmart' ),
+				'type'      => Controls_Manager::DATE_TIME,
+				'default'   => date( 'Y-m-d', strtotime( ' +2 months' ) ),
 				'condition' => array(
 					'show_countdown' => array( 'yes' ),
 				),
@@ -644,45 +708,46 @@ class Banner extends Widget_Base {
 
 		$this->add_control(
 			'countdown_style',
-			[
+			array(
 				'label'   => esc_html__( 'Style', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => [
+				'options' => array(
 					'standard'    => esc_html__( 'Standard', 'woodmart' ),
 					'transparent' => esc_html__( 'Transparent', 'woodmart' ),
 					'active'      => esc_html__( 'Primary color', 'woodmart' ),
-				],
+					'simple'      => esc_html__( 'Simple', 'woodmart' ),
+				),
 				'default' => 'standard',
-			]
+			)
 		);
 
 		$this->add_control(
 			'countdown_color_scheme',
-			[
+			array(
 				'label'   => esc_html__( 'Color Scheme', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => [
+				'options' => array(
 					''      => esc_html__( 'Inherit', 'woodmart' ),
 					'light' => esc_html__( 'Light', 'woodmart' ),
 					'dark'  => esc_html__( 'Dark', 'woodmart' ),
-				],
+				),
 				'default' => '',
-			]
+			)
 		);
 
 		$this->add_control(
 			'countdown_size',
-			[
+			array(
 				'label'   => esc_html__( 'Predefined size', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
-				'options' => [
+				'options' => array(
 					'small'  => esc_html__( 'Small (20px)', 'woodmart' ),
 					'medium' => esc_html__( 'Medium (24px)', 'woodmart' ),
 					'large'  => esc_html__( 'Large (28px)', 'woodmart' ),
 					'xlarge' => esc_html__( 'Extra Large (42px)', 'woodmart' ),
-				],
+				),
 				'default' => 'medium',
-			]
+			)
 		);
 
 		$this->end_controls_section();
@@ -715,16 +780,15 @@ class Banner extends Widget_Base {
 		);
 
 		$this->add_control(
-			'btn_size',
+			'btn_style',
 			array(
-				'label'   => esc_html__( 'Predefined size', 'woodmart' ),
+				'label'   => esc_html__( 'Style', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => array(
-					'default'     => esc_html__( 'Default', 'woodmart' ),
-					'extra-small' => esc_html__( 'Extra Small', 'woodmart' ),
-					'small'       => esc_html__( 'Small', 'woodmart' ),
-					'large'       => esc_html__( 'Large', 'woodmart' ),
-					'extra-large' => esc_html__( 'Extra Large', 'woodmart' ),
+					'default'  => esc_html__( 'Flat', 'woodmart' ),
+					'bordered' => esc_html__( 'Bordered', 'woodmart' ),
+					'link'     => esc_html__( 'Link button', 'woodmart' ),
+					'3d'       => esc_html__( '3D', 'woodmart' ),
 				),
 				'default' => 'default',
 			)
@@ -741,21 +805,132 @@ class Banner extends Widget_Base {
 					'alt'     => esc_html__( 'Alternative', 'woodmart' ),
 					'black'   => esc_html__( 'Black', 'woodmart' ),
 					'white'   => esc_html__( 'White', 'woodmart' ),
+					'custom'  => esc_html__( 'Custom', 'woodmart' ),
 				),
 				'default' => 'default',
 			)
 		);
 
-		$this->add_control(
-			'btn_style',
+		$this->start_controls_tabs(
+			'btn_tabs_style',
 			array(
-				'label'   => esc_html__( 'Style', 'woodmart' ),
+				'condition' => array(
+					'btn_color' => array( 'custom' ),
+				),
+			)
+		);
+
+		$this->start_controls_tab(
+			'btn_tab_normal',
+			array(
+				'label' => esc_html__( 'Normal', 'woodmart' ),
+			)
+		);
+
+		$this->add_control(
+			'btn_bg_color',
+			array(
+				'label'     => esc_html__( 'Background color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-button-wrapper a' => 'background-color: {{VALUE}}; border-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'btn_color_scheme',
+			array(
+				'label'   => esc_html__( 'Text color scheme', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => array(
-					'default'  => esc_html__( 'Flat', 'woodmart' ),
-					'bordered' => esc_html__( 'Bordered', 'woodmart' ),
-					'link'     => esc_html__( 'Link button', 'woodmart' ),
-					'3d'       => esc_html__( '3D', 'woodmart' ),
+					'inherit' => esc_html__( 'Inherit', 'woodmart' ),
+					'dark'    => esc_html__( 'Dark', 'woodmart' ),
+					'light'   => esc_html__( 'Light', 'woodmart' ),
+					'custom'  => esc_html__( 'Custom', 'woodmart' ),
+				),
+				'default' => 'inherit',
+			)
+		);
+
+		$this->add_control(
+			'btn_custom_color_scheme',
+			array(
+				'label'     => esc_html__( 'Custom text color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-button-wrapper a' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					'btn_color_scheme' => 'custom',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->start_controls_tab(
+			'btn_tab_hover',
+			array(
+				'label' => esc_html__( 'Hover', 'woodmart' ),
+			)
+		);
+
+		$this->add_control(
+			'btn_bg_color_hover',
+			array(
+				'label'     => esc_html__( 'Background color hover', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-button-wrapper:hover a' => 'background-color: {{VALUE}}; border-color: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'btn_color_scheme_hover',
+			array(
+				'label'   => esc_html__( 'Text color scheme on hover', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'inherit' => esc_html__( 'Inherit', 'woodmart' ),
+					'dark'    => esc_html__( 'Dark', 'woodmart' ),
+					'light'   => esc_html__( 'Light', 'woodmart' ),
+					'custom'  => esc_html__( 'Custom', 'woodmart' ),
+				),
+				'default' => 'inherit',
+			)
+		);
+
+		$this->add_control(
+			'btn_custom_color_scheme_hover',
+			array(
+				'label'     => esc_html__( 'Custom text color on hover', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-button-wrapper:hover a' => 'color: {{VALUE}};',
+				),
+				'condition' => array(
+					'btn_color_scheme_hover' => 'custom',
+				),
+			)
+		);
+
+		$this->end_controls_tab();
+
+		$this->end_controls_tabs();
+
+		$this->add_control(
+			'btn_size',
+			array(
+				'label'   => esc_html__( 'Predefined size', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'default'     => esc_html__( 'Default', 'woodmart' ),
+					'extra-small' => esc_html__( 'Extra Small', 'woodmart' ),
+					'small'       => esc_html__( 'Small', 'woodmart' ),
+					'large'       => esc_html__( 'Large', 'woodmart' ),
+					'extra-large' => esc_html__( 'Extra Large', 'woodmart' ),
 				),
 				'default' => 'default',
 			)
@@ -768,8 +943,8 @@ class Banner extends Widget_Base {
 				'type'      => Controls_Manager::SELECT,
 				'options'   => array(
 					'rectangle'  => esc_html__( 'Rectangle', 'woodmart' ),
-					'round'      => esc_html__( 'Circle', 'woodmart' ),
-					'semi-round' => esc_html__( 'Round', 'woodmart' ),
+					'round'      => esc_html__( 'Round', 'woodmart' ),
+					'semi-round' => esc_html__( 'Rounded', 'woodmart' ),
 				),
 				'condition' => array(
 					'btn_style!' => array( 'link' ),
@@ -787,7 +962,7 @@ class Banner extends Widget_Base {
 			)
 		);
 
-		woodmart_get_button_style_icon_map( $this );
+		woodmart_get_button_style_icon_map( $this, 'btn_' );
 
 		$this->add_control(
 			'button_layout_heading',
@@ -1016,7 +1191,7 @@ class Banner extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		woodmart_elementor_banner_template( $this->get_settings_for_display() );
+		woodmart_elementor_banner_template( $this->get_settings_for_display(), $this );
 	}
 }
 

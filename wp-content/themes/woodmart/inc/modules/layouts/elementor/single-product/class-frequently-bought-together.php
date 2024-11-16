@@ -156,6 +156,8 @@ class Frequently_Bought_Together extends Widget_Base {
 						'step' => 1,
 					),
 				),
+				'devices'     => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'     => 'wd-hide-custom-breakpoints',
 			)
 		);
 

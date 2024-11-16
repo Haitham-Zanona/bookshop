@@ -27,8 +27,10 @@ if ( isset( $params['wrap_type'], $params['style'], $params['icon_design'] ) && 
 	$extra_class .= ' wd-with-wrap';
 }
 
-if ( ! empty( $params['close_menu_mouseout'] ) ) {
+if ( 'click' === $params['mouse_event'] && ! empty( $params['close_menu_mouseout'] ) ) {
 	$extra_class .= ' wd-close-menu-mouseout';
+} elseif ( 'hover' === $params['mouse_event'] ) {
+	$extra_class .= ' wd-event-hover';
 }
 
 if ( isset( $id ) ) {
@@ -37,7 +39,7 @@ if ( isset( $id ) ) {
 
 ?>
 <div class="wd-tools-element wd-header-sticky-nav<?php echo esc_attr( $extra_class ); ?>">
-	<a href="#" rel="nofollow" aria-label="<?php esc_html_e( 'Open sticky navigation', 'woodmart' ); ?>">
+	<a href="#" rel="nofollow" aria-label="<?php esc_attr_e( 'Open sticky navigation', 'woodmart' ); ?>">
 		<?php if ( '8' === $params['icon_design'] || ( isset( $params['wrap_type'], $params['style'], $params['icon_design'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['style'] && in_array( $params['icon_design'], array( '6', '7' ), true ) ) ) : ?>
 			<span class="wd-tools-inner">
 		<?php endif; ?>

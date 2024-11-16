@@ -19,8 +19,9 @@
 		&:before {
 			content: "";
 			position: absolute;
-			top: -1px;
-			bottom: -1px;
+			// top: -1px;
+			// bottom: -1px;
+			inset-block: -1px;
 			inset-inline-start: -1px;
 			box-sizing: border-box;
 			width: 40px;
@@ -97,8 +98,9 @@
 			&:after {
 				content: "";
 				position: absolute;
-				top: 0;
-				bottom: 100%;
+				// top: 0;
+				// bottom: 100%;
+				inset-block: 0 100%;
 				inset-inline-start: 25px;
 				display: block;
 				width: 10px;
@@ -136,7 +138,8 @@
 
 	:where(
 	.xts-popup,
-	.xts-box){
+	.xts-box,
+	.vc_ui-panel){
 
 		.xts-notice {
 			@extend %notice;
@@ -194,8 +197,9 @@
 		top: 32px;
 		z-index: $z-layer-10;
 		margin-top: -15px;
-		margin-right: -15px;
-		margin-left: -15px;
+		// margin-right: -15px;
+		// margin-left: -15px;
+		margin-inline: -15px;
 		padding-top: 15px;
 		padding-right: 15px;
 		// padding-bottom: 15px;

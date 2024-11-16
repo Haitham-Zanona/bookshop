@@ -34,6 +34,8 @@ if ( ! function_exists( 'woodmart_product_filters_shortcode' ) ) {
 			$atts
 		);
 
+		$atts['space_between_tablet']     = woodmart_vc_get_control_data( $atts['space_between'], 'tablet' );
+		$atts['space_between_mobile']     = woodmart_vc_get_control_data( $atts['space_between'], 'mobile' );
 		$atts['space_between']            = woodmart_vc_get_control_data( $atts['space_between'], 'desktop' );
 		$atts['display_grid_col_desktop'] = woodmart_vc_get_control_data( $atts['display_grid_col'], 'desktop' );
 		$atts['display_grid_col_tablet']  = woodmart_vc_get_control_data( $atts['display_grid_col'], 'tablet' );
@@ -47,27 +49,37 @@ if ( ! function_exists( 'woodmart_product_filters_shortcode' ) ) {
 			$wrapper_classes .= ' ' . vc_shortcode_custom_css_class( $css );
 		}
 
-		$classes = '';
+		$classes     = '';
+		$style_attrs = '';
 
-		if ( 'number' !== $display_grid && ! empty( $display_grid ) ) {
-			$classes .= ' wd-grid-' . $display_grid;
-		} elseif ( 'number' === $display_grid ) {
-			if ( ! empty( $display_grid_col_desktop ) ) {
-				$classes .= ' wd-grid-col-' . $display_grid_col_desktop;
-			}
-			if ( ! empty( $display_grid_col_tablet ) ) {
-				$classes .= ' wd-grid-col-md-' . $display_grid_col_tablet;
-			}
-			if ( ! empty( $display_grid_col_mobile ) ) {
-				$classes .= ' wd-grid-col-sm-' . $display_grid_col_mobile;
-			}
+		if ( 'number' === $atts['display_grid'] ) {
+			$classes .= ' wd-grid-g';
+
+			$style_attrs .= woodmart_get_grid_attrs(
+				array(
+					'columns'        => $display_grid_col_desktop,
+					'columns_tablet' => $display_grid_col_tablet,
+					'columns_mobile' => $display_grid_col_mobile,
+				)
+			);
+		} elseif ( 'inline' === $atts['display_grid'] ) {
+			$classes .= ' wd-grid-f-inline';
+		} else {
+			$classes .= ' wd-grid-f-stretch';
+		}
+
+		$style_attrs .= '--wd-gap-lg:' . $space_between . 'px;';
+
+		if ( '' !== $space_between_tablet ) {
+			$style_attrs .= '--wd-gap-md:' . $space_between_tablet . 'px;';
+		}
+		if ( '' !== $space_between_mobile ) {
+			$style_attrs .= '--wd-gap-sm:' . $space_between_mobile . 'px;';
 		}
 
 		if ( ! empty( $woodmart_color_scheme ) ) {
 			$classes .= ' color-scheme-' . $woodmart_color_scheme;
 		}
-
-		$classes .= ' wd-spacing-' . $space_between;
 
 		$classes .= ( $el_class ) ? ' ' . $el_class : '';
 
@@ -77,7 +89,13 @@ if ( ! function_exists( 'woodmart_product_filters_shortcode' ) ) {
 			if ( '' === get_option( 'permalink_structure' ) ) {
 				$form_action = remove_query_arg( array( 'page', 'paged', 'product-page' ), add_query_arg( $wp->query_string, '', home_url( $wp->request ) ) );
 			} else {
-				$form_action = preg_replace( '%\/page/[0-9]+%', '', home_url( trailingslashit( $wp->request ) ) );
+				if ( is_search() ) {
+					$home_url = add_query_arg( $wp->query_vars, home_url() );
+				} else {
+					$home_url = home_url( trailingslashit( $wp->request ) );
+				}
+
+				$form_action = preg_replace( '%\/page/[0-9]+%', '', $home_url );
 			}
 		}
 
@@ -98,7 +116,7 @@ if ( ! function_exists( 'woodmart_product_filters_shortcode' ) ) {
 		woodmart_enqueue_inline_style( 'woo-mod-swatches-filter' );
 		?>
 		<div class="wd-product-filters-wrapp wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
-			<form action="<?php echo esc_url( $form_action ); ?>" class="wd-product-filters wd-items-middle<?php echo esc_attr( $classes ); ?>" method="GET">
+			<form action="<?php echo esc_url( $form_action ); ?>" class="wd-product-filters<?php echo esc_attr( $classes ); ?>" method="GET" style="<?php echo esc_attr( $style_attrs ); ?>">
 				<?php echo do_shortcode( $content ); ?>
 
 				<?php if ( 'click' === $submit_form_on ) : ?>
@@ -170,6 +188,7 @@ if ( ! function_exists( 'woodmart_filters_categories_shortcode' ) ) {
 
 		$list_args['current_category']           = ( isset( $current_cat ) ) ? $current_cat->term_id : '';
 		$list_args['current_category_ancestors'] = $cat_ancestors;
+		$list_args['active_filter_url']          = woodmart_filters_get_page_base_url();
 
 		if ( $show_categories_ancestors && isset( $current_cat ) ) {
 			$is_cat_has_children = get_term_children( $current_cat->term_id, 'product_cat' );
@@ -189,7 +208,13 @@ if ( ! function_exists( 'woodmart_filters_categories_shortcode' ) ) {
 					<?php echo esc_html( $title ); ?>
 				</span>
 				<?php if ( 'yes' === $woodmart_product_filters_attr['show_selected_values'] ) : ?>
-					<ul class="wd-pf-results"></ul>
+					<ul class="wd-pf-results">
+						<?php if ( isset( $current_cat ) && ! is_null( $current_cat ) ) : ?>
+							<li class="selected-value" data-title="<?php echo esc_attr( $current_cat->slug ); ?>">
+								<?php echo esc_attr( $current_cat->name ); ?>
+							</li>
+						<?php endif; ?>
+					</ul>
 				<?php endif; ?>
 			</div>
 
@@ -216,8 +241,21 @@ if ( ! function_exists( 'woodmart_filters_categories_shortcode' ) ) {
 if ( ! function_exists( 'woodmart_stock_status_shortcode' ) ) {
 	function woodmart_stock_status_shortcode( $atts ) {
 		$woodmart_product_filters_attr = Global_Data::get_instance()->get_data( 'woodmart_product_filters_attr' );
-		$current_stock_status          = isset( $_GET['stock_status'] ) ? explode( ',', $_GET['stock_status'] ) : array();
-		$result_value                  = isset( $_GET['stock_status'] ) ? $_GET['stock_status']: '';
+		$filter_name                   = 'stock_status';
+		$current_filter                = isset( $_GET[ $filter_name ] ) ? explode( ',', $_GET[ $filter_name ] ) : array();
+		$result_value                  = isset( $_GET[ $filter_name ] ) ? $_GET[ $filter_name ]: '';
+		$link                          = woodmart_filters_get_page_base_url();
+		$options                       = array(
+			'onsale'      => esc_html__( 'On sale', 'woodmart' ),
+			'instock'     => esc_html__( 'In stock', 'woodmart' ),
+			'onbackorder' => esc_html__( 'On backorder', 'woodmart' ),
+		);
+
+		foreach ( $options as $key => $value ) {
+			if ( ! $atts[ $key ] ) {
+				unset( $options[ $key ] );
+			}
+		}
 
 		extract(
 			shortcode_atts(
@@ -239,36 +277,54 @@ if ( ! function_exists( 'woodmart_stock_status_shortcode' ) ) {
 				<div class="wd-pf-title">
 					<span class="title-text"><?php echo esc_html( $title ); ?></span>
 					<?php if ( 'yes' === $woodmart_product_filters_attr['show_selected_values'] ) : ?>
-						<ul class="wd-pf-results"></ul>
+						<ul class="wd-pf-results">
+							<?php if ( isset( $current_filter ) && ! empty( $current_filter ) ) : ?>
+								<?php foreach ( $current_filter as $filter ) : ?>
+									<?php if ( isset( $options[ $filter ] ) ) : ?>
+										<li class="selected-value" data-title="<?php echo esc_attr( $filter ); ?>">
+											<?php echo esc_attr( $options[ $filter ] ); ?>
+										</li>
+									<?php endif; ?>
+								<?php endforeach; ?>
+							<?php endif; ?>
+						</ul>
 					<?php endif; ?>
 				</div>
 
 				<div class="wd-pf-dropdown wd-dropdown">
 					<div class="wd-scroll">
 						<ul class="wd-scroll-content">
-							<?php if ( $onsale ) : ?>
-								<li class="<?php echo in_array( 'onsale', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-									<a href="#" rel="nofollow noopener" class="pf-value" data-val="onsale" data-title="<?php esc_html_e( 'On sale', 'woodmart' ); ?>">
-										<?php esc_html_e( 'On sale', 'woodmart' ); ?>
-									</a>
-								</li>
-							<?php endif; ?>
+						<?php foreach ( $options as $slug => $name ) : ?>
+							<?php
+							$current_filter   = ! empty( $_GET[ $filter_name ] ) ? explode( ',', $_GET[ $filter_name ] ) : array();
+							$is_active_filter = in_array( $slug, $current_filter, true );
+							$link             = remove_query_arg( $filter_name, $link );
 
-							<?php if ( $instock ) : ?>
-								<li class="<?php echo in_array( 'instock', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-									<a href="#" rel="nofollow noopener" class="pf-value" data-val="instock" data-title="<?php esc_html_e( 'In stock', 'woodmart' ); ?>">
-										<?php esc_html_e( 'In stock', 'woodmart' ); ?>
-									</a>
-								</li>
-							<?php endif; ?>
+							if ( $is_active_filter ) {
+								$remove_key = array_search( $slug, $current_filter, true );
+								unset( $current_filter[ $remove_key ] );
+							} else {
+								$current_filter[] = $slug;
+							}
 
-							<?php if ( $onbackorder ) : ?>
-								<li class="<?php echo in_array( 'onbackorder', $current_stock_status, true ) ? ' wd-active' : ''; ?>">
-									<a href="#" rel="nofollow noopener" class="pf-value" data-val="onbackorder" data-title="<?php esc_html_e( 'On backorder', 'woodmart' ); ?>">
-										<?php esc_html_e( 'On backorder', 'woodmart' ); ?>
-									</a>
-								</li>
-							<?php endif; ?>
+							if ( ! empty( $current_filter ) ) {
+								$link = add_query_arg(
+									array(
+										$filter_name => implode( ',', $current_filter ),
+									),
+									$link
+								);
+							}
+
+							$link = str_replace( '%2C', ',', $link );
+							?>
+
+							<li class="<?php echo $is_active_filter ? esc_attr( 'wd-active' ) : ''; ?>">
+								<a href="<?php echo esc_url( $link ); ?>" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $slug ); ?>" data-title="<?php echo esc_attr( $name ); ?>">
+									<?php echo esc_html( $name ); ?>
+								</a>
+							</li>
+						<?php endforeach; ?>
 						</ul>
 					</div>
 				</div>
@@ -376,6 +432,8 @@ if ( ! function_exists( 'woodmart_filters_price_slider_shortcode' ) ) {
 		wp_enqueue_script( 'wc-jquery-ui-touchpunch' );
 		wp_enqueue_script( 'accounting' );
 
+		$link = woodmart_filters_get_page_base_url();
+
 		ob_start();
 
 		woodmart_enqueue_inline_style( 'widget-slider-price-filter' );
@@ -420,7 +478,7 @@ if ( ! function_exists( 'woodmart_filters_price_slider_shortcode' ) ) {
 						<input type="hidden" class="max_price" name="max_price" value="<?php echo esc_attr( $max_price ); ?>" data-max="<?php echo esc_attr( $max ); ?>">
 
 						<?php if ( 'select' === $woodmart_product_filters_attr['submit_form_on'] ) : ?>
-							<button type="submit" class="button"><?php echo esc_html__( 'Filter', 'woodmart' ); ?></button>
+							<a href="<?php echo esc_url( $link ); ?>" class="button pf-value"><?php echo esc_html__( 'Filter', 'woodmart' ); ?></a>
 						<?php endif; ?>
 
 						<div class="price_label" style="display:none;"><span class="from"></span><span class="to"></span></div>
@@ -487,7 +545,8 @@ if ( ! function_exists( 'woodmart_get_filtered_price' ) ) {
 if ( ! function_exists( 'woodmart_orderby_filter_template' ) ) {
 	function woodmart_orderby_filter_template() {
 		$woodmart_product_filters_attr = Global_Data::get_instance()->get_data( 'woodmart_product_filters_attr' );
-		$current_stock_status          = isset( $_GET['orderby'] ) ? $_GET['orderby'] : '';
+		$current_filter                = isset( $_GET['orderby'] ) ? $_GET['orderby'] : '';
+		$link                          = woodmart_filters_get_page_base_url();
 
 		$options = apply_filters(
 			'woocommerce_catalog_orderby',
@@ -504,7 +563,7 @@ if ( ! function_exists( 'woodmart_orderby_filter_template' ) ) {
 		ob_start();
 		?>
 		<div class="wd-pf-checkboxes wd-col wd-pf-sortby wd-event-<?php echo esc_attr( $woodmart_product_filters_attr['show_dropdown_on'] ); ?>">
-			<input type="hidden" class="result-input" name="orderby">
+			<input type="hidden" class="result-input" name="orderby" value="<?php echo ! empty( $current_filter ) ? esc_attr( $current_filter ) : ''; ?>">
 
 			<div class="wd-pf-title">
 				<span class="title-text">
@@ -512,7 +571,13 @@ if ( ! function_exists( 'woodmart_orderby_filter_template' ) ) {
 				</span>
 
 				<?php if ( 'yes' === $woodmart_product_filters_attr['show_selected_values'] ) : ?>
-					<ul class="wd-pf-results"></ul>
+					<ul class="wd-pf-results">
+						<?php if ( ! empty( $current_filter ) && array_key_exists( $current_filter, $options ) ) : ?>
+							<li class="selected-value" data-title="<?php echo esc_attr( $current_filter ); ?>">
+								<?php echo esc_attr( $options[ $current_filter ] ); ?>
+							</li>
+						<?php endif; ?>
+					</ul>
 				<?php endif; ?>
 			</div>
 
@@ -520,8 +585,25 @@ if ( ! function_exists( 'woodmart_orderby_filter_template' ) ) {
 				<div class="wd-scroll">
 					<ul class="wd-scroll-content">
 						<?php foreach ( $options as $key => $value ) : ?>
-							<li class="<?php echo $key === $current_stock_status ? esc_attr( 'wd-active' ) : ''; ?>">
-								<a href="#" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $value ); ?>">
+							<?php
+							$is_active_filter = $key === $current_filter;
+							$link             = add_query_arg(
+								array(
+									'orderby' => $key,
+								),
+								$link
+							);
+
+							if ( $is_active_filter ) {
+								$link = remove_query_arg(
+									'orderby',
+									$link
+								);
+							}
+							?>
+
+							<li class="<?php echo $is_active_filter ? esc_attr( 'wd-active' ) : ''; ?>">
+								<a href="<?php echo esc_url( $link ); ?>" rel="nofollow noopener" class="pf-value" data-val="<?php echo esc_attr( $key ); ?>" data-title="<?php echo esc_attr( $value ); ?>">
 									<?php echo esc_html( $value ); ?>
 								</a>
 							</li>

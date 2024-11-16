@@ -21,6 +21,8 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
  * Reviews class.
  */
 class Reviews extends Singleton {
+	private $comment_count = 0;
+
 	/**
 	 * Init.
 	 */
@@ -84,9 +86,16 @@ class Reviews extends Singleton {
 	 * @return array List of comments.
 	 */
 	public function filter_comments() {
+		global $overridden_cpage;
+
 		$product_id = Helper::get_product_id();
 		$ratings    = Helper::get_ratings_from_request();
 		$order_by   = Helper::get_order_by_from_request();
+
+		$page          = (get_query_var('cpage')) ? get_query_var('cpage') : 1;
+		$limit         = get_option( 'comments_per_page' );
+		$offset        = ($page * $limit) - $limit;
+		$comment_order = get_option( 'comment_order' );
 
 		$args = apply_filters(
 			'woodmart_product_reviews_args',
@@ -94,78 +103,82 @@ class Reviews extends Singleton {
 				'post_id'            => $product_id,
 				'post_type'          => 'product',
 				'status'             => 'approve',
+				'orderby'            => 'comment_date_gmt',
+				'order'              => $comment_order,
+				'paged'              => $page,
+				'offset'             => $offset,
 				'include_unapproved' => array( is_user_logged_in() ? get_current_user_id() : wp_get_unapproved_comment_author_email() ),
 			)
 		);
 
 		$stars = apply_filters( 'woodmart_product_reviews_ratings', $ratings );
 
-		switch ( $order_by ) {
-			case 'oldest':
-				$args['orderby'] = 'comment_date';
-				$args['order']   = 'ASC';
-				break;
-			case 'highest_rated':
-				$args['orderby']  = 'meta_value_num';
-				$args['order']    = 'DESC';
+		if ( 'default' !== $order_by ) {
+			switch ( $order_by ) {
+				case 'newest':
+					$args['order'] = 'DESC';
+					break;
+				case 'oldest':
+					$args['order'] = 'ASC';
+					break;
+				case 'highest_rated':
+					$args['orderby']  = 'meta_value_num';
+					$args['order']    = 'DESC';
 
-				$args['meta_query'] = array( // phpcs:ignore.
-					'relation' => 'AND',
-					array(
-						'relation' => 'OR',
+					$args['meta_query'] = array( // phpcs:ignore.
+						'relation' => 'AND',
 						array(
-							'key'     => 'rating',
-							'compare' => 'NOT EXISTS',
+							'relation' => 'OR',
+							array(
+								'key'     => 'rating',
+								'compare' => 'NOT EXISTS',
+							),
+							array(
+								'key'     => 'rating',
+								'compare' => 'EXISTS',
+							)
 						),
-						array(
-							'key'     => 'rating',
-							'compare' => 'EXISTS',
-						)
-					),
-				);
-				break;
-			case 'lowest_rated':
-				$args['orderby']  = 'meta_value_num';
-				$args['order']    = 'ASC';
+					);
+					break;
+				case 'lowest_rated':
+					$args['orderby']  = 'meta_value_num';
+					$args['order']    = 'ASC';
 
-				$args['meta_query'] = array( // phpcs:ignore.
-					'relation' => 'AND',
-					array(
-						'relation' => 'OR',
+					$args['meta_query'] = array( // phpcs:ignore.
+						'relation' => 'AND',
 						array(
-							'key'     => 'rating',
-							'compare' => 'NOT EXISTS',
+							'relation' => 'OR',
+							array(
+								'key'     => 'rating',
+								'compare' => 'NOT EXISTS',
+							),
+							array(
+								'key'     => 'rating',
+								'compare' => 'EXISTS',
+							)
 						),
-						array(
-							'key'     => 'rating',
-							'compare' => 'EXISTS',
-						)
-					),
-				);
-				break;
-			case 'most_helpful':
-				$args['orderby']  = 'meta_value_num comment_date';
-				$args['order']    = 'DESC';
+					);
+					break;
+				case 'most_helpful':
+					$args['orderby']  = 'meta_value_num comment_date_gmt';
+					$args['order']    = 'DESC';
 
-				$args['meta_query'] = array( // phpcs:ignore.
-					'relation' => 'AND',
-					array(
-						'relation' => 'OR',
+					$args['meta_query'] = array( // phpcs:ignore.
+						'relation' => 'AND',
 						array(
-							'key'     => 'wd_total_vote',
-							'compare' => 'NOT EXISTS',
+							'relation' => 'OR',
+							array(
+								'key'     => 'wd_total_vote',
+								'compare' => 'NOT EXISTS',
+							),
+							array(
+								'key'     => 'wd_total_vote',
+								'compare' => 'EXISTS',
+							)
 						),
-						array(
-							'key'     => 'wd_total_vote',
-							'compare' => 'EXISTS',
-						)
-					),
-				);
-				break;
-			default:
-				$args['orderby'] = 'comment_date';
-				$args['order']   = 'DESC';
-				break;
+					);
+					break;
+			}
 		}
 
 		if ( ! empty( $stars ) ) {
@@ -199,6 +212,20 @@ class Reviews extends Singleton {
 
 		$comments = get_comments( $args );
 
+		$comment_count = 0;
+
+		foreach ( $comments as $comment ) {
+			// @codeCoverageIgnoreStart
+			if ( '0' !== $comment->comment_parent ) {
+				continue;
+			}
+			// @codeCoverageIgnoreEnd
+
+			$comment_count++;
+		}
+
+		$this->comment_count = $comment_count;
+
 		if ( wp_doing_ajax() && ( ! empty( $stars ) || Helper::show_only_image() ) ) {
 			$comments_children = array();
 
@@ -213,36 +240,49 @@ class Reviews extends Singleton {
 			$comments = array_merge( $comments, $comments_children );
 		}
 
+		if ( 'default' === $order_by && 'desc' === $comment_order ) {
+			$comments = array_reverse( $comments );
+		}
+
+		$max_depth = get_option( 'thread_comments' ) ? get_option( 'thread_comments_depth' ) : -1;
+		$threaded  = ( -1 !== $max_depth );
+
+		// @codeCoverageIgnoreStart
+		if ( wp_doing_ajax() && get_comment_pages_count( $comments, $limit, $threaded ) > 1 ) {
+			$overridden_cpage = true; // phpcs:ignore.
+		}
+		// @codeCoverageIgnoreEnd
+
 		return $comments;
 	}
 
 	/**
 	 * Render title.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $return Do you need to return the html?.
 	 * @return string|void
 	 */
 	public function render_title( $return = false ) {
 		global $product;
 
-		$comments   = $this->filter_comments();
 		$product_id = Helper::get_product_id();
 
 		if ( $return ) {
 			ob_start();
 		}
 
-		$count = count( $comments );
+		$count = $this->comment_count;
 
 		if ( function_exists( 'wc_review_ratings_enabled' ) && wc_review_ratings_enabled() ) {
-			/* translators: 1: reviews count 2: product name */
+			/* translators: 1: reviews count 2: stars rating 3: product name*/
 			$reviews_title = sprintf(
 				esc_html(
 					_n(
 						'%1$s %2$s review for %3$s',
 						'%1$s %2$s reviews for %3$s',
 						$count,
-						'woocommerce'
+						'woodmart'
 					)
 				),
 				esc_html( $count ),
@@ -273,29 +313,28 @@ class Reviews extends Singleton {
 	/**
 	 * Render comments.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $return Do you need to return the html?.
 	 * @return string|void
 	 */
 	public function render_comments( $return = false ) {
 		$comments             = $this->filter_comments();
-		$comment_list_classes = 'wd-grid';
+		$comment_list_classes = 'wd-grid-g wd-active wd-in';
 		$comment_list_styles  = '';
 		$reviews_attr         = array();
 
 		$comment_list_classes .= ' wd-review-' . woodmart_get_opt( 'reviews_style', 'style-1' );
-
-		if ( ! wp_doing_ajax() ) {
-			$comment_list_classes .= ' wd-active wd-in';
-		}
 
 		foreach ( array( 'desktop', 'tablet', 'mobile' ) as $device ) {
 			$key             = 'reviews_columns' . ( 'desktop' === $device ? '' : '_' . $device );
 			$prefix          = '';
 			$reviews_columns = Global_Data::get_instance()->get_data( $key ) ? Global_Data::get_instance()->get_data( $key ) : woodmart_get_opt( $key, 1 );
 
-			if ( 'tablet' === $device ) {
+			if ( 'desktop' === $device ) {
+				$prefix = '-lg';
+			} elseif ( 'tablet' === $device ) {
 				$prefix = '-md';
-			} else if ( 'mobile' === $device ) {
+			} elseif ( 'mobile' === $device ) {
 				$prefix = '-sm';
 			}
 
@@ -303,8 +342,7 @@ class Reviews extends Singleton {
 				$reviews_columns = $_GET[ $key ];
 			}
 
-			$comment_list_classes .= $reviews_columns ? sprintf( ' wd-grid-col%s-%s', $prefix, $reviews_columns ) : '';
-			$comment_list_styles  .= $reviews_columns ? sprintf( '--wd-col%s: %s;', $prefix, $reviews_columns ) : '';
+			$comment_list_styles .= $reviews_columns ? sprintf( '--wd-col%s: %s;', $prefix, $reviews_columns ) : '';
 
 			$reviews_attr[ $key ] = $reviews_columns;
 		}
@@ -320,15 +358,16 @@ class Reviews extends Singleton {
 					apply_filters(
 						'woocommerce_product_review_list_args',
 						array(
-							'callback'     => 'woocommerce_comments',
-							'per_page'     => get_option( 'comments_per_page' ),
+							'callback'          => 'woocommerce_comments',
+							'per_page'          => get_option( 'comments_per_page' ),
+							'reverse_top_level' => 'default' !== Helper::get_order_by_from_request() ? 0 : null,
 						)
 					),
 					$comments
 				);
 			} else {
 				?>
-				<li class="woocommerce-noreviews wd-col"><?php esc_html_e( 'There are no reviews matching the given conditions.', 'woocommerce' ); ?></li>
+				<li class="woocommerce-noreviews wd-col"><?php esc_html_e( 'There are no reviews matching the given conditions.', 'woodmart' ); ?></li>
 				<?php
 			}
 			?>
@@ -347,6 +386,7 @@ class Reviews extends Singleton {
 	/**
 	 * Render pagination.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $return Do you need to return the html?.
 	 * @return string|void
 	 */
@@ -412,11 +452,13 @@ class Reviews extends Singleton {
 
 	/**
 	 * Filter reviews with ajax.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function ajax_filter_reviews() {
 		$data = array(
-			'title'         => $this->render_title( true ),
-			'content'       => $this->render_comments( true ),
+			'content' => $this->render_comments( true ),
+			'title'   => $this->render_title( true ),
 		);
 
 		wp_send_json( $data );

@@ -5,7 +5,7 @@
  * @package Woodmart.
  */
 
-use XTS\Google_Fonts;
+use XTS\Admin\Modules\Options\Google_Fonts;
 use XTS\Modules\Layouts\Main;
 
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
@@ -383,8 +383,16 @@ if ( ! function_exists( 'woodmart_fields_css_data_to_css' ) ) {
 					continue;
 				}
 				foreach ( $decompressed_data['devices'] as $device => $device_value ) {
+					if ( isset( $device_value['value'] ) && 'custom' === $device_value['value'] ) {
+						continue;
+					}
+
 					foreach ( $params['selectors'] as $selector => $properties ) {
 						$selector = str_replace( '{{WRAPPER}}', $wrapper, $selector );
+
+						if ( ! $properties ) {
+							continue;
+						}
 
 						foreach ( $properties as $property ) {
 							$result = '';
@@ -400,16 +408,16 @@ if ( ! function_exists( 'woodmart_fields_css_data_to_css' ) ) {
 								$result = str_replace( '{{SPREAD}}', $device_value['spread'], $result );
 								$result = str_replace( '{{COLOR}}', $device_value['color'], $result );
 							} elseif ( isset( $params['type'] ) && 'wd_dimensions' === $params['type'] ) {
-								if ( false !== stripos( $property, 'top' ) && ( $device_value['top'] || '0' === $device_value['top'] ) ) {
+								if ( false !== stripos( $property, '{{TOP}}' ) && ( $device_value['top'] || '0' === $device_value['top'] ) ) {
 									$result .= str_replace( '{{TOP}}', $device_value['top'], $property );
 								}
-								if ( false !== stripos( $property, 'right' ) && ( $device_value['right'] || '0' === $device_value['right'] ) ) {
+								if ( false !== stripos( $property, '{{RIGHT}}' ) && ( $device_value['right'] || '0' === $device_value['right'] ) ) {
 									$result .= str_replace( '{{RIGHT}}', $device_value['right'], $property );
 								}
-								if ( false !== stripos( $property, 'bottom' ) && ( $device_value['bottom'] || '0' === $device_value['bottom'] ) ) {
+								if ( false !== stripos( $property, '{{BOTTOM}}' ) && ( $device_value['bottom'] || '0' === $device_value['bottom'] ) ) {
 									$result .= str_replace( '{{BOTTOM}}', $device_value['bottom'], $property );
 								}
-								if ( false !== stripos( $property, 'left' ) && ( $device_value['left'] || '0' === $device_value['left'] ) ) {
+								if ( false !== stripos( $property, '{{LEFT}}' ) && ( $device_value['left'] || '0' === $device_value['left'] ) ) {
 									$result .= str_replace( '{{LEFT}}', $device_value['left'], $property );
 								}
 
@@ -483,6 +491,9 @@ if ( ! function_exists( 'woodmart_fields_css_data_to_css' ) ) {
 			if ( 'tablet' === $device ) {
 				$css_list['tablet'] = implode( '', $styles );
 			}
+			if ( 'tablet_vertical' === $device ) {
+				$css_list['tablet_vertical'] = implode( '', $styles );
+			}
 			if ( 'mobile' === $device ) {
 				$css_list['mobile'] = implode( '', $styles );
 			}
@@ -495,6 +506,11 @@ if ( ! function_exists( 'woodmart_fields_css_data_to_css' ) ) {
 		if ( isset( $css_list['tablet'] ) ) {
 			$device_styles = $css_list['tablet'];
 			$css          .= "@media (max-width: 1199px) { $device_styles }";
+		}
+
+		if ( isset( $css_list['tablet_vertical'] ) ) {
+			$device_styles = $css_list['tablet_vertical'];
+			$css          .= "@media (max-width: 1024px) { $device_styles }";
 		}
 
 		if ( isset( $css_list['mobile'] ) ) {

@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Frequently_Bought_Together;
 
-use XTS\Metaboxes;
+use XTS\Admin\Modules\Options\Metaboxes;
 use WP_Query;
 use XTS\Singleton;
 
@@ -20,6 +20,7 @@ class Controls extends Singleton {
 	 */
 	public function init() {
 		add_action( 'init', array( $this, 'add_metaboxes' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 
 		add_filter( 'woocommerce_product_data_tabs', array( $this, 'product_data_tabs' ) );
 		add_action( 'woocommerce_product_data_panels', array( $this, 'product_data_panels' ) );
@@ -30,6 +31,21 @@ class Controls extends Singleton {
 		add_action( 'wp_ajax_xts_get_bundles_settings_content', array( $this, 'get_settings_content' ) );
 
 		add_action( 'woocommerce_process_product_meta', array( $this, 'save_control' ) );
+	}
+
+	/**
+	 * Enqueue admin scripts.
+	 *
+	 * @return void
+	 */
+	public function enqueue_scripts() {
+		if ( 'woodmart_woo_fbt' !== get_post_type() ) {
+			return;
+		}
+
+		wp_enqueue_style( 'wd-cont-table-control', WOODMART_ASSETS . '/css/parts/cont-table-control.min.css', array(), WOODMART_VERSION );
+		wp_enqueue_style( 'wd-page-fbt', WOODMART_ASSETS . '/css/parts/page-fbt.min.css', array(), WOODMART_VERSION );
+
 	}
 
 	/**
@@ -63,6 +79,7 @@ class Controls extends Singleton {
 					'type' => 'number',
 					'min'  => '0',
 					'max'  => '100',
+					'step' => '0.01',
 				),
 				'section'     => 'general',
 				'priority'    => 20,
@@ -106,6 +123,57 @@ class Controls extends Singleton {
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 				'off-text'    => esc_html__( 'No', 'woodmart' ),
 				'priority'    => 40,
+				'class'       => 'xts-col-6',
+			)
+		);
+
+		$metabox->add_field(
+			array(
+				'id'       => '_woodmart_default_checkbox_state',
+				'name'     => esc_html__( 'Default checkbox state', 'woodmart' ),
+				'group'    => esc_html__( 'Settings', 'woodmart' ),
+				'type'     => 'buttons',
+				'section'  => 'general',
+				'options'  => array(
+					'check'   => array(
+						'name'  => esc_html__( 'Check', 'woodmart' ),
+						'value' => 'check',
+					),
+					'uncheck' => array(
+						'name'  => esc_html__( 'Uncheck', 'woodmart' ),
+						'value' => 'uncheck',
+					),
+				),
+				'default'  => 'check',
+				'requires' => array(
+					array(
+						'key'     => '_woodmart_show_checkbox',
+						'compare' => 'equals',
+						'value'   => true,
+					),
+				),
+				'priority' => 50,
+				'class'    => 'xts-col-6',
+			)
+		);
+
+		$metabox->add_field(
+			array(
+				'id'       => '_woodmart_hide_out_of_stock_product',
+				'name'     => esc_html__( 'Hide out of stock product', 'woodmart' ),
+				'group'    => esc_html__( 'Settings', 'woodmart' ),
+				'type'     => 'switcher',
+				'section'  => 'general',
+				'on-text'  => esc_html__( 'Yes', 'woodmart' ),
+				'off-text' => esc_html__( 'No', 'woodmart' ),
+				'priority' => 60,
+				'requires' => array(
+					array(
+						'key'     => '_woodmart_show_checkbox',
+						'compare' => 'equals',
+						'value'   => true,
+					),
+				),
 			)
 		);
 	}
@@ -129,6 +197,7 @@ class Controls extends Singleton {
 	/**
 	 * Add custom tab content in WC tabs.
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function product_data_panels() {
@@ -149,7 +218,7 @@ class Controls extends Singleton {
 					<?php $bundles_table->print_column_headers(); ?>
 				</tr>
 				</thead>
-				<tbody id="the-list" data-wp-lists='list:$singular'>
+				<tbody>
 					<?php $bundles_table->display_rows_or_placeholder(); ?>
 				</tbody>
 			</table>
@@ -157,7 +226,7 @@ class Controls extends Singleton {
 				<div class="options_group">
 					<p class="form-field">
 						<label><?php esc_html_e( 'Add bundles', 'woodmart' ); ?></label>
-						<select class="xts-select xts-select2 xts-autocomplete" name="xts_bundle" data-type="post" data-value="woodmart_woo_fbt" data-search="woodmart_get_post_by_query_autocomplete">
+						<select class="xts-select xts-select2 xts-autocomplete" name="xts_bundle" data-type="post" data-value="woodmart_woo_fbt" data-search="woodmart_get_post_by_query_autocomplete" data-security="<?php echo esc_attr( wp_create_nonce( 'woodmart_get_post_by_query_autocomplete_nonce' ) ); ?>">
 							<option value=""><?php esc_html_e( 'Select', 'woodmart' ); ?></option>
 						</select>
 						<input type="hidden" class="xts-product-bundles-id" name="xts_product_bundles_id" value="<?php echo esc_attr( implode( ',', $bundles_id ) ); ?>" data-product-id="<?php the_ID(); ?>" data-nonce="<?php echo esc_attr( wp_create_nonce( 'woodmart_product_bundles_settings' ) ); ?>">
@@ -216,9 +285,11 @@ class Controls extends Singleton {
 			}
 
 			foreach ( $query->posts as $post ) {
+				// @codeCoverageIgnoreStart
 				if ( ! $post ) {
 					continue;
 				}
+				// @codeCoverageIgnoreEnd
 
 				$products[] = '<a href="' . get_permalink( $post->ID ) . '">' . $post->post_title . '</a>';
 			}

@@ -126,6 +126,302 @@ class Social extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'social_links_source',
+			array(
+				'label'     => esc_html__( 'Social links source', 'woodmart' ),
+				'type'      => Controls_Manager::SELECT,
+				'options'   => array(
+					'theme_settings' => esc_html__( 'Theme settings', 'woodmart' ),
+					'custom'         => esc_html__( 'Custom', 'woodmart' ),
+				),
+				'default'   => 'theme_settings',
+				'condition' => array(
+					'type' => array( 'follow' ),
+				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		/**
+		 * Links to social profiles.
+		 */
+		$this->start_controls_section(
+			'social_links_content_section',
+			array(
+				'label'     => esc_html__( 'Links to social profiles', 'woodmart' ),
+				'condition' => array(
+					'type'                 => array( 'follow' ),
+					'social_links_source' => array( 'custom' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'fb_link',
+			array(
+				'label'   => esc_html__( 'Facebook link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '#',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'twitter_link',
+			array(
+				'label'   => esc_html__( 'X link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '#',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'isntagram_link',
+			array(
+				'label'   => esc_html__( 'Instagram link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '#',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'pinterest_link',
+			array(
+				'label'   => esc_html__( 'Pinterest link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '#',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'youtube_link',
+			array(
+				'label'   => esc_html__( 'YouTube link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '#',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'tumblr_link',
+			array(
+				'label'   => esc_html__( 'Tumblr link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'linkedin_link',
+			array(
+				'label'   => esc_html__( 'LinkedIn link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'vimeo_link',
+			array(
+				'label'   => esc_html__( 'Vimeo link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'flickr_link',
+			array(
+				'label'   => esc_html__( 'Flickr link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'github_link',
+			array(
+				'label'   => esc_html__( 'Github link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'dribbble_link',
+			array(
+				'label'   => esc_html__( 'Dribbble link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'behance_link',
+			array(
+				'label'   => esc_html__( 'Behance link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'soundcloud_link',
+			array(
+				'label'   => esc_html__( 'SoundCloud link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'spotify_link',
+			array(
+				'label'   => esc_html__( 'Spotify link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'whatsapp_link',
+			array(
+				'label'   => esc_html__( 'WhatsApp link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'snapchat_link',
+			array(
+				'label'   => esc_html__( 'Snapchat link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'tg_link',
+			array(
+				'label'   => esc_html__( 'Telegram link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'tiktok_link',
+			array(
+				'label'   => esc_html__( 'TikTok link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'discord_link',
+			array(
+				'label'   => esc_html__( 'Discord link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'yelp_link',
+			array(
+				'label'   => esc_html__( 'Yelp link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'vk_link',
+			array(
+				'label'   => esc_html__( 'VK link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
+		$this->add_control(
+			'ok_link',
+			array(
+				'label'   => esc_html__( 'OK link', 'woodmart' ),
+				'type'    => Controls_Manager::TEXT,
+				'default' => '',
+				'ai'      => array(
+					'active' => false,
+				),
+			)
+		);
+
 		$this->end_controls_section();
 
 		/**
@@ -197,6 +493,37 @@ class Social extends Widget_Base {
 		);
 
 		$this->add_control(
+			'style',
+			array(
+				'label'   => esc_html__( 'Style', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'default'     => esc_html__( 'Default', 'woodmart' ),
+					'simple'      => esc_html__( 'Simple', 'woodmart' ),
+					'colored'     => esc_html__( 'Colored', 'woodmart' ),
+					'colored-alt' => esc_html__( 'Colored alternative', 'woodmart' ),
+					'bordered'    => esc_html__( 'Bordered', 'woodmart' ),
+					'primary'     => esc_html__( 'Primary color', 'woodmart' ),
+				),
+				'default' => 'default',
+			)
+		);
+
+		$this->add_control(
+			'form',
+			array(
+				'label'   => esc_html__( 'Form', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'circle'  => esc_html__( 'Circle', 'woodmart' ),
+					'square'  => esc_html__( 'Square', 'woodmart' ),
+					'rounded' => esc_html__( 'Rounded', 'woodmart' ),
+				),
+				'default' => 'circle',
+			)
+		);
+
+		$this->add_control(
 			'size',
 			array(
 				'label'   => esc_html__( 'Size', 'woodmart' ),
@@ -223,35 +550,6 @@ class Social extends Widget_Base {
 			)
 		);
 
-		$this->add_control(
-			'style',
-			array(
-				'label'   => esc_html__( 'Style', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					'default'     => esc_html__( 'Default', 'woodmart' ),
-					'simple'      => esc_html__( 'Simple', 'woodmart' ),
-					'colored'     => esc_html__( 'Colored', 'woodmart' ),
-					'colored-alt' => esc_html__( 'Colored alternative', 'woodmart' ),
-					'bordered'    => esc_html__( 'Bordered', 'woodmart' ),
-				),
-				'default' => 'default',
-			)
-		);
-
-		$this->add_control(
-			'form',
-			array(
-				'label'   => esc_html__( 'Form', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					'circle' => esc_html__( 'Circle', 'woodmart' ),
-					'square' => esc_html__( 'Square', 'woodmart' ),
-				),
-				'default' => 'circle',
-			)
-		);
-
 		$this->end_controls_section();
 
 		/**
@@ -273,7 +571,7 @@ class Social extends Widget_Base {
 			array(
 				'label'     => esc_html__( 'Typography', 'woodmart' ),
 				'name'      => 'title_typography',
-				'selector'  => '{{WRAPPER}} .wd-label',
+				'selector'  => '{{WRAPPER}} .wd-social-icons .wd-label',
 				'condition' => array(
 					'show_label' => array( 'yes' ),
 				),
@@ -286,7 +584,7 @@ class Social extends Widget_Base {
 				'label'     => esc_html__( 'Label color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => array(
-					'{{WRAPPER}} .wd-label' => 'color: {{VALUE}}',
+					'{{WRAPPER}} .wd-social-icons .wd-label' => 'color: {{VALUE}}',
 				),
 				'condition' => array(
 					'show_label' => array( 'yes' ),
@@ -310,12 +608,13 @@ class Social extends Widget_Base {
 		$settings = wp_parse_args(
 			$this->get_settings_for_display(),
 			array(
-				'elementor'  => true,
-				'layout'     => '',
+				'elementor'            => true,
+				'layout'               => '',
+				'social_links_source' => 'theme_settings',
 				// Label settings.
-				'show_label' => 'no',
-				'label_text' => esc_html__( 'Share: ', 'woodmart' ),
-				'is_element' => true,
+				'show_label'           => 'no',
+				'label_text'           => esc_html__( 'Share: ', 'woodmart' ),
+				'is_element'           => true,
 			)
 		);
 

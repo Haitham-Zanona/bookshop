@@ -49,6 +49,9 @@ get_header(); ?>
 							'slides_per_view'         => 3,
 							'hide_pagination_control' => 'yes',
 							'custom_sizes'            => apply_filters( 'woodmart_portfolio_related_custom_sizes', false ),
+							'spacing'                 => woodmart_get_opt( 'portfolio_spacing' ),
+							'spacing_tablet'          => woodmart_get_opt( 'portfolio_spacing_tablet', '' ),
+							'spacing_mobile'          => woodmart_get_opt( 'portfolio_spacing_mobile', '' ),
 						),
 						$query
 					);

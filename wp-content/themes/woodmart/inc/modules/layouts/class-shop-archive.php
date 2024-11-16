@@ -71,6 +71,27 @@ class Shop_Archive extends Layout_Type {
 
 				$is_active = isset( $_GET[ 'filter_' . $condition_filter ] ); // phpcs:ignore
 				break;
+			case 'filtered_product_by_term':
+				$chosen_attributes = WC_Query::get_layered_nav_chosen_attributes();
+
+				foreach ( $chosen_attributes as $taxonomy => $data ) {
+					if ( ! empty( $data['terms'] ) ) {
+						foreach ( $data['terms'] as $term_slug ) {
+							$term = get_term_by( 'slug', $term_slug, $taxonomy );
+
+							if ( $term && $term->term_id === (int) $condition['condition_query'] ) {
+								$is_active = true;
+
+								break;
+							}
+						}
+					}
+
+					if ( $is_active ) {
+						break;
+					}
+				}
+				break;
 			case 'filtered_product_term_any':
 				$chosen_attributes = WC_Query::get_layered_nav_chosen_attributes();
 
@@ -78,6 +99,9 @@ class Shop_Archive extends Layout_Type {
 					$filter_name = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
 					$is_active   = isset( $_GET[ $filter_name ] ); // phpcs:ignore
 				}
+				break;
+			case 'filtered_product_stock_status':
+				$is_active = isset( $_GET['stock_status'] ) && false !== strpos( $_GET['stock_status'], $condition['condition_query'] ); // phpcs:ignore
 				break;
 		}
 
@@ -92,7 +116,7 @@ class Shop_Archive extends Layout_Type {
 	 * @return bool|string
 	 */
 	public function override_template( $template ) {
-		if ( woodmart_woocommerce_installed() && ( is_shop() || is_product_taxonomy() ) && Main::get_instance()->has_custom_layout( 'shop_archive' ) ) {
+		if ( woodmart_woocommerce_installed() && ( is_shop() || is_product_taxonomy() ) && Main::get_instance()->has_custom_layout( 'shop_archive' ) && ( ! function_exists( 'wcfm_is_store_page' ) || ! wcfm_is_store_page() ) ) {
 			$this->display_template();
 
 			return false;

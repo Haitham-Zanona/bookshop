@@ -173,6 +173,10 @@
 	background-image: url(../../../../admin/assets/images/vc-icon/banners-carousel.svg);
 }
 
+.wd-icon-before-after:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/before-after.svg);
+}
+
 .wd-icon-infobox:before {
 	background-image: url(../../../../admin/assets/images/vc-icon/information-box.svg);
 }
@@ -245,8 +249,19 @@
 	background-image: url(../../../../admin/assets/images/vc-icon/open-street-map.svg);
 }
 
-// Single product.
+.wd-icon-video:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/video.svg);
+}
 
+.wd-icon-marquee:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/marquee.svg);
+}
+
+.wd-icon-nested-carousel:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/carousel.svg);
+}
+
+// Single product.
 .wd-icon-sp-title:before {
 	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-title.svg);
 }
@@ -359,12 +374,23 @@
 	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-linked-variations.svg);
 }
 
+.wd-icon-sp-stock-status:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-stock-status.svg);
+}
+
 .wd-icon-sp-stock-progress-bar:before {
 	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-stock-status.svg);
 }
 
-// Shop archive.
+.wd-icon-sp-dynamic-discounts:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-dynamic-discounts.svg);
+}
 
+.wd-icon-sp-sold-counter:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/sp-icons/sp-sold-counter.svg);
+}
+
+// Shop archive.
 .wd-icon-sa-active-filters:before {
 	background-image: url(../../../../admin/assets/images/vc-icon/sa-icons/sa-active-filters.svg);
 }
@@ -421,6 +447,14 @@
 
 .wd-icon-ct-cart-totals:before {
 	background-image: url(../../../../admin/assets/images/vc-icon/ct-icons/ct-cart-totals.svg);
+}
+
+.wd-icon-ct-empty-cart:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/ct-icons/ct-empty-cart.svg);
+}
+
+.wd-icon-ct-free-gifts:before {
+	background-image: url(../../../../admin/assets/images/vc-icon/ct-icons/ct-free-gifts.svg);
 }
 
 // Checkout.

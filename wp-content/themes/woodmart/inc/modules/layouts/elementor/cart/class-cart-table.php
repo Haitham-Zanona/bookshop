@@ -124,13 +124,23 @@ class Cart_Table extends Widget_Base {
 
 		wc()->cart->calculate_totals();
 
+		$update_cart_btn_classes = '';
+
+		if ( function_exists( 'wc_wp_theme_get_element_class_name' ) ) {
+			$update_cart_btn_classes .= ' ' . wc_wp_theme_get_element_class_name( 'button' );
+		}
+
+		if ( woodmart_get_opt( 'update_cart_quantity_change' ) ) {
+			$update_cart_btn_classes .= ' wd-hide';
+		}
+
 		?>
 		<form class="woocommerce-cart-form cart-data-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
 			<div class="cart-table-section">
 
 				<?php do_action( 'woocommerce_before_cart_table' ); ?>
 
-				<table class="shop_table shop_table_responsive cart woocommerce-cart-form__contents">
+				<table class="shop_table shop_table_responsive shop-table-with-img cart woocommerce-cart-form__contents">
 					<thead>
 					<tr>
 						<th class="product-remove">&nbsp;</th>
@@ -154,6 +164,7 @@ class Cart_Table extends Widget_Base {
 
 						if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
 							$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
+							$product_name      = apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key );
 							?>
 
 							<tr class="woocommerce-cart-form__cart-item <?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
@@ -165,7 +176,8 @@ class Cart_Table extends Widget_Base {
 										sprintf(
 											'<a href="%s" class="remove" aria-label="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
 											esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-											esc_html__( 'Remove this item', 'woocommerce' ),
+											/* translators: %s is the product name */
+											esc_attr( sprintf( __( 'Remove %s from cart', 'woocommerce' ), wp_strip_all_tags( $product_name ) ) ),
 											esc_attr( $product_id ),
 											esc_attr( $_product->get_sku() )
 										),
@@ -187,7 +199,7 @@ class Cart_Table extends Widget_Base {
 								<td class="product-name" data-title="<?php esc_attr_e( 'Product', 'woocommerce' ); ?>">
 									<?php
 									if ( ! $product_permalink ) {
-										echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
+										echo wp_kses_post( $product_name . '&nbsp;' );
 									} else {
 										echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
 									}
@@ -206,11 +218,13 @@ class Cart_Table extends Widget_Base {
 
 								<?php if ( woodmart_get_opt( 'show_sku_in_cart' ) ) : ?>
 									<td class="product-sku" data-title="<?php esc_attr_e( 'SKU', 'woocommerce' ); ?>">
-										<?php if ( $_product->get_sku() ) : ?>
-											<?php echo esc_html( $_product->get_sku() ); ?>
-										<?php else : ?>
-											<?php esc_html_e( 'N/A', 'woocommerce' ); ?>
-										<?php endif; ?>
+										<span>
+											<?php if ( $_product->get_sku() ) : ?>
+												<?php echo esc_html( $_product->get_sku() ); ?>
+											<?php else : ?>
+												<?php esc_html_e( 'N/A', 'woocommerce' ); ?>
+											<?php endif; ?>
+										</span>
 									</td>
 								<?php endif; ?>
 
@@ -234,7 +248,7 @@ class Cart_Table extends Widget_Base {
 											'input_value'  => $cart_item['quantity'],
 											'max_value'    => $max_quantity,
 											'min_value'    => $min_quantity,
-											'product_name' => $_product->get_name(),
+											'product_name' => $product_name,
 										),
 										$_product,
 										false
@@ -255,28 +269,38 @@ class Cart_Table extends Widget_Base {
 
 					<?php do_action( 'woocommerce_cart_contents' ); ?>
 
+					<tr class="wd-cart-action-row">
+						<td colspan="12" class="actions">
+							<div class="cart-actions">
+								<?php if ( wc_coupons_enabled() ) : ?>
+									<div class="coupon wd-coupon-form">
+										<label for="coupon_code">
+											<?php esc_html_e( 'Coupon:', 'woocommerce' ); ?>
+										</label>
+										<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Coupon code', 'woocommerce' ); ?>" />
+										<button type="submit" class="button<?php echo esc_attr( function_exists( 'wc_wp_theme_get_element_class_name' ) && wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>">
+											<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>
+										</button>
+										<?php do_action( 'woocommerce_cart_coupon' ); ?>
+									</div>
+								<?php endif; ?>
+
+								<button type="submit" class="button<?php echo esc_attr( $update_cart_btn_classes ); ?>" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'woocommerce' ); ?>">
+									<?php esc_html_e( 'Update cart', 'woocommerce' ); ?>
+								</button>
+
+								<?php do_action( 'woocommerce_cart_actions' ); ?>
+
+								<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>
+							</div>
+						</td>
+					</tr>
+
 					<?php do_action( 'woocommerce_after_cart_contents' ); ?>
 					</tbody>
 				</table>
 
-				<div class="row cart-actions">
-					<div class="col-12 order-last order-md-first col-md">
-						<?php if ( wc_coupons_enabled() ) : ?>
-							<div class="coupon">
-								<label for="coupon_code"><?php esc_html_e( 'Coupon:', 'woocommerce' ); ?></label> <input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Coupon code', 'woocommerce' ); ?>" /> <button type="submit" class="button<?php echo esc_attr( function_exists( 'wc_wp_theme_get_element_class_name') && wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>" name="apply_coupon" value="<?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?>"><?php esc_attr_e( 'Apply coupon', 'woocommerce' ); ?></button>
-								<?php do_action( 'woocommerce_cart_coupon' ); ?>
-							</div>
-						<?php endif; ?>
-					</div>
-
-					<div class="col-12 order-first order-md-last col-md-auto">
-						<button type="submit" class="button" name="update_cart" value="<?php esc_attr_e( 'Update cart', 'woocommerce' ); ?>"><?php esc_html_e( 'Update cart', 'woocommerce' ); ?></button>
-
-						<?php do_action( 'woocommerce_cart_actions' ); ?>
-
-						<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce' ); ?>
-					</div>
-				</div>
+				<?php do_action( 'woocommerce_after_cart_table' ); ?>
 			</div>
 		</form>
 		<?php

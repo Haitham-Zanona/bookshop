@@ -8,6 +8,8 @@
 namespace XTS\WC_Wishlist\Backend\List_Table;
 
 use WP_List_Table;
+use XTS\WC_Wishlist\Sends_About_Products_Wishlists;
+use XTS\WC_Wishlist\Sends_Promotional;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 'No direct script access allowed' );
@@ -36,6 +38,19 @@ class Popular_Products extends WP_List_Table {
 	}
 
 	/**
+	 * Prints checkbox column.
+	 *
+	 * @param array $item Item to use to print record.
+	 * @return string
+	 */
+	public function column_cb( $item ) {
+		return sprintf(
+			'<input type="checkbox" name="popular_products[]" value="%1$s" />',
+			$item['product_id']
+		);
+	}
+
+	/**
 	 * Print column for product name
 	 *
 	 * @param array $item Item for the current record.
@@ -54,7 +69,7 @@ class Popular_Products extends WP_List_Table {
 		$product_name     = $product->get_name();
 
 		$actions     = array(
-			'product_id'   => $item['product_id'],
+			'product_id'   => sprintf( 'ID: %s', esc_html( $item['product_id'] ) ),
 			'edit'         => sprintf( '<a href="%s" title="%s">%s</a>', $product_edit_url, esc_html__( 'Edit this item', 'woodmart' ), esc_html__( 'Edit', 'woodmart' ) ),
 			'view_users'   => sprintf(
 				'<a href="%s" title="%s">%s</a>',
@@ -140,15 +155,56 @@ class Popular_Products extends WP_List_Table {
 	}
 
 	/**
+	 * Print column for Create promotion button.
+	 *
+	 * @param array $item Item for the current record.
+	 * @return string
+	 */
+	public function column_create_promotion( $item ) {
+		return sprintf(
+			'<a href="%s" class="xts-btn xts-color-primary wd-create-promotion">%s</a>',
+			esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'page'       => 'xts-wishlist-settings-page',
+							'tab'        => 'xts-popular-products-in-wishlist',
+							'product_id' => $item['product_id'],
+						),
+						admin_url( 'edit.php?post_type=product' )
+					),
+					'woodmart_send_promotion_email'
+				)
+			),
+			esc_html__( 'Create promotion', 'woodmart' )
+		);
+	}
+
+	/**
 	 * Override the parent columns method. Defines the columns to use in your listing table.
 	 *
 	 * @return array
 	 */
 	public function get_columns() {
 		return array(
-			'name'     => esc_html__( 'Name', 'woodmart' ),
-			'category' => esc_html__( 'Category', 'woodmart' ),
-			'count'    => esc_html__( 'Wishlist count', 'woodmart' ),
+			'cb'               => '<input type="checkbox" />',
+			'name'             => esc_html__( 'Name', 'woodmart' ),
+			'category'         => esc_html__( 'Category', 'woodmart' ),
+			'count'            => esc_html__( 'Wishlist count', 'woodmart' ),
+			'create_promotion' => sprintf(
+				'%s<div class="xts-hint">
+						<div class="xts-tooltip xts-top xts-top-left"><div class="xts-tooltip-inner">
+							%s
+						</div>
+					</div>',
+				esc_html__( 'Create promotion', 'woodmart' ),
+				sprintf(
+					'%s <a href="%s">%s</a>.',
+					esc_html__( 'When you create a promotion, all customers that have a corresponding product in their wishlist will get an email. You can customize this email content in', 'woodmart' ),
+					esc_url( admin_url( 'admin.php?page=wc-settings&tab=email&section=woodmart_promotional_email' ) ),
+					esc_html__( 'WooCommerce -> Settings -> Emails -> Wishlist “Promotional” email', 'woodmart' )
+				)
+			),
 		);
 	}
 
@@ -171,6 +227,55 @@ class Popular_Products extends WP_List_Table {
 			'name'  => array( 'name', false ),
 			'count' => array( 'count', false ),
 		);
+	}
+
+	/**
+	 * Sets bulk actions for table.
+	 *
+	 * @return array Array of available actions.
+	 */
+	public function get_bulk_actions() {
+		return array(
+			'create-promotion' => esc_html__( 'Create promotion', 'woodmart' ),
+		);
+	}
+
+	/**
+	 * Delete wishlist on bulk action.
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function process_bulk_action() {
+		if ( ! isset( $_REQUEST['_wpnonce'] ) || ! wp_verify_nonce( $_REQUEST['_wpnonce'], 'bulk-' . $this->_args['plural'] ) ) { // phpcs:ignore.
+			return;
+		}
+
+		// Detect when a bulk action is being triggered...
+		$popular_products_ids = isset( $_REQUEST['popular_products'] ) ? array_map( 'intval', (array) $_REQUEST['popular_products'] ) : false;
+
+		if ( 'create-promotion' === $this->current_action() && ! empty( $popular_products_ids ) ) {
+			if ( ! woodmart_check_this_email_notification_is_enabled( 'woocommerce_woodmart_promotional_email_settings', 'yes' ) ) {
+				return;
+			}
+
+			$users_products = array();
+
+			foreach ( $popular_products_ids as $product_id ) {
+				foreach ( array_unique( self::get_user_ids_by_product_id( $product_id ) ) as $user_id ) {
+					$users_products[$user_id][] = $product_id;
+				}
+			}
+
+			try {
+				Sends_Promotional::update_promotion_data( $users_products );
+			} catch ( Exception $e ) {
+				throw( $e );
+			}
+
+			wp_safe_redirect( admin_url( '/edit.php?post_type=product&page=xts-wishlist-settings-page&tab=xts-popular-products-in-wishlist' ) );
+			die();
+		}
 	}
 
 	/**
@@ -202,6 +307,8 @@ class Popular_Products extends WP_List_Table {
 
 		$this->_column_headers = array( $columns, $hidden, $sortable );
 		$this->items           = $data;
+
+		$this->process_bulk_action();
 	}
 
 	/**
@@ -252,6 +359,40 @@ class Popular_Products extends WP_List_Table {
 		}
 
 		return wp_cache_get( 'popular_products_list_table' );
+	}
+
+	/**
+	 * Get user id`s list by product id.
+	 *
+	 * @param int|string $product_id Product id.
+	 * @return array
+	 */
+	public static function get_user_ids_by_product_id( $product_id ) {
+		global $wpdb;
+
+		if ( $product_id ) {
+			$where_query[] = $wpdb->prepare( "$wpdb->woodmart_products_table.product_id = %d", $product_id );
+		}
+
+		$where_query_text = ! empty( $where_query ) ? ' WHERE ' . implode( ' AND ', $where_query ) : '';
+
+		$user_ids_from_db = $wpdb->get_results( //phpcs:ignore;
+			"SELECT $wpdb->woodmart_wishlists_table.user_id
+				FROM $wpdb->woodmart_wishlists_table
+			        INNER JOIN $wpdb->woodmart_products_table
+						ON $wpdb->woodmart_wishlists_table.ID = $wpdb->woodmart_products_table.wishlist_id"
+			. $where_query_text .
+			";",
+			ARRAY_A
+		);
+
+		$user_ids = array();
+
+		foreach ( $user_ids_from_db as $user_ids_list ) {
+			$user_ids[] = $user_ids_list['user_id'];
+		}
+
+		return $user_ids;
 	}
 
 	/**
@@ -325,18 +466,6 @@ class Popular_Products extends WP_List_Table {
 			array(),
 			WOODMART_VERSION
 		);
-
-		wp_enqueue_script(
-			'xts-admin-wishlist',
-			WOODMART_ASSETS . '/js/wishlist.js',
-			array(
-				'jquery',
-				'jquery-ui-datepicker',
-				'select2',
-			),
-			WOODMART_VERSION,
-			true
-		);
 		?>
 		<select
 			id="_product_id"
@@ -356,7 +485,7 @@ class Popular_Products extends WP_List_Table {
 			name="_from"
 			class="date-picker"
 			value="<?php echo esc_attr( $from ); ?>"
-			placeholder="<?php esc_html_e( 'From:', 'woodmart' ); ?>"
+			placeholder="<?php esc_attr_e( 'From:', 'woodmart' ); ?>"
 			style="min-width: 200px; vertical-align:middle;"
 		/>
 		<input
@@ -364,7 +493,7 @@ class Popular_Products extends WP_List_Table {
 			name="_to"
 			class="date-picker"
 			value="<?php echo esc_attr( $to ); ?>"
-			placeholder="<?php esc_html_e( 'To:', 'woodmart' ); ?>"
+			placeholder="<?php esc_attr_e( 'To:', 'woodmart' ); ?>"
 			style="min-width: 200px; vertical-align:middle;"
 		/>
 		<?php

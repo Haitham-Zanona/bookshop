@@ -15,12 +15,15 @@
 			var $this  = $(this);
 			var $inner = $this.find('.wd-tab-content-wrapper');
 			var cache  = [];
+			var $cloneContent = $inner.find('.wd-products-element').clone().removeClass('wd-active wd-in');
 
-			if ($inner.find('.owl-carousel').length < 1) {
-				cache[0] = {
-					html: $inner.html()
-				};
+			if ( $cloneContent.find('.wd-carousel') ) {
+				$cloneContent.find('.wd-carousel').removeClass('wd-initialized');
 			}
+
+			cache[0] = {
+				html: $cloneContent.prop('outerHTML')
+			};
 
 			$this.find('.products-tabs-title li').on('click', function(e) {
 				e.preventDefault();
@@ -34,16 +37,27 @@
 				}
 				process = true;
 
+				$inner.find('.wd-products-element').removeClass('wd-in');
+
+				setTimeout(function() {
+					$inner.find('.wd-products-element').addClass('wd-active');
+				}, 100);
+
 				loadTab(atts, index, $inner, $this, cache, function(data) {
 					if (data.html) {
 						woodmartThemeModule.removeDuplicatedStylesFromHTML(data.html, function(html) {
-							$inner.html(html);
+							$inner.find('.wd-products-element').replaceWith(html);
 
-							$inner.removeClass('loading').parent().removeClass('element-loading');
+							$inner.find('.wd-products-element').addClass('wd-active');
+
+							setTimeout(function() {
+								$inner.find('.wd-products-element').addClass('wd-in');
+
+								woodmartThemeModule.$document.trigger('wdProductsTabsLoaded');
+								woodmartThemeModule.$document.trigger('wood-images-loaded');
+							}, 200);
+
 							$this.removeClass('loading');
-
-							woodmartThemeModule.$document.trigger('wdProductsTabsLoaded');
-							woodmartThemeModule.$document.trigger('wood-images-loaded');
 						});
 					}
 				});
@@ -55,20 +69,19 @@
 		});
 
 		var loadTab = function(atts, index, holder, btn, cache, callback) {
+			var $loader = holder.find('> .wd-sticky-loader');
 			btn.parent().find('.wd-active').removeClass('wd-active');
 			btn.addClass('wd-active');
 
 			if (cache[index]) {
-				holder.addClass('loading');
 				setTimeout(function() {
 					process = false;
 					callback(cache[index]);
-					holder.removeClass('loading');
 				}, 300);
 				return;
 			}
 
-			holder.addClass('loading').parent().addClass('element-loading');
+			$loader.addClass('wd-loading');
 			btn.addClass('loading');
 
 			$.ajax({
@@ -89,6 +102,7 @@
 				},
 				complete: function() {
 					process = false;
+					$loader.removeClass('wd-loading');
 				}
 			});
 		};

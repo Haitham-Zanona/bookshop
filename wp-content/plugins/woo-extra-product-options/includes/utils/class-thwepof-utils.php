@@ -36,17 +36,21 @@ class THWEPOF_Utils {
 	}
 
 	public static function save_sections($sections){
-		$result = update_option(self::OPTION_KEY_CUSTOM_SECTIONS, $sections);
+		if (apply_filters('thwepof_clear_cache_before_update', false) || class_exists('Nawawi\\DocketCache\\Plugin') ) {
+			self::clear_cache(self::OPTION_KEY_CUSTOM_SECTIONS, 'options');
+		}
+
+		$result = update_option(self::OPTION_KEY_CUSTOM_SECTIONS, $sections, 'no');
 		return $result;
 	}
 
 	public static function save_section_hook_map($section_hook_map){
-		$result = update_option(self::OPTION_KEY_SECTION_HOOK_MAP, $section_hook_map);
+		$result = update_option(self::OPTION_KEY_SECTION_HOOK_MAP, $section_hook_map, 'no');
 		return $result;
 	}
 
 	public static function save_name_title_map($name_title_map){
-		$result = update_option(self::OPTION_KEY_NAME_TITLE_MAP, $name_title_map);
+		$result = update_option(self::OPTION_KEY_NAME_TITLE_MAP, $name_title_map, 'no');
 		return $result;
 	}
 
@@ -188,6 +192,10 @@ class THWEPOF_Utils {
 		}
 	}
 
+	public static function clear_cache($key, $group){
+		wp_cache_delete($key, $group);
+	}
+
 	/*public static function get_option_display_value($name, $value, $data){
 		$type = false;
 		$options = false;
@@ -230,6 +238,9 @@ class THWEPOF_Utils {
 
 	public static function get_product_id($product){
 		$product_id = '';
+		if (!is_object($product) || !($product instanceof WC_Product)) {
+			return $product_id;
+		}
 		if(self::woo_version_check()){
 			$product_id = $product->get_id();
 		}else{
@@ -240,6 +251,9 @@ class THWEPOF_Utils {
 
 	public static function get_product_type($product){
 		$product_type = '';
+		if (!is_object($product) || !($product instanceof WC_Product)) {
+			return $product_type;
+		}
 		if(self::woo_version_check()){
 			$product_type = $product->get_type();
 		}else{
@@ -359,13 +373,13 @@ class THWEPOF_Utils {
 
 	public static function sort_sections(&$sections){
 		if(is_array($sections) && !empty($sections)){
-			self::stable_uasort($sections, array('self', 'sort_sections_by_order'));
+			self::stable_uasort($sections, array(__CLASS__, 'sort_sections_by_order'));
 		}
 	}
 
 	public static function sort_hooked_sections(&$sections){
 		if(is_array($sections) && !empty($sections)){
-			self::stable_uasort($sections, array('self', 'sort_sections_by_order'));
+			self::stable_uasort($sections, array(__CLASS__, 'sort_sections_by_order'));
 		}
 	}
 
@@ -396,7 +410,7 @@ class THWEPOF_Utils {
 			return;
 		}
 
-		$halfway = count($array) / 2;
+		$halfway = intdiv(count($array), 2);
 		$array1 = array_slice($array, 0, $halfway, TRUE);
 		$array2 = array_slice($array, $halfway, NULL, TRUE);
 

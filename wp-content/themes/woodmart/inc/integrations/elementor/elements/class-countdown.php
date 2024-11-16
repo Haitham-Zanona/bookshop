@@ -135,6 +135,7 @@ class Countdown extends Widget_Base {
 					'standard'    => esc_html__( 'Standard', 'woodmart' ),
 					'transparent' => esc_html__( 'Transparent', 'woodmart' ),
 					'active'      => esc_html__( 'Primary color', 'woodmart' ),
+					'simple'      => esc_html__( 'Simple', 'woodmart' ),
 				],
 				'default' => 'standard',
 			]
@@ -224,13 +225,13 @@ class Countdown extends Widget_Base {
 						'wd-countdown-timer',
 						'color-scheme-' . $settings['woodmart_color_scheme'],
 						'text-' . $settings['align'],
-						'timer-size-' . $settings['size'],
-						'timer-style-' . $settings['style'],
 					],
 				],
 				'timer'   => [
 					'class'         => [
 						'wd-timer',
+						'timer-size-' . $settings['size'],
+						'timer-style-' . $settings['style'],
 						woodmart_get_old_classes( ' woodmart-timer' ),
 					],
 					'data-end-date' => [
@@ -254,26 +255,34 @@ class Countdown extends Widget_Base {
 		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
 			<div <?php echo $this->get_render_attribute_string( 'timer' ); ?>>
 				<span class="countdown-days">
-					0
-					<span>
+					<span class="wd-timer-value">
+						0
+					</span>
+					<span class="wd-timer-text">
 						<?php esc_html_e( 'days', 'woodmart' ); ?>
 					</span>
 				</span>
 				<span class="countdown-hours">
-					00
-					<span>
+					<span class="wd-timer-value">
+						00
+					</span>
+					<span class="wd-timer-text">
 						<?php esc_html_e( 'hr', 'woodmart' ); ?>
 					</span>
 				</span>
 				<span class="countdown-min">
-					00
-					<span>
+					<span class="wd-timer-value">
+						00
+					</span>
+					<span class="wd-timer-text">
 						<?php esc_html_e( 'min', 'woodmart' ); ?>
 					</span>
 				</span>
 				<span class="countdown-sec">
-					00
-					<span>
+					<span class="wd-timer-value">
+						00
+					</span>
+					<span class="wd-timer-text">
 						<?php esc_html_e( 'sc', 'woodmart' ); ?>
 					</span>
 				</span>

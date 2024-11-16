@@ -7,6 +7,8 @@
 			$wrapper.find('.wd-more-cat-btn a').on('click', function(e) {
 				e.preventDefault();
 				$wrapper.toggleClass('wd-show-cat');
+
+				woodmartThemeModule.$document.trigger('wood-images-loaded');
 			});
 		});
 	};

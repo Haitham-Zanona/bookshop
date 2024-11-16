@@ -178,8 +178,32 @@ class Search extends Widget_Base {
 						'image' => WOODMART_ASSETS_IMAGES . '/header-builder/search/with-bg-2.jpg',
 						'style' => 'col-2',
 					),
+					'4'         => array(
+						'value' => '4',
+						'title' => esc_html__( 'Fourth', 'woodmart' ),
+						'image' => WOODMART_ASSETS_IMAGES . '/header-builder/search/fourth.jpg',
+					),
 				),
 				'default' => 'default',
+			)
+		);
+
+		$this->add_responsive_control(
+			'form_height',
+			array(
+				'label'      => esc_html__( 'Form height', 'woodmart' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px', '%' ),
+				'range'      => array(
+					'px' => array(
+						'min'  => 30,
+						'max'  => 100,
+						'step' => 1,
+					),
+				),
+				'selectors'  => array(
+					'{{WRAPPER}} .searchform' => '--wd-form-height: {{SIZE}}{{UNIT}};',
+				),
 			)
 		);
 

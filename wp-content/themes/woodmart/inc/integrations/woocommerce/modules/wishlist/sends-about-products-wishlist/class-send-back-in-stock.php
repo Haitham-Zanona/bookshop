@@ -79,7 +79,7 @@ class Sends_Back_In_Stock extends Singleton {
 			}
 		}
 
-		update_option( 'woodmart_wishlist_products_back_in_stock', $products_back_in_stock );
+		update_option( 'woodmart_wishlist_products_back_in_stock', $products_back_in_stock, false );
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Sends_Back_In_Stock extends Singleton {
 			$products_back_in_stock[ $user_id ][] = $product_id;
 		}
 
-		update_option( 'woodmart_wishlist_products_back_in_stock', $products_back_in_stock );
+		update_option( 'woodmart_wishlist_products_back_in_stock', $products_back_in_stock, false );
 	}
 
 	/**
@@ -157,7 +157,7 @@ class Sends_Back_In_Stock extends Singleton {
 					unset( $product_ids_back_in_stock[ $user_id ] );
 				}
 
-				update_option( 'woodmart_wishlist_products_back_in_stock', $product_ids_back_in_stock );
+				update_option( 'woodmart_wishlist_products_back_in_stock', $product_ids_back_in_stock, false );
 			}
 		}
 	}

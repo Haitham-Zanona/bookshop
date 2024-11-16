@@ -7,6 +7,8 @@
 
 use XTS\Modules\Checkout_Order_Table;
 use XTS\Modules\Layouts\Main;
+use Automattic\WooCommerce\Internal\Orders\OrderAttributionController;
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -46,6 +48,15 @@ if ( ! function_exists( 'woodmart_shortcode_checkout_order_review' ) ) {
 		?>
 		<div class="wd-order-table wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
 			<?php woocommerce_order_review(); ?>
+			
+			<?php
+			// Render order attribution inputs if feature is enabled.
+			if ( FeaturesUtil::feature_is_enabled( 'order_attribution' ) ) {
+				$order_attribution_controller = new OrderAttributionController();
+
+				$order_attribution_controller->stamp_html_element();
+			}
+			?>
 		</div>
 		<?php
 

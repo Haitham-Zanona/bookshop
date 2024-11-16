@@ -18,12 +18,13 @@
 			closeBtnInside : false,
 			showCloseBtn   : false,
 			enableEscapeKey: false,
-			removalDelay   : 500,
+			removalDelay   : 600,
 			tClose         : woodmart_settings.close,
 			tLoading       : woodmart_settings.loading,
+			fixedContentPos: true,
 			callbacks      : {
 				beforeOpen: function() {
-					this.st.mainClass = 'mfp-move-horizontal wd-promo-popup-wrapper';
+					this.wrap.addClass('wd-popup-slide-from-left');
 				}
 			}
 		});

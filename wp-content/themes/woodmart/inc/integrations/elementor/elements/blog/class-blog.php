@@ -91,6 +91,15 @@ class Blog extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'post_type',
 			[
 				'label'       => esc_html__( 'Data source', 'woodmart' ),
@@ -249,6 +258,7 @@ class Blog extends Widget_Base {
 					'mask'         => esc_html__( 'Mask on image', 'woodmart' ),
 					'meta-image'   => esc_html__( 'Meta on image', 'woodmart' ),
 					'carousel'     => esc_html__( 'Carousel', 'woodmart' ),
+					'list'         => esc_html__( 'List', 'woodmart' ),
 				),
 			]
 		);
@@ -311,18 +321,21 @@ class Blog extends Widget_Base {
 						'step' => 1,
 					],
 				],
+				'devices'     => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'     => 'wd-hide-custom-breakpoints',
 				'condition'   => [
 					'blog_design' => [ 'masonry', 'mask', 'meta-image' ],
 				],
 			]
 		);
 
-		$this->add_control(
+		$this->add_responsive_control(
 			'blog_spacing',
 			[
 				'label'     => esc_html__( 'Space between', 'woodmart' ),
 				'type'      => Controls_Manager::SELECT,
 				'options'   => [
+					'' => esc_html__( 'Inherit from Theme Settings', 'woodmart' ),
 					0  => esc_html__( '0 px', 'woodmart' ),
 					2  => esc_html__( '2 px', 'woodmart' ),
 					6  => esc_html__( '6 px', 'woodmart' ),
@@ -330,7 +343,9 @@ class Blog extends Widget_Base {
 					20 => esc_html__( '20 px', 'woodmart' ),
 					30 => esc_html__( '30 px', 'woodmart' ),
 				],
-				'default'   => 30,
+				'default'   => '',
+				'devices'   => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'   => 'wd-hide-custom-breakpoints',
 				'condition' => [
 					'blog_design' => [ 'mask', 'masonry', 'carousel', 'meta-image' ],
 				],
@@ -361,131 +376,6 @@ class Blog extends Widget_Base {
 				'condition' => [
 					'blog_design!' => 'carousel',
 				],
-			]
-		);
-
-		$this->end_controls_section();
-
-		/**
-		 * Carousel settings.
-		 */
-		$this->start_controls_section(
-			'carousel_style_section',
-			[
-				'label'     => esc_html__( 'Carousel', 'woodmart' ),
-				'tab'       => Controls_Manager::TAB_STYLE,
-				'condition' => [
-					'blog_design' => 'carousel',
-				],
-			]
-		);
-
-		$this->add_responsive_control(
-			'slides_per_view',
-			[
-				'label'       => esc_html__( 'Slides per view', 'woodmart' ),
-				'description' => esc_html__( 'Set numbers of slides you want to display at the same time on slider\'s container for carousel mode.', 'woodmart' ),
-				'type'        => Controls_Manager::SLIDER,
-				'default'     => [
-					'size' => 3,
-				],
-				'size_units'  => '',
-				'range'       => [
-					'px' => [
-						'min'  => 1,
-						'max'  => 4,
-						'step' => 1,
-					],
-				],
-			]
-		);
-
-		$this->add_control(
-			'scroll_per_page',
-			[
-				'label'        => esc_html__( 'Scroll per page', 'woodmart' ),
-				'description'  => esc_html__( 'Scroll per page not per item. This affect next/prev buttons and mouse/touch dragging.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'yes',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			]
-		);
-
-		$this->add_control(
-			'hide_pagination_control',
-			[
-				'label'        => esc_html__( 'Hide pagination control', 'woodmart' ),
-				'description'  => esc_html__( 'If "YES" pagination control will be removed.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			]
-		);
-
-		$this->add_control(
-			'hide_prev_next_buttons',
-			[
-				'label'        => esc_html__( 'Hide prev/next buttons', 'woodmart' ),
-				'description'  => esc_html__( 'If "YES" prev/next control will be removed', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			]
-		);
-
-		$this->add_control(
-			'wrap',
-			[
-				'label'        => esc_html__( 'Slider loop', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			]
-		);
-
-		$this->add_control(
-			'autoplay',
-			[
-				'label'        => esc_html__( 'Slider autoplay', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			]
-		);
-
-		$this->add_control(
-			'speed',
-			[
-				'label'       => esc_html__( 'Slider speed', 'woodmart' ),
-				'description' => esc_html__( 'Duration of animation between slides (in ms)', 'woodmart' ),
-				'default'     => '5000',
-				'type'        => Controls_Manager::NUMBER,
-				'condition'   => [
-					'autoplay' => 'yes',
-				],
-			]
-		);
-
-		$this->add_control(
-			'scroll_carousel_init',
-			[
-				'label'        => esc_html__( 'Init carousel on scroll', 'woodmart' ),
-				'description'  => esc_html__( 'This option allows you to init carousel script only when visitor scroll the page to the slider. Useful for performance optimization.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
 			]
 		);
 

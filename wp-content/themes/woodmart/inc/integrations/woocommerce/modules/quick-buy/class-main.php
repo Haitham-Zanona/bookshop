@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Quick_Buy;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 
 /**
@@ -49,7 +49,7 @@ class Main extends Singleton {
 			array(
 				'id'          => 'buy_now_enabled',
 				'name'        => esc_html__( 'Buy now button', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'buy-now-button.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'buy-now-button.jpg" alt="">', true ),
 				'description' => wp_kses( __( 'Add an extra button next to the “Add to cart” that will add the product to the cart and redirect it to the cart or checkout. Read more information in our <a href="https://xtemos.com/docs-topic/buy-now-button/">documentation</a>.', 'woodmart' ), 'default' ),
 				'type'        => 'switcher',
 				'section'     => 'single_product_buy_now',
@@ -89,6 +89,8 @@ class Main extends Singleton {
 
 	/**
 	 * Output quick buy button.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function output_quick_buy_button() {
 		if ( ! is_singular( 'product' ) && ! woodmart_loop_prop( 'is_quick_view' ) || ! woodmart_get_opt( 'buy_now_enabled' ) ) {

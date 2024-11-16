@@ -24,7 +24,7 @@ if ( ! function_exists( 'woodmart_add_section_class_if_content_width' ) ) {
 	function woodmart_add_section_class_if_content_width( $widget ) {
 		$settings = $widget->get_settings_for_display();
 
-		if ( isset( $settings['content_width'] ) && isset( $settings['content_width']['size'] ) && ! $settings['content_width']['size'] ) {
+		if ( ! isset( $settings['content_width'] ) || ( isset( $settings['content_width']['size'] ) && ! $settings['content_width']['size'] ) ) {
 			$widget->add_render_attribute( '_wrapper', 'class', 'wd-negative-gap' );
 		}
 	}
@@ -67,9 +67,9 @@ if ( ! function_exists( 'woodmart_add_section_full_width_control' ) ) {
 				'label'        => esc_html__( 'Section stretch CSS', 'woodmart' ),
 				'description'  => esc_html__( 'Enable this option instead of native Elementor\'s one to stretch section with CSS and not with JS.', 'woodmart' ),
 				'type'         => Controls_Manager::SELECT,
-				'default'      => 'disabled',
+				'default'      => '',
 				'options'      => array(
-					'disabled'        => esc_html__( 'Disabled', 'woodmart' ),
+					''                => esc_html__( 'Disabled', 'woodmart' ),
 					'stretch'         => esc_html__( 'Stretch section', 'woodmart' ),
 					'stretch-content' => esc_html__( 'Stretch section and content', 'woodmart' ),
 				),
@@ -94,6 +94,10 @@ if ( ! function_exists( 'woodmart_override_section_margin_control' ) ) {
 	 */
 	function woodmart_override_section_margin_control( $control_stack ) {
 		$control = Plugin::instance()->controls_manager->get_control_from_stack( $control_stack->get_unique_name(), 'margin' );
+
+		if ( is_wp_error( $control ) ) {
+			return;
+		}
 
 		$control['allowed_dimensions'] = [ 'top', 'right', 'bottom', 'left' ];
 		$control['placeholder']        = [

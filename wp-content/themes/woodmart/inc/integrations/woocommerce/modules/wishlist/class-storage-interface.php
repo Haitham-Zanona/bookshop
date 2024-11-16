@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Storage interface.
  *
+ * @codeCoverageIgnore
  * @since 1.0.0
  */
 interface Storage {

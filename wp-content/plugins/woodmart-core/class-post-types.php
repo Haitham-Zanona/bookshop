@@ -42,6 +42,8 @@ class Post_Types {
 		add_action( 'init', array( $this, 'register_layout' ), 1 );
 		add_action( 'init', array( $this, 'linked_variations' ), 1 );
 		add_action( 'init', array( $this, 'bought_together' ), 1 );
+		add_action( 'init', array( $this, 'register_discounts' ), 1 );
+		add_action( 'init', array( $this, 'register_free_gifts' ), 1 );
 	}
 
 	/**
@@ -56,6 +58,8 @@ class Post_Types {
 					'name'          => esc_html__( 'Layouts', 'woodmart' ),
 					'singular_name' => esc_html__( 'Layout', 'woodmart' ),
 					'menu_name'     => esc_html__( 'Layouts', 'woodmart' ),
+					'add_new'       => esc_html__( 'Add New', 'woodmart' ),
+					'add_new_item'  => esc_html__( 'Add New', 'woodmart' ),
 				),
 				'supports'           => array( 'title', 'editor' ),
 				'hierarchical'       => false,
@@ -85,6 +89,8 @@ class Post_Types {
 					'name'          => esc_html__( 'Linked Variations', 'woodmart' ),
 					'singular_name' => esc_html__( 'Linked Variations', 'woodmart' ),
 					'menu_name'     => esc_html__( 'Linked Variations', 'woodmart' ),
+					'add_new'       => esc_html__( 'Add New', 'woodmart' ),
+					'add_new_item'  => esc_html__( 'Add New', 'woodmart' ),
 				),
 				'supports'           => array( 'title' ),
 				'hierarchical'       => false,
@@ -92,6 +98,7 @@ class Post_Types {
 				'show_in_menu'       => 'edit.php?post_type=product',
 				'publicly_queryable' => false,
 				'show_in_rest'       => true,
+				'capability_type'    => 'product',
 			)
 		);
 	}
@@ -112,6 +119,7 @@ class Post_Types {
 					'name'          => esc_html__( 'Frequently Bought Together', 'woodmart' ),
 					'singular_name' => esc_html__( 'Frequently Bought Together', 'woodmart' ),
 					'menu_name'     => esc_html__( 'Frequently Bought Together', 'woodmart' ),
+					'add_new'       => esc_html__( 'Add New', 'woodmart' ),
 					'add_new_item'  => esc_html__( 'Add New', 'woodmart' ),
 				),
 				'supports'           => array( 'title' ),
@@ -120,6 +128,68 @@ class Post_Types {
 				'show_in_menu'       => 'edit.php?post_type=product',
 				'publicly_queryable' => false,
 				'show_in_rest'       => true,
+				'capability_type'    => 'product',
+			)
+		);
+	}
+
+	/**
+	 * Register Dynamic Pricing & Discounts post type.
+	 */
+	public function register_discounts() {
+		if ( ! function_exists( 'woodmart_get_opt' ) || ! woodmart_get_opt( 'discounts_enabled', 0 ) ) {
+			return;
+		}
+
+		register_post_type(
+			'wd_woo_discounts',
+			array(
+				'label'              => esc_html__( 'Dynamic Discounts', 'woodmart' ),
+				'labels'             => array(
+					'name'          => esc_html__( 'Dynamic Discounts', 'woodmart' ),
+					'singular_name' => esc_html__( 'Dynamic Discount', 'woodmart' ),
+					'menu_name'     => esc_html__( 'Dynamic Discounts', 'woodmart' ),
+					'add_new'       => esc_html__( 'Add New', 'woodmart' ),
+					'add_new_item'  => esc_html__( 'Add New', 'woodmart' ),
+				),
+				'supports'           => array( 'title' ),
+				'hierarchical'       => false,
+				'public'             => true,
+				'show_in_menu'       => 'edit.php?post_type=product',
+				'publicly_queryable' => false,
+				'show_in_rest'       => true,
+				'capability_type'    => 'product',
+			)
+		);
+	}
+
+	/**
+	 * Register Free gifts post type.
+	 */
+	public function register_free_gifts() {
+		if ( ! function_exists( 'woodmart_get_opt' ) || ! woodmart_get_opt( 'free_gifts_enabled', 0 ) ) {
+			return;
+		}
+
+		register_post_type(
+			'wd_woo_free_gifts',
+			array(
+				'label'              => esc_html__( 'Free Gifts', 'woodmart' ),
+				'labels'             => array(
+					'name'          => esc_html__( 'Free Gifts', 'woodmart' ),
+					'singular_name' => esc_html__( 'Free Gift', 'woodmart' ),
+					'menu_name'     => esc_html__( 'Free Gifts', 'woodmart' ),
+					'add_new'       => esc_html__( 'Add New', 'woodmart' ),
+					'add_new_item'  => esc_html__( 'Add New Gift', 'woodmart' ),
+					'edit_item'     => esc_html__( 'Edit Gift Rule', 'textdomain' ),
+				),
+				'supports'           => array( 'title' ),
+				'hierarchical'       => false,
+				'public'             => true,
+				'show_in_menu'       => 'edit.php?post_type=product',
+				'publicly_queryable' => false,
+				'show_in_rest'       => true,
+				'capability_type'    => 'product',
 			)
 		);
 	}

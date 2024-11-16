@@ -1,0 +1,50 @@
+2021-10-30T04:10:46+00:00 CRITICAL Maximum execution time of 900 seconds exceeded in C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\includes\onedrive\client.php on line 97
+
+2021-10-30T04:15:26+00:00 CRITICAL Maximum execution time of 900 seconds exceeded in C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\includes\onedrive\client.php on line 97
+
+2021-10-30T04:23:16+00:00 CRITICAL Uncaught TypeError: fclose(): Argument #1 ($stream) must be of type resource, bool given in C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php:3574
+Stack trace:
+#0 C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php(3574): fclose(false)
+#1 C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php(2621): UpdraftPlus->backup_finish(true, false)
+#2 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(303): UpdraftPlus->backup_resume(3, '8e374dc35879')
+#3 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(327): WP_Hook->apply_filters('', Array)
+#4 C:\xampp\htdocs\bookshop\wp-includes\plugin.php(518): WP_Hook->do_action(Array)
+#5 C:\xampp\htdocs\bookshop\wp-cron.php(138): do_action_ref_array('updraft_backup_...', Array)
+#6 {main}
+  thrown in C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php on line 3574
+
+2021-10-30T23:57:40+00:00 CRITICAL Uncaught TypeError: method_exists(): Argument #1 ($object_or_class) must be of type object|string, array given in C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php:157
+Stack trace:
+#0 C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php(157): method_exists(Array, 'getId')
+#1 C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\MailCatcherV6.php(167): WPMailSMTP\Providers\Gmail\Mailer->is_email_sent()
+#2 C:\xampp\htdocs\bookshop\wp-includes\pluggable.php(542): WPMailSMTP\MailCatcherV6->send()
+#3 C:\xampp\htdocs\bookshop\wp-admin\includes\class-wp-automatic-updater.php(1264): wp_mail(Array, '[bookshop] Some...', 'Howdy! Themes f...', Array)
+#4 C:\xampp\htdocs\bookshop\wp-admin\includes\class-wp-automatic-updater.php(976): WP_Automatic_Updater->send_plugin_theme_email('fail', Array, Array)
+#5 C:\xampp\htdocs\bookshop\wp-admin\includes\class-wp-automatic-updater.php(546): WP_Automatic_Updater->after_plugin_theme_update(Array)
+#6 C:\xampp\htdocs\bookshop\wp-includes\update.php(729): WP_Automatic_Updater->run()
+#7 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(303): wp_maybe_auto_update('')
+#8 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(327): WP_Hook->apply_filters('', Array)
+#9 C:\xampp\htdocs\bookshop\wp-includes\plugin.php(470): WP_Hook->do_action(Array)
+#10 C:\xampp\htdocs\bookshop\wp-includes\update.php(256): do_action('wp_maybe_auto_u...')
+#11 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(303): wp_version_check()
+#12 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(327): WP_Hook->apply_filters('', Array)
+#13 C:\xampp\htdocs\bookshop\wp-includes\plugin.php(518): WP_Hook->do_action(Array)
+#14 C:\xampp\htdocs\bookshop\wp-cron.php(138): do_action_ref_array('wp_version_chec...', Array)
+#15 {main}
+  thrown in C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php on line 157
+
+2021-10-30T23:59:30+00:00 CRITICAL Uncaught TypeError: method_exists(): Argument #1 ($object_or_class) must be of type object|string, array given in C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php:157
+Stack trace:
+#0 C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php(157): method_exists(Array, 'getId')
+#1 C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\MailCatcherV6.php(167): WPMailSMTP\Providers\Gmail\Mailer->is_email_sent()
+#2 C:\xampp\htdocs\bookshop\wp-includes\pluggable.php(542): WPMailSMTP\MailCatcherV6->send()
+#3 C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php(3761): wp_mail(Array, 'Backed up: book...', '\r\nbookshop: Bac...', Array)
+#4 C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php(3569): UpdraftPlus->send_results_email('The backup atte...', Array)
+#5 C:\xampp\htdocs\bookshop\wp-content\plugins\updraftplus\class-updraftplus.php(2641): UpdraftPlus->backup_finish(true, true)
+#6 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(303): UpdraftPlus->backup_resume(1, 'fff59278ae27')
+#7 C:\xampp\htdocs\bookshop\wp-includes\class-wp-hook.php(327): WP_Hook->apply_filters('', Array)
+#8 C:\xampp\htdocs\bookshop\wp-includes\plugin.php(518): WP_Hook->do_action(Array)
+#9 C:\xampp\htdocs\bookshop\wp-cron.php(138): do_action_ref_array('updraft_backup_...', Array)
+#10 {main}
+  thrown in C:\xampp\htdocs\bookshop\wp-content\plugins\wp-mail-smtp\src\Providers\Gmail\Mailer.php on line 157
+

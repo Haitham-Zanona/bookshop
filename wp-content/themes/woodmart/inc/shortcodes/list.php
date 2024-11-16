@@ -48,7 +48,7 @@ if ( ! function_exists( 'woodmart_list_shortcode' ) ) {
 
 		extract( $atts );
 
-		if ( function_exists( 'vc_icon_element_fonts_enqueue' ) ) {
+		if ( 'icon' === $list_type && function_exists( 'vc_icon_element_fonts_enqueue' ) ) {
 			vc_icon_element_fonts_enqueue( $icon_library );
 		}
 
@@ -67,7 +67,7 @@ if ( ! function_exists( 'woodmart_list_shortcode' ) ) {
 		}
 		$list_id = 'wd-' . $woodmart_css_id;
 
-		$icon_class = 'list-icon';
+		$icon_class = 'list-icon wd-icon';
 		if ( $list_type == 'icon' ) {
 			$icon_class .= ' ' . ${'icon_' . $icon_library};
 		}
@@ -94,19 +94,14 @@ if ( ! function_exists( 'woodmart_list_shortcode' ) ) {
 			$icon_output = '<span class="' . esc_attr( $icon_class ) . '"></span>';
 		}
 
-		if ( 'image' === $list_type && ! empty( $image ) && function_exists( 'wpb_getImageBySize' ) ) {
+		if ( 'image' === $list_type && ! empty( $image ) ) {
 			if ( woodmart_is_svg( wp_get_attachment_image_url( $image ) ) ) {
 				$icon_output = woodmart_get_svg_html(
 					$image,
 					$atts['img_size']
 				);
 			} else {
-				$icon_output = wpb_getImageBySize(
-					array(
-						'attach_id'  => $image,
-						'thumb_size' => $img_size,
-					)
-				)['thumbnail'];
+				$icon_output = woodmart_otf_get_image_html( $image, $img_size );
 			}
 		}
 
@@ -132,19 +127,14 @@ if ( ! function_exists( 'woodmart_list_shortcode' ) ) {
 
 				$item_icon_output = $icon_output;
 
-				if ( isset( $item['item_type'] ) && 'image' === $item['item_type'] && isset( $item['image_id'] ) && function_exists( 'wpb_getImageBySize' ) ) {
+				if ( isset( $item['item_type'] ) && 'image' === $item['item_type'] && isset( $item['image_id'] ) ) {
 					if ( woodmart_is_svg( wp_get_attachment_image_url( $item['image_id'] ) ) ) {
 						$item_icon_output = woodmart_get_svg_html(
 							$item['image_id'],
 							$item['item_image_size']
 						);
 					} else {
-						$item_icon_output = wpb_getImageBySize(
-							array(
-								'attach_id'  => $item['image_id'],
-								'thumb_size' => $item['item_image_size'],
-							)
-						)['thumbnail'];
+						$item_icon_output = woodmart_otf_get_image_html( $item['image_id'], $item['item_image_size'] );
 					}
 				}
 				?>
@@ -160,12 +150,12 @@ if ( ! function_exists( 'woodmart_list_shortcode' ) ) {
 		</ul>
 		<?php
 		if ( ( $icons_color && ! woodmart_is_css_encode( $icons_color ) ) || ( $icons_bg_color && ! woodmart_is_css_encode( $icons_bg_color ) ) ) {
-			$css = '#' . esc_attr( $list_id ) . ' .list-icon {';
+			$css = '#' . esc_attr( $list_id ) . ' .wd-icon {';
 			$css .= 'color: ' . esc_attr( $icons_color ) . ';';
 			$css .= '}';
 
 			if ( $list_style == 'rounded' || $list_style == 'square' ) {
-				$css .= '#' . esc_attr( $list_id ) . ' .list-icon {';
+				$css .= '#' . esc_attr( $list_id ) . ' .wd-icon {';
 				$css .= 'background-color: ' . esc_attr( $icons_bg_color  ) . ';';
 				$css .= '}';
 			}

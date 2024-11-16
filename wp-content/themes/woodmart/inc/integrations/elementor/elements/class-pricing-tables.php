@@ -368,6 +368,80 @@ Helio X25 processor
 		);
 
 		$this->end_controls_section();
+
+		/**
+		 * Style tab.
+		 */
+
+		/**
+		 * General settings.
+		 */
+		$this->start_controls_section(
+			'general_style_section',
+			[
+				'label' => esc_html__( 'General', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
+			]
+		);
+
+		$this->add_control(
+			'display_grid',
+			array(
+				'label'   => esc_html__( 'Display grid', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'stretch' => esc_html__( 'Stretch', 'woodmart' ),
+					'number'  => esc_html__( 'Number', 'woodmart' ),
+				),
+				'default' => 'stretch',
+			)
+		);
+
+		$this->add_responsive_control(
+			'display_grid_col',
+			array(
+				'label'       => esc_html__( 'Columns', 'woodmart' ),
+				'type'        => Controls_Manager::SLIDER,
+				'default'     => array(
+					'size' => 3,
+				),
+				'range'       => array(
+					'px' => array(
+						'min'  => 1,
+						'max'  => 12,
+						'step' => 1,
+					),
+				),
+				'devices'     => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'     => 'wd-hide-custom-breakpoints',
+				'condition'   => array(
+					'display_grid' => 'number',
+				),
+				'render_type' => 'template',
+			)
+		);
+
+		$this->add_responsive_control(
+			'space_between',
+			array(
+				'label'       => esc_html__( 'Space between', 'woodmart' ),
+				'type'        => Controls_Manager::SELECT,
+				'options'     => array(
+					0  => esc_html__( '0 px', 'woodmart' ),
+					2  => esc_html__( '2 px', 'woodmart' ),
+					6  => esc_html__( '6 px', 'woodmart' ),
+					10 => esc_html__( '10 px', 'woodmart' ),
+					20 => esc_html__( '20 px', 'woodmart' ),
+					30 => esc_html__( '30 px', 'woodmart' ),
+				),
+				'default'     => 20,
+				'devices'     => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'     => 'wd-hide-custom-breakpoints',
+				'render_type' => 'template',
+			)
+		);
+
+		$this->end_controls_section();
 	}
 
 	/**
@@ -383,16 +457,55 @@ Helio X25 processor
 		global $post;
 
 		$default_settings = [
-			'items' => '',
+			'items'                   => '',
+			'display_grid'            => 'stretch',
+			'display_grid_col'        => array( 'size' => 3 ),
+			'display_grid_col_tablet' => array( 'size' => '' ),
+			'display_grid_col_mobile' => array( 'size' => '' ),
+			'space_between'           => '20',
+			'space_between_tablet'    => '',
+			'space_between_mobile'    => '',
 		];
 
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
+
+		$this->add_render_attribute( 'wrapper', 'class', 'pricing-tables' );
+
+		if ( 'number' === $settings['display_grid'] ) {
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-grid-g' );
+
+			$this->add_render_attribute(
+				'wrapper',
+				'style',
+				woodmart_get_grid_attrs(
+					array(
+						'columns'        => $settings['display_grid_col']['size'],
+						'columns_tablet' => $settings['display_grid_col_tablet']['size'],
+						'columns_mobile' => $settings['display_grid_col_mobile']['size'],
+						'spacing'        => $settings['space_between'],
+						'spacing_tablet' => $settings['space_between_tablet'],
+						'spacing_mobile' => $settings['space_between_mobile'],
+					)
+				)
+			);
+		} else {
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-grid-f-stretch' );
+
+			$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-lg:' . $settings['space_between'] . 'px;' );
+
+			if ( '' !== $settings['space_between_tablet'] ) {
+				$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-md:' . $settings['space_between_tablet'] . 'px;' );
+			}
+			if ( '' !== $settings['space_between_mobile'] ) {
+				$this->add_render_attribute( 'wrapper', 'style', '--wd-gap-sm:' . $settings['space_between_mobile'] . 'px;' );
+			}
+		}
 
 		woodmart_enqueue_inline_style( 'pricing-table' );
 
 		?>
 		<div class="pricing-tables-wrapper">
-			<div class="pricing-tables" >
+			<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
 				<?php foreach ( $settings['items'] as $index => $item ) : ?>
 					<?php
 					$default_settings = [
@@ -429,6 +542,7 @@ Helio X25 processor
 							$repeater_wrapper_key  => [
 								'class' => [
 									'wd-price-table',
+									'wd-col',
 									'price-style-' . $settings['style'],
 								],
 							],
@@ -482,7 +596,7 @@ Helio X25 processor
 
 					if ( 'yes' === $settings['with_bg_image'] && $settings['bg_image'] ) {
 						$this->add_render_attribute( $repeater_wrapper_key, 'class', 'with-bg-image' );
-						$bg_style = 'background-image:url(' . esc_url( woodmart_get_image_url( $settings['bg_image']['id'], 'bg_image', $settings ) ) . ')';
+						$bg_style = 'background-image:url(' . esc_url( woodmart_otf_get_image_url( $settings['bg_image']['id'], $settings['bg_image_size'], $settings['bg_image_custom_dimension'] ) ) . ')';
 					}
 
 					$features = explode( "\n", $settings['features_list'] );
@@ -506,7 +620,7 @@ Helio X25 processor
 
 						<div class="wd-plan-inner">
 							<?php if ( $settings['label'] ) : ?>
-								<div class="price-label">
+								<div class="wd-plan-label price-label">
 									<span>
 										<?php echo wp_kses( $settings['label'], woodmart_get_allowed_html() ); ?>
 									</span>

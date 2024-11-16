@@ -21,7 +21,7 @@ $template = '
                     <div class="whb-column whb-col-right whb-visible-lg">
                         <%.wd-header-my-account%>
                         <%.wd-header-search:not(.wd-header-search-mobile)%>
-						<%.wd-header-wishlist%>
+                        <%.wd-header-wishlist%>
                         <%.wd-header-compare%>
                         <%.wd-header-cart%>
                         <%.wd-header-fs-nav%>

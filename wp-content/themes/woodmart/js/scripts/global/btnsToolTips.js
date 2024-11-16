@@ -36,10 +36,11 @@
 		});
 
 		// Bootstrap tooltips
-		$('.wd-tooltip, .wd-hover-icons .wd-buttons .wd-action-btn:not(.wd-add-btn) > a, .wd-hover-icons .wd-buttons .wd-add-btn, body:not(.catalog-mode-on):not(.login-see-prices) .wd-hover-base .wd-bottom-actions .wd-action-btn.wd-style-icon:not(.wd-add-btn) > a, body:not(.catalog-mode-on):not(.login-see-prices) .wd-hover-base .wd-bottom-actions .wd-action-btn.wd-style-icon.wd-add-btn, .wd-hover-base .wd-compare-btn > a, .wd-products-nav .wd-btn-back, .wd-single-action-btn .wd-action-btn.wd-style-icon a').on('mouseenter touchstart', function() {
-			var $this = $(this);
+		$('.wd-tooltip, .wd-hover-icons .wd-buttons .wd-action-btn:not(.wd-add-btn) > a, .wd-hover-icons .wd-buttons .wd-add-btn, body:not(.catalog-mode-on):not(.login-see-prices) .wd-hover-base .wd-bottom-actions .wd-action-btn.wd-style-icon:not(.wd-add-btn) > a, body:not(.catalog-mode-on):not(.login-see-prices) .wd-hover-base .wd-bottom-actions .wd-action-btn.wd-style-icon.wd-add-btn, .wd-hover-base .wd-compare-btn > a, .wd-products-nav .wd-btn-back, .wd-single-action-btn .wd-action-btn.wd-style-icon a, body:not(.logged-in) .wd-review-likes a').on('mouseenter touchstart', function() {
+			var $this         = $(this);
+			var isReviewLikes = 0 !== $this.closest('.wd-review-likes').length;
 
-			if (!$this.hasClass('wd-hint') && woodmartThemeModule.windowWidth <= 1024 || $this.hasClass('wd-tooltip-inited')) {
+			if ((! $this.hasClass('wd-hint') && ! isReviewLikes && woodmartThemeModule.windowWidth <= 1024) || $this.hasClass('wd-tooltip-inited')) {
 				return;
 			}
 
@@ -48,6 +49,7 @@
 				container: 'body',
 				trigger  : 'hover',
 				boundary: 'window',
+				placement: 'auto',
 				title    : function() {
 					var $this = $(this);
 
@@ -61,6 +63,10 @@
 
 					if ($this.find('.wd-swatch-text').length > 0) {
 						return $this.find('.wd-swatch-text').text();
+					}
+
+					if (isReviewLikes) {
+						return woodmart_settings.review_likes_tooltip;
 					}
 
 					return $this.text();

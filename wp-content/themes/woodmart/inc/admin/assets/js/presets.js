@@ -23,13 +23,17 @@
 					var $condition = $(this);
 
 					data.push({
-						type      : $condition.find('.xts-condition-type select').val(),
-						comparison: $condition.find('.xts-condition-comparison select').val(),
-						post_type : $condition.find('.xts-condition-post-type select').val(),
-						taxonomy  : $condition.find('.xts-condition-taxonomy select').val(),
-						custom    : $condition.find('.xts-condition-custom select').val(),
-						value_id  : $condition.find('.xts-condition-value-id').val(),
-						user_role : $condition.find('.xts-condition-user-role select').val()
+						type                          : $condition.find('.xts-condition-type select').val(),
+						comparison                    : $condition.find('.xts-condition-comparison select').val(),
+						post_type                     : $condition.find('.xts-condition-post-type select').val(),
+						taxonomy                      : $condition.find('.xts-condition-taxonomy select').val(),
+						custom                        : $condition.find('.xts-condition-custom select').val(),
+						value_id                      : $condition.find('.xts-condition-value-id').val(),
+						user_role                     : $condition.find('.xts-condition-user-role select').val(),
+						filtered_product_term         : $condition.find('.xts-condition-filtered-product-term select').val(),
+						filtered_product_by_term      : $condition.find('.xts-condition-filtered-product-by-term select').val(),
+						filtered_product_term_any     : 1,
+						filtered_product_stock_status : $condition.find('.xts-condition-filtered-product-stock-status select').val()
 					});
 				});
 
@@ -84,15 +88,22 @@
 				var $custom = $condition.find('.xts-condition-custom');
 				var $valueID = $condition.find('.xts-condition-value-wrapper');
 				var $userRole = $condition.find('.xts-condition-user-role');
+				var $filteredProductTerm = $condition.find('.xts-condition-filtered-product-term');
+				var $filteredProductByTerm = $condition.find('.xts-condition-filtered-product-by-term');
+				var $filteredProductByStockStatus = $condition.find('.xts-condition-filtered-product-stock-status');
 				var type = $type.val();
 
 				switch (type) {
 					case 'post_type':
+					case 'single_post_type':
 						$postType.removeClass('xts-hidden');
 						$taxonomy.addClass('xts-hidden');
 						$custom.addClass('xts-hidden');
 						$valueID.addClass('xts-hidden');
 						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
 						break;
 					case 'taxonomy':
 						$postType.addClass('xts-hidden');
@@ -100,6 +111,9 @@
 						$custom.addClass('xts-hidden');
 						$valueID.addClass('xts-hidden');
 						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
 						break;
 					case 'post_id':
 					case 'term_id':
@@ -109,6 +123,9 @@
 						$custom.addClass('xts-hidden');
 						$valueID.removeClass('xts-hidden');
 						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
 						break;
 					case 'custom':
 						$postType.addClass('xts-hidden');
@@ -116,6 +133,9 @@
 						$custom.removeClass('xts-hidden');
 						$valueID.addClass('xts-hidden');
 						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
 						break;
 					case 'user_role':
 						$postType.addClass('xts-hidden');
@@ -123,6 +143,49 @@
 						$custom.addClass('xts-hidden');
 						$valueID.addClass('xts-hidden');
 						$userRole.removeClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
+						break;
+					case 'filtered_product_term':
+						$postType.addClass('xts-hidden');
+						$taxonomy.addClass('xts-hidden');
+						$custom.addClass('xts-hidden');
+						$valueID.addClass('xts-hidden');
+						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.removeClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
+						break;
+					case 'filtered_product_by_term':
+						$postType.addClass('xts-hidden');
+						$taxonomy.addClass('xts-hidden');
+						$custom.addClass('xts-hidden');
+						$valueID.addClass('xts-hidden');
+						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.removeClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
+						break;
+					case 'filtered_product_term_any':
+						$postType.addClass('xts-hidden');
+						$taxonomy.addClass('xts-hidden');
+						$custom.addClass('xts-hidden');
+						$valueID.addClass('xts-hidden');
+						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
+						break;
+					case 'filtered_product_stock_status':
+						$postType.addClass('xts-hidden');
+						$taxonomy.addClass('xts-hidden');
+						$custom.addClass('xts-hidden');
+						$valueID.addClass('xts-hidden');
+						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.removeClass('xts-hidden');
 						break;
 
 					case '':
@@ -131,6 +194,9 @@
 						$custom.addClass('xts-hidden');
 						$valueID.addClass('xts-hidden');
 						$userRole.addClass('xts-hidden');
+						$filteredProductTerm.addClass('xts-hidden');
+						$filteredProductByTerm.addClass('xts-hidden');
+						$filteredProductByStockStatus.addClass('xts-hidden');
 						break;
 				}
 			});

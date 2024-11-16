@@ -66,8 +66,7 @@ abstract class Layout_Type extends Singleton {
 		}
 
 		if ( woodmart_is_elementor_installed() && Plugin::$instance->documents->get( $id )->is_built_with_elementor() ) {
-			$content  = woodmart_elementor_get_content_css( $id );
-			$content .= woodmart_elementor_get_content( $id );
+			$content = woodmart_elementor_get_content( $id );
 		} else {
 			$shortcodes_custom_css          = get_post_meta( $id, '_wpb_shortcodes_custom_css', true );
 			$woodmart_shortcodes_custom_css = get_post_meta( $id, 'woodmart_shortcodes_custom_css', true );

@@ -294,23 +294,26 @@ class Image extends Widget_Base {
 		}
 
 		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$icon_output = woodmart_get_image_html(
-				$settings,
-				'image'
+			$icon_output = woodmart_otf_get_image_html(
+				$settings['image']['id'],
+				$settings['image_size'],
+				$settings['image_custom_dimension']
 			);
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ) ) ) {
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
 				$icon_output = woodmart_get_svg_html(
 					$settings['image']['id'],
 					$image_size
 				);
 			}
+		} else {
+			$icon_output = woodmart_get_image_html( $settings, 'image' );
 		}
 		?>
 
 		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); // phpcs:ignore ?>>
 			<?php if ( 'none' !== $settings['on_click_action'] ) : ?>
-				<a <?php echo $link_attrs; // phpcs:ignore ?>>
+				<a <?php echo $link_attrs; // phpcs:ignore ?> aria-label="<?php esc_html_e('Image link', 'woodmart' ); ?>">
 			<?php endif; ?>
 					<?php echo $icon_output; // phpcs:ignore  ?>
 			<?php if ( 'none' !== $settings['on_click_action'] ) : ?>

@@ -79,7 +79,7 @@
 			var title = $input.val();
 
 			$wrapper.addClass('wd-edit');
-			$input.val('').val(title).focus();
+			$input.val('').val(title).trigger('focus');
 
 			woodmartThemeModule.$body.on('mouseup', function(e) {
 				var $this = $(this);
@@ -194,7 +194,7 @@
 				var $wrapper = $this.parents('.wd-popup-wishlist');
 
 				$wrapper.addClass('wd-create-group');
-				$wrapper.find('.wd-wishlist-group-name').focus();
+				$wrapper.find('.wd-wishlist-group-name').trigger('focus');
 
 				return;
 			}
@@ -234,6 +234,7 @@
 
 			if ( ! $moveBtn.length ) {
 				woodmartThemeModule.$document.trigger('wdAddProductToWishlist', [ productsId, groupId, $wrapperList.data('nonce'), function () {
+					$popupWrapper = $('.wd-popup-wishlist');
 					$popupWrapper.addClass('wd-added');
 					$popupWrapper.removeClass('wd-create-group');
 					$this.removeClass('loading');
@@ -324,7 +325,7 @@
 
 			Cookies.set(cookiesHashName, hash, {
 				expires: 7,
-				path   : '/',
+				path   : woodmart_settings.cookie_path,
 				secure : woodmart_settings.cookie_secure_param
 			});
 		}
@@ -344,12 +345,13 @@
 			}
 
 			$.magnificPopup.open({
-				removalDelay: 500, //delay removal by X to allow out-animation
-				tClose      : woodmart_settings.close,
-				tLoading    : woodmart_settings.loading,
-				callbacks   : {
+				removalDelay   : 600, //delay removal by X to allow out-animation
+				tClose         : woodmart_settings.close,
+				tLoading       : woodmart_settings.loading,
+				fixedContentPos: true,
+				callbacks      : {
 					beforeOpen: function() {
-						this.st.mainClass = 'mfp-move-horizontal' + classes ;
+						this.wrap.addClass('wd-popup-slide-from-left' + classes);
 					},
 					open      : function() {
 						var $popupWrapper = $(this.content[0]);
@@ -362,7 +364,7 @@
 							$btn.html( $btn.data('create-text'));
 
 							setTimeout( function () {
-								$popupWrapper.find('.wd-wishlist-group-name').focus();
+								$popupWrapper.find('.wd-wishlist-group-name').trigger('focus');
 							}, 500);
 						}
 						if ( ' wd-move-action' === classes ) {

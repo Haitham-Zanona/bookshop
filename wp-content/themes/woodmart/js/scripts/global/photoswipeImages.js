@@ -6,7 +6,7 @@
 
 			$this.on('click', 'a', function(e) {
 				e.preventDefault();
-				var index = $(e.currentTarget).data('index') - 1;
+				var index = $(e.currentTarget).parents('.wd-gallery-item').index();
 				var items = getGalleryItems($this, []);
 
 				woodmartThemeModule.callPhotoSwipe(index, items);

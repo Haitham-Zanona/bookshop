@@ -7,11 +7,11 @@
  * If no active widgets are in this sidebar, hide it completely.
  */
 
-use XTS\Modules\Layouts\Main;
+use XTS\Registry;
 
 $sidebar_class = woodmart_get_sidebar_class();
 
-$sidebar_name = woodmart_get_sidebar_name();
+$sidebar_name = Registry::getInstance()->layout->get_sidebar_name();
 
 if ( strstr( $sidebar_class, 'col-lg-0' ) ) {
 	return;

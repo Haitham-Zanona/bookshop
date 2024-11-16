@@ -17,13 +17,11 @@
 	});
 
 	woodmartThemeModule.swatchesVariations = function() {
-		woodmartThemeModule.setupMainCarouselArg();
-
 		var $variation_forms = $('.variations_form');
 		var variationGalleryReplace = false;
-		var swathesSelected = false;
 		var variationData = $variation_forms.data('product_variations');
 		var useAjax = false === variationData;
+		var defaultMainImageAttr = [];
 
 		// Firefox mobile fix
 		$('.variations_form .label').on('click', function(e) {
@@ -35,14 +33,14 @@
 		$variation_forms.each(function() {
 			var $variation_form = $(this);
 
-			if ($variation_form.data('swatches')) {
+			if ($variation_form.data('swatches') || $variation_form.hasClass('wd-quick-shop-2')) {
 				return;
 			}
 
 			$variation_form.data('swatches', true);
 
 			if (!$variation_form.data('product_variations')) {
-				$variation_form.find('.wd-swatches-product').find('> div').addClass('wd-enabled');
+				$variation_form.find('.wd-swatches-product').find('> .wd-swatch').addClass('wd-enabled');
 			}
 
 			if ($('.wd-swatches-product > div').hasClass('wd-active')) {
@@ -51,7 +49,9 @@
 				showWCVariationContent($variation_form);
 			}
 
-			$variation_form.find('select.wd-changes-variation-image').on('change', function () {
+			var $selectChangesVariation = $variation_form.find('select.wd-changes-variation-image');
+
+			$selectChangesVariation.on('change', function () {
 				var $select = $(this);
 				var attributeName = $select.attr('name');
 				var attributeValue = $select.val();
@@ -70,8 +70,14 @@
 				}
 
 				var $pageWrapper = $variation_form.parents('.product, .main-page-wrapper');
-				var $firstThumb = $pageWrapper.find('.thumbnails .product-image-thumbnail img').first();
+				var $firstThumb = $pageWrapper.find('.wd-gallery-thumb .wd-carousel-item img').first();
 				var $mainImage = $pageWrapper.find('.woocommerce-product-gallery .woocommerce-product-gallery__image > a .wp-post-image').first();
+
+				if ( 'undefined' === typeof defaultMainImageAttr['src'] ) {
+					defaultMainImageAttr['src'] = $firstThumb.attr('src');
+					defaultMainImageAttr['srcset'] = $firstThumb.attr('srcset');
+					defaultMainImageAttr['size'] = $firstThumb.attr('srcset');
+				}
 
 				$.each( productData, function ( key, variation ) {
 					if ( variation.attributes[attributeName] === attributeValue ) {
@@ -79,7 +85,7 @@
 							$variation_form.wc_variations_image_update(variation);
 
 							if ( ! replaceMainGallery( variation.variation_id, $variation_form ) && ( $firstThumb.attr('src') !== variation.image.thumb_src || $firstThumb.attr('srcset') !== variation.image.thumb_src ) ) {
-								$firstThumb = $pageWrapper.find('.thumbnails .product-image-thumbnail img').first();
+								$firstThumb = $pageWrapper.find('.wd-gallery-thumb .wd-carousel-item img').first();
 
 								$firstThumb.wc_set_variation_attr( 'src', variation.image.src );
 								$firstThumb.wc_set_variation_attr( 'srcset', variation.image.src );
@@ -100,13 +106,22 @@
 				});
 			});
 
-			$variation_form.on('click', '.wd-swatches-product > div', function() {
+			if ( $selectChangesVariation.val() ) {
+				$selectChangesVariation.trigger('change');
+			}
+
+			$variation_form
+				.on('click touchstart', '.wd-swatches-single > .wd-swatch', function() {
 					var $this = $(this);
 					var value = $this.data('value');
 					var id = $this.parent().data('id');
 					var title = $this.data('title');
 
 					resetSwatches($variation_form);
+
+					if ( $this.parents('.wd-swatches-limited').length ) {
+						$this.parents('.wd-swatches-limited').find('.wd-swatch-divider').trigger('click');
+					}
 
 					if ($this.hasClass('wd-active')) {
 						return;
@@ -121,15 +136,11 @@
 					$this.addClass('wd-active');
 					resetSwatches($variation_form);
 
-					if ((woodmart_settings.swatches_labels_name === 'yes' && woodmartThemeModule.$window.width() >= 769) || woodmartThemeModule.$window.width() <= 768) {
-						$this.parents('tr').find(' > th .wd-attr-selected').remove();
-
-						$this.parents('tr').find(' > th').append(
-							'<span class="wd-attr-selected">' + title + '</span>'
-						);
-					}
+					showSelectedAttr();
 				})
 				.on('woocommerce_update_variation_values', function() {
+					showSelectedAttr();
+
 					resetSwatches($variation_form);
 				})
 				.on('click', '.reset_variations', function() {
@@ -167,8 +178,7 @@
 					$variation_form.removeClass('variation-swatch-selected');
 					$variation_form.find('.woocommerce-variation').removeClass('wd-show');
 
-					var $mainOwl = $('.woocommerce-product-gallery__wrapper.owl-carousel');
-					var $galleryWrapper = $('.woocommerce-product-gallery');
+					var mainGallery = document.querySelector('.woocommerce-product-gallery__wrapper.wd-carousel');
 
 					resetSwatches($variation_form);
 
@@ -176,31 +186,13 @@
 						replaceMainGallery('default', $variation_form);
 					}
 
-					if (!$mainOwl.hasClass('owl-carousel')) {
-						return;
-					}
-
-					if (woodmart_settings.product_slider_auto_height === 'yes') {
-						if (!isQuickView() && isVariationGallery('default', $variation_form) && variationGalleryReplace) {
-							$mainOwl.trigger('destroy.owl.carousel');
+					if ( mainGallery && 'undefined' !== typeof mainGallery.swiper ) {
+						if (woodmart_settings.product_slider_auto_height === 'yes') {
+							mainGallery.swiper.update();
 						}
 
-						$('.product-images').imagesLoaded(function() {
-							$mainOwl = $mainOwl.owlCarousel(woodmartThemeModule.mainCarouselArg);
-							$mainOwl.trigger('refresh.owl.carousel');
-						});
-					} else {
-						$mainOwl = $mainOwl.owlCarousel(woodmartThemeModule.mainCarouselArg);
-						$mainOwl.trigger('refresh.owl.carousel');
+						mainGallery.swiper.slideTo(0);
 					}
-
-					var slide_go_to = $galleryWrapper.hasClass('thumbs-position-centered') ? woodmart_settings.centered_gallery_start : 0;
-
-					if (isQuickView()) {
-						slide_go_to = 0;
-					}
-
-					$mainOwl.trigger('to.owl.carousel', slide_go_to);
 
 					woodmartThemeModule.$document.trigger('wdResetVariation');
 				})
@@ -210,10 +202,15 @@
 					}
 				})
 				.on('reset_image', function() {
-					var $thumb = $('.thumbnails .product-image-thumbnail img').first();
+					var $thumb = $('.wd-gallery-thumb .wd-carousel-item img').first();
 
 					if (!isQuickView() && !isQuickShop($variation_form)) {
 						$thumb.wc_reset_variation_attr('src');
+						$thumb.wc_reset_variation_attr('srcset');
+
+						if ( ! $thumb.attr('data-o_srcset') && $thumb.attr('data-srcset') ) {
+							$thumb.attr('data-srcset', null)
+						}
 					}
 				})
 				.on('show_variation', function(e, variation) {
@@ -227,29 +224,22 @@
 								return;
 							}
 
-							$select.siblings('.wd-swatches-product').find('.wd-swatch[data-value=' + value + ']').addClass('wd-active');
+							$select.siblings('.wd-swatches-product').find('.wd-swatch[data-value="' + value + '"]').addClass('wd-active');
 						});
 					}
 
-					if (((woodmart_settings.swatches_labels_name === 'yes' && woodmartThemeModule.$window.width() >= 769) || woodmartThemeModule.$window.width() <= 768) && !swathesSelected) {
-						$variation_form.find('.wd-active').each(function() {
-							var $this = $(this);
-							var title = $this.data('title');
-							$this.parents('tr').find('.wd-attr-selected').html(title);
-						});
-
-						swathesSelected = true;
-					}
+					showSelectedAttr();
 
 					$variation_form.addClass('variation-swatch-selected');
 
-					if (!variation.image.src) {
+					if ( 'undefined' === typeof variation || ! variation.image.src) {
 						return;
 					}
 
 					var $pageWrapper = $variation_form.parents('.product, .main-page-wrapper');
-					var galleryHasImage = $pageWrapper.find('.thumbnails .product-image-thumbnail img[data-o_src="' + variation.image.thumb_src + '"]').length > 0;
-					var $firstThumb = $pageWrapper.find('.thumbnails .product-image-thumbnail img').first();
+					var galleryHasImage = $pageWrapper.find('.wd-gallery-thumb .wd-carousel-item img[data-o_src="' + variation.image.thumb_src + '"]').length > 0;
+					var $firstThumb = $pageWrapper.find('.wd-gallery-thumb .wd-carousel-item img, .quick-view-gallery.wd-carousel .wd-carousel-item img').first();
+					var $sourceThumb = $firstThumb.siblings('source');
 					var originalImageUrl = $pageWrapper.find('.woocommerce-product-gallery .woocommerce-product-gallery__image > a').first().data('o_href');
 
 					if (galleryHasImage) {
@@ -259,6 +249,18 @@
 					if (!isQuickShop($variation_form) && !replaceMainGallery(variation.variation_id, $variation_form)) {
 						if ($firstThumb.attr('src') !== variation.image.thumb_src) {
 							$firstThumb.wc_set_variation_attr('src', variation.image.src);
+
+							if ( variation.image.srcset.length ) {
+								$firstThumb.wc_set_variation_attr('srcset', variation.image.srcset);
+							}
+
+							if ( $sourceThumb.length ) {
+								if ( variation.image.srcset.length ) {
+									$sourceThumb.attr('srcset', variation.image.srcset);
+								} else {
+									$sourceThumb.attr('srcset', variation.image.src);
+								}
+							}
 						}
 
 						woodmartThemeModule.$document.trigger('wdShowVariationNotQuickView');
@@ -270,39 +272,33 @@
 						scrollToTop();
 					}
 
-					var $mainOwl = $('.woocommerce-product-gallery__wrapper.owl-carousel');
+					var mainGallery = document.querySelector('.woocommerce-product-gallery__wrapper');
 
-					if (!$mainOwl.hasClass('owl-carousel')) {
+					if (!mainGallery) {
 						return;
 					}
 
-					if (woodmart_settings.product_slider_auto_height === 'yes') {
-						if (!isQuickView() && isVariationGallery(variation.variation_id, $variation_form) && variationGalleryReplace) {
-							$mainOwl.trigger('destroy.owl.carousel');
-						}
-
-						$('.product-images').imagesLoaded(function() {
-							$mainOwl = $mainOwl.owlCarousel(woodmartThemeModule.mainCarouselArg);
-							$mainOwl.trigger('refresh.owl.carousel');
-						});
-					} else {
-						$mainOwl = $mainOwl.owlCarousel(woodmartThemeModule.mainCarouselArg);
-						$mainOwl.trigger('refresh.owl.carousel');
+					if (mainGallery.classList.contains('wd-carousel') && 'undefined' !== typeof mainGallery.swiper) {
+						mainGallery.swiper.update();
+						mainGallery.swiper.slideTo(0);
 					}
 
-					var $thumbs = $('.images .thumbnails');
+					if ( 'undefined' !== typeof defaultMainImageAttr['src'] ) {
+						var $mainImage = $pageWrapper.find('.woocommerce-product-gallery .woocommerce-product-gallery__image > a .wp-post-image').first();
+						var defaultMainImageSrc = defaultMainImageAttr['src'];
+						var defaultMainImageSrcset = defaultMainImageSrc;
 
-					$mainOwl.trigger('to.owl.carousel', 0);
+						if ( defaultMainImageSrc !== $mainImage.attr( 'data-o_src' ) ) {
+							if ( 'undefined' !== typeof defaultMainImageAttr['srcset'] ) {
+								defaultMainImageSrcset = defaultMainImageAttr['srcset'];
+							}
 
-					if ($thumbs.hasClass('owl-carousel')) {
-						$thumbs.owlCarousel().trigger('to.owl.carousel', 0);
-						$thumbs.find('.active-thumb').removeClass('active-thumb');
-						$thumbs.find('.product-image-thumbnail').eq(0).addClass('active-thumb');
-					} else if ($thumbs.hasClass('slick-slider')) {
-						$thumbs.slick('slickGoTo', 0);
-						if (!$thumbs.find('.product-image-thumbnail').eq(0).hasClass('active-thumb')) {
-							$thumbs.find('.active-thumb').removeClass('active-thumb');
-							$thumbs.find('.product-image-thumbnail').eq(0).addClass('active-thumb');
+							if ( 'undefined' !== typeof defaultMainImageAttr['size'] ) {
+								$mainImage.attr( 'data-o_size', defaultMainImageAttr['size'] );
+							}
+
+							$mainImage.attr( 'data-o_src', defaultMainImageSrc );
+							$mainImage.attr( 'data-o_srcset', defaultMainImageSrcset );
 						}
 					}
 				});
@@ -320,7 +316,7 @@
 				var options = select.html();
 				options = $(options);
 
-				swatch.find('> div').removeClass('wd-enabled').addClass('wd-disabled');
+				swatch.find('.wd-swatch').removeClass('wd-enabled').addClass('wd-disabled');
 
 				options.each(function() {
 					var value = $(this).val();
@@ -388,7 +384,9 @@
 					scrollTop: $('.woocommerce-product-gallery__wrapper').offset().top - 150
 				}, 800);
 
-				$('.wd-swatch').tooltip('hide');
+				if ( 'undefined' !== typeof ($.fn.tooltip) ) {
+					$('.wd-swatch').tooltip('hide');
+				}
 			}
 		};
 
@@ -476,7 +474,11 @@
 			var $pageWrapper = $variationForm.parents('.product, .main-page-wrapper');
 			var $mainGallery = $pageWrapper.find('.woocommerce-product-gallery__wrapper');
 
-			if (imagesData.length > 1) {
+			if ($mainGallery.hasClass('wd-carousel')) {
+				$mainGallery = $mainGallery.find('.wd-carousel-wrap');
+			}
+
+			if (imagesData && imagesData.length > 1) {
 				$pageWrapper.find('.woocommerce-product-gallery').addClass('wd-has-thumb');
 			} else {
 				$pageWrapper.find('.woocommerce-product-gallery').removeClass('wd-has-thumb');
@@ -491,7 +493,7 @@
 					classes += imagesData[index].video.classes;
 				}
 
-				var $html = '<div class="product-image-wrap' + classes + '">';
+				var $html = '<div class="wd-carousel-item' + classes + '">';
 
 				$html += '<figure data-thumb="' + imagesData[index].data_thumb + '" class="woocommerce-product-gallery__image">';
 
@@ -522,9 +524,14 @@
 		var replaceMainGalleryNew = function(imagesData, $variationForm, galleryType = '') {
 			var $pageWrapper = $variationForm.parents('.product, .main-page-wrapper');
 			var $mainGallery = $pageWrapper.find('.woocommerce-product-gallery__wrapper');
+
+			if ($mainGallery.hasClass('wd-carousel')) {
+				$mainGallery = $mainGallery.find('.wd-carousel-wrap');
+			}
+
 			$mainGallery.empty();
 
-			if (imagesData.length > 1) {
+			if (imagesData && imagesData.length > 1) {
 				$pageWrapper.find('.woocommerce-product-gallery').addClass('wd-has-thumb');
 			} else {
 				$pageWrapper.find('.woocommerce-product-gallery').removeClass('wd-has-thumb');
@@ -538,7 +545,7 @@
 						classes += imagesData[key].video.classes;
 					}
 
-					var $html = '<div class="product-image-wrap' + classes + '">';
+					var $html = '<div class="wd-carousel-item' + classes + '">';
 
 					if ( !isQuickView() && 'default' === galleryType && 'undefined' !== typeof imagesData[key].video && 'undefined' !== typeof imagesData[key].video.controls ) {
 						$html += imagesData[key].video.controls;
@@ -587,6 +594,32 @@
 				$wrapper.addClass('wd-show');
 			}
 		};
+
+		function showSelectedAttr () {
+			var swathesSelected = false;
+
+			$('.variations_form').each(function() {
+				var $variation_form = $(this);
+
+				if (((woodmart_settings.swatches_labels_name === 'yes' && woodmartThemeModule.$window.width() >= 769) || woodmartThemeModule.$window.width() <= 768) && !swathesSelected) {
+					$variation_form.find('.wd-active').each(function() {
+						var $this = $(this);
+						var title = $this.data('title');
+						var wrapAttr = $this.parents('tr').find('.wd-attr-selected');
+
+						if ( wrapAttr.length ) {
+							wrapAttr.html(title);
+						} else {
+							$this.parents('tr').find(' > th').append(
+								'<span class="wd-attr-selected">' + title + '</span>'
+							);
+						}
+					});
+
+					swathesSelected = true;
+				}
+			});
+		}
 	};
 
 	$(document).ready(function() {

@@ -117,7 +117,7 @@ if ( ! function_exists( 'woodmart_shortcodes_css_data_to_css' ) ) {
 							}
 						}
 					} else {
-						$selector = '.website-wrapper .wd-rs-' . $decompressed_data->selector_id;
+						$selector = 'html .wd-rs-' . $decompressed_data->selector_id;
 						if ( 'vc_column' === $decompressed_data->shortcode || 'vc_column_inner' === $decompressed_data->shortcode ) {
 							$selector .= ' > .vc_column-inner';
 						}

@@ -11,9 +11,9 @@ if ( ! class_exists( 'WOODMART_Twitter' ) ) {
 			// Configure widget array
 			$args = array( 
 				// Widget Backend label
-				'label' => esc_html__( 'WOODMART Twitter', 'woodmart' ), 
+				'label' => esc_html__( 'WOODMART X (Twitter)', 'woodmart' ), 
 				// Widget Backend Description								
-				'description' => esc_html__( 'Displays the most recent tweets from your Twitter Stream.', 'woodmart' ), 	
+				'description' => esc_html__( 'Displays the most recent posts from your X (Twitter) Stream.', 'woodmart' ), 	
 				'slug' => 'woodmart-twitter',
 			 );
 
@@ -25,6 +25,9 @@ if ( ! class_exists( 'WOODMART_Twitter' ) ) {
 		// Output function
 
 		function widget( $args, $instance )	{
+			if ( $this->is_widget_preview() ) {
+				return;
+			}
 
 			extract( $args );
 
@@ -78,8 +81,8 @@ if ( ! class_exists( 'WOODMART_Twitter' ) ) {
 		function form( $instance ) {
 			//Set up some default widget settings.
 			$defaults = array(
-				'title' 			=> esc_html__( 'Recent Tweets', 'woodmart' ), 
-				'name' 				=> 'Twitter',
+				'title' 			=> esc_html__( 'Recent posts', 'woodmart' ), 
+				'name' 				=> 'x',
 				'numTweets' 		=> 4,
 				'consumerKey' 		=> esc_html__( 'xxxxxxxxxxxx', 'woodmart' ),// Consumer key
 				'consumerSecret' 	=> esc_html__( 'xxxxxxxxxxxx', 'woodmart' ), // Consumer secret
@@ -93,45 +96,46 @@ if ( ! class_exists( 'WOODMART_Twitter' ) ) {
 			$instance = wp_parse_args( (array) $instance, $defaults );
 
 			?>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 			</p>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'name' ) ); ?>"><?php esc_html_e( 'Twitter Name (without @ symbol):', 'woodmart' ) ?></label>
+			<p class="wd-widget-field">
+				<label for="<?php echo esc_attr( $this->get_field_id( 'name' ) ); ?>"><?php esc_html_e( 'X Name (without @ symbol):', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'name' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'name' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['name'] ); ?>" />
 			</p>
-			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'numTweets' ) ); ?>"><?php esc_html_e( 'Number of Tweets:', 'woodmart' ) ?></label>
+			<p class="wd-widget-field">
+				<label for="<?php echo esc_attr( $this->get_field_id( 'numTweets' ) ); ?>"><?php esc_html_e( 'Number of posts:', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'numTweets' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'numTweets' ) ) ?>" type="text" value="<?php echo esc_attr ( $instance['numTweets'] ); ?>" />
 			</p>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr(  $this->get_field_id( 'consumerKey' ) ); ?>"><?php esc_html_e( 'Consumer Key:', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'consumerKey' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'consumerKey' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['consumerKey'] ); ?>" />
 			</p>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'consumerSecret' ) ); ?>"><?php esc_html_e( 'Consumer Secret:', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'consumerSecret' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'consumerSecret' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['consumerSecret'] ); ?>" />
 			</p>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'accessToken' ) ); ?>"><?php esc_html_e('Access Token:', 'woodmart') ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'accessToken' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'accessToken' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['accessToken'] ); ?>" />
 			</p>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'accessTokenSecret' ) ); ?>"><?php esc_html_e( 'Access Token Secret:', 'woodmart' ) ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'accessTokenSecret' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'accessTokenSecret' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['accessTokenSecret'] ); ?>" />
 			</p>
-			<p>
-				<input class="checkbox" type="checkbox" value="true" <?php checked( ( isset( $instance['showAvatar'] ) && ( $instance['showAvatar'] == "true") ), true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'showAvatar' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'showAvatar' ) ); ?>" />
+			<p class="wd-widget-field wd-type-checkbox">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'showAvatar' ) ); ?>"><?php esc_html_e('Show your avatar image', 'woodmart'); ?></label>
+				<input class="checkbox" type="checkbox" value="true" <?php checked( ( isset( $instance['showAvatar'] ) && ( $instance['showAvatar'] == "true") ), true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'showAvatar' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'showAvatar' ) ); ?>" />
 			</p>
-			<p>
-				<input class="checkbox" type="checkbox" value="true" <?php checked( ( isset( $instance['exclude_replies'] ) && ( $instance['exclude_replies'] == "true") ), true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'exclude_replies' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'exclude_replies' ) ); ?>" />
+			<p class="wd-widget-field wd-type-checkbox">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'exclude_replies' ) ); ?>"><?php esc_html_e('Exclude Replies', 'woodmart'); ?></label>
+				<input class="checkbox" type="checkbox" value="true" <?php checked( ( isset( $instance['exclude_replies'] ) && ( $instance['exclude_replies'] == "true") ), true ); ?> id="<?php echo esc_attr( $this->get_field_id( 'exclude_replies' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'exclude_replies' ) ); ?>" />
 			</p>
-			<p>
+			<p class="wd-widget-field">
 				<label for="<?php echo esc_attr( $this->get_field_id( 'avatarSize' ) ); ?>"><?php esc_html_e( 'Size of Avatar (default: 48):', 'woodmart' ); ?></label>
-				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'avatarSize' ) ) ?>" name="<?php echo esc_attr( $this->get_field_name( 'avatarSize' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['avatarSize'] ); ?>" /><br><em><?php esc_html_e( 'input number only', 'woodmart' ); ?></em>
+				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'avatarSize' ) ) ?>" name="<?php echo esc_attr( $this->get_field_name( 'avatarSize' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['avatarSize'] ); ?>" />
+				<small class="description"><?php esc_html_e( 'Input number only', 'woodmart' ); ?></small>
 			</p>
 			<?php
 		}

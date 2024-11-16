@@ -19,9 +19,11 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_countdown' ) ) {
 	 */
 	function woodmart_shortcode_single_product_countdown( $settings ) {
 		$default_settings = array(
-			'alignment' => 'left',
-			'css'       => '',
-			'title'     => '',
+			'timer_style'           => 'standard',
+			'woodmart_color_scheme' => '',
+			'alignment'             => 'left',
+			'css'                   => '',
+			'title'                 => '',
 		);
 
 		$settings = wp_parse_args( $settings, $default_settings );

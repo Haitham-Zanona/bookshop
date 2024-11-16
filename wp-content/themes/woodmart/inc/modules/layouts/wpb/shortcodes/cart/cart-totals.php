@@ -26,6 +26,7 @@ if ( ! function_exists( 'woodmart_shortcode_cart_totals' ) ) {
 			'button_alignment' => 'left',
 			'css'              => '',
 			'show_title'       => 'yes',
+			'title_alignment'  => '',
 		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
@@ -40,6 +41,10 @@ if ( ! function_exists( 'woodmart_shortcode_cart_totals' ) ) {
 
 		if ( 'yes' === $settings['show_title'] ) {
 			$wrapper_classes .= ' wd-title-show';
+		}
+
+		if ( $settings['title_alignment'] ) {
+			$wrapper_classes .= ' text-' . $settings['title_alignment'];
 		}
 
 		ob_start();

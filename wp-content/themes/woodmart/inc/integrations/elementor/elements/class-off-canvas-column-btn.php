@@ -76,6 +76,7 @@ class Off_Canvas_Column_Btn extends Widget_Base {
 	 * Register the widget controls.
 	 */
 	protected function register_controls() {
+		$sticky_key = woodmart_is_elementor_pro_installed() ? 'wd_sticky' : 'sticky';
 		/**
 		 * Content tab
 		 */
@@ -101,7 +102,7 @@ class Off_Canvas_Column_Btn extends Widget_Base {
 		);
 
 		$this->add_control(
-			'sticky',
+			$sticky_key,
 			array(
 				'label'        => esc_html__( 'Sticky', 'woodmart' ),
 				'description'  => esc_html__( 'Make the off canvas sidebar button sticky.', 'woodmart' ),
@@ -178,6 +179,7 @@ class Off_Canvas_Column_Btn extends Widget_Base {
 				'icon_type'   => 'default',
 				'icon'        => array(),
 				'sticky'      => '',
+				'wd_sticky'   => '',
 			)
 		);
 		woodmart_enqueue_js_script( 'off-canvas-colum-btn' );
@@ -209,20 +211,17 @@ class Off_Canvas_Column_Btn extends Widget_Base {
 		$off_canvas_classes .= woodmart_get_old_classes( ' woodmart-show-sidebar-btn' );
 
 		if ( 'custom' === $settings['icon_type'] && ! empty( $settings['icon']['id'] ) ) {
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['icon']['id'], 'icon', $settings ) ) ) {
+			if ( woodmart_is_svg( $settings['icon']['url'] ) ) {
 				$icon_output = woodmart_get_svg_html(
 					$settings['icon']['id'],
 					$icon_size
 				);
 			} else {
-				$icon_output = woodmart_get_image_html(
-					$settings,
-					'icon'
-				);
+				$icon_output = woodmart_otf_get_image_html( $settings['icon']['id'], $settings['icon_size'], $settings['icon_custom_dimension'] );
 			}
 		}
 
-		if ( 'yes' === $settings['sticky'] ) {
+		if ( 'yes' === $settings['sticky'] || 'yes' === $settings['wd_sticky'] ) {
 			woodmart_enqueue_inline_style( 'mod-sticky-sidebar-opener' );
 		}
 
@@ -240,8 +239,8 @@ class Off_Canvas_Column_Btn extends Widget_Base {
 			</a>
 		</div>
 
-		<?php if ( 'yes' === $settings['sticky'] ) : ?>
-			<div class="wd-sidebar-opener wd-action-btn wd-style-icon<?php echo esc_html( $sticky_off_canvas_classes ); ?>">
+		<?php if ( 'yes' === $settings['sticky'] || 'yes' === $settings['wd_sticky'] ) : ?>
+			<div class="wd-sidebar-opener wd-on-shop wd-action-btn wd-style-icon<?php echo esc_html( $sticky_off_canvas_classes ); ?>">
 				<a href="#" rel="nofollow">
 					<?php if ( ! empty( $icon_output ) ) : ?>
 						<span class="wd-action-icon">

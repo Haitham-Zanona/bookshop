@@ -6,8 +6,9 @@
  */
 
 use Elementor\Controls_Manager;
+	use Elementor\Group_Control_Image_Size;
 
-if ( ! defined( 'ABSPATH' ) ) {
+	if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
@@ -22,9 +23,10 @@ if ( ! function_exists( 'woodmart_get_button_content_general_map' ) ) {
 	 */
 	function woodmart_get_button_content_general_map( $element, $custom_args = array() ) {
 		$default_args = array(
-			'link'          => true,
-			'smooth_scroll' => true,
-			'text'          => 'Read more',
+			'link'                => true,
+			'smooth_scroll'       => true,
+			'collapsible_content' => true,
+			'text'                => 'Read more',
 		);
 
 		$args = wp_parse_args( $custom_args, $default_args );
@@ -97,19 +99,21 @@ Then you need to have a section with an ID of "section-id" and this button click
 			);
 		}
 
-		$element->add_control(
-			'button_collapsible_content',
-			array(
-				'label'        => esc_html__( 'Use for collapsible content', 'woodmart' ),
-				'description'  => esc_html__( 'Enable this option when you place this button inside the column with the "Collapsible content" option turned on.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => '',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-				'separator'    => 'before',
-			)
-		);
+		if ( $args['collapsible_content'] ) {
+			$element->add_control(
+				'button_collapsible_content',
+				array(
+					'label'        => esc_html__( 'Use for collapsible content', 'woodmart' ),
+					'description'  => esc_html__( 'Enable this option when you place this button inside the container with the "Collapsible content" option turned on.', 'woodmart' ),
+					'type'         => Controls_Manager::SWITCHER,
+					'default'      => '',
+					'label_on'     => esc_html__( 'Yes', 'woodmart' ),
+					'label_off'    => esc_html__( 'No', 'woodmart' ),
+					'return_value' => 'yes',
+					'separator'    => 'before',
+				)
+			);
+		}
 	}
 }
 
@@ -286,45 +290,13 @@ if ( ! function_exists( 'woodmart_get_button_style_general_map' ) ) {
 				'type'    => Controls_Manager::SELECT,
 				'options' => [
 					'rectangle'  => esc_html__( 'Rectangle', 'woodmart' ),
-					'round'      => esc_html__( 'Circle', 'woodmart' ),
-					'semi-round' => esc_html__( 'Round', 'woodmart' ),
+					'round'      => esc_html__( 'Round', 'woodmart' ),
+					'semi-round' => esc_html__( 'Rounded', 'woodmart' ),
 				],
 				'condition' => [
 					'style!' => [ 'link' ],
 				],
 				'default' => 'rectangle',
-			]
-		);
-	}
-}
-
-if ( ! function_exists( 'woodmart_get_button_style_icon_map' ) ) {
-	/**
-	 * Get button map.
-	 *
-	 * @param  object $element  Element object.
-	 *
-	 * @since 1.0.0
-	 */
-	function woodmart_get_button_style_icon_map( $element ) {
-		$element->add_control(
-			'icon',
-			[
-				'label' => esc_html__( 'Icon', 'woodmart' ),
-				'type'  => Controls_Manager::ICONS,
-			]
-		);
-
-		$element->add_control(
-			'icon_position',
-			[
-				'label'   => esc_html__( 'Icon position', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => [
-					'right' => esc_html__( 'Right', 'woodmart' ),
-					'left'  => esc_html__( 'Left', 'woodmart' ),
-				],
-				'default' => 'right',
 			]
 		);
 	}
@@ -375,3 +347,75 @@ if ( ! function_exists( 'woodmart_get_button_style_layout_map' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'woodmart_get_button_style_icon_map' ) ) {
+	/**
+	 * Get button map.
+	 *
+	 * @param  object $element  Element object.
+	 *
+	 * @since 1.0.0
+	 */
+	function woodmart_get_button_style_icon_map( $element, $prefix_key = '' ) {
+		$element->add_control(
+			$prefix_key . 'icon_type',
+			[
+				'label'   => esc_html__( 'Type', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => [
+					'icon'  => esc_html__( 'Icon', 'woodmart' ),
+					'image' => esc_html__( 'Image', 'woodmart' ),
+				],
+				'default' => 'icon',
+			]
+		);
+
+		$element->add_control(
+			$prefix_key . 'image',
+			array(
+				'label'     => esc_html__( 'Choose image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'condition' => array(
+					$prefix_key . 'icon_type' => 'image',
+				),
+			)
+		);
+
+		$element->add_group_control(
+			Group_Control_Image_Size::get_type(),
+			array(
+				'name'      => $prefix_key . 'image',
+				'default'   => 'thumbnail',
+				'separator' => 'none',
+				'condition' => array(
+					$prefix_key . 'icon_type' => 'image',
+				),
+			)
+		);
+
+		$element->add_control(
+			$prefix_key . 'icon',
+			[
+				'label'     => esc_html__( 'Icon', 'woodmart' ),
+				'type'      => Controls_Manager::ICONS,
+				'condition' => array(
+					$prefix_key . 'icon_type' => 'icon',
+				),
+			]
+		);
+
+		$element->add_control(
+			$prefix_key . 'icon_position',
+			[
+				'label'   => esc_html__( 'Icon position', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => [
+					'right' => esc_html__( 'Right', 'woodmart' ),
+					'left'  => esc_html__( 'Left', 'woodmart' ),
+				],
+				'default' => 'right',
+			]
+		);
+	}
+}
+

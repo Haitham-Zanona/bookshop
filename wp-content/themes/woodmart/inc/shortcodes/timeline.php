@@ -18,6 +18,7 @@ if ( ! function_exists( 'woodmart_timeline_shortcode' ) ) {
 					'item_style'      => 'default',
 					'el_class'        => '',
 					'woodmart_css_id' => '',
+					'css'             => '',
 				),
 				$atts
 			)
@@ -32,6 +33,11 @@ if ( ! function_exists( 'woodmart_timeline_shortcode' ) ) {
 		$classes .= ' wd-item-' . $item_style;
 		$classes .= ' wd-line-' . $line_style;
 		$classes .= $el_class ? ' ' . $el_class : '';
+		$classes .= ' wd-rs-' . $woodmart_css_id;
+
+		if ( function_exists( 'vc_shortcode_custom_css_class' ) ) {
+			$classes .= ' ' . vc_shortcode_custom_css_class( $css );
+		}
 
 		ob_start();
 
@@ -122,19 +128,10 @@ if ( ! function_exists( 'woodmart_timeline_item_shortcode' ) ) {
 				<span class="timeline-arrow"></span>
 				<?php if ( $image_primary ) : ?>
 					<div class="wd-timeline-image" >
-						<?php if ( function_exists( 'wpb_getImageBySize' ) ) : ?>
-							<?php
-							echo wpb_getImageBySize(
-								array(
-									'attach_id'  => $image_primary,
-									'thumb_size' => $img_size_primary,
-								)
-							)['thumbnail'];
-							?>
-						<?php endif; ?>
+						<?php echo woodmart_otf_get_image_html( $image_primary, $img_size_primary ); ?>
 					</div>
 				<?php endif ?>
-				<h4 class="wd-timeline-title"><?php echo esc_attr( $title_primary ); ?></h4>
+				<h4 class="wd-timeline-title"><?php echo esc_html( $title_primary ); ?></h4>
 				<div class="wd-timeline-content set-cont-mb-s reset-last-child"><?php echo do_shortcode( $content ); ?></div>
 			</div>
 
@@ -142,19 +139,10 @@ if ( ! function_exists( 'woodmart_timeline_item_shortcode' ) ) {
 				<span class="timeline-arrow"></span>
 				<?php if ( $image_secondary ) : ?>
 					<div class="wd-timeline-image" >
-						<?php if ( function_exists( 'wpb_getImageBySize' ) ) : ?>
-							<?php
-							echo wpb_getImageBySize(
-								array(
-									'attach_id'  => $image_secondary,
-									'thumb_size' => $img_size_secondary,
-								)
-							)['thumbnail'];
-							?>
-						<?php endif; ?>
+						<?php echo woodmart_otf_get_image_html( $image_secondary, $img_size_secondary ); ?>
 					</div>
 				<?php endif ?>
-				<h4 class="wd-timeline-title"><?php echo esc_attr( $title_secondary ); ?></h4>
+				<h4 class="wd-timeline-title"><?php echo esc_html( $title_secondary ); ?></h4>
 				<div class="wd-timeline-content set-cont-mb-s reset-last-child"><?php echo do_shortcode( $content_secondary ); ?></div>
 			</div>
 			<?php
@@ -210,7 +198,7 @@ if ( ! function_exists( 'woodmart_timeline_breakpoint_shortcode' ) ) {
 		ob_start();
 		?>
 		<div id="<?php echo esc_attr( $id ); ?>" class="<?php echo esc_attr( $classes ); ?>">
-			<span class="woodmart-timeline-breakpoint-title"><?php echo esc_attr( $title ); ?></span>
+			<span class="woodmart-timeline-breakpoint-title"><?php echo esc_html( $title ); ?></span>
 			<?php
 			if ( $color_bg && ! woodmart_is_css_encode( $color_bg ) ) {
 				$css = '#' . esc_attr( $id ) . ' .woodmart-timeline-breakpoint-title {';

@@ -7,6 +7,7 @@
 
 use XTS\Modules\Layouts\Global_Data as Builder;
 use XTS\Modules\Layouts\Main;
+use XTS\Modules\Waitlist\Frontend as Waitlist_Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -36,7 +37,7 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_add_to_cart' ) ) {
 
 		$settings = wp_parse_args( $settings, $default_settings );
 
-		if ( woodmart_get_opt( 'catalog_mode' ) ) {
+		if ( woodmart_get_opt( 'catalog_mode' ) || ! is_user_logged_in() && woodmart_get_opt( 'login_prices' ) ) {
 			return '';
 		}
 
@@ -74,9 +75,21 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_add_to_cart' ) ) {
 		ob_start();
 
 		Main::setup_preview( array(), $settings['product_id'] );
+		global $product;
 		?>
 		<div class="wd-single-add-cart wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
 			<?php woocommerce_template_single_add_to_cart(); ?>
+
+			<?php
+		if ( woodmart_get_opt( 'waitlist_enabled' ) && ( ! woodmart_get_opt( 'waitlist_for_loggined' ) || is_user_logged_in() ) ) {
+				$waitlist_frontend = Waitlist_Frontend::get_instance();
+
+				if ( ( 'variable' === $product->get_type() && ! empty( $waitlist_frontend->get_out_of_stock_variations_ids( $product ) ) ) || ( 'simple' === $product->get_type() && ! $product->is_in_stock() ) ) {
+					$waitlist_frontend->render_waitlist_subscribe_form();
+					$waitlist_frontend->render_template_subscribe_form();
+				}
+			}
+			?>
 		</div>
 		<?php
 		Main::restore_preview( $settings['product_id'] );

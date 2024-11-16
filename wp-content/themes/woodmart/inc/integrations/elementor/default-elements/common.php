@@ -27,13 +27,17 @@ if ( ! function_exists( 'woodmart_common_before_render' ) ) {
 		}
 
 		if ( isset( $settings['_animation'] ) && $settings['_animation'] ) {
-			woodmart_enqueue_inline_style( 'int-el-animations' );
+			woodmart_enqueue_inline_style( 'mod-animations-keyframes' );
 		}
 
 		if ( isset( $settings['wd_animation'] ) && $settings['wd_animation'] ) {
 			woodmart_enqueue_inline_style( 'animations' );
 			woodmart_enqueue_js_script( 'animations' );
 			woodmart_enqueue_js_library( 'waypoints' );
+		}
+
+		if ( 'woocommerce-cart' === $widget->get_name() && 'yes' === $settings['update_cart_automatically'] ) {
+			woodmart_enqueue_js_script( 'cart-quantity' );
 		}
 	}
 

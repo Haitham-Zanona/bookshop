@@ -248,7 +248,7 @@ class Wishlist_Button extends Widget_Base {
 		$classes  = 'wd-action-btn wd-wishlist-icon';
 		$classes .= ' wd-style-' . $settings['style'];
 
-		if ( ! woodmart_get_opt( 'wishlist' ) ) {
+		if ( ! woodmart_get_opt( 'wishlist' ) || ! is_user_logged_in() && woodmart_get_opt( 'wishlist_logged' ) ) {
 			return;
 		}
 

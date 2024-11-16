@@ -132,7 +132,7 @@ class Price extends Widget_Base {
 			array(
 				'label'    => esc_html__( 'Typography', 'woodmart' ),
 				'name'     => 'main_price_typography',
-				'selector' => '{{WRAPPER}} .price',
+				'selector' => '{{WRAPPER}} .price, {{WRAPPER}} .amount',
 			)
 		);
 

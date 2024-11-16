@@ -19,7 +19,13 @@ if ( ! function_exists( 'woodmart_get_slider_responsive_param' ) ) {
 	 * @return string
 	 */
 	function woodmart_get_slider_responsive_param( $settings, $value ) {
-		$param_name = $settings['param_name'];
+		$param_name   = $settings['param_name'];
+		$devices_maps = array(
+			'desktop'         => esc_html__( 'Desktop', 'woodmart' ),
+			'tablet'          => esc_html__( 'Tablet', 'woodmart' ),
+			'tablet_vertical' => esc_html__( 'Tablet', 'woodmart' ),
+			'mobile'          => esc_html__( 'Mobile', 'woodmart' ),
+		);
 
 		if ( ! empty( $value ) ) {
 			if ( woodmart_is_compressed_data( $value ) ) {
@@ -40,6 +46,10 @@ if ( ! function_exists( 'woodmart_get_slider_responsive_param' ) ) {
 			$settings['default'] = $settings['devices'];
 
 			foreach ( $data['devices'] as $device => $device_settings ) {
+				if ( ! isset( $settings['devices'][ $device ] ) ) {
+					continue;
+				}
+
 				$settings['devices'][ $device ] = $data['devices'][ $device ];
 			}
 		}
@@ -58,8 +68,8 @@ if ( ! function_exists( 'woodmart_get_slider_responsive_param' ) ) {
 						}
 						?>
 
-						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>">
-							<span><?php echo esc_attr( $device ); ?></span>
+						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>" title="<?php echo esc_attr( ucfirst( $devices_maps[ $device ] ) ); ?>">
+							<span><?php echo esc_html( $devices_maps[ $device ] ); ?></span>
 						</span>
 					<?php endforeach; ?>
 				</div>

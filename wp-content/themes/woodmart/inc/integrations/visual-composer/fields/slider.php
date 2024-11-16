@@ -32,12 +32,12 @@ if ( ! function_exists( 'woodmart_get_slider_param' ) ) {
 
 			<input type="hidden" class="wd-slider-field-value wpb_vc_param_value" name="<?php echo esc_attr( $param_name ); ?>" id="<?php echo esc_attr( $param_name ); ?>" value="<?php echo esc_attr( $value ); ?>" data-min="<?php echo esc_attr( $settings['min'] ); ?>" data-max="<?php echo esc_attr( $settings['max'] ); ?>" data-step="<?php echo esc_attr( $settings['step'] ); ?>" data-css_params="<?php echo esc_attr( $css_params ); ?>" data-css_args="<?php echo esc_attr( $css_args ); ?>">
 
-			<span class="xts-slider-field-value-display">
-				<span class="wd-slider-value-preview"></span>
+			<span class="xts-range-field-value-input">
+				<input type="number" min="<?php echo esc_attr( $settings['min'] ); ?>" max="<?php echo esc_attr( $settings['max'] ); ?>" step="<?php echo esc_attr( $settings['step'] ); ?>" value="<?php echo esc_attr( $value ); ?>" class="wd-slider-value-preview" aria-label="Preview">
 			</span>
 
 			<span class="xts-slider-units">
-				<span class="wd-slider-unit-control xts-active"><?php echo esc_attr( $settings['units'] ); ?></span>
+				<span class="wd-slider-unit-control xts-active"><?php echo esc_html( $settings['units'] ); ?></span>
 			</span>
 		</div>
 		<?php

@@ -7,8 +7,9 @@
 	.xts-header {
 		position: absolute;
 		top: 0;
-		right: -20px;
-		left: -20px;
+		// right: -20px;
+		// left: -20px;
+		inset-inline: -20px;
 		// margin-top: 20px;
 		margin-bottom: 20px;
 		min-width: 850px;
@@ -16,6 +17,7 @@
 		// border-radius: var(--xts-brd-radius);
 		background-color: #FFF;
 		// box-shadow: var(--xts-box-shadow);
+		height: $xts-header-h;
 
 		:is(
 		.xts-row,
@@ -24,8 +26,9 @@
 		}
 
 		.xts-row {
-			margin-right: 0;
-			margin-left: 0;
+			// margin-right: 0;
+			// margin-left: 0;
+			margin-inline: 0;
 			// padding-right: 5px;
 			// padding-left: 5px;
 		}
@@ -39,8 +42,9 @@
 				align-items: flex-start;
 				flex-direction: column;
 				justify-content: center;
-				padding-right: 30px;
-				padding-left: 30px;
+				// padding-right: 30px;
+				// padding-left: 30px;
+				padding-inline: 30px;
 
 				border-inline-end: 1px solid var(--xts-option-border-color);
 			}
@@ -49,17 +53,23 @@
 		.xts-nav {
 			flex-grow: 1;
 			align-items: center;
-			padding-right: 15px;
-			padding-left: 15px;
+			// padding-right: 15px;
+			// padding-left: 15px;
+			padding-inline: 15px;
 			width: 100%;
 
-			&:first-child {
-				min-height: 70px;
-				border-bottom: 1px solid var(--xts-option-border-color);
-			}
+			// &:first-child {
+			// 	min-height: 70px;
+			// 	border-bottom: 1px solid var(--xts-option-border-color);
+			// }
 
 			&:last-child {
 				min-height: 60px;
+			}
+
+			&:not(:last-child) {
+				min-height: 70px;
+				border-bottom: 1px solid var(--xts-option-border-color);
 			}
 		}
 	}
@@ -118,8 +128,9 @@
 			> li {
 
 				> a {
-					padding-top: 10px;
-					padding-bottom: 10px;
+					// padding-top: 10px;
+					// padding-bottom: 10px;
+					padding-block: 10px;
 
 					span {
 						position: relative;

@@ -5,19 +5,19 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_products_widget' ) ) {
-	function woodmart_vc_map_products_widget() {
-		if ( ! shortcode_exists( 'woodmart_shortcode_products_widget' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_shortcode_products_widget' ) ) {
+	function woodmart_get_vc_map_shortcode_products_widget() {
+		return array(
 			'name' => esc_html__( 'WC products widget', 'woodmart' ),
 			'base' => 'woodmart_shortcode_products_widget',
 			'category' => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
 			'description' => esc_html__( 'Small products list widget', 'woodmart' ),
-        	'icon'            => WOODMART_ASSETS . '/images/vc-icon/wc-product-widget.svg',
+			'icon'            => WOODMART_ASSETS . '/images/vc-icon/wc-product-widget.svg',
 			'params' => array(
+				array(
+					'param_name' => 'woodmart_css_id',
+					'type'       => 'woodmart_css_id',
+				),
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -30,8 +30,8 @@ if( ! function_exists( 'woodmart_vc_map_products_widget' ) ) {
 					'param_name' => 'title',
 				),
 				/**
-				* Data settings
-				*/
+				 * Data settings
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -136,11 +136,10 @@ if( ! function_exists( 'woodmart_vc_map_products_widget' ) ) {
 					'param_name' => 'images_size',
 					'hint' => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\' or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use \'thumbnail\' size.', 'woodmart' ),
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
-					'description' => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 				),
 				/**
-				* Extra
-				*/
+				 * Extra
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -171,16 +170,22 @@ if( ! function_exists( 'woodmart_vc_map_products_widget' ) ) {
 					'param_name' => 'el_class',
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				woodmart_get_vc_responsive_spacing_map(),
 			),
-		));
-
-		//Filters For autocomplete param:
-		//For suggestion: vc_autocomplete_[shortcode_name]_[param_name]_callback
-		add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_ids_callback', 'woodmart_productCategoryCategoryAutocompleteSuggester', 10, 1 ); // Get suggestion(find). Must return an array
-		add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_ids_render', 'woodmart_productCategoryCategoryRenderByIdExact', 10, 1 );
-
-		add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_include_products_callback',	'woodmart_productIdAutocompleteSuggester', 10, 1 ); 
-		add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_include_products_render',	'woodmart_productIdAutocompleteRender', 10, 1 ); 
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_products_widget' );
 }
+
+//Filters For autocomplete param:
+//For suggestion: vc_autocomplete_[shortcode_name]_[param_name]_callback
+add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_ids_callback', 'woodmart_productCategoryCategoryAutocompleteSuggester', 10, 1 ); // Get suggestion(find). Must return an array
+add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_ids_render', 'woodmart_productCategoryCategoryRenderByIdExact', 10, 1 );
+
+add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_include_products_callback',	'woodmart_productIdAutocompleteSuggester', 10, 1 );
+add_filter( 'vc_autocomplete_woodmart_shortcode_products_widget_include_products_render',	'woodmart_productIdAutocompleteRender', 10, 1 );

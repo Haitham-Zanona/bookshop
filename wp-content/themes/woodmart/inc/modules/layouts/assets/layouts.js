@@ -1,12 +1,18 @@
 /* global woodmartConfig */
+/* global woodmartConfig */
 (function($) {
 	'use strict';
 
-	var $wrapper = $('.wd-layout, #wd-layout-conditions');
+	var $wrapper  = $('.wd-layout, #wd-layout-conditions');
 	var $template = $wrapper.find('.xts-layout-condition-template');
-	var $form = $wrapper.find('form');
-	var $popup = $wrapper.find('.xts-popup');
-	var allowSubmit = true;
+	var $form     = $wrapper.find('form');
+	var $popup    = $wrapper.find('.xts-popup');
+
+	const showNotice = function( $popup, message, status ) {
+		$popup.find('.xts-layout-popup-notices').text('');
+		$popup.find('.xts-layout-popup-notices').append('<div class="xts-notice xts-' + status + '">' + message + '</div>');
+		$popup.removeClass('xts-loading');
+	};
 
 	// Change status.
 	$(document).on('click', '.column-wd_layout_status .xts-switcher-btn', function() {
@@ -28,9 +34,10 @@
 				$switcher.replaceWith(response.new_html);
 			},
 			error   : function() {
-				$popup.find('.xts-layout-popup-notices').text('');
-				$popup.find('.xts-layout-popup-notices').append('<div class="xts-notice xts-warning">Something went wrong with the creation of the layout!</div>');
-				$popup.removeClass('xts-loading');
+				var $popup = $switcher.parents('.wd_layout_status').siblings('.wd_layout_conditions').find('.xts-popup');
+
+				$popup.parent('.xts-popup-holder').addClass('xts-opened');
+				showNotice( $popup, woodmartConfig.creation_error, 'warning' );
 			}
 		});
 	});
@@ -38,12 +45,6 @@
 	// Form.
 	$form.on('submit', function(e) {
 		e.preventDefault();
-
-		if (allowSubmit) {
-			allowSubmit = false;
-		} else {
-			return false;
-		}
 
 		var data = [];
 		var layoutType = $form.find('.xts-layout-type').val();
@@ -73,12 +74,14 @@
 			},
 			dataType: 'json',
 			success : function(response) {
-				window.location.href = response.redirect_url;
+				if ( ! response.success && response.hasOwnProperty('data') && response.data.hasOwnProperty('message') ) {
+					showNotice( $popup, response.data.message, 'warning' );
+				} else {
+					window.location.href = response.redirect_url;
+				}
 			},
 			error   : function() {
-				$popup.find('.xts-layout-popup-notices').text('');
-				$popup.find('.xts-layout-popup-notices').append('<div class="xts-notice xts-warning">Something went wrong with the creation of the layout!</div>');
-				$popup.removeClass('xts-loading');
+				showNotice( $popup, woodmartConfig.creation_error, 'warning' );
 			}
 		});
 	});
@@ -105,7 +108,7 @@
 			$('.xts-layout-predefined-layouts[data-type="' + layoutType + '"]').removeClass('xts-hidden');
 		}
 
-		if ('cart' === layoutType || 'checkout_form' === layoutType || 'checkout_content' === layoutType) {
+		if ('cart' === layoutType || 'empty_cart' === layoutType || 'checkout_form' === layoutType || 'checkout_content' === layoutType) {
 			$wrapper.find('.xts-layout-condition-add').addClass('xts-hidden');
 			$wrapper.find('.xts-layout-conditions-title').addClass('xts-hidden');
 			$form.find('.xts-layout-condition').addClass('xts-hidden');
@@ -123,7 +126,7 @@
 			$querySelect.select2('destroy');
 		}
 
-		if ('all' === conditionType || 'shop_page' === conditionType || 'product_search' === conditionType || 'product_cats' === conditionType || 'product_tags' === conditionType || 'checkout_form' === conditionType || 'checkout_content' === conditionType || 'cart' === conditionType || 'filtered_product_term_any' === conditionType) {
+		if ('all' === conditionType || 'shop_page' === conditionType || 'product_search' === conditionType || 'product_cats' === conditionType || 'product_tags' === conditionType || 'checkout_form' === conditionType || 'checkout_content' === conditionType || 'cart' === conditionType || 'empty_cart' === conditionType || 'filtered_product_term_any' === conditionType) {
 			$querySelect.addClass('xts-hidden');
 			$querySelect.removeAttr('data-query-type');
 		} else {
@@ -253,14 +256,10 @@
 			},
 			dataType: 'json',
 			success : function() {
-				$popup.find('.xts-layout-popup-notices').text('');
-				$popup.find('.xts-layout-popup-notices').append('<div class="xts-notice xts-success">Conditions has been successfully saved!</div>');
-				$popup.removeClass('xts-loading');
+				showNotice( $popup, woodmartConfig.success_save, 'success' );
 			},
 			error   : function() {
-				$popup.find('.xts-layout-popup-notices').text('');
-				$popup.find('.xts-layout-popup-notices').append('<div class="xts-notice xts-warning">Something went wrong with editing the layout!</div>');
-				$popup.removeClass('xts-loading');
+				showNotice( $popup, woodmartConfig.editing_error, 'warning' );
 			}
 		});
 	});

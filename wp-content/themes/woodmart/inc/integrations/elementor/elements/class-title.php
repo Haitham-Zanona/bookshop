@@ -94,6 +94,15 @@ class Title extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'subtitle',
 			array(
 				'label'   => esc_html__( 'Subtitle', 'woodmart' ),
@@ -311,7 +320,7 @@ class Title extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			array(
 				'name'     => 'subtitle_typography',
-				'label'    => esc_html__( 'Custom typography', 'woodmart' ),
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
 				'selector' => '{{WRAPPER}} .title-subtitle',
 			)
 		);
@@ -403,7 +412,7 @@ class Title extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			array(
 				'name'     => 'title_typography',
-				'label'    => esc_html__( 'Custom typography', 'woodmart' ),
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
 				'selector' => '{{WRAPPER}} .title',
 			)
 		);
@@ -436,7 +445,7 @@ class Title extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			array(
 				'name'     => 'text_typography',
-				'label'    => esc_html__( 'Custom typography', 'woodmart' ),
+				'label'    => esc_html__( 'Typography', 'woodmart' ),
 				'selector' => '{{WRAPPER}} .title-after_title',
 			)
 		);
@@ -529,14 +538,26 @@ class Title extends Widget_Base {
 		);
 
 		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$image_output = '<div class="img-wrapper">' . woodmart_get_image_html( $settings, 'image' ) . '</div>';
+			$image_output              = '<span class="img-wrapper">' . woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] ) . '</span>';
+			$render_svg_with_image_tag = apply_filters( 'woodmart_render_svg_with_image_tag', true );
 
-			if ( woodmart_is_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ) ) ) {
-				$image_output = '<div class="img-wrapper"><span class="svg-icon" style="width:' . esc_attr( $custom_image_size['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( woodmart_get_image_url( $settings['image']['id'], 'image', $settings ), rand( 999, 9999 ) ) . '</span></div>';
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
+				if ( $render_svg_with_image_tag ) {
+					$custom_image_size = 'custom' !== $settings['image_size'] && 'full' !== $settings['image_size'] ? $settings['image_size'] : $custom_image_size;
+					$image_output      = '<span class="img-wrapper">' . woodmart_get_svg_html( $settings['image']['id'], $custom_image_size ) . '</span>';
+				} else {
+					$image_output = '<span class="img-wrapper"><span class="svg-icon" style="width:' . esc_attr( $custom_image_size['width'] ) . 'px; height:' . esc_attr( $custom_image_size['height'] ) . 'px;">' . woodmart_get_any_svg( $settings['image']['url'], rand( 999, 9999 ) ) . '</span></span>';
+				}
 			}
 		}
 
 		woodmart_enqueue_inline_style( 'section-title' );
+
+		if ( in_array( $settings['style'], array( 'bordered', 'simple' ), true ) ) {
+			woodmart_enqueue_inline_style( 'section-title-style-simple-and-brd' );
+		} elseif ( in_array( $settings['style'], array( 'overlined', 'underlined', 'underlined-2' ), true ) ) {
+			woodmart_enqueue_inline_style( 'section-title-style-under-and-over' );
+		}
 
 		if ( isset( $settings['title_decoration_style'] ) && 'default' !== $settings['title_decoration_style'] ) {
 			woodmart_enqueue_inline_style( 'mod-highlighted-text' );

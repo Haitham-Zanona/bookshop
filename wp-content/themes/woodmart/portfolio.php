@@ -20,11 +20,13 @@ if ( ! woodmart_is_woo_ajax() ) {
 ?>
 <div class="site-content page-portfolio <?php echo esc_attr( $content_class ); ?>" role="main">
 	<?php if ( have_posts() ) : ?>
-		<?php if ( $filters && ( ( 'links' === $filters_type && is_tax() ) || ! is_tax() ) ) : ?>
-			<?php woodmart_portfolio_filters( '', $filters_type ); ?>
-		<?php endif ?>
+		<div class="wd-portfolio-element">
+			<?php if ( $filters && ( ( 'links' === $filters_type && is_tax() ) || ! is_tax() ) ) : ?>
+				<?php woodmart_portfolio_filters( '', $filters_type ); ?>
+			<?php endif ?>
 
-		<?php woodmart_get_portfolio_main_loop(); ?>
+			<?php woodmart_get_portfolio_main_loop(); ?>
+		</div>
 	<?php else : ?>
 		<?php get_template_part( 'content', 'none' ); ?>
 	<?php endif; ?>

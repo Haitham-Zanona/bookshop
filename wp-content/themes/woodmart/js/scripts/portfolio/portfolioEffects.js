@@ -17,7 +17,7 @@
 			return;
 		}
 
-		$('.wd-portfolio-holder .portfolio-parallax').panr({
+		$('.wd-projects .portfolio-parallax').panr({
 			sensitivity         : 15,
 			scale               : false,
 			scaleOnHover        : true,

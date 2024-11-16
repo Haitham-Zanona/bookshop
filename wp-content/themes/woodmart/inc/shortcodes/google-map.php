@@ -77,9 +77,12 @@ if ( ! function_exists( 'woodmart_shortcode_google_map' ) ) {
 						$thumb_size = woodmart_get_image_size( $marker['image_size'] );
 						$thumbnail  = wpb_resize( $marker['image'], null, $thumb_size[0], $thumb_size[1], true );
 
-						$marker[ 'marker_icon' ]      = isset( $thumbnail['url'] ) ? $thumbnail['url'] : '';
-						$marker[ 'marker_icon_size' ] = array( $thumbnail['width'], $thumbnail['height'] );
+						$marker['marker_icon']      = isset( $thumbnail['url'] ) ? $thumbnail['url'] : '';
+						$marker['marker_icon_size'] = array( $thumbnail['width'], $thumbnail['height'] );
 					}
+
+					$marker['marker_title']       = esc_html( $marker['marker_title'] );
+					$marker['marker_description'] = esc_html( $marker['marker_description'] );
 
 					return $marker;
 				},
@@ -133,7 +136,7 @@ if ( ! function_exists( 'woodmart_shortcode_google_map' ) ) {
 			$el_class .= ' ' . vc_shortcode_custom_css_class( $css );
 		}
 
-		$minified = woodmart_get_opt( 'minified_js' ) ? '.min' : '';
+		$minified = woodmart_is_minified_needed() ? '.min' : '';
 		$version  = woodmart_get_theme_info( 'Version' );
 
 		wp_enqueue_script( 'wd-google-map-api', 'https://maps.google.com/maps/api/js?libraries=geometry&callback=woodmartThemeModule.googleMapsCallback&v=weekly&key=' . $google_key, array(), $version, true );
@@ -184,8 +187,8 @@ if ( ! function_exists( 'woodmart_shortcode_google_map' ) ) {
 			$thumb_size = woodmart_get_image_size( $marker_icon_size );
 			$thumbnail  = wpb_resize( $marker_icon, null, $thumb_size[0], $thumb_size[1], true );
 
-			$map_args[ 'marker_icon' ]      = isset( $thumbnail['url'] ) ? $thumbnail['url'] : '';
-			$map_args[ 'marker_icon_size' ] = array( $thumbnail['width'], $thumbnail['height'] );
+			$map_args['marker_icon']      = isset( $thumbnail['url'] ) ? $thumbnail['url'] : '';
+			$map_args['marker_icon_size'] = array( $thumbnail['width'], $thumbnail['height'] );
 		}
 
 		$image_id   = $map_init_placeholder;
@@ -198,12 +201,7 @@ if ( ! function_exists( 'woodmart_shortcode_google_map' ) ) {
 		$placeholder = '<img src="' . WOODMART_ASSETS_IMAGES . '/google-map-placeholder.jpg">';
 
 		if ( $image_id ) {
-			$placeholder = wpb_getImageBySize(
-				array(
-					'attach_id'  => $image_id,
-					'thumb_size' => $image_size,
-				)
-			)['thumbnail'];
+			$placeholder = woodmart_otf_get_image_html( $image_id, $image_size );
 		}
 
 		$style_attr = ! $new_height && 0 < $height ? 'style="height: ' . esc_attr( $height ) . 'px"' : '';
@@ -225,7 +223,7 @@ if ( ! function_exists( 'woodmart_shortcode_google_map' ) ) {
 				<?php if ( 'button' === $init_type ) : ?>
 					<div class="wd-init-map-wrap wd-fill">
 						<a href="#" rel="nofollow noopener" class="btn btn-color-white wd-init-map">
-							<span><?php esc_attr_e( 'Show map', 'woodmart' ); ?></span>
+							<span><?php esc_html_e( 'Show map', 'woodmart' ); ?></span>
 						</a>
 					</div>
 				<?php endif ?>

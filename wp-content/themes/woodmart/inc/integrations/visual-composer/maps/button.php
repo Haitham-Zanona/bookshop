@@ -6,17 +6,6 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if ( ! function_exists( 'woodmart_vc_shortcode_button' ) ) {
-	function woodmart_vc_shortcode_button() {
-		if ( ! shortcode_exists( 'woodmart_button' ) ) {
-			return;
-		}
-
-		vc_map( woodmart_get_woodmart_button_shortcode_args() );
-	}
-	add_action( 'vc_before_init', 'woodmart_vc_shortcode_button' );
-}
-
 if ( ! function_exists( 'woodmart_get_woodmart_button_shortcode_args' ) ) {
 	function woodmart_get_woodmart_button_shortcode_args() {
 		return array(
@@ -189,9 +178,9 @@ if ( ! function_exists( 'woodmart_get_button_shortcode_params' ) ) {
 						esc_html__( 'Round', 'woodmart' )  => 'semi-round',
 					),
 					'images_value'     => array(
-						'rectangle'  => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/rectangle.png',
-						'round'      => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/circle.png',
-						'semi-round' => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/round.png',
+						'rectangle'  => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/rectangle.jpeg',
+						'round'      => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/circle.jpeg',
+						'semi-round' => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/round.jpeg',
 					),
 					'dependency'       => array(
 						'element'            => 'style',

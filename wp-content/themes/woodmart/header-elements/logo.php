@@ -32,7 +32,7 @@ if ( $has_sticky_logo ) {
 
 ?>
 <div class="site-logo<?php echo esc_attr( $logo_classes ); ?>">
-	<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="wd-logo wd-main-logo<?php echo woodmart_get_old_classes( ' woodmart-logo woodmart-main-logo' ); ?>" rel="home">
+	<a href="<?php echo esc_url( home_url( '/' ) ); ?>" class="wd-logo wd-main-logo<?php echo woodmart_get_old_classes( ' woodmart-logo woodmart-main-logo' ); ?>" rel="home" aria-label="<?php esc_html_e( 'Site logo', 'woodmart' ); ?>">
 		<?php echo $logo; // phpcs:ignore ?>
 	</a>
 	<?php if ( $has_sticky_logo ) : ?>

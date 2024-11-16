@@ -59,6 +59,7 @@ class Render extends Singleton {
 		foreach ( WC()->cart->cart_contents as $product_cart ) {
 			if ( ! empty( $product_cart['wd_fbt_bundle_id'] ) ) {
 				woodmart_enqueue_inline_style( 'woo-opt-fbt-cart' );
+				woodmart_enqueue_inline_style( 'woo-mod-cart-labels' );
 
 				return;
 			}
@@ -71,8 +72,6 @@ class Render extends Singleton {
 	 * @return void
 	 */
 	public function purchasable_fbt_products() {
-		check_ajax_referer( 'wd-frequently-bought-together', 'key' );
-
 		if ( empty( $_POST['main_product'] ) || empty( $_POST['products_id'] ) || empty( $_POST['bundle_id'] ) ) {
 			wp_send_json_error();
 		}
@@ -127,21 +126,23 @@ class Render extends Singleton {
 		}
 
 		foreach ( $fbt_products as $fbt_product ) {
-			if ( ! isset( $products_id[ $fbt_product['id'] ] ) || $main_product->get_id() === (int) $fbt_product['id'] ) {
+			$product_id = apply_filters( 'wpml_object_id', $fbt_product['id'], 'product', true );
+
+			if ( ! isset( $products_id[ $product_id ] ) || $main_product->get_id() === (int) $product_id ) {
 				continue;
 			}
 
-			$product           = wc_get_product( $fbt_product['id'] );
+			$product           = wc_get_product( $product_id );
 			$item_qty          = 1;
 			$item_variation_id = 0;
 			$item_variation    = array();
 
 			if ( $product->is_type( 'variable' ) ) {
-				if ( ! $products_id[ $fbt_product['id'] ] ) {
+				if ( ! $products_id[ $product_id ] ) {
 					continue;
 				}
 
-				$variation_product = wc_get_product( $products_id[ $fbt_product['id'] ] );
+				$variation_product = wc_get_product( $products_id[ $product_id ] );
 				$item_variation_id = $variation_product->get_id();
 				$item_variation    = $variation_product->get_variation_attributes();
 			}
@@ -219,7 +220,8 @@ class Render extends Singleton {
 					$variation_product = wc_get_product( $cart_item['variation_id'] );
 					$price             = (float) $variation_product->get_price();
 				} else {
-					$price = (float) $cart_item['data']->get_price();
+					$current_product = wc_get_product( $cart_item['data']->get_id() );
+					$price           = $current_product->get_price();
 				}
 
 				$price = apply_filters( 'woodmart_fbt_set_product_cart_price', $price, $cart_item );
@@ -236,6 +238,7 @@ class Render extends Singleton {
 	/**
 	 * Update products data bundles after save bundle.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $cart_item Product cart item.
 	 *
 	 * @return void
@@ -247,6 +250,14 @@ class Render extends Singleton {
 		$main_discount      = get_post_meta( $cart_item['wd_fbt_bundle_id'], '_woodmart_main_products_discount', true );
 		$show_checkbox      = get_post_meta( $cart_item['wd_fbt_bundle_id'], '_woodmart_show_checkbox', true );
 		$fbt_products_count = count( $fbt_products );
+
+		if ( $fbt_products ) {
+			foreach ( $fbt_products as $key => $fbt_product ) {
+				if ( ! empty( $fbt_product['id'] ) ) {
+					$fbt_products[ $key ]['id'] = apply_filters( 'wpml_object_id', $fbt_product['id'], 'product', true );
+				}
+			}
+		}
 
 		$bundles_id = get_post_meta( $cart_item['wd_fbt_parent_id'], 'woodmart_fbt_bundles_id', true );
 
@@ -311,6 +322,7 @@ class Render extends Singleton {
 	/**
 	 * Update price in cart.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $price Product price.
 	 * @param array  $cart_item Product data.
 	 * @return string
@@ -339,6 +351,7 @@ class Render extends Singleton {
 	/**
 	 * Update subtotal price in cart.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $price Product price.
 	 * @param array  $cart_item Product data.
 	 * @return string
@@ -385,6 +398,7 @@ class Render extends Singleton {
 	/**
 	 * Cart item quantity.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $quantity Quantity content.
 	 * @param string $cart_item_key Product key.
 	 *
@@ -398,9 +412,8 @@ class Render extends Singleton {
 				array(
 					'input_name'   => "cart[{$cart_item_key}][qty]",
 					'input_value'  => $item['quantity'],
-					'max_value'    => $item['quantity'],
-					'min_value'    => $item['quantity'],
 					'product_name' => $item['data']->get_name(),
+					'readonly'     => true,
 				),
 				$item['data'],
 				false
@@ -488,6 +501,7 @@ class Render extends Singleton {
 	/**
 	 * Update title in cart for frequently bought together product.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $item_name Product title.
 	 * @param array  $item Product data.
 	 * @return string
@@ -500,7 +514,7 @@ class Render extends Singleton {
 			woodmart_enqueue_js_script( 'btns-tooltips' );
 
 			?>
-			<span class="wd-fbt-label wd-tooltip">
+			<span class="wd-cart-label wd-fbt-label wd-tooltip">
 				<?php esc_html_e( 'Bundled product', 'woodmart' ); ?>
 			</span>
 			<?php

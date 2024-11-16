@@ -273,10 +273,20 @@ class Author_Area extends Widget_Base {
 		$this->add_inline_editing_attributes( 'author_name' );
 		$this->add_inline_editing_attributes( 'content' );
 
-		$image_url = woodmart_get_image_url( $settings['image']['id'], 'image', $settings );
+		// Image settings.
+		$image_output      = '';
+		$custom_image_size = isset( $settings['image_custom_dimension']['width'] ) && $settings['image_custom_dimension']['width'] ? $settings['image_custom_dimension'] : array(
+			'width'  => 128,
+			'height' => 128,
+		);
 
-		if ( ! $image_url ) {
-			$image_url = $settings['image']['url'];
+		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
+			$image_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $custom_image_size, array( 'class' => 'author-area-image' ) );
+
+			if ( woodmart_is_svg( wp_get_attachment_image_url( $settings['image']['id'] ) ) ) {
+				$custom_image_size = 'custom' !== $settings['image_size'] ? $settings['image_size'] : $custom_image_size;
+				$image_output      = woodmart_get_svg_html( $settings['image']['id'], $custom_image_size );
+			}
 		}
 
 		$link_attrs = woodmart_get_link_attrs( $settings['link'] );
@@ -289,13 +299,11 @@ class Author_Area extends Widget_Base {
 				</h3>
 			<?php endif ?>
 
-			<?php if ( $image_url ) : ?>
+			<?php if ( $image_output ) : ?>
 				<div class="author-avatar">
-					<?php echo apply_filters( 'woodmart_image', '<img src="' . esc_url( $image_url ) . '" class="author-area-image">' ); ?>
+					<?php echo wp_kses( $image_output, true ); ?>
 				</div>
 			<?php endif; ?>
-
-
 
 			<?php if ( $settings['author_name'] ) : ?>
 				<h4 <?php echo $this->get_render_attribute_string( 'author_name' ); ?>>
@@ -309,7 +317,7 @@ class Author_Area extends Widget_Base {
 				</div>
 			<?php endif ?>
 
-			<?php if ( $settings['link'] ) : ?>
+			<?php if ( ! empty( $settings['link_text'] ) ) : ?>
 				<a <?php echo $link_attrs; ?> class="btn btn-style-link btn-color-default">
 					<?php echo esc_html( $settings['link_text'] ); ?>
 				</a>

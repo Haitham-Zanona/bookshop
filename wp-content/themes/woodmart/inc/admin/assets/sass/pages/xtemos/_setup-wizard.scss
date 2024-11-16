@@ -19,8 +19,9 @@
 			:is(
 			.xts-setup-wizard-wrap,
 			.xts-footer) {
-				margin-right: auto;
-				margin-left: auto;
+				// margin-right: auto;
+				// margin-left: auto;
+				margin-inline: auto;
 				max-width: 1000px;
 				width: 100%;
 			}
@@ -88,13 +89,20 @@
 		.xts-msg {
 
 			> p {
-				margin-top: 0;
-				margin-bottom: 30px;
+				// margin-top: 0;
+				// margin-bottom: 30px;
+				margin-block: 0 30px;
 			}
 		}
 
 		.xts-notice {
 			font-size: 12px;
+		}
+
+		::-webkit-scrollbar,
+		::-webkit-scrollbar-track,
+		::-webkit-scrollbar-thumb {
+			border-radius: 3px;
 		}
 
 		::-webkit-scrollbar {
@@ -142,8 +150,9 @@
 					&:before {
 						content: "";
 						display: block;
-						margin-inline-end: 13px;
-						margin-inline-start: 1px;
+						margin-inline: 1px 13px;
+						// margin-inline-start: 1px;
+						// margin-inline-end: 13px;
 						width: 20px;
 						height: 20px;
 						border-radius: 50%;
@@ -195,9 +204,10 @@
 
 						&:before {
 							margin-top: 1px;
-							margin-inline-end: 14px;
+							margin-inline: 2px 14px;
+							// margin-inline-start: 2px;
+							// margin-inline-end: 14px;
 							margin-bottom: 2px;
-							margin-inline-start: 2px;
 							width: 17px;
 							height: 17px;
 						}
@@ -222,9 +232,10 @@
 
 		.xts-wizard-nav-bg-img {
 			position: absolute;
-			right: 0;
+			// right: 0;
+			// left: 0;
+			inset-inline: 0;
 			bottom: 0;
-			left: 0;
 		}
 	}
 
@@ -302,8 +313,9 @@
 		.xts-next {
 
 			&:after {
-				margin-inline-end: -5px;
-				margin-inline-start: 5px;
+				// margin-inline-start: 5px;
+				// margin-inline-end: -5px;
+				margin-inline: 5px -5px;
 				font-weight: 400;
 
 				@include font-icon($xts-icon-button-right);
@@ -317,8 +329,9 @@
 		.xts-prev {
 
 			&:before {
-				margin-inline-end: 5px;
-				margin-inline-start: -5px;
+				// margin-inline-start: -5px;
+				// margin-inline-end: 5px;
+				margin-inline: -5px 5px;
 				font-weight: 400;
 
 				@include font-icon($xts-icon-button-left);
@@ -365,8 +378,9 @@
 		}
 
 		.xts-inline-btn {
-			margin-top: 10px;
-			margin-bottom: 10px;
+			// margin-top: 10px;
+			// margin-bottom: 10px;
+			margin-block: 10px;
 		}
 	}
 
@@ -616,8 +630,9 @@
 		}
 
 		> span {
-			margin-right: 15px;
-			margin-left: 15px;
+			// margin-right: 15px;
+			// margin-left: 15px;
+			margin-inline: 15px;
 			font-weight: 500;
 		}
 	}
@@ -627,8 +642,9 @@
 	}
 
 	.xts-page-builder-title {
-		margin-top: 15px;
-		margin-bottom: 8px;
+		// margin-top: 15px;
+		// margin-bottom: 8px;
+		margin-block: 15px 8px;
 		color: #333;
 		font-weight: 700;
 		font-size: 16px;
@@ -661,8 +677,9 @@
 			}
 
 			.xts-import-search {
-				margin-inline-end: 0;
-				margin-inline-start: 10px;
+				// margin-inline-start: 10px;
+				// margin-inline-end: 0;
+				margin-inline: 10px 0;
 			}
 		}
 
@@ -806,8 +823,9 @@
 	.xts-wizard-done-nav {
 		display: none;
 		margin-top: 50px;
-		margin-right: 15px;
-		margin-left: 15px;
+		// margin-right: 15px;
+		// margin-left: 15px;
+		margin-inline: 15px;
 		text-align: center;
 
 		h3 {
@@ -842,8 +860,9 @@
 		}
 
 		.xts-wizard-help {
-			padding-right: 20px;
-			padding-left: 20px;
+			// padding-right: 20px;
+			// padding-left: 20px;
+			padding-inline: 20px;
 		}
 	}
 

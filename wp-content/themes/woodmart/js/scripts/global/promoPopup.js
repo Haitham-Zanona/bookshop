@@ -16,16 +16,17 @@
 
 		var showPopup = function() {
 			$.magnificPopup.open({
-				items       : {
+				items          : {
 					src: '.wd-promo-popup'
 				},
-				type        : 'inline',
-				removalDelay: 500, //delay removal by X to allow out-animation
-				tClose      : woodmart_settings.close,
-				tLoading    : woodmart_settings.loading,
-				callbacks   : {
+				type           : 'inline',
+				removalDelay   : 600, //delay removal by X to allow out-animation
+				tClose         : woodmart_settings.close,
+				tLoading       : woodmart_settings.loading,
+				fixedContentPos: true,
+				callbacks      : {
 					beforeOpen: function() {
-						this.st.mainClass = 'mfp-move-horizontal wd-promo-popup-wrapper';
+						this.wrap.addClass('wd-popup-slide-from-left');
 					},
 					close     : function() {
 						Cookies.set('woodmart_popup_' + promo_version, 'shown', {

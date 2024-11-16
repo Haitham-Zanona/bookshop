@@ -28,7 +28,7 @@ woodmart_enqueue_inline_style( 'woo-mod-shop-table' );
 ?>
 
 <form class="cart grouped_form" action="<?php echo esc_url( apply_filters( 'woocommerce_add_to_cart_form_action', $product->get_permalink() ) ); ?>" method="post" enctype='multipart/form-data'>
-	<table cellspacing="0" class="woocommerce-grouped-product-list group_table shop_table_responsive">
+	<table cellspacing="0" class="woocommerce-grouped-product-list group_table shop_table_responsive shop-table-with-img">
 		<tbody>
 			<?php
 				$quantites_required      = false;
@@ -38,8 +38,8 @@ woodmart_enqueue_inline_style( 'woo-mod-shop-table' );
 					'woocommerce_grouped_product_columns',
 					array(
 						'thumbnail',
-						'quantity',
 						'label',
+						'quantity',
 						'price',
 					),
 					$product
@@ -69,22 +69,17 @@ woodmart_enqueue_inline_style( 'woo-mod-shop-table' );
 						switch ( $column_id ) {
 							case 'thumbnail':
 								$attachment_id = get_post_meta( $grouped_product_child->get_id(), '_thumbnail_id', true );
-								$value = '<td class="product-thumbnail grouped-thumb">';
-									$value .= wp_get_attachment_image( $attachment_id, 'woocommerce_thumbnail' );	
-								$value .= '</td>';
+
+								$value = wp_get_attachment_image( $attachment_id, 'woocommerce_thumbnail' );
 								break;
 							case 'label':
-                                $value = '<td class="label product-name">';
-								$value .= '<label for="product-' . esc_attr( $grouped_product_child->get_id() ) . '">';
+								$value  = '<label for="product-' . esc_attr( $grouped_product_child->get_id() ) . '">';
 								$value .= $grouped_product_child->is_visible() ? '<a href="' . esc_url( apply_filters( 'woocommerce_grouped_product_list_link', $grouped_product_child->get_permalink(), $grouped_product_child->get_id() ) ) . '">' . $grouped_product_child->get_name() . '</a>' : $grouped_product_child->get_name();
 								$value .= '</label>';
-                                $value .= '</td>';
 								break;
 							case 'quantity':
 								ob_start();
-                                
-                                echo '<td class="product-quantity" data-title="' . esc_attr__( 'Quantity', 'woodmart' ) . '">';
-                                
+
 								if ( ! $grouped_product_child->is_purchasable() || $grouped_product_child->has_options() || ! $grouped_product_child->is_in_stock() ) {
 									woocommerce_template_loop_add_to_cart();
 								} elseif ( $grouped_product_child->is_sold_individually() ) {
@@ -92,7 +87,7 @@ woodmart_enqueue_inline_style( 'woo-mod-shop-table' );
 									echo '<label for="' . esc_attr( 'quantity-' . $grouped_product_child->get_id() ) . '" class="screen-reader-text">' . esc_html__( 'Buy one of this item', 'woocommerce' ) . '</label>';
 								} else {
 									do_action( 'woocommerce_before_add_to_cart_quantity' );
-									
+
 									woocommerce_quantity_input(
 										array(
 											'input_name'  => 'quantity[' . $grouped_product_child->get_id() . ']',
@@ -105,24 +100,20 @@ woodmart_enqueue_inline_style( 'woo-mod-shop-table' );
 
 									do_action( 'woocommerce_after_add_to_cart_quantity' );
 								}
-                                
-                                echo '</td>';
 
 								$value = ob_get_clean();
 								break;
 							case 'price':
-                                $value = '<td class="price-column" data-title="' . esc_attr__( 'Price', 'woodmart' ) . '">';
-    							$value .= '<div class="price">';
+    							$value  = '<div class="price">';
                                 $value .= $grouped_product_child->get_price_html() . wc_get_stock_html( $grouped_product_child );
                                 $value .= '</div>';
-                                $value .= '</td>';
 								break;
 							default:
 								$value = '';
 								break;
 						}
-                        
-                        echo apply_filters( 'woocommerce_grouped_product_list_column_' . $column_id, $value, $grouped_product_child );
+
+						echo '<td class="woocommerce-grouped-product-list-item__' . esc_attr( $column_id ) . ' product-' . esc_attr( $column_id ) . '">' . apply_filters( 'woocommerce_grouped_product_list_column_' . $column_id, $value, $grouped_product_child ) . '</td>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 
 						do_action( 'woocommerce_grouped_product_list_after_' . $column_id, $grouped_product_child );
 					}

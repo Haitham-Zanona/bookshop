@@ -67,11 +67,31 @@ class Wishlists extends WP_List_Table {
 			wp_nonce_url( admin_url( 'edit.php?post_type=product' ), 'delete_wishlist', 'delete_wishlist' )
 		);
 
+		if ( '' != get_option('permalink_structure') ) {
+			$view_wishlist_page = woodmart_get_wishlist_page_url() . $item['ID'] . '/';
+		} else {
+			$view_wishlist_page = add_query_arg(
+				array(
+					'page_id'     => woodmart_get_opt( 'wishlist_page' ),
+					'wishlist_id' => $item['ID'],
+				),
+				home_url() . '/'
+			);
+		}
+
 		$actions = apply_filters(
 			'woodmart_admin_table_column_name_actions',
 			array(
-				'view'   => sprintf( '<a href="%s">%s</a>', esc_url( woodmart_get_wishlist_page_url() . $item['ID'] . '/' ), esc_html__( 'View', 'woodmart' ) ),
-				'delete' => sprintf( '<a href="%s">%s</a>', esc_url( $delete_wishlist_url ), esc_html__( 'Delete', 'woodmart' ) ),
+				'view'   => sprintf(
+					'<a href="%s">%s</a>',
+						esc_url( $view_wishlist_page ),
+						esc_html__( 'View', 'woodmart' )
+					),
+				'delete' => sprintf(
+					'<a href="%s">%s</a>',
+						esc_url( $delete_wishlist_url ),
+						esc_html__( 'Delete', 'woodmart' )
+					),
 			),
 			$item,
 			$delete_wishlist_url
@@ -80,7 +100,7 @@ class Wishlists extends WP_List_Table {
 		if ( isset( $item['ID'] ) ) {
 			$row = sprintf(
 				"<a href='%s'>%s</a>%s",
-				esc_url( woodmart_get_wishlist_page_url() . $item['ID'] . '/' ),
+				esc_url( $view_wishlist_page ),
 				( ! empty( $item['wishlist_group'] ) ) ? $item['wishlist_group'] : esc_html__( 'My wishlist', 'woodmart' ),
 				$this->row_actions( $actions )
 			);
@@ -310,7 +330,7 @@ class Wishlists extends WP_List_Table {
 						FROM $wpdb->woodmart_wishlists_table
 							INNER JOIN $wpdb->woodmart_products_table
 							    ON $wpdb->woodmart_wishlists_table.ID = $wpdb->woodmart_products_table.wishlist_id
-						    INNER JOIN wp_users
+						    INNER JOIN $wpdb->users
            						 ON $wpdb->woodmart_wishlists_table.user_id = $wpdb->users.ID"
 					. $where_query_text .
 					" GROUP BY $wpdb->woodmart_wishlists_table.ID;",

@@ -610,6 +610,10 @@ class THWEPOF_Utils_Field {
 		$cssclass = is_array($cssclass) ? $cssclass : explode(',', $cssclass);
 		$is_valign = is_array($cssclass) && in_array("valign", $cssclass) ? true : false;
 
+		if($value){
+			$value = is_array($value) ? $value[0] : $value;
+		}
+
 		$i=0;
 		foreach($field->get_property('options') as $option_key => $option_text){
 			$id = esc_attr($name).'_'. esc_attr($option_key);

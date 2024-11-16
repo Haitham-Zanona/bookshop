@@ -1,6 +1,10 @@
 /* global woodmart_settings */
 (function($) {
-	woodmartThemeModule.$document.on('wdElementorColumnReady', function () {
+	woodmartThemeModule.$document.on('wdElementorColumnReady pjax:complete', function () {
+		woodmartThemeModule.stickyColumn();
+	});
+
+	window.addEventListener('popstate', function() {
 		woodmartThemeModule.stickyColumn();
 	});
 

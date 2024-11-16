@@ -27,6 +27,7 @@
 		// margin-top: var(--xts-option-space);
 		border: 1px solid var(--xts-option-border-color);
 		border-radius: var(--xts-option-border-radius);
+		background-color: #FFF;
 
 		&[style*='url("")'],
 		&[style*='background-color']:not([style*='background-image']),
@@ -49,10 +50,12 @@
 	// ------------------------------------------------------------------------------------------------
 
 	.whb-background-option {
+		margin-bottom: 30px;
 
 		.whb-background-select {
 			flex: 1 1 calc(50% - 15px);
-			margin-bottom: 15px;
+			// margin-top: 15px;
+			// margin-bottom: 30px; // CHANGE THIS MARGIN ON GAP FOR "whb-option-fields"
 		}
 	}
 
@@ -68,6 +71,10 @@
 			.whb-field-description {
 				flex: 1 1 100%;
 			}
+
+			+ .whb-field-description {
+				margin-top: 0;
+			}
 		}
 	}
 
@@ -81,6 +88,9 @@
 		border: 1px solid var(--xts-option-border-color);
 		border-radius: var(--xts-option-border-radius);
 		animation: wd-fadeIn .2s ease-in-out;
+		// margin-top: 20px;
+		// margin-bottom: 15px;
+		background-color: #FFF;
 
 		span {
 			text-transform: uppercase;
@@ -90,9 +100,9 @@
 			filter: invert(1);
 		}
 
-		&:not([style*="background-color"]) {
-			display: none;
-		}
+		// &:not([style*="background-color"]) {
+		// 	display: none;
+		// }
 	}
 
 } // END IF

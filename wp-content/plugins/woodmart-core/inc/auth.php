@@ -19,7 +19,7 @@ class WOODMART_Auth {
 		if ( function_exists( 'woodmart_http' ) && ( isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) ) {
 			$this->current_url = woodmart_http() . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}";
 		}
-		
+
 		add_action( 'init', array( $this, 'auth' ), 20 );
 		add_action( 'init', array( $this, 'process_auth_callback' ), 30 );
 		add_action( 'init', array( $this, 'remove_captcha' ), -10 );
@@ -54,83 +54,7 @@ class WOODMART_Auth {
 			return;
 		}
 
-		$account_url   = $this->get_account_url();
-		$security_salt = apply_filters( 'woodmart_opauth_salt', '2NlBUibcszrVtNmDnxqDbwCOpLWq91eatIz6O1O' );
-		$callback_param = 'int_callback';
-		$strategy       = array();
-		switch ( $network ) {
-			case 'google':
-				$app_id     = woodmart_get_opt( 'goo_app_id' );
-				$app_secret = woodmart_get_opt( 'goo_app_secret' );
-
-				if ( empty( $app_secret ) || empty( $app_id ) ) {
-					return;
-				}
-
-				$strategy = array(
-					'Google' => array(
-						'client_id'     => $app_id,
-						'client_secret' => $app_secret,
-						// 'scope' => 'email'
-					),
-				);
-
-				$callback_param = 'oauth2callback';
-
-				break;
-
-			case 'vkontakte':
-				$app_id     = woodmart_get_opt( 'vk_app_id' );
-				$app_secret = woodmart_get_opt( 'vk_app_secret' );
-
-				if ( empty( $app_secret ) || empty( $app_id ) ) {
-					return;
-				}
-
-				$strategy = array(
-					'VKontakte' => array(
-						'app_id'     => $app_id,
-						'app_secret' => $app_secret,
-						'scope'      => 'email',
-					),
-				);
-				break;
-
-			default:
-				$app_id     = woodmart_get_opt( 'fb_app_id' );
-				$app_secret = woodmart_get_opt( 'fb_app_secret' );
-
-				if ( empty( $app_secret ) || empty( $app_id ) ) {
-					return;
-				}
-
-				$strategy = array(
-					'Facebook' => array(
-						'app_id'     => $app_id,
-						'app_secret' => $app_secret,
-						'scope'      => 'email',
-					),
-				);
-				break;
-		}
-
-		$config = array(
-			'security_salt'      => $security_salt,
-			'host'               => $account_url,
-			'path'               => '/',
-			'callback_url'       => $account_url,
-			'callback_transport' => 'get',
-			'strategy_dir'       => WOODMART_PT_3D . '/vendor/opauth/',
-			'Strategy'           => $strategy,
-		);
-
-		if ( empty( $_GET['code'] ) ) {
-			$config['request_uri'] = '/' . $network;
-		} else {
-			$config['request_uri'] = '/' . $network . '/' . $callback_param . '?code=' . $_GET['code'];
-		}
-
-		new Opauth( $config );
+		new Opauth( $this->get_config( $network ) );
 	}
 
 	public function process_auth_callback() {
@@ -142,17 +66,31 @@ class WOODMART_Auth {
 			return;
 		}
 
-		$opauth = unserialize( base64_decode( $_GET['opauth'] ) );
+		$response = json_decode( base64_decode( $_GET['opauth'] ), true );
 
-		switch ( $opauth['auth']['provider'] ) {
+		if ( empty( $response['auth'] ) || empty( $response['timestamp'] ) || empty( $response['signature'] ) || empty( $response['auth']['provider'] ) || ( 'VKontakte' !== $response['auth']['provider'] && empty( $response['auth']['uid'] ) ) ) {
+			wp_redirect( $this->get_account_url() );
+			exit;
+		}
+
+		$opauth = new Opauth( $this->get_config( strtolower( $response['auth']['provider'] ) ), false );
+
+		$reason = '';
+
+		if ( ! $opauth->validate( sha1( print_r( $response['auth'], true) ), $response['timestamp'], $response['signature'], $reason ) ) {
+			wp_redirect( $this->get_account_url() );
+			exit;
+		}
+
+		switch ( $response['auth']['provider'] ) {
 			case 'Facebook':
-				if ( empty( $opauth['auth']['info'] ) ) {
+				if ( empty( $response['auth']['info'] ) ) {
 					wc_add_notice( __( 'Can\'t login with Facebook. Please, try again later.', 'woodmart' ), 'error' );
 					return;
 				}
 
-				$email = isset( $opauth['auth']['info']['email'] ) ? $opauth['auth']['info']['email'] : '';
-				$name = isset( $opauth['auth']['info']['name'] ) ? $opauth['auth']['info']['name'] : '';
+				$email = isset( $response['auth']['info']['email'] ) ? $response['auth']['info']['email'] : '';
+				$name  = isset( $response['auth']['info']['name'] ) ? $response['auth']['info']['name'] : '';
 
 				if ( empty( $email ) ) {
 					wc_add_notice( __( 'Facebook doesn\'t provide your email. Try to register manually.', 'woodmart' ), 'error' );
@@ -162,12 +100,12 @@ class WOODMART_Auth {
 				$this->register_or_login( $email, $name );
 				break;
 			case 'Google':
-				if ( empty( $opauth['auth']['info'] ) ) {
+				if ( empty( $response['auth']['info'] ) ) {
 					wc_add_notice( __( 'Can\'t login with Google. Please, try again later.', 'woodmart' ), 'error' );
 					return;
 				}
 
-				$email = isset( $opauth['auth']['info']['email'] ) ? $opauth['auth']['info']['email'] : '';
+				$email = isset( $response['auth']['info']['email'] ) ? $response['auth']['info']['email'] : '';
 
 				if ( empty( $email ) ) {
 					wc_add_notice( __( 'Google doesn\'t provide your email. Try to register manually.', 'woodmart' ), 'error' );
@@ -177,12 +115,12 @@ class WOODMART_Auth {
 				$this->register_or_login( $email );
 				break;
 			case 'VKontakte':
-				if ( empty( $opauth['auth']['info'] ) ) {
+				if ( empty( $response['auth']['info'] ) ) {
 					wc_add_notice( __( 'Can\'t login with VKontakte. Please, try again later.', 'woodmart' ), 'error' );
 					return;
 				}
 
-				$email = isset( $opauth['auth']['info']['email'] ) ? $opauth['auth']['info']['email'] : '';
+				$email = isset( $response['auth']['info']['email'] ) ? $response['auth']['info']['email'] : '';
 
 				if ( empty( $email ) ) {
 					wc_add_notice( __( 'VK doesn\'t provide your email. Try to register manually.', 'woodmart' ), 'error' );
@@ -209,7 +147,7 @@ class WOODMART_Auth {
 
 			if ( ! empty( $name[0] ) ) {
 				$args['first_name'] = $name[0];
- 			}
+			}
 
 			if ( ! empty( $name[1] ) ) {
 				$args['last_name'] = $name[1];
@@ -255,5 +193,101 @@ class WOODMART_Auth {
 
 	public function return_yes() {
 		return 'yes';
+	}
+
+	private function get_config( $network ) {
+		$callback_param = 'int_callback';
+		$security_salt  = apply_filters( 'woodmart_opauth_salt', '2NlBUibcszrVtNmDnxqDbwCOpLWq91eatIz6O1O' );
+
+		if ( defined( 'SECURE_AUTH_SALT' ) ) {
+			$security_salt = SECURE_AUTH_SALT;
+		}
+
+		switch ( $network ) {
+			case 'google':
+				$app_id     = woodmart_get_opt( 'goo_app_id' );
+				$app_secret = woodmart_get_opt( 'goo_app_secret' );
+
+				if ( empty( $app_secret ) || empty( $app_id ) ) {
+					return array();
+				}
+
+				$strategy = array(
+					'Google' => array(
+						'client_id'     => $app_id,
+						'client_secret' => $app_secret,
+						// 'scope' => 'email'
+					),
+				);
+
+				$callback_param = 'oauth2callback';
+
+				break;
+
+			case 'vkontakte':
+				$app_id     = woodmart_get_opt( 'vk_app_id' );
+				$app_secret = woodmart_get_opt( 'vk_app_secret' );
+
+				if ( empty( $app_secret ) || empty( $app_id ) ) {
+					return array();
+				}
+
+				$strategy = array(
+					'VKontakte' => array(
+						'app_id'     => $app_id,
+						'app_secret' => $app_secret,
+						'scope'      => 'email',
+					),
+				);
+				break;
+
+			default:
+				$app_id     = woodmart_get_opt( 'fb_app_id' );
+				$app_secret = woodmart_get_opt( 'fb_app_secret' );
+
+				if ( empty( $app_secret ) || empty( $app_id ) ) {
+					return array();
+				}
+
+				$strategy = array(
+					'Facebook' => array(
+						'app_id'     => $app_id,
+						'app_secret' => $app_secret,
+						'scope'      => 'email',
+					),
+				);
+				break;
+		}
+
+		$callback_url = $this->get_account_url();
+
+		if ( function_exists( 'woodmart_set_cookie' ) && function_exists( 'wc_get_page_permalink' ) ) {
+			if ( ! empty( $_COOKIE['wd_social_auth'] ) ) {
+				$callback_url = $_COOKIE['wd_social_auth'];
+				woodmart_set_cookie( 'wd_social_auth', null );
+			} elseif ( ! empty( $_GET['is_checkout'] ) ) {
+				$callback_url = untrailingslashit( wc_get_page_permalink( 'checkout' ) );
+				woodmart_set_cookie( 'wd_social_auth', $callback_url );
+			}
+		}
+
+		$account_url = $this->get_account_url();
+		$config      = array(
+			'security_salt'      => $security_salt,
+			'host'               => $account_url,
+			'path'               => '/',
+			'callback_url'       => $callback_url,
+			'callback_transport' => 'get',
+			'strategy_dir'       => WOODMART_PT_3D . '/vendor/opauth/',
+			'Strategy'           => $strategy,
+		);
+
+		if ( empty( $_GET['code'] ) ) {
+			$config['request_uri'] = '/' . $network;
+		} else {
+			$config['request_uri'] = '/' . $network . '/' . $callback_param . '?code=' . $_GET['code'];
+		}
+
+		return $config;
 	}
 }

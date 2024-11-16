@@ -132,6 +132,15 @@ class Mailchimp extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'form_id',
 			[
 				'label'       => esc_html__( 'Select form', 'woodmart' ),
@@ -224,6 +233,7 @@ class Mailchimp extends Widget_Base {
 				'selectors'      => [
 					'{{WRAPPER}} .mc4wp-form-fields' => 'max-width: {{SIZE}}{{UNIT}};',
 				],
+
 			]
 		);
 		$this->end_controls_section();

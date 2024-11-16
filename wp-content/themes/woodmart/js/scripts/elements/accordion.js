@@ -13,14 +13,18 @@
 		});
 	});
 
+	var triggerReviewOpener = function() {
+		$('.tabs-layout-accordion .wd-accordion-title.tab-title-reviews:not(.active)').click();
+	}
+
 	woodmartThemeModule.accordion = function() {
 		var hash = window.location.hash;
 		var url = window.location.href;
 
 		// Single product.
-		$('.woocommerce-review-link').on('click', function() {
-			$('.tabs-layout-accordion .wd-accordion-title.tab-title-reviews:not(.active)').click();
-		});
+		$('.woocommerce-review-link')
+			.off('click', triggerReviewOpener)
+			.on('click', triggerReviewOpener);
 
 		// Element.
 		$('.wd-accordion').each(function() {

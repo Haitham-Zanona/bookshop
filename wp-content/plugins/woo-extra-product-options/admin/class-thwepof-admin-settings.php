@@ -130,6 +130,11 @@ abstract class THWEPOF_Admin_Settings{
 
 	public function output_review_request_link(){
 
+		$current_screen = get_current_screen();
+		if($current_screen->id !== 'product_page_thwepof_extra_product_options'){
+			return;
+		}
+
 		if(!apply_filters('thwepof_show_dismissable_admin_notice', true)){
 			return;
 		}

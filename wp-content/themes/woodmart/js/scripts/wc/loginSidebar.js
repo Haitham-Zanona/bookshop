@@ -1,25 +1,32 @@
 /* global woodmart_settings */
 (function($) {
+	woodmartThemeModule.$document.on('wdShopPageInit', function () {
+		woodmartThemeModule.loginSidebar();
+	});
+
 	woodmartThemeModule.loginSidebar = function() {
 		var body = woodmartThemeModule.$body;
 		var loginFormSide = $('.login-form-side');
 		var closeSide = $('.wd-close-side');
 
-		$('.login-side-opener').on('click', function(e) {
-			if (!loginFormSide.length) {
-				return
-			}
 
-			e.preventDefault();
+		$('.login-side-opener')
+			.off('click')
+			.on('click', function(e) {
+				if (!loginFormSide.length) {
+					return
+				}
 
-			if (isOpened()) {
-				closeWidget();
-			} else {
-				setTimeout(function() {
-					openWidget();
-				}, 10);
-			}
-		});
+				e.preventDefault();
+
+				if (isOpened()) {
+					closeWidget();
+				} else {
+					setTimeout(function() {
+						openWidget();
+					}, 10);
+				}
+			});
 
 		body.on('click touchstart', '.wd-close-side', function() {
 			if (isOpened()) {

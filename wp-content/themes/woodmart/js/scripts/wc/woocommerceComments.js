@@ -4,7 +4,7 @@
 		var hash = window.location.hash;
 		var url = window.location.href;
 
-		if (hash.toLowerCase().indexOf('comment-') >= 0 || hash === '#reviews' || hash === '#tab-reviews' || url.indexOf('comment-page-') > 0 || url.indexOf('cpage=') > 0 || hash === '#tab-wd_additional_tab' || hash === '#tab-wd_custom_tab') {
+		if ( ! document.querySelector('.wd-hidden-tab-title') && ( hash.toLowerCase().indexOf('comment-') >= 0 || hash === '#reviews' || hash === '#tab-reviews' || url.indexOf('comment-page-') > 0 || url.indexOf('cpage=') > 0 || hash === '#tab-wd_additional_tab' || hash === '#tab-wd_custom_tab' ) ) {
 			setTimeout(function() {
 				window.scrollTo(0, 0);
 			}, 1);
@@ -31,7 +31,7 @@
 		}
 
 		$('.wd-builder-on .woocommerce-review-link').on('click', function () {
-			var $tabReviews = $('.wd-single-tabs .wd-accordion .wd-accordion-title.tab-title-reviews');
+			var $tabReviews = $('.wd-single-tabs .wd-accordion:not(.tabs-layout-accordion) .wd-accordion-title.tab-title-reviews');
 
 			if ( !$tabReviews.length ) {
 				return;

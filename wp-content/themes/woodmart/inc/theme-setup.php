@@ -1,7 +1,5 @@
 <?php
 
-use XTS\Setup_Wizard;
-
 if ( ! defined('WOODMART_THEME_DIR')) exit('No direct script access allowed');
 
 add_option( 'woodmart-generated-wpbcss-file' );
@@ -33,24 +31,6 @@ if ( ! function_exists( 'woodmart_gallery_shortcode_add_scripts_styles' ) ) {
 
 	add_filter( 'gallery_style', 'woodmart_gallery_shortcode_add_scripts_styles' );
 }
-
-/**
- * ------------------------------------------------------------------------------------------------
- * Set up the content width value based on theme's design.
- * ------------------------------------------------------------------------------------------------
- */
-if( ! isset( $content_width ) ) {
-	$content_width = 1200;
-}
-
-
-/**
- * Make the theme available for translations.
- */
-$lang_dir = WOODMART_THEMEROOT . '/languages';
-load_theme_textdomain( 'woodmart', $lang_dir );
-
-
 /**
  * ------------------------------------------------------------------------------------------------
  * Set up theme default and register various supported features
@@ -104,6 +84,13 @@ if( ! function_exists( 'woodmart_theme_setup' ) ) {
 
 		add_editor_style( get_template_directory_uri() . '/css/editor-style.css' );
 
+		if ( woodmart_get_opt( 'load_text_domain', true ) ) {
+			/**
+			 * Make the theme available for translations.
+			 */
+			$lang_dir = WOODMART_THEMEROOT . '/languages';
+			load_theme_textdomain( 'woodmart', $lang_dir );
+		}
 	}
 
 	add_action( 'after_setup_theme', 'woodmart_theme_setup' );
@@ -188,7 +175,6 @@ if( ! function_exists( 'woodmart_widget_init' ) ) {
 
 			if ( woodmart_woocommerce_installed() ) {
 				$sidebar_shop_classes = '';
-				$filter_widget_class  = woodmart_get_widget_column_class( 'filters-area' );
 
 				if ( 'all' === woodmart_get_opt( 'shop_widgets_collapse' ) ) {
 					$sidebar_shop_classes .= ' wd-widget-collapse';
@@ -212,7 +198,7 @@ if( ! function_exists( 'woodmart_widget_init' ) ) {
 						'id'            => 'filters-area',
 						'description'   => esc_html__( 'Widget Area for shop filters above the products', 'woodmart' ),
 						'class'         => '',
-						'before_widget' => '<div id="%1$s" class="wd-widget widget filter-widget' . $widget_class . ' ' . esc_attr( $filter_widget_class ) . ' %2$s">',
+						'before_widget' => '<div id="%1$s" class="wd-widget widget filter-widget wd-col' . $widget_class . ' %2$s">',
 						'after_widget'  => '</div>',
 						'before_title'  => $before_title,
 						'after_title'   => $after_title,
@@ -377,6 +363,7 @@ if( ! function_exists( 'woodmart_register_required_plugins' ) ) {
 				'force_activation'   => false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch.
 				'force_deactivation' => false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins.
 				'external_url'       => '', // If set, overrides default API URL and points to an external URL.
+				'hide_notice'        => true
 			),
 
 	        array(
@@ -451,3 +438,29 @@ if( ! function_exists( 'woodmart_register_required_plugins' ) ) {
 
 	add_action( 'tgmpa_register', 'woodmart_register_required_plugins' );
 }
+
+// **********************************************************************//
+// ! Theme 3d plugins
+// **********************************************************************//
+
+	if( ! function_exists( 'woodmart_3d_plugins' )) {
+		function woodmart_3d_plugins() {
+			if( function_exists( 'set_revslider_as_theme' ) ){
+				set_revslider_as_theme();
+			}
+		}
+
+		add_action( 'init', 'woodmart_3d_plugins' );
+	}
+
+	if( ! function_exists( 'woodmart_vcSetAsTheme' ) ) {
+
+		function woodmart_vcSetAsTheme() {
+			if( function_exists( 'vc_set_as_theme' ) ){
+				vc_set_as_theme();
+			}
+		}
+
+		add_action( 'vc_before_init', 'woodmart_vcSetAsTheme' );
+	}
+

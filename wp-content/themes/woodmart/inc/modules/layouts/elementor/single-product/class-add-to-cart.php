@@ -12,6 +12,7 @@ use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Plugin;
 use XTS\Modules\Layouts\Global_Data as Builder;
+use XTS\Modules\Waitlist\Frontend as Waitlist_Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -200,6 +201,7 @@ class Add_To_Cart extends Widget_Base {
 					'bottom' => esc_html__( 'Bottom', 'woodmart' ),
 				),
 				'devices'        => array( 'desktop', 'mobile' ),
+				'classes'        => 'wd-hide-custom-breakpoints wd-hide-tablet-breakpoint',
 				'default'        => 'side',
 				'mobile_default' => 'side',
 			)
@@ -216,6 +218,7 @@ class Add_To_Cart extends Widget_Base {
 					'hide' => esc_html__( 'Hide', 'woodmart' ),
 				),
 				'devices'        => array( 'desktop', 'mobile' ),
+				'classes'        => 'wd-hide-custom-breakpoints wd-hide-tablet-breakpoint',
 				'default'        => 'side',
 				'mobile_default' => 'side',
 				'render_type'    => 'template',
@@ -368,7 +371,7 @@ class Add_To_Cart extends Widget_Base {
 
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 
-		if ( woodmart_get_opt( 'catalog_mode' ) ) {
+		if ( woodmart_get_opt( 'catalog_mode' ) || ! is_user_logged_in() && woodmart_get_opt( 'login_prices' ) ) {
 			return;
 		}
 
@@ -389,7 +392,23 @@ class Add_To_Cart extends Widget_Base {
 		Builder::get_instance()->set_data( 'layout_id', get_the_ID() );
 
 		Main::setup_preview( array(), $settings['product_id'] );
+		global $product;
+
 		woocommerce_template_single_add_to_cart();
+
+		if ( woodmart_get_opt( 'waitlist_enabled' ) && ( ! woodmart_get_opt( 'waitlist_for_loggined' ) || is_user_logged_in() ) ) {
+			$waitlist_frontend = Waitlist_Frontend::get_instance();
+
+			if ( ( 'variable' === $product->get_type() && ! empty( $waitlist_frontend->get_out_of_stock_variations_ids( $product ) ) ) || ( 'simple' === $product->get_type() && ! $product->is_in_stock() ) ) {
+				if ( woodmart_elementor_is_edit_mode() || woodmart_elementor_is_preview_page() || woodmart_elementor_is_preview_mode() ) {
+					$waitlist_frontend->render_waitlist_subscribe_form_on_elementor_edit_page();
+				} else {
+					$waitlist_frontend->render_waitlist_subscribe_form();
+					$waitlist_frontend->render_template_subscribe_form();
+				}
+			}
+		}
+
 		Main::restore_preview( $settings['product_id'] );
 	}
 }

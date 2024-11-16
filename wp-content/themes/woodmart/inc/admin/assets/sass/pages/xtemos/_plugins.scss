@@ -146,12 +146,13 @@
 		line-height: 1.2;
 	}
 
-	// .xts-plugin-response {
+	.xts-plugin-response {
+		margin-bottom: 20px;
 
-	// 	.xts-notice {
-	// 		margin-bottom: 20px;
-	// 	}
-	// }
+		&:empty {
+			display: none;
+		}
+	}
 
 	.xts-plugin-description {
 		display: none;
@@ -308,15 +309,17 @@
 		}
 
 		.xts-plugin-btn-wrapper {
-			margin-top: auto;
-			margin-right: -5px;
-			margin-bottom: -5px;
-			margin-left: -5px;
+			// margin-top: auto;
+			// margin-right: -5px;
+			// margin-bottom: -5px;
+			// margin-left: -5px;
+			margin: auto -5px -5px -5px;
 
 			> a {
-				margin-right: 5px;
+				// margin-right: 5px;
+				// margin-left: 5px;
+				margin-inline: 5px;
 				margin-bottom: 5px;
-				margin-left: 5px;
 			}
 		}
 

@@ -22,7 +22,7 @@
 				return;
 			}
 
-			var product    = $this.parents('.product-grid-item'),
+			var product    = $this.parents('.wd-product'),
 			    image      = product.find('.product-image-link > img, .product-image-link > picture > img'),
 			    source     = product.find('.product-image-link picture source'),
 			    srcOrig    = image.data('original-src'),
@@ -47,6 +47,8 @@
 				image_sizes = sizesOrig;
 				$this.removeClass('wd-active');
 				product.removeClass('product-swatched');
+
+				product.trigger( 'wdImagesGalleryInLoopOn', product );
 			} else {
 				$this.parent().find('.wd-active').removeClass('wd-active');
 				$this.addClass('wd-active');
@@ -55,7 +57,7 @@
 				srcset = imageSrcset;
 				image_sizes = imageSizes;
 
-				$('.product-grid-item').trigger( 'wdImagesGalleryInLoopOff', product );
+				product.trigger( 'wdImagesGalleryInLoopOff', product );
 			}
 
 			if (image.attr('src') === src) {

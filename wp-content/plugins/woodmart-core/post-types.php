@@ -32,7 +32,7 @@ class WOODMART_Post_Types {
 		add_action( 'init', array( $this, 'slider' ), 1 );
 
 		// Duplicate post action for slides
-		add_filter( 'post_row_actions', array( $this, 'duplicate_slide_action' ), 10, 2 );
+		add_filter( 'post_row_actions', array( $this, 'duplicate_action' ), 10, 2 );
 		add_filter( 'admin_action_woodmart_duplicate_post_as_draft', array( $this, 'duplicate_post_as_draft' ), 10, 2 );
 
 		// Manage slides list columns
@@ -131,13 +131,13 @@ class WOODMART_Post_Types {
 		register_taxonomy( 'woodmart_slider', array( 'woodmart_slide' ), $args );
 	}
 
-	public function duplicate_slide_action( $actions, $post ) {
-		if ( $post->post_type != 'woodmart_slide' ) {
+	public function duplicate_action( $actions, $post ) {
+		if ( ! in_array( $post->post_type, array( 'woodmart_slide', 'cms_block' ), true )  ) {
 			return $actions;
 		}
 
 		if ( current_user_can( 'edit_posts' ) ) {
-			$actions['duplicate'] = '<a href="' . wp_nonce_url( 'admin.php?action=woodmart_duplicate_post_as_draft&post=' . $post->ID, basename( __FILE__ ), 'duplicate_nonce' ) . '" title="Duplicate this item" rel="permalink">Duplicate</a>';
+			$actions['duplicate'] = '<a href="' . wp_nonce_url( 'admin.php?action=woodmart_duplicate_post_as_draft&post=' . $post->ID, 'woodmart_duplicate_post_as_draft', 'duplicate_nonce' ) . '" title="Duplicate this item" rel="permalink">Duplicate</a>';
 		}
 		return $actions;
 	}
@@ -151,7 +151,7 @@ class WOODMART_Post_Types {
 		/*
 		 * Nonce verification
 		 */
-		if ( ! isset( $_GET['duplicate_nonce'] ) || ! wp_verify_nonce( $_GET['duplicate_nonce'], basename( __FILE__ ) ) ) {
+		if ( ! isset( $_GET['duplicate_nonce'] ) || ! wp_verify_nonce( $_GET['duplicate_nonce'], 'woodmart_duplicate_post_as_draft' ) ) {
 			return;
 		}
 
@@ -269,7 +269,7 @@ class WOODMART_Post_Types {
 			'exclude_from_search' => true,
 			'publicly_queryable'  => false,
 			'rewrite'             => false,
-			'capability_type'     => 'page',
+			'capability_type'     => 'product',
 		);
 
 		register_post_type( 'woodmart_size_guide', $args );
@@ -372,7 +372,7 @@ class WOODMART_Post_Types {
 	public function manage_html_blocks_columns( $column, $post_id ) {
 		switch ( $column ) {
 			case 'shortcode':
-				echo '<strong>[html_block id="' . $post_id . '"]</strong>';
+				echo '[html_block id="' . $post_id . '"]';
 				break;
 			case 'wd_categories':
 				$terms     = wp_get_post_terms( $post_id, 'cms_block_cat' );

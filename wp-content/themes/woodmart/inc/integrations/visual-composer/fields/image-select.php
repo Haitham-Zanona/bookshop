@@ -12,7 +12,9 @@ if( ! function_exists( 'woodmart_add_image_select_type' ) ) {
 		$classes = $tooltip ? 'woodmart-css-tooltip' : '';
 		$classes .= ! $tooltip && $title ? ' with-title' : '';
 
-		$output = '<div class="wd-select-fields wd-style-images"><ul class="wd-select-buttons woodmart-vc-image-select">';
+		$data_attrs = isset( $settings['allowed_unselect'] ) ? 'data-allowed-unselect=1' : '';
+
+		$output = '<div class="wd-select-fields wd-style-images"><ul class="wd-select-buttons woodmart-vc-image-select" ' . esc_attr( $data_attrs ) . '>';
 			$output .= '<input type="hidden" class="woodmart-vc-image-select-input wpb_vc_param_value" name="' . esc_attr( $settings['param_name'] ) . '" value="' . esc_attr( $value ) . '">';
 			foreach ( $settings['value'] as $key => $value ) {
 				$output .= '<li data-value="' . esc_attr( $value ) . '" class="' . esc_attr( $classes ) . '" data-text="' . esc_html( $settings_value[$value] ) . '">';

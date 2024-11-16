@@ -5,12 +5,8 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
-	function woodmart_vc_shortcode_categories() {
-		if ( ! shortcode_exists( 'woodmart_categories' ) ) {
-			return;
-		}
-
+if( ! function_exists( 'woodmart_get_vc_shortcode_categories' ) ) {
+	function woodmart_get_vc_shortcode_categories() {
 		$order_by_values = array(
 			'',
 			esc_html__( 'Date', 'woodmart' ) => 'date',
@@ -36,8 +32,7 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 			)
 		);
 
-		vc_map(
-			array(
+		return array(
 				'name'        => esc_html__( 'Product categories', 'woodmart' ),
 				'base'        => 'woodmart_categories',
 				'category'    => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
@@ -45,8 +40,8 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 				'icon'        => WOODMART_ASSETS . '/images/vc-icon/product-categories.svg',
 				'params'      => array(
 					/**
-					* Data settings
-					*/
+					 * Data settings
+					 */
 					array(
 						'group'      => esc_html__( 'Content', 'woodmart' ),
 						'type'       => 'woodmart_css_id',
@@ -118,14 +113,17 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 					),
 
 					array(
-						'heading'          => esc_html__( 'Mobile accordion', 'woodmart' ),
+						'heading'          => esc_html__( 'Mobile categories layout', 'woodmart' ),
 						'group'            => esc_html__( 'Content', 'woodmart' ),
-						'type'             => 'woodmart_switch',
+						'hint'             => esc_html__( 'Turn categories navigation into accordion or hidden sidebar on mobile devices', 'woodmart' ),
+						'type'             => 'dropdown',
 						'param_name'       => 'mobile_accordion',
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'yes',
-						'hint'             => esc_html__( 'Turn categories navigation into accordion on mobile devices', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Default', 'woodmart' ) => 'no',
+							esc_html__( 'Accordion', 'woodmart' ) => 'yes',
+							esc_html__( 'Hidden sidebar', 'woodmart' ) => 'side-hidden',
+						),
+						'std'              => 'yes',
 						'dependency'       => array(
 							'element' => 'type',
 							'value'   => array( 'navigation' ),
@@ -188,11 +186,11 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'value'            => $order_by_values,
 						'save_always'      => true,
 						'hint'             => sprintf( wp_kses(  __( 'Select how to sort retrieved categories. More at %s.', 'woodmart' ), array(
-								'a' => array(
-									'href'   => array(),
-									'target' => array()
-								)
-							)), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' ),
+							'a' => array(
+								'href'   => array(),
+								'target' => array()
+							)
+						)), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' ),
 						'dependency'       => array(
 							'element' => 'data_source',
 							'value'   => array( 'custom_query' ),
@@ -207,11 +205,11 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'value'            => $order_way_values,
 						'save_always'      => true,
 						'hint'             => sprintf( wp_kses(  __( 'Designates the ascending or descending order. More at %s.', 'woodmart' ), array(
-								'a' => array(
-									'href' => array(),
-									'target' => array()
-								)
-							)), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' ),
+							'a' => array(
+								'href' => array(),
+								'target' => array()
+							)
+						)), '<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" target="_blank">WordPress codex page</a>' ),
 						'dependency'       => array(
 							'element' => 'data_source',
 							'value'   => array( 'custom_query' ),
@@ -247,6 +245,22 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'edit_field_class' => 'vc_col-sm-6 vc_column',
 					),
 
+					array(
+						'type'       => 'woodmart_button_set',
+						'heading'    => esc_html__( 'Product count', 'woodmart' ),
+						'param_name' => 'grid_product_count',
+						'value'      => array(
+							esc_html__( 'Inherit', 'woodmart' ) => '',
+							esc_html__( 'Enable', 'woodmart' ) => 'enable',
+							esc_html__( 'Disable', 'woodmart' ) => 'disable',
+						),
+						'group'      => esc_html__( 'Content', 'woodmart' ),
+						'dependency' => array(
+							'element' => 'type',
+							'value'   => array( 'grid' ),
+						),
+					),
+
 					/**
 					 * Design
 					 */
@@ -267,7 +281,9 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 							esc_html__( 'Alternative', 'woodmart' ) => 'alt',
 							esc_html__( 'Center title', 'woodmart' ) => 'center',
 							esc_html__( 'Replace title', 'woodmart' ) => 'replace-title',
-							esc_html__( 'Mask with subcategories', 'woodmart' ) => 'mask-subcat',
+							esc_html__( 'Mask', 'woodmart' ) => 'mask-subcat',
+							esc_html__( 'Side', 'woodmart' ) => 'side',
+							esc_html__( 'Zoom out', 'woodmart' ) => 'zoom-out',
 						),
 						'images_value' => array(
 							'inherit'       => WOODMART_ASSETS_IMAGES . '/settings/empty.jpg',
@@ -276,6 +292,8 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 							'center'        => WOODMART_ASSETS_IMAGES . '/settings/categories/center.jpg',
 							'replace-title' => WOODMART_ASSETS_IMAGES . '/settings/categories/replace-title.jpg',
 							'mask-subcat'   => WOODMART_ASSETS_IMAGES . '/settings/categories/subcat.jpg',
+							'side'          => WOODMART_ASSETS_IMAGES . '/settings/categories/side.jpg',
+							'zoom-out'      => WOODMART_ASSETS_IMAGES . '/settings/categories/zoom-out.jpg',
 						),
 						'hint'         => esc_html__( 'Overrides option from Theme Settings -> Shop', 'woodmart' ),
 						'dependency'   => array(
@@ -291,7 +309,82 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'hint'       => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\' or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use \'thumbnail\' size.', 'woodmart' ),
 					),
 					array(
-						'heading'    => esc_html__( 'Image container width', 'woodmart' ),
+						'type'        => 'woodmart_switch',
+						'heading'     => esc_html__( 'Bordered grid', 'woodmart' ),
+						'hint'        => esc_html__( 'Add borders between the categories in your grid', 'woodmart' ),
+						'group'       => esc_html__( 'Style', 'woodmart' ),
+						'param_name'  => 'categories_bordered_grid',
+						'true_state'  => 1,
+						'false_state' => 0,
+						'default'     => 0,
+						'dependency'  => array(
+							'element' => 'type',
+							'value'   => array( 'grid' ),
+						),
+					),
+					array(
+						'type'          => 'woodmart_button_set',
+						'heading'       => esc_html__( 'Bordered grid style', 'woodmart' ),
+						'param_name'    => 'categories_bordered_grid_style',
+						'value'         => array(
+							esc_html__( 'Outside', 'woodmart' ) => 'outside',
+							esc_html__( 'Inside', 'woodmart' )  => 'inside',
+						),
+						'group'         => esc_html__( 'Style', 'woodmart' ),
+						'dependency'    => array(
+							'element' => 'type',
+							'value'   => array( 'grid' ),
+						),
+						'wd_dependency' => array(
+							'element' => 'categories_bordered_grid',
+							'value'   => '1',
+						),
+					),
+					array(
+						'heading'          => esc_html__( 'Custom category border color', 'woodmart' ),
+						'hint'             => esc_html__( 'Set custom border color for category.', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'type'             => 'wd_colorpicker',
+						'param_name'       => 'category_border_color',
+						'selectors'        => array(
+							'{{WRAPPER}} [class*="products-bordered-grid"], {{WRAPPER}} [class*="products-bordered-grid"] .wd-cat, {{WRAPPER}}[class*="products-bordered-grid"], {{WRAPPER}}[class*="products-bordered-grid"] .wd-cat' => array(
+								'--wd-bordered-brd:{{VALUE}};',
+							),
+						),
+						'dependency'       => array(
+							'element' => 'categories_bordered_grid',
+							'value'   => '1',
+						),
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'heading'     => esc_html__( 'Categories background', 'woodmart' ),
+						'hint'        => esc_html__( 'Add a background to the categories in your grid.', 'woodmart' ),
+						'group'       => esc_html__( 'Style', 'woodmart' ),
+						'type'        => 'woodmart_switch',
+						'param_name'  => 'categories_with_background',
+						'true_state'  => 1,
+						'false_state' => 0,
+						'default'     => 0,
+					),
+					array(
+						'heading'          => esc_html__( 'Custom background color', 'woodmart' ),
+						'hint'             => esc_html__( 'Set custom background color for categories.', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'type'             => 'wd_colorpicker',
+						'param_name'       => 'categories_background',
+						'selectors'        => array(
+							'{{WRAPPER}} .wd-products-with-bg, {{WRAPPER}}.wd-products-with-bg, {{WRAPPER}} .wd-products-with-bg .wd-cat, {{WRAPPER}}.wd-products-with-bg .wd-cat' => array(
+								'--wd-prod-bg:{{VALUE}}; --wd-bordered-bg:{{VALUE}};',
+							),
+						),
+						'dependency'       => array(
+							'element' => 'categories_with_background',
+							'value'   => array( '1' ),
+						),
+					),
+					array(
+						'heading'    => esc_html__( 'Image width', 'woodmart' ),
 						'group'      => esc_html__( 'Style', 'woodmart' ),
 						'type'       => 'wd_slider',
 						'param_name' => 'image_container_width',
@@ -328,7 +421,7 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						),
 						'dependency' => array(
 							'element' => 'categories_design',
-							'value'   => array( 'alt' ),
+							'value'   => array( 'alt', 'side' ),
 						),
 					),
 					array(
@@ -452,7 +545,7 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'style'         => 'select',
 						'selectors'     => array(
 							'{{WRAPPER}}' => array(
-								'--wd-brd-radius: {{VALUE}}px;',
+								'--wd-cat-brd-radius: {{VALUE}}px;',
 							),
 						),
 						'devices'       => array(
@@ -481,7 +574,7 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'param_name'    => 'custom_rounding_size',
 						'selectors'     => array(
 							'{{WRAPPER}}' => array(
-								'--wd-brd-radius: {{VALUE}}{{UNIT}};',
+								'--wd-cat-brd-radius: {{VALUE}}{{UNIT}};',
 							),
 						),
 						'devices'       => array(
@@ -518,6 +611,43 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						),
 						'generate_zero' => true,
 					),
+
+					array(
+						'type'          => 'woodmart_button_set',
+						'heading'       => esc_html__( 'Subcategories', 'woodmart' ),
+						'param_name'    => 'subcategories',
+						'value'         => array(
+							esc_html__( 'Inherit', 'woodmart' ) => '',
+							esc_html__( 'Enable', 'woodmart' ) => 'enable',
+							esc_html__( 'Disable', 'woodmart' ) => 'disable',
+						),
+						'group'         => esc_html__( 'Style', 'woodmart' ),
+						'dependency'    => array(
+							'element' => 'categories_design',
+							'value'   => array( 'mask-subcat', 'side' ),
+						),
+						'wd_dependency' => array(
+							'element' => 'type',
+							'value'   => array( 'grid' ),
+						),
+					),
+
+					array(
+						'type'       => 'woodmart_button_set',
+						'heading'    => esc_html__( 'Product count', 'woodmart' ),
+						'param_name' => 'grid_product_count',
+						'value'      => array(
+							esc_html__( 'Inherit', 'woodmart' ) => '',
+							esc_html__( 'Enable', 'woodmart' ) => 'enable',
+							esc_html__( 'Disable', 'woodmart' ) => 'disable',
+						),
+						'group'      => esc_html__( 'Style', 'woodmart' ),
+						'dependency' => array(
+							'element' => 'type',
+							'value'   => array( 'grid' ),
+						),
+					),
+
 					$title_typography['font_family'],
 					$title_typography['font_size'],
 					$title_typography['font_weight'],
@@ -526,8 +656,8 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 					$title_typography['line_height'],
 
 					/**
-					* Layout
-					*/
+					 * Layout
+					 */
 					array(
 						'title'      => esc_html__( 'Layout', 'woodmart' ),
 						'group'      => esc_html__( 'Style', 'woodmart' ),
@@ -547,7 +677,7 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'save_always'      => true,
 						'hint'             => esc_html__( 'Try out our creative styles for categories block', 'woodmart' ),
 						'value'            => array(
-							esc_html__( 'Default', 'woodmart' )                   => 'default',
+							esc_html__( 'Grid', 'woodmart' )                   => 'default',
 							esc_html__( 'Masonry', 'woodmart' )                   => 'masonry',
 							esc_html__( 'Masonry (with first wide)', 'woodmart' ) => 'masonry-first',
 							esc_html__( 'Carousel', 'woodmart' )                  => 'carousel',
@@ -593,19 +723,218 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'edit_field_class' => 'vc_col-sm-6 vc_column',
 					),
 					array(
+						'heading'    => esc_html__( 'Grid items with different sizes', 'woodmart' ),
+						'group'      => esc_html__( 'Style', 'woodmart' ),
+						'type'       => 'textfield',
+						'param_name' => 'grid_different_sizes',
+						'value'      => '',
+						'dependency' => array(
+							'element' => 'style',
+							'value'   => array( 'default' ),
+						),
+					),
+					array(
+						'type'             => 'woodmart_button_set',
 						'heading'          => esc_html__( 'Space between categories', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'param_name'       => 'spacing_tabs',
+						'tabs'             => true,
+						'value'            => array(
+							esc_html__( 'Desktop', 'woodmart' ) => 'desktop',
+							esc_html__( 'Tablet', 'woodmart' ) => 'tablet',
+							esc_html__( 'Mobile', 'woodmart' ) => 'mobile',
+						),
+						'default'          => 'desktop',
+						'edit_field_class' => 'wd-res-control wd-custom-width vc_col-sm-12 vc_column',
+					),
+					array(
 						'group'            => esc_html__( 'Style', 'woodmart' ),
 						'type'             => 'dropdown',
 						'param_name'       => 'spacing',
-						'value'            => array( 30, 20, 10, 6, 2, 0 ),
+						'value'            => array(
+							esc_html__( 'Inherit from Theme Settings', 'woodmart' ) => '',
+							0  => 0,
+							2  => 2,
+							6  => 6,
+							10 => 10,
+							20 => 20,
+							30 => 30,
+						),
+						'std'              => '',
+						'wd_dependency'    => array(
+							'element' => 'spacing_tabs',
+							'value'   => array( 'desktop' ),
+						),
+						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
+					),
+					array(
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'type'             => 'dropdown',
+						'param_name'       => 'spacing_tablet',
+						'value'            => array(
+							esc_html__( 'Inherit', 'woodmart' ) => '',
+							0  => 0,
+							2  => 2,
+							6  => 6,
+							10 => 10,
+							20 => 20,
+							30 => 30,
+						),
+						'std'              => '',
+						'wd_dependency'    => array(
+							'element' => 'spacing_tabs',
+							'value'   => array( 'tablet' ),
+						),
+						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
+					),
+					array(
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'type'             => 'dropdown',
+						'param_name'       => 'spacing_mobile',
+						'value'            => array(
+							esc_html__( 'Inherit', 'woodmart' ) => '',
+							0  => 0,
+							2  => 2,
+							6  => 6,
+							10 => 10,
+							20 => 20,
+							30 => 30,
+						),
+						'std'              => '',
+						'wd_dependency'    => array(
+							'element' => 'spacing_tabs',
+							'value'   => array( 'mobile' ),
+						),
+						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
+					),
+
+					/**
+					 * Hidden sidebar settings.
+					 */
+					array(
+						'title'      => esc_html__( 'Hidden sidebar', 'woodmart' ),
+						'group'      => esc_html__( 'Style', 'woodmart' ),
+						'type'       => 'woodmart_title_divider',
+						'param_name' => 'side_hidden_style_section',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'wd_dependency'    => array(
+							'element' => 'type',
+							'value'   => array( 'navigation' ),
+						),
+					),
+					array(
+						'param_name'       => 'mobile_categories_menu_layout',
+						'type'             => 'dropdown',
+						'heading'          => esc_html__( 'Menu layout', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Dropdown', 'woodmart' )  => 'dropdown',
+							esc_html__( 'Drilldown', 'woodmart' ) => 'drilldown',
+						),
+						'std'              => 'dropdown',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'param_name'       => 'mobile_categories_drilldown_animation',
+						'type'             => 'dropdown',
+						'heading'          => esc_html__( 'Drilldown animation', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Slide', 'woodmart' )   => 'slide',
+							esc_html__( 'Fade in', 'woodmart' ) => 'fade-in',
+						),
+						'std'              => 'slide',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'wd_dependency'    => array(
+							'element' => 'mobile_categories_menu_layout',
+							'value'   => array( 'drilldown' ),
+						),
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'param_name'       => 'mobile_categories_submenu_opening_action',
+						'type'             => 'dropdown',
+						'heading'          => esc_html__( 'Opening action', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Arrow', 'woodmart' ) => 'only_arrow',
+							esc_html__( 'Label and arrow', 'woodmart' ) => 'item_and_arrow',
+						),
+						'std'              => 'only_arrow',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'param_name'       => 'mobile_categories_position',
+						'type'             => 'woodmart_image_select',
+						'heading'          => esc_html__( 'Position', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Left', 'woodmart' )   => 'left',
+							esc_html__( 'Right', 'woodmart' )  => 'right',
+						),
+						'images_value'     => array(
+							'left'   => WOODMART_ASSETS_IMAGES . '/settings/sidebar-layout/left.png',
+							'right'  => WOODMART_ASSETS_IMAGES . '/settings/sidebar-layout/right.png',
+						),
+						'std'              => 'left',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'wood_tooltip'     => true,
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'param_name'       => 'mobile_categories_color_scheme',
+						'type'             => 'dropdown',
+						'heading'          => esc_html__( 'Color scheme', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'value'            => array(
+							esc_html__( 'Default', 'woodmart' ) => 'default',
+							esc_html__( 'Dark', 'woodmart' )    => 'dark',
+							esc_html__( 'Light', 'woodmart' )   => 'light',
+						),
+						'std'              => 'default',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
+						'edit_field_class' => 'vc_col-sm-6 vc_column',
+					),
+					array(
+						'param_name'       => 'mobile_categories_close_btn',
+						'type'             => 'woodmart_switch',
+						'heading'          => esc_html__( 'Show close button', 'woodmart' ),
+						'group'            => esc_html__( 'Style', 'woodmart' ),
+						'true_state'       => 'yes',
+						'false_state'      => 'no',
+						'default'          => 'no',
+						'dependency'       => array(
+							'element' => 'mobile_accordion',
+							'value'   => array( 'side-hidden' ),
+						),
 						'edit_field_class' => 'vc_col-sm-6 vc_column',
 					),
 					/**
-					* Carousel
-					*/
+					 * Carousel
+					 */
 					array(
 						'title'      => esc_html__( 'Carousel', 'woodmart' ),
-						'group'      => esc_html__( 'Style', 'woodmart' ),
+						'group'      => esc_html__( 'Carousel', 'woodmart' ),
 						'type'       => 'woodmart_title_divider',
 						'holder'     => 'div',
 						'param_name' => 'carousel_divider',
@@ -614,177 +943,9 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 							'value'   => array( 'carousel' ),
 						),
 					),
-					array(
-						'type'             => 'woodmart_button_set',
-						'heading'          => esc_html__( 'Slides per view', 'woodmart' ),
-						'hint'             => esc_html__( 'Set numbers of slides you want to display at the same time on slider\'s container for carousel mode.', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'param_name'       => 'slides_per_view_tabs',
-						'tabs'             => true,
-						'value'            => array(
-							esc_html__( 'Desktop', 'woodmart' ) => 'desktop',
-							esc_html__( 'Tablet', 'woodmart' ) => 'tablet',
-							esc_html__( 'Mobile', 'woodmart' ) => 'mobile',
-						),
-						'dependency'  => array(
-							'element' => 'style',
-							'value' => array( 'carousel' )
-						),
-						'default'          => 'desktop',
-						'edit_field_class' => 'wd-res-control wd-custom-width vc_col-sm-12 vc_column',
-					),
-					array(
-						'type' => 'dropdown',
-						'param_name' => 'slides_per_view',
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'value' => array(
-							'1'  => '1',
-							'2'  => '2',
-							'3'  => '3',
-							'4'  => '4',
-							'5'  => '5',
-							'6'  => '6',
-							'7'  => '7',
-							'8'  => '8',
-							'9'  => '9',
-							'10' => '10',
-							'11' => '11',
-							'12' => '12',
-						),
-						'std' => '3',
-						'dependency' => array(
-							'element' => 'style',
-							'value' => array( 'carousel' )
-						),
-						'wd_dependency'    => array(
-							'element' => 'slides_per_view_tabs',
-							'value'   => array( 'desktop' ),
-						),
-						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
-					),
-					array(
-						'type' => 'dropdown',
-						'param_name' => 'slides_per_view_tablet',
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'value' => array(
-							esc_html__( 'Auto', 'woodmart' ) => 'auto',
-							'1'  => '1',
-							'2'  => '2',
-							'3'  => '3',
-							'4'  => '4',
-							'5'  => '5',
-							'6'  => '6',
-							'7'  => '7',
-							'8'  => '8',
-							'9'  => '9',
-							'10' => '10',
-							'11' => '11',
-							'12' => '12',
-						),
-						'std' => 'auto',
-						'dependency' => array(
-							'element' => 'style',
-							'value' => array( 'carousel' )
-						),
-						'wd_dependency'    => array(
-							'element' => 'slides_per_view_tabs',
-							'value'   => array( 'tablet' ),
-						),
-						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
-					),
-					array(
-						'type' => 'dropdown',
-						'param_name' => 'slides_per_view_mobile',
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'value' => array(
-							esc_html__( 'Auto', 'woodmart' ) => 'auto',
-							'1'  => '1',
-							'2'  => '2',
-							'3'  => '3',
-							'4'  => '4',
-							'5'  => '5',
-							'6'  => '6',
-							'7'  => '7',
-							'8'  => '8',
-							'9'  => '9',
-							'10' => '10',
-							'11' => '11',
-							'12' => '12',
-						),
-						'std' => 'auto',
-						'dependency' => array(
-							'element' => 'style',
-							'value' => array( 'carousel' )
-						),
-						'wd_dependency'    => array(
-							'element' => 'slides_per_view_tabs',
-							'value'   => array( 'mobile' ),
-						),
-						'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
-					),
-					array(
-						'heading'          => esc_html__( 'Hide pagination control', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'type'             => 'woodmart_switch',
-						'param_name'       => 'hide_pagination_control',
-						'hint'             => esc_html__( 'If "YES" pagination control will be removed', 'woodmart' ),
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'no',
-						'dependency'       => array(
-							'element' => 'style',
-							'value'   => array( 'carousel' ),
-						),
-						'edit_field_class' => 'vc_col-sm-6 vc_column',
-					),
-					array(
-						'heading'          => esc_html__( 'Hide prev/next buttons', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'type'             => 'woodmart_switch',
-						'param_name'       => 'hide_prev_next_buttons',
-						'hint'             => esc_html__( 'If "YES" prev/next control will be removed', 'woodmart' ),
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'no',
-						'dependency'       => array(
-							'element' => 'style',
-							'value'   => array( 'carousel' ),
-						),
-						'edit_field_class' => 'vc_col-sm-6 vc_column',
-					),
-					array(
-						'heading'          => esc_html__( 'Slider loop', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'type'             => 'woodmart_switch',
-						'param_name'       => 'wrap',
-						'hint'             => esc_html__( 'Enables loop mode.', 'woodmart' ),
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'no',
-						'dependency'       => array(
-							'element' => 'style',
-							'value'   => array( 'carousel' ),
-						),
-						'edit_field_class' => 'vc_col-sm-6 vc_column',
-					),
-					array(
-						'type'             => 'woodmart_switch',
-						'heading'          => esc_html__( 'Slider autoplay', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'param_name'       => 'autoplay',
-						'hint'             => esc_html__( 'Enables autoplay mode.', 'woodmart' ),
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'no',
-						'dependency'       => array(
-							'element' => 'view',
-							'value'   => array( 'carousel' ),
-						),
-						'edit_field_class' => 'vc_col-sm-6 vc_column',
-					),
 					/**
-					* Extra
-					*/
+					 * Extra
+					 */
 					array(
 						'title'      => esc_html__( 'Extra options', 'woodmart' ),
 						'group'      => esc_html__( 'Style', 'woodmart' ),
@@ -801,21 +962,6 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 						'false_state'      => 'no',
 						'default'          => 'no',
 						'edit_field_class' => 'vc_col-sm-6 vc_column',
-					),
-					array(
-						'heading'          => esc_html__( 'Init carousel on scroll', 'woodmart' ),
-						'group'            => esc_html__( 'Style', 'woodmart' ),
-						'type'             => 'woodmart_switch',
-						'param_name'       => 'scroll_carousel_init',
-						'hint'             => esc_html__( 'This option allows you to init carousel script only when visitor scroll the page to the slider. Useful for performance optimization.', 'woodmart' ),
-						'true_state'       => 'yes',
-						'false_state'      => 'no',
-						'default'          => 'no',
-						'edit_field_class' => 'vc_col-sm-6 vc_column',
-						'dependency'       => array(
-							'element' => 'style',
-							'value'   => array( 'carousel' ),
-						),
 					),
 					array(
 						'heading'    => esc_html__( 'Extra class name', 'woodmart' ),
@@ -841,10 +987,8 @@ if( ! function_exists( 'woodmart_vc_shortcode_categories' ) ) {
 					woodmart_get_responsive_dependency_width_map( 'width_mobile' ),
 					woodmart_get_responsive_dependency_width_map( 'custom_width_mobile' ),
 				)
-			)
-		);
+			);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_shortcode_categories' );
 }
 
 //Filters For autocomplete param:

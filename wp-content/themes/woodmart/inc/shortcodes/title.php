@@ -105,6 +105,12 @@ if ( ! function_exists( 'woodmart_shortcode_title' ) ) {
 
 		woodmart_enqueue_inline_style( 'section-title' );
 
+		if ( in_array( $style, array( 'bordered', 'simple' ), true ) ) {
+			woodmart_enqueue_inline_style( 'section-title-style-simple-and-brd' );
+		} elseif ( in_array( $style, array( 'overlined', 'underlined', 'underlined-2' ), true ) ) {
+			woodmart_enqueue_inline_style( 'section-title-style-under-and-over' );
+		}
+
 		if ( isset( $title_decoration_style ) && 'default' !== $title_decoration_style ) {
 			$title_class .= ' wd-underline-' . $title_decoration_style;
 			woodmart_enqueue_inline_style( 'mod-highlighted-text' );

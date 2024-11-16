@@ -129,6 +129,16 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 					),
 				),
 				array(
+					'id'     => 'checkboxes',
+					'type'   => 'dropdown',
+					'std'    => 'off',
+					'name'   => esc_html__( 'Show checkboxes', 'woodmart' ),
+					'fields' => array(
+						esc_html__( 'OFF', 'woodmart' ) => 'off',
+						esc_html__( 'ON', 'woodmart' )  => 'on',
+					),
+				),
+				array(
 					'id'         => 'search_by_filters',
 					'type'       => 'checkbox',
 					'name'       => esc_html__( 'Show search input for this attribute', 'woodmart' ),
@@ -354,78 +364,6 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 		}
 
 		/**
-		 * Get current page URL for layered nav items.
-		 *
-		 * @return string
-		 */
-		protected function get_page_base_url() {
-			if ( Automattic\Jetpack\Constants::is_defined( 'SHOP_IS_ON_FRONT' ) ) {
-				$link = home_url();
-			} elseif ( is_shop() ) {
-				$link = get_permalink( wc_get_page_id( 'shop' ) );
-			} elseif ( is_product_category() ) {
-				$link = get_term_link( get_query_var( 'product_cat' ), 'product_cat' );
-			} elseif ( is_product_tag() ) {
-				$link = get_term_link( get_query_var( 'product_tag' ), 'product_tag' );
-			} else {
-				$queried_object = get_queried_object();
-				$link           = get_term_link( $queried_object->slug, $queried_object->taxonomy );
-			}
-
-			// Min/Max.
-			if ( isset( $_GET['min_price'] ) ) {
-				$link = add_query_arg( 'min_price', wc_clean( wp_unslash( $_GET['min_price'] ) ), $link );
-			}
-
-			if ( isset( $_GET['max_price'] ) ) {
-				$link = add_query_arg( 'max_price', wc_clean( wp_unslash( $_GET['max_price'] ) ), $link );
-			}
-
-			// Order by.
-			if ( isset( $_GET['orderby'] ) ) {
-				$link = add_query_arg( 'orderby', wc_clean( wp_unslash( $_GET['orderby'] ) ), $link );
-			}
-
-			/**
-			 * Search Arg.
-			 * To support quote characters, first they are decoded from &quot; entities, then URL encoded.
-			 */
-			if ( get_search_query() ) {
-				$link = add_query_arg( 's', rawurlencode( htmlspecialchars_decode( get_search_query() ) ), $link );
-			}
-
-			// Post Type Arg
-			if ( isset( $_GET['post_type'] ) ) {
-				$link = add_query_arg( 'post_type', wc_clean( wp_unslash( $_GET['post_type'] ) ), $link );
-
-				// Prevent post type and page id when pretty permalinks are disabled.
-				if ( is_shop() ) {
-					$link = remove_query_arg( 'page_id', $link );
-				}
-			}
-
-			// Min Rating Arg
-			if ( isset( $_GET['rating_filter'] ) ) {
-				$link = add_query_arg( 'rating_filter', wc_clean( wp_unslash( $_GET['rating_filter'] ) ), $link );
-			}
-
-			// All current filters.
-			if ( $_chosen_attributes = WC_Query::get_layered_nav_chosen_attributes() ) { // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments.Found, WordPress.CodeAnalysis.AssignmentInCondition.Found
-				foreach ( $_chosen_attributes as $name => $data ) {
-					$filter_name = wc_attribute_taxonomy_slug( $name );
-					if ( ! empty( $data['terms'] ) ) {
-						$link = add_query_arg( 'filter_' . $filter_name, implode( ',', $data['terms'] ), $link );
-					}
-					if ( 'or' === $data['query_type'] ) {
-						$link = add_query_arg( 'query_type_' . $filter_name, 'or', $link );
-					}
-				}
-			}
-
-			return apply_filters( 'woocommerce_widget_get_current_page_url', $link, $this );
-		}
-
-		/**
 		 * Count products within certain terms, taking the main WP query into consideration.
 		 *
 		 * This query allows counts to be generated based on the viewed products, not all products.
@@ -533,6 +471,7 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 		protected function layered_nav_list( $terms, $taxonomy, $query_type, $instance ) {
 			$labels            = isset( $instance['labels'] ) ? $instance['labels'] : 'on';
 			$tooltips          = isset( $instance['tooltips'] ) ? $instance['tooltips'] : 'off';
+			$checkboxes        = isset( $instance['checkboxes'] ) ? $instance['checkboxes'] : 'off';
 			$size              = isset( $instance['size'] ) ? $instance['size'] : 'normal';
 			$style             = isset( $instance['style'] ) ? $instance['style'] : 'inherit';
 			$shape             = isset( $instance['shape'] ) ? $instance['shape'] : 'round';
@@ -583,6 +522,10 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 
 			if ( in_array( $size, array( 'small', 'normal', 'large' ), true ) ) {
 				$class .= woodmart_get_old_classes( ' swatches-' . $size );
+			}
+
+			if ( 'on' === $checkboxes ) {
+				$class .= ' wd-checkboxes-on';
 			}
 
 			if ( $search_by_filters ) {
@@ -636,7 +579,7 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 					continue;
 				}
 
-				$filter_name    = 'filter_' . sanitize_title( str_replace( 'pa_', '', $taxonomy ) );
+				$filter_name    = 'filter_' . wc_attribute_taxonomy_slug( $taxonomy );
 				$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( $_GET[ $filter_name ] ) ) : array();
 				$current_filter = array_map( 'sanitize_title', $current_filter );
 
@@ -644,7 +587,7 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 					$current_filter[] = $term->slug;
 				}
 
-				$base_link = $this->get_page_base_url();
+				$base_link = apply_filters( 'woocommerce_widget_get_current_page_url', woodmart_filters_get_page_base_url(), $this );
 				$link      = remove_query_arg( $filter_name, $base_link );
 
 				// Add current filters to URL.
@@ -818,13 +761,14 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 			$wrapper_classes = '';
 
 			if ( 'or' === $query_type ) {
-				$wrapper_classes .= ' multi_select';
+				$wrapper_classes = ' multi_select';
 			}
 
 			$wrapper_classes .= ' wd-event-' . $show_dropdown_on;
 
 			$taxonomy_filter_name = str_replace( 'pa_', '', $taxonomy );
-			$current_value        = isset( $_GET[ 'filter_' . $taxonomy_filter_name ] ) ? sanitize_text_field( $_GET[ 'filter_' . $taxonomy_filter_name ] ) : '';
+			$filter_name          = 'filter_' . esc_attr( $taxonomy_filter_name );
+			$current_value        = isset( $_GET[ $filter_name ] ) ? sanitize_text_field( $_GET[ $filter_name ] ) : '';
 
 			if ( $is_on_shop ) {
 				$term_counts = $this->get_filtered_term_product_counts( wp_list_pluck( $terms, 'term_id' ), $taxonomy, $query_type );
@@ -835,14 +779,31 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 
 			echo '<div class="wd-pf-checkboxes wd-pf-attributes wd-col' . esc_attr( $wrapper_classes ) . '">';
 				echo '<input class="result-input" name="filter_' . esc_attr( $taxonomy_filter_name ) . '" type="hidden" value="' . esc_attr( $current_value ) . '">';
-			if ( $query_type == 'or' ) {
+			if ( 'or' === $query_type ) {
 				echo '<input name="query_type_' . esc_attr( $taxonomy_filter_name ) . '" type="hidden" value="' . esc_attr( $query_type ) . '">';
 			}
 
 			echo '<div class="wd-pf-title"><span class="title-text">' . esc_html( $title ) . '</span>';
 
 			if ( 'yes' === $show_selected_values ) {
-				echo '<ul class="wd-pf-results"></ul>';
+				echo '<ul class="wd-pf-results">';
+
+				if ( ! empty( $current_value ) ) {
+					$current_values_list = explode( ',', $current_value );
+
+					foreach ( $current_values_list as $current_value_slug ) {
+						$current_term = get_term_by( 'slug', $current_value_slug, $taxonomy );
+
+						if ( ! $current_term ) {
+							continue;
+						}
+
+						echo '<li class="selected-value" data-title="' . esc_attr( $current_value_slug ) . '">';
+							echo esc_attr( $current_term->name );
+						echo '</li>';
+					}
+				}
+				echo '</ul>';
 			}
 
 			echo '</div>';
@@ -905,8 +866,46 @@ if ( ! class_exists( 'WOODMART_Widget_Layered_Nav' ) ) {
 
 								// END swatches customization
 
+								$current_filter = array();
+
+								if ( 'or' === $query_type ) {
+									$current_filter = isset( $_GET[ $filter_name ] ) ? explode( ',', wc_clean( $_GET[ $filter_name ] ) ) : array();
+									$current_filter = array_map( 'sanitize_title', $current_filter );
+								}
+
+								if ( ! in_array( $term->slug, $current_filter ) ) {
+									$current_filter[] = $term->slug;
+								}
+
+								$base_link = apply_filters( 'woocommerce_widget_get_current_page_url', woodmart_filters_get_page_base_url(), $this );
+								$link      = remove_query_arg( $filter_name, $base_link );
+
+								// Add current filters to URL.
+								foreach ( $current_filter as $key => $value ) {
+									// Exclude query arg for current term archive term.
+									if ( $value === $this->get_current_term_slug() ) {
+										unset( $current_filter[ $key ] );
+									}
+
+									// Exclude self so filter can be unset on click.
+									if ( $option_is_set && $value === $term->slug ) {
+										unset( $current_filter[ $key ] );
+									}
+								}
+
+								if ( ! empty( $current_filter ) ) {
+									asort( $current_filter );
+									$link = add_query_arg( $filter_name, implode( ',', $current_filter ), $link );
+
+									// Add Query type Arg to URL.
+									if ( 'or' === $query_type && ! ( 1 === count( $current_filter ) && $option_is_set ) ) {
+										$link = add_query_arg( 'query_type_' . wc_attribute_taxonomy_slug( $taxonomy ), 'or', $link );
+									}
+									$link = str_replace( '%2C', ',', $link );
+								}
+
 								echo '<li class="wd-pf-' . esc_attr( $term->slug ) . esc_attr( $class ) . '">';
-								echo '<a rel="nofollow noopener" href="' . esc_url( get_term_link( $term->term_id, $term->taxonomy ) ) .'" class="pf-value" data-val="' . esc_attr( wc_attribute_taxonomy_slug( $term->slug ) ) . '" data-title="' . esc_attr( $term->name ) . '">';
+								echo '<a rel="nofollow noopener" href="' . esc_url( apply_filters( 'woocommerce_layered_nav_link', $link ) ) .'" class="pf-value" data-val="' . esc_attr( wc_attribute_taxonomy_slug( $term->slug ) ) . '" data-title="' . esc_attr( $term->name ) . '">';
 									if ( $swatch_style || $swatch_text || $swatch_image ) {
 										echo '<span class="wd-swatch' . esc_attr( $filter_classes ) . '">';
 

@@ -18,11 +18,11 @@
 		var $mainGalleryWrapper = $mainGallery.parents('.woocommerce-product-gallery');
 		var $variation_form = $('.variations_form');
 
-		woodmartThemeModule.$document.on('click', '.product-image-wrap.wd-with-video .wd-play-video', function (e) {
+		woodmartThemeModule.$document.on('click', '.wd-carousel-item.wd-with-video .wd-play-video', function (e) {
 			e.preventDefault();
 
 			var $button  = $(this);
-			var $wrapper = $button.parents('.product-image-wrap');
+			var $wrapper = $button.parents('.wd-carousel-item');
 			var $video   = $wrapper.find('iframe');
 
 			if ( ! $video.length ) {
@@ -81,14 +81,13 @@
 			});
 		});
 
-		if ( $mainGallery.find('.product-image-wrap.wd-with-video').length ) {
-			$mainGallery.on('changed.owl.carousel', function(e) {
-				var $currentSlide = $mainGallery.find('.owl-item').eq(e.item.index);
-				var $imageWrapper = $currentSlide.find('.product-image-wrap');
+		if ( $mainGallery.find('.wd-carousel-item.wd-with-video').length ) {
+			document.querySelector('.woocommerce-product-gallery__wrapper:not(.quick-view-gallery)').addEventListener('wdSlideChange', function (e) {
+				var activeSlide = e.target.swiper.slides[e.target.swiper.activeIndex];
 
-				if ( $imageWrapper.hasClass('wd-overlay-hidden') && ( $imageWrapper.hasClass('wd-video-playing') || $imageWrapper.hasClass('wd-video-design-native') && $imageWrapper.hasClass('wd-video-hide-thumb') ) ) {
+				if ( activeSlide.classList.contains('wd-overlay-hidden') && ( activeSlide.classList.contains('wd-video-playing') || activeSlide.classList.contains('wd-video-design-native') && activeSlide.classList.contains('wd-video-hide-thumb') ) ) {
 					visibleOverlayProductInfo( 'hide' );
-				} else if ( $mainGalleryWrapper.hasClass('wd-hide-overlay-info') && ( ! $imageWrapper.hasClass('wd-overlay-hidden') || ! $imageWrapper.hasClass('wd-video-playing' ) ) ) {
+				} else if ( $mainGalleryWrapper.hasClass('wd-hide-overlay-info') && ( ! activeSlide.classList.contains('wd-overlay-hidden') || ! activeSlide.classList.contains('wd-video-playing') ) ) {
 					visibleOverlayProductInfo( 'show' );
 				}
 			});
@@ -96,7 +95,7 @@
 
 		if ( $variation_form.length ) {
 			$variation_form.on('show_variation', function(e, variation) {
-				$mainGallery.find('.product-image-wrap.wd-video-playing').each( function () {
+				$mainGallery.find('.wd-carousel-item.wd-video-playing').each( function () {
 					var $imageWrapper = $(this);
 
 					if ( $imageWrapper.find('.wp-post-image').length || $imageWrapper.hasClass('wd-inited') ) {
@@ -152,6 +151,7 @@
 		function youtubeVideoControls( $wrapper ) {
 			var $video    = $wrapper.find('iframe');
 			var $playBtn  = $wrapper.find('.wd-play-video');
+			var prevState;
 
 			var player = new YT.Player($video[0], {
 				events: {
@@ -168,6 +168,8 @@
 						visibleOverlayProductInfo( 'show' );
 					}
 				}
+
+				prevState = event.data;
 			}
 
 			function onPlayerReady() {
@@ -190,12 +192,26 @@
 			}
 
 			$playBtn.on('click', function() {
+				if ( prevState === YT.PlayerState.UNSTARTED ) {
+					if ( 'function' === typeof player.playVideo ) {
+						player.playVideo();
+					}
+
+					return;
+				}
+
 				if ( $wrapper.hasClass('wd-video-playing') ) {
 					$wrapper.removeClass('wd-video-playing');
-					player.pauseVideo();
+
+					if ( 'function' === typeof player.pauseVideo ) {
+						player.pauseVideo();
+					}
 				} else {
 					$wrapper.addClass('wd-video-playing');
-					player.playVideo();
+
+					if ( 'function' === typeof player.playVideo ) {
+						player.playVideo();
+					}
 				}
 			});
 		}
@@ -308,7 +324,7 @@
 		}
 
 		function visibleOverlayProductInfo( event ) {
-			if ( ! $mainGallery.hasClass('owl-carousel') ) {
+			if ( ! $mainGallery.hasClass('wd-carousel') ) {
 				return;
 			}
 
@@ -324,3 +340,13 @@
 		woodmartThemeModule.productVideoGallery();
 	});
 })(jQuery);
+
+window.addEventListener('load',function() {
+	if ( document.querySelector('#www-widgetapi-script') && document.querySelector('.woocommerce-product-gallery .wd-carousel-item.wd-with-video') ) {
+		const tag = document.createElement( 'script' );
+		tag.src = '//www.youtube.com/iframe_api';
+
+		const firstScriptTag = document.getElementsByTagName( 'script' )[0];
+		firstScriptTag.parentNode.insertBefore( tag, firstScriptTag );
+	}
+});

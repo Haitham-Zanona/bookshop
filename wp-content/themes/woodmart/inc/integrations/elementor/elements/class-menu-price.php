@@ -65,7 +65,7 @@ class Menu_Price extends Widget_Base {
 	 * @return array Widget categories.
 	 */
 	public function get_categories() {
-		return [ 'wd-elements' ];
+		return array( 'wd-elements' );
 	}
 
 	/**
@@ -84,66 +84,66 @@ class Menu_Price extends Widget_Base {
 		 */
 		$this->start_controls_section(
 			'general_content_section',
-			[
+			array(
 				'label' => esc_html__( 'General', 'woodmart' ),
-			]
+			)
 		);
 
 		$this->add_control(
 			'title',
-			[
+			array(
 				'label'   => esc_html__( 'Title', 'woodmart' ),
 				'type'    => Controls_Manager::TEXT,
 				'default' => 'Weight Watchers General Tso\'s Chicken',
-			]
+			)
 		);
 
 		$this->add_control(
 			'description',
-			[
+			array(
 				'label'   => esc_html__( 'Description', 'woodmart' ),
 				'type'    => Controls_Manager::TEXT,
 				'default' => 'In a medium bowl, whisk together broth, cornstarch, sugar, soy sauce, vinegar and ginger; set aside.',
-			]
+			)
 		);
 
 		$this->add_control(
 			'price',
-			[
+			array(
 				'label'   => esc_html__( 'Price', 'woodmart' ),
 				'type'    => Controls_Manager::TEXT,
 				'default' => '$399.00',
-			]
+			)
 		);
 
 		$this->add_control(
 			'link',
-			[
+			array(
 				'label'   => esc_html__( 'Link', 'woodmart' ),
 				'type'    => Controls_Manager::URL,
-				'default' => [
+				'default' => array(
 					'url'         => '',
 					'is_external' => false,
 					'nofollow'    => false,
-				],
-			]
+				),
+			)
 		);
 
 		$this->add_control(
 			'image',
-			[
+			array(
 				'label' => esc_html__( 'Choose image', 'woodmart' ),
 				'type'  => Controls_Manager::MEDIA,
-			]
+			)
 		);
 
 		$this->add_group_control(
 			Group_Control_Image_Size::get_type(),
-			[
+			array(
 				'name'      => 'image',
 				'default'   => 'thumbnail',
 				'separator' => 'none',
-			]
+			)
 		);
 
 		$this->end_controls_section();
@@ -159,37 +159,40 @@ class Menu_Price extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		$default_settings = [
+		$default_settings = array(
 			'image'       => '',
 			'title'       => '',
 			'description' => '',
 			'price'       => '',
-			'link'        => '',
-		];
+			'link'        => array(
+				'url'         => '',
+				'is_external' => '',
+			),
+		);
 
 		$settings     = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 		$image_output = '';
 
 		$this->add_render_attribute(
-			[
-				'wrapper'     => [
-					'class' => [
+			array(
+				'wrapper'     => array(
+					'class' => array(
 						'wd-menu-price',
 						woodmart_get_old_classes( 'woodmart-menu-price' ),
-					],
-				],
-				'price'       => [
-					'class' => [
+					),
+				),
+				'price'       => array(
+					'class' => array(
 						'menu-price-price',
 						'price',
-					],
-				],
-				'description' => [
-					'class' => [
+					),
+				),
+				'description' => array(
+					'class' => array(
 						'menu-price-details',
-					],
-				],
-			]
+					),
+				),
+			)
 		);
 
 		$this->add_inline_editing_attributes( 'title' );
@@ -197,25 +200,33 @@ class Menu_Price extends Widget_Base {
 		$this->add_inline_editing_attributes( 'description' );
 
 		// Image settings.
+		$custom_image_size = isset( $settings['image_custom_dimension']['width'] ) && $settings['image_custom_dimension']['width'] ? $settings['image_custom_dimension'] : array(
+			'width'  => 128,
+			'height' => 128,
+		);
+
 		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$image_output = '<span class="img-wrapper">' . woodmart_get_image_html( $settings, 'image' ) . '</span>';
+			$image_output ='<span class="img-wrapper">' . woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] ) . '</span>';
+
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
+				$custom_image_size = 'custom' !== $settings['image_size'] ? $settings['image_size'] : $custom_image_size;
+				$image_output      = woodmart_get_svg_html( $settings['image']['id'], $custom_image_size );
+			}
 		}
 
 		// Link settings.
 		if ( $settings['link'] && $settings['link']['url'] ) {
-			$this->add_render_attribute( 'wrapper', 'class', 'cursor-pointer' );
-		}
-		if ( isset( $settings['link']['is_external'] ) && 'on' === $settings['link']['is_external'] ) {
-			$onclick = 'window.open(\'' . esc_url( $settings['link']['url'] ) . '\',\'_blank\')';
-		} else {
-			$onclick = 'window.location.href=\'' . esc_url( $settings['link']['url'] ) . '\'';
+			$this->add_link_attributes( 'link', $settings['link'] );
+			$this->add_render_attribute( 'link', 'class', 'wd-menu-price-link wd-fill' );
+			$this->add_render_attribute( 'link', 'aria-label', esc_html__( 'Menu price link', 'woodmart' ) );
+
+			$this->add_render_attribute( 'wrapper', 'class', 'wd-with-link' );
 		}
 
 		woodmart_enqueue_inline_style( 'menu-price' );
 
 		?>
-		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?> <?php echo $settings['link']['url'] && ! woodmart_elementor_is_edit_mode() ? 'onclick="' . $onclick . '"' : ''; ?>>
-
+		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
 			<?php if ( $image_output ) : ?>
 				<div class="menu-price-image">
 					<?php echo $image_output; ?>
@@ -236,13 +247,18 @@ class Menu_Price extends Widget_Base {
 						<?php echo wp_kses( $settings['price'], woodmart_get_allowed_html() ); ?>
 					</div>
 				</div>
-				
+
 				<?php if ( $settings['description'] ) : ?>
 					<div <?php echo $this->get_render_attribute_string( 'description' ); ?>>
 						<?php echo do_shortcode( $settings['description'] ); ?>
 					</div>
 				<?php endif ?>
 			</div>
+
+			<?php if ( ! empty( $settings['link']['url'] ) ) : ?>
+				<a <?php echo $this->get_render_attribute_string( 'link' )?>></a>
+			<?php endif; ?>
+
 		</div>
 		<?php
 	}

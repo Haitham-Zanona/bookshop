@@ -1,5 +1,10 @@
-<?php if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
-	exit( 'No direct script access allowed' );}
+<?php
+
+if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
+	exit( 'No direct script access allowed' );
+}
+
+use XTS\Modules\Mega_Menu_Walker;
 
 /**
 * ------------------------------------------------------------------------------------------------
@@ -20,8 +25,10 @@ if ( ! function_exists( 'woodmart_shortcode_mega_menu' ) ) {
 				'design'                => 'vertical',
 				'dropdown_design'       => 'default',
 				'items_gap'             => 's',
+				'vertical_items_gap'    => 's',
 				'alignment'             => 'left',
 				'color'                 => '',
+				'icon_alignment'        => 'inherit',
 				'woodmart_color_scheme' => 'light',
 				'el_class'              => '',
 				'woodmart_css_id'       => '',
@@ -53,6 +60,11 @@ if ( ! function_exists( 'woodmart_shortcode_mega_menu' ) ) {
 
 		if ( 'vertical' === $atts['design'] ) {
 			$menu_classes .= ' wd-design-' . $atts['dropdown_design'];
+			$menu_classes .= ' wd-gap-' . $atts['vertical_items_gap'];
+		}
+
+		if ( $atts['icon_alignment'] && 'inherit' !== $atts['icon_alignment'] ) {
+			$menu_classes .= ' wd-icon-' . $atts['icon_alignment'];
 		}
 
 		ob_start();
@@ -61,6 +73,7 @@ if ( ! function_exists( 'woodmart_shortcode_mega_menu' ) ) {
 
 		if ( 'vertical' === $atts['design'] ) {
 			woodmart_enqueue_inline_style( 'mod-nav-vertical' );
+			woodmart_enqueue_inline_style( 'mod-nav-vertical-design-' . $atts['dropdown_design'] );
 		}
 		?>
 
@@ -79,7 +92,7 @@ if ( ! function_exists( 'woodmart_shortcode_mega_menu' ) ) {
 							'container'   => '',
 							'menu'        => $atts['nav_menu'],
 							'menu_class'  => 'menu wd-nav' . $menu_classes,
-							'walker'      => new WOODMART_Mega_Menu_Walker(),
+							'walker'      => new Mega_Menu_Walker(),
 						)
 					);
 				?>

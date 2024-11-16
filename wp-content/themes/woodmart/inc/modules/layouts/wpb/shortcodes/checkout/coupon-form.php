@@ -23,7 +23,8 @@ if ( ! function_exists( 'woodmart_shortcode_checkout_coupon_form' ) ) {
 		}
 
 		$default_settings = array(
-			'css' => '',
+			'alignment' => '',
+			'css'       => '',
 		);
 
 		$settings = wp_parse_args( $settings, $default_settings );
@@ -32,6 +33,10 @@ if ( ! function_exists( 'woodmart_shortcode_checkout_coupon_form' ) ) {
 
 		if ( $settings['css'] ) {
 			$wrapper_classes .= ' ' . vc_shortcode_custom_css_class( $settings['css'] );
+		}
+
+		if ( $settings['alignment'] ) {
+			$wrapper_classes .= ' text-' . $settings['alignment'];
 		}
 
 		ob_start();

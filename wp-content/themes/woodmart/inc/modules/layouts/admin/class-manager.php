@@ -7,6 +7,7 @@
 
 namespace XTS\Modules\Layouts;
 
+use WP_Post;
 use XTS\Singleton;
 
 /**
@@ -59,6 +60,7 @@ class Manager extends Singleton {
 		add_action( 'untrashed_post', array( $this, 'on_untrash_post' ) );
 		add_action( 'save_post_' . $this->post_type, array( $this, 'save_post' ) );
 		add_action( 'woodmart_after_import', array( $this, 'save_post' ) );
+		add_filter( 'post_row_actions', array( $this, 'duplicate_action' ), 10, 2 );
 	}
 
 	/**
@@ -99,10 +101,10 @@ class Manager extends Singleton {
 		$status  = woodmart_clean( $_POST['status'] ); // phpcs:ignore
 
 		wp_update_post(
-			[
+			array(
 				'ID'          => $post_id,
 				'post_status' => $status,
-			]
+			)
 		);
 
 		wp_send_json(
@@ -152,6 +154,34 @@ class Manager extends Singleton {
 			),
 		);
 
+		if ( 'single_product' === $type ) {
+			$published_products = wc_get_products(
+				array(
+					'status' => 'publish',
+					'limit'  => 1,
+				)
+			);
+
+			if ( empty( $published_products ) ) {
+				$create_product_link = add_query_arg(
+					array(
+						'post_type' => 'product',
+					),
+					admin_url( 'post-new.php' )
+				);
+
+				wp_send_json_error(
+					array(
+						'message' => sprintf(
+							'%s <a href="' . $create_product_link . '">%s</a>',
+							esc_html__( 'In order to create a Single product layout, you must first publish at least one product!', 'woodmart' ),
+							esc_html__( 'Add new product', 'woodmart' )
+						),
+					)
+				);
+			}
+		}
+
 		$post_id = wp_insert_post( $post_args );
 
 		if ( $predefined_name ) {
@@ -193,6 +223,7 @@ class Manager extends Singleton {
 			case 'product_tag':
 			case 'product_term':
 			case 'product_attr_term':
+			case 'filtered_product_by_term':
 				$taxonomy = array();
 
 				if ( 'product_cat' === $query_type || 'product_cat_children' === $query_type || 'product_term' === $query_type ) {
@@ -201,9 +232,15 @@ class Manager extends Singleton {
 				if ( 'product_tag' === $query_type || 'product_term' === $query_type ) {
 					$taxonomy[] = 'product_tag';
 				}
-				if ( 'product_attr_term' === $query_type || 'product_term' === $query_type ) {
-					foreach ( wc_get_attribute_taxonomies() as $attribute ) {
-						$taxonomy[] = 'pa_' . $attribute->attribute_name;
+				if ( 'product_attr_term' === $query_type || 'product_term' === $query_type || 'filtered_product_by_term' === $query_type ) {
+					$attribute_taxonomies = wc_get_attribute_taxonomies();
+
+					if ( ! empty( $attribute_taxonomies ) ) {
+						foreach ( $attribute_taxonomies as $tax ) {
+							if ( taxonomy_exists( wc_attribute_taxonomy_name( $tax->attribute_name ) ) ) {
+								$taxonomy[] = wc_attribute_taxonomy_name( $tax->attribute_name );
+							}
+						}
 					}
 				}
 
@@ -233,6 +270,22 @@ class Manager extends Singleton {
 						'text' => $attribute->attribute_label . ' (Tax: pa_' . $attribute->attribute_name . ')',
 					);
 				}
+				break;
+			case 'filtered_product_stock_status':
+				$items = array(
+					array(
+						'id'   => 'instock',
+						'text' => esc_html__( 'In Stock', 'woodmart' ),
+					),
+					array(
+						'id'   => 'onsale',
+						'text' => esc_html__( 'On Sale', 'woodmart' ),
+					),
+					array(
+						'id'   => 'onbackorder',
+						'text' => esc_html__( 'On backorder', 'woodmart' ),
+					),
+				);
 				break;
 			case 'product_type':
 				foreach ( wc_get_product_types() as $type => $title ) {
@@ -267,6 +320,45 @@ class Manager extends Singleton {
 				'results' => $items,
 			)
 		);
+	}
+
+	/**
+	 * Add duplicate action.
+	 *
+	 * @param string[] $actions An array of row action links. Defaults are
+	 *                           'Edit', 'Quick Edit', 'Restore', 'Trash',
+	 *                           'Delete Permanently', 'Preview', and 'View'.
+	 * @param WP_Post  $post The post object.
+	 *
+	 * @return string[]
+	 */
+	public function duplicate_action( $actions, $post ) {
+		if ( 'woodmart_layout' !== $post->post_type ) {
+			return $actions;
+		}
+
+		if ( current_user_can( 'edit_posts' ) ) {
+			$url = wp_nonce_url(
+				add_query_arg(
+					array(
+						'action' => 'woodmart_duplicate_post_as_draft',
+						'post'   => $post->ID,
+					),
+					'admin.php'
+				),
+				'woodmart_duplicate_post_as_draft',
+				'duplicate_nonce'
+			);
+
+			ob_start();
+			?>
+			<a href="<?php echo esc_url( $url ); ?>">
+				<?php esc_html_e( 'Duplicate', 'woodmart' ); ?>
+			</a>
+			<?php
+			$actions['duplicate'] = ob_get_clean();
+		}
+		return $actions;
 	}
 }
 

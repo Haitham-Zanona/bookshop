@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Frequently_Bought_Together;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 
 /**
@@ -51,15 +51,15 @@ class Main extends Singleton {
 			array(
 				'id'          => 'bought_together_enabled',
 				'name'        => esc_html__( 'Enable "Frequently bought together"', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-frequently-bought-together.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'enable-frequently-bought-together.jpg" alt="">', true ),
 				'description' => wp_kses( __( 'You can configure your bundles in Dashboard -> Products -> Frequently Bought Together. Read more information in our <a href="https://xtemos.com/docs-topic/frequently-bought-together/" target="_blank">documentation</a>.', 'woodmart' ), true ),
-				'group'       => esc_html__( 'Frequently bought together', 'woodmart' ),
 				'type'        => 'switcher',
-				'section'     => 'shop_section',
+				'section'     => 'bought_together_section',
 				'default'     => '1',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 				'off-text'    => esc_html__( 'No', 'woodmart' ),
-				'priority'    => 111,
+				'priority'    => 10,
+				'class'       => 'xts-preset-field-disabled',
 			)
 		);
 
@@ -67,9 +67,8 @@ class Main extends Singleton {
 			array(
 				'id'       => 'bought_together_column',
 				'name'     => esc_html__( 'Products columns on desktop', 'woodmart' ),
-				'group'    => esc_html__( 'Frequently bought together', 'woodmart' ),
 				'type'     => 'buttons',
-				'section'  => 'shop_section',
+				'section'  => 'bought_together_section',
 				'options'  => array(
 					1 => array(
 						'name'  => '1',
@@ -103,7 +102,7 @@ class Main extends Singleton {
 					'icon'  => 'xts-i-desktop',
 					'style' => 'devices',
 				),
-				'priority' => 112,
+				'priority' => 20,
 			)
 		);
 
@@ -111,9 +110,8 @@ class Main extends Singleton {
 			array(
 				'id'       => 'bought_together_column_tablet',
 				'name'     => esc_html__( 'Products columns on tablet', 'woodmart' ),
-				'group'    => esc_html__( 'Frequently bought together', 'woodmart' ),
 				'type'     => 'buttons',
-				'section'  => 'shop_section',
+				'section'  => 'bought_together_section',
 				'options'  => array(
 					'auto' => array(
 						'name'  => esc_html__( 'Auto', 'woodmart' ),
@@ -136,9 +134,9 @@ class Main extends Singleton {
 				't_tab'    => array(
 					'id'   => 'bought_together_column_tabs',
 					'tab'  => esc_html__( 'Tablet', 'woodmart' ),
-					'icon' => 'xts-i-phone',
+					'icon' => 'xts-i-tablet',
 				),
-				'priority' => 113,
+				'priority' => 30,
 			)
 		);
 
@@ -146,9 +144,8 @@ class Main extends Singleton {
 			array(
 				'id'       => 'bought_together_column_mobile',
 				'name'     => esc_html__( 'Products columns on mobile', 'woodmart' ),
-				'group'    => esc_html__( 'Frequently bought together', 'woodmart' ),
 				'type'     => 'buttons',
-				'section'  => 'shop_section',
+				'section'  => 'bought_together_section',
 				'options'  => array(
 					'auto' => array(
 						'name'  => esc_html__( 'Auto', 'woodmart' ),
@@ -169,7 +166,7 @@ class Main extends Singleton {
 					'tab'  => esc_html__( 'Mobile', 'woodmart' ),
 					'icon' => 'xts-i-phone',
 				),
-				'priority' => 114,
+				'priority' => 40,
 			)
 		);
 
@@ -177,10 +174,9 @@ class Main extends Singleton {
 			array(
 				'id'        => 'bought_together_form_width',
 				'name'      => esc_html__( 'Form width', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'bought-together-form-width.gif" alt="">', 'woodmart' ), true ),
-				'group'     => esc_html__( 'Frequently bought together', 'woodmart' ),
+				'hint'      => '<video data-src="' . WOODMART_TOOLTIP_URL . 'bought-together-form-width.mp4" autoplay loop muted></video>',
 				'type'      => 'responsive_range',
-				'section'   => 'shop_section',
+				'section'   => 'bought_together_section',
 				'selectors' => array(
 					'.wd-builder-off .wd-fbt.wd-design-side' => array(
 						'--wd-form-width: {{VALUE}}{{UNIT}};',
@@ -204,7 +200,7 @@ class Main extends Singleton {
 						'step' => 1,
 					),
 				),
-				'priority'  => 116,
+				'priority'  => 50,
 			)
 		);
 	}

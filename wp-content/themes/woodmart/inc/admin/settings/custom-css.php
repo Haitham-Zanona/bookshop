@@ -1,7 +1,7 @@
 <?php if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 /**
  * Custom CSS section.

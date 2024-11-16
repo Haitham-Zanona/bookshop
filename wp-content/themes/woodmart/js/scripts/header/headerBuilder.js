@@ -33,9 +33,7 @@
 					return;
 				}
 
-				$header.addClass('whb-sticky-prepared').css({
-					paddingTop: headerHeight
-				});
+				$header.addClass('whb-sticky-prepared');
 
 				stickAfter = Math.ceil($firstSticky.offset().top) - adminBarHeight;
 			}
@@ -66,6 +64,8 @@
 			});
 
 			cloneHTML = cloneHTML.replace(/<link[^>]*>/g, '');
+			cloneHTML = cloneHTML.replace('whb-col-1', '');
+			cloneHTML = cloneHTML.replace('dropdowns-loading', '');
 
 			$header.after(cloneHTML);
 			$header = $header.parent().find('.whb-clone');
@@ -151,7 +151,7 @@
 		woodmartThemeModule.$document.trigger('wdHeaderBuilderInited');
 	};
 
-	woodmartThemeModule.$window.on('wdEventStarted', function() {
+	window.addEventListener('wdEventStarted', function () {
 		woodmartThemeModule.headerBuilder();
 	});
 })(jQuery);

@@ -16,7 +16,7 @@
 		woodmartThemeModule.$document.on('click', '.portfolio-enlarge', function(e) {
 			e.preventDefault();
 			var $this = $(this);
-			var $parent = $this.parents('.owl-item');
+			var $parent = $this.parents('.wd-carousel-item');
 
 			if ($parent.length === 0) {
 				$parent = $this.parents('.portfolio-entry');

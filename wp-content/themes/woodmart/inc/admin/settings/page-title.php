@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -47,17 +47,17 @@ Options::add_field(
 		'options'     => array(
 			'default' => array(
 				'name'  => esc_html__( 'Default', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-default.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-default.jpg" alt="">', true ),
 				'value' => 'default',
 			),
 			'small'   => array(
 				'name'  => esc_html__( 'Small', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-small.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-small.jpg" alt="">', true ),
 				'value' => 'small',
 			),
 			'large'   => array(
 				'name'  => esc_html__( 'Large', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-large.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-large.jpg" alt="">', true ),
 				'value' => 'large',
 			),
 		),
@@ -117,7 +117,7 @@ Options::add_field(
 	array(
 		'id'          => 'page_title_tag',
 		'name'        => esc_html__( 'Title tag', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-title-tag.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-title-tag.jpg" alt="">', true ),
 		'description' => esc_html__( 'Choose which HTML tag to use for the page title.', 'woodmart' ),
 		'group'       => esc_html__( 'SEO', 'woodmart' ),
 		'type'        => 'select',
@@ -174,7 +174,7 @@ Options::add_field(
 		'id'          => 'breadcrumbs',
 		'section'     => 'page_title_section',
 		'name'        => esc_html__( 'Show breadcrumbs', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-show-breadcrumbs.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-show-breadcrumbs.jpg" alt="">', true ),
 		'description' => esc_html__( 'Displays a full chain of links to the current page.', 'woodmart' ),
 		'group'       => esc_html__( 'SEO', 'woodmart' ),
 		'on-text'     => esc_html__( 'Yes', 'woodmart' ),

@@ -2,7 +2,7 @@
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -21,7 +21,7 @@ Options::add_field(
 		'default'      => array(
 			array(
 				'font-family' => 'Lato',
-				'color'       => '#777777',
+				'color'       => '#767676',
 				'font-size'   => '14',
 				'font-weight' => '400',
 			),
@@ -286,7 +286,7 @@ Options::add_field(
 );
 
 /**
- * Icons Fonts.
+ * Icon Fonts.
  */
 Options::add_field(
 	array(
@@ -363,7 +363,12 @@ Options::add_field(
 	array(
 		'id'          => 'typekit_id',
 		'name'        => esc_html__( 'Adobe project IDs', 'woodmart' ),
-		'description' => esc_html__( 'Enter your ', 'woodmart' ) . '<a target="_blank" href="https://fonts.adobe.com/my_fonts#web_projects-section">Adobe project IDs</a> separate with coma: tpm3one, qny2aiv.',
+		'description' => sprintf(
+			'%s <a target="_blank" href="https://fonts.adobe.com/my_fonts#web_projects-section">%s</a> %s',
+			esc_html__( 'Enter your', 'woodmart' ),
+			esc_html__( 'Adobe project IDs', 'woodmart' ),
+			esc_html__( 'separate with coma: tpm3one, qny2aiv. ', 'woodmart' )
+		),
 		'type'        => 'text_input',
 		'section'     => 'typekit_section',
 		'priority'    => 20,

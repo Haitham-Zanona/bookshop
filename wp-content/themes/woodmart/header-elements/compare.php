@@ -3,10 +3,12 @@ if ( ! woodmart_woocommerce_installed() || ! woodmart_get_opt( 'compare' ) ) {
 	return;
 }
 
-	$extra_class = '';
-	$icon_type   = $params['icon_type'];
+woodmart_enqueue_inline_style( 'header-elements-base' );
 
-	$extra_class .= ' wd-style-' . $params['design'];
+$extra_class = '';
+$icon_type   = $params['icon_type'];
+
+$extra_class .= ' wd-style-' . $params['design'];
 
 if ( ! $params['hide_product_count'] ) {
 	$extra_class .= ' wd-with-count';

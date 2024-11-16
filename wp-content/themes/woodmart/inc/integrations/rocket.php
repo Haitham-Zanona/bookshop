@@ -55,19 +55,20 @@ if ( ! function_exists( 'woodmart_delay_js_exclusions' ) ) {
 				'menuOffsets',
 				'menuDropdowns',
 				'cartWidget',
+				'cart-fragments',
 				'mobileNavigation',
 				'loginSidebar',
 				'menuSetUp',
 				'cart-fragments',
-				'slick',
 				'productImages',
 				'cookie.min',
-				'owl.carousel',
-				'owlCarousel',
 				'imagesLoaded',
 				'ageVerify',
 				'magnific-popup',
 				'headerBuilder',
+				'swiper',
+				'swiperInit',
+				'trackProductViewed',
 			)
 		);
 	}

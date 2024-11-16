@@ -4,18 +4,23 @@
 
 @if $general {
 
+	.xts-logo-wrap {
+		position: relative;
+		height: $xts-header-h;
+
+		> a {
+			position: absolute;
+			inset: 0;
+		}
+	}
+
 	.xts-logo {
 		display: inline-block;
-		// min-width: 170px;
 		max-width: 170px;
-		// line-height: 1;
-
-		img {
-			padding-top: 10px;
-			padding-bottom: 10px;
-			max-width: 100%;
-			max-height: 70px;
-		}
+		// padding-top: 10px;
+		// padding-bottom: 10px;
+		padding-block: 10px;
+		max-height: 70px;
 	}
 
 } // END IF

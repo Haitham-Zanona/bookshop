@@ -39,8 +39,8 @@ if ( ! function_exists( 'woodmart_get_number_param' ) ) {
 						}
 						?>
 
-						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>">
-							<span><?php echo esc_attr( $device ); ?></span>
+						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>" title="<?php echo esc_attr( ucfirst( $device ) ); ?>">
+							<span><?php echo esc_html( $device ); ?></span>
 						</span>
 					<?php endforeach; ?>
 				</div>
@@ -55,7 +55,7 @@ if ( ! function_exists( 'woodmart_get_number_param' ) ) {
 				}
 				?>
 
-				<input aria-label="<?php esc_attr_e( 'Number', 'woodmart' ); ?>" type="number" class="xts-number xts-z-index-input<?php echo esc_attr( $classes ); ?>" min="<?php echo esc_attr( $settings['min'] ); ?>" max="<?php echo esc_attr( $settings['max'] ); ?>" step="<?php echo esc_attr( $settings['step'] ); ?>" data-device="<?php echo esc_attr( $device ); ?>" value="<?php echo esc_attr( $device_settings['value'] ); ?>">
+				<input aria-label="<?php esc_attr_e( 'Number', 'woodmart' ); ?>" type="number" class="xts-number xts-z-index-input<?php echo esc_attr( $classes ); ?>" min="<?php echo esc_attr( $settings['min'] ); ?>" max="<?php echo esc_attr( $settings['max'] ); ?>" step="<?php echo esc_attr( $settings['step'] ); ?>" data-device="<?php echo esc_attr( $device ); ?>" placeholder="<?php echo isset( $device_settings['placeholder'] ) ? esc_attr( $device_settings['placeholder'] ) : ''; ?>" value="<?php echo esc_attr( $device_settings['value'] ); ?>">
 
 			<?php endforeach; ?>
 

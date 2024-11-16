@@ -27,15 +27,15 @@
 		woodmartThemeModule.$document.on('pjax:start', function() {
 			var $siteContent = $('.site-content');
 
-			$siteContent.removeClass('ajax-loaded');
-			$siteContent.addClass('ajax-loading');
+			$siteContent.removeClass('wd-loaded');
+			$siteContent.addClass('wd-loading');
 
 			woodmartThemeModule.$document.trigger('wdPortfolioPjaxStart');
 			woodmartThemeModule.$window.trigger('scroll.loaderVerticalPosition');
 		});
 
 		woodmartThemeModule.$document.on('pjax:end', function() {
-			$('.site-content').removeClass('ajax-loading');
+			$('.site-content').removeClass('wd-loading');
 		});
 
 		woodmartThemeModule.$document.on('pjax:complete', function() {

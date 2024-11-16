@@ -88,6 +88,8 @@ $xts-icon-spacer: \e96e;
 $xts-icon-desktop: \e973;
 $xts-icon-tablet: \e974;
 $xts-icon-phone: \e975;
+$xts-icon-desktop-dis: \e980;
+$xts-icon-phone-dis: \e981;
 $xts-icon-logo-woodmart: \e976;
 $xts-icon-mail-fill: \e97a;
 $xts-icon-save: \e93e;
@@ -121,6 +123,8 @@ $xts-icon-logo-tiktok: \e93b;
 $xts-icon-logo-viber: \e93c;
 $xts-icon-logo-xtemos: \e93d;
 $xts-icon-logo-google: \e94b;
+$xts-icon-logo-discord: \e95e;
+$xts-icon-logo-yelp: \e97f;
 
 // ------------------------------------------
 // MIXIN
@@ -582,6 +586,20 @@ $xts-icon-logo-google: \e94b;
 
 		&:before {
 			@include font-icon-content($xts-icon-phone);
+		}
+	}
+
+	.xts-i-desktop-dis {
+
+		&:before {
+			@include font-icon-content($xts-icon-desktop-dis);
+		}
+	}
+
+	.xts-i-phone-dis {
+
+		&:before {
+			@include font-icon-content($xts-icon-phone-dis);
 		}
 	}
 

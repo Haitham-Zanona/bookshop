@@ -30,6 +30,7 @@ class Frontend extends Singleton {
 	/**
 	 * Output,
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $wrapper_classes Classes.
 	 */
 	public function output( $wrapper_classes = '' ) {
@@ -54,16 +55,24 @@ class Frontend extends Singleton {
 
 		$current_attributes     = $this->get_product_attributes( $product->get_id() );
 		$linked_variations_data = $this->get_linked_variations( $product->get_id() );
+		$swatch_limit           = false;
+		$more_limit_swathes     = (int) apply_filters( 'woodmart_show_more_limit_swatches_count', 1 );
 
 		if ( ! $wrapper_classes ) {
-			$wrapper_classes = ' wd-label-top-md';
+			$wrapper_classes = ' wd-label-top-md wd-label-top-lg';
 		}
+
+		if ( woodmart_get_opt( 'single_product_swatches_limit' ) ) {
+			$swatch_limit = (int) woodmart_get_opt( 'single_product_swatches_limit_count', 10 );
+		}
+
 		?>
 		<div class="variations_form-linked<?php echo esc_attr( $wrapper_classes ); ?>">
 			<table class="variations">
 				<tbody>
 					<?php foreach ( $linked_variations_data as $attr_slug => $attr_data ) : ?>
 						<?php
+						$index            = 0;
 						$swatch_size      = woodmart_wc_get_attribute_term( $attr_slug, 'swatch_size' );
 						$swatch_dis_style = woodmart_wc_get_attribute_term( $attr_slug, 'swatch_dis_style' );
 						$swatch_style     = woodmart_wc_get_attribute_term( $attr_slug, 'swatch_style' );
@@ -92,11 +101,15 @@ class Frontend extends Singleton {
 						$swatches_classes .= ' wd-dis-style-' . $swatch_dis_style;
 						$swatches_classes .= ' wd-size-' . $swatch_size;
 						$swatches_classes .= ' wd-shape-' . $swatch_shape;
+
+						if ( $swatch_limit && is_array( $attr_data['terms'] ) && count( $attr_data['terms'] ) > $swatch_limit + $more_limit_swathes ) {
+							$swatches_classes .= ' wd-swatches-limited';
+						}
 						?>
 						<tr>
 							<th class="label cell">
 								<label>
-									<?php echo esc_html( $current_attributes['taxonomy'][ $attr_slug ] ); ?>
+									<?php echo wc_attribute_label( $current_attributes['taxonomy'][ $attr_slug ], $product ); ?>
 								</label>
 							</th>
 							<td class="value cell with-swatches">
@@ -134,6 +147,25 @@ class Frontend extends Singleton {
 											$classes = wd_add_cssclass( 'wd-active', $classes );
 										}
 
+										if ( $swatch_limit && is_array( $attr_data['terms'] ) && count( $attr_data['terms'] ) > $swatch_limit + $more_limit_swathes ) {
+											if ( $index >= $swatch_limit ) {
+												$classes .= ' wd-hidden';
+											}
+
+											if ( $index === $swatch_limit ) {
+												woodmart_enqueue_inline_style( 'woo-opt-limit-swatches' );
+												woodmart_enqueue_js_script( 'swatches-limit' );
+
+												?>
+												<div class="wd-swatch-divider">
+													<?php echo '+' . ( count( $attr_data['terms'] ) - (int) $swatch_limit ); ?>
+												</div>
+												<?php
+											}
+										}
+
+										$index++;
+
 										?>
 										<a class="<?php echo esc_attr( $classes ); ?>" href="<?php echo esc_url( $term_data['permalink'] ); ?>">
 											<?php if ( $styles || $image ) : ?>
@@ -167,22 +199,46 @@ class Frontend extends Singleton {
 	 */
 	public function get_linked_variations( $product_id ) {
 		$attributes = $this->get_product_attributes( $product_id );
-		$output     = [];
+		$output     = array();
+
+		if ( empty( $attributes['slugs'] ) ) {
+			return $output;
+		}
 
 		foreach ( $attributes['slugs'] as $taxonomy => $attribute ) {
+			$taxonomy_ids = array();
+
+			foreach ( $this->linked_data['products'] as $current_product_id ) {
+				$current_product = wc_get_product( $current_product_id );
+
+				if ( ! $current_product || $current_product->get_status() !== 'publish' ) {
+					continue;
+				}
+
+				$current_product_attrs = $current_product->get_attributes();
+
+				if ( is_wp_error( $current_product_attrs ) || empty( $current_product_attrs[ $taxonomy ] ) || ! $current_product_attrs[ $taxonomy ]->get_options() ) {
+					continue;
+				}
+
+				$taxonomy_ids = array_merge( $taxonomy_ids, $current_product_attrs[ $taxonomy ]->get_options() );
+			}
+
 			$terms = get_terms(
 				[
-					'taxonomy'   => $taxonomy,
-					'hide_empty' => true,
+					'taxonomy' => $taxonomy,
+					'include'  => array_unique( $taxonomy_ids ),
 				]
 			);
 
 			foreach ( $terms as $term ) {
 				$data = $this->get_linked_variation_data_for_attribute( $product_id, $taxonomy, $term->slug );
 
+				// @codeCoverageIgnoreStart
 				if ( ! $data ) {
 					continue;
 				}
+				// @codeCoverageIgnoreEnd
 
 				$output[ $taxonomy ]['terms'][ $term->slug ] = $data;
 				$output[ $taxonomy ]['label'][ $term->slug ] = $term->name;
@@ -212,9 +268,11 @@ class Frontend extends Singleton {
 			]
 		);
 
+		// @codeCoverageIgnoreStart
 		if ( ! $post->posts ) {
 			return;
 		}
+		// @codeCoverageIgnoreEnd
 
 		$this->linked_data = [
 			'products'  => get_post_meta( $post->posts[0]->ID, '_woodmart_linked_products', true ),
@@ -236,7 +294,7 @@ class Frontend extends Singleton {
 		foreach ( $this->linked_data['attrs'] as $attribute ) {
 			$terms = get_the_terms( $product_id, $attribute );
 
-			if ( ! $terms ) {
+			if ( ! $terms || is_wp_error( $terms ) ) {
 				continue;
 			}
 
@@ -251,7 +309,7 @@ class Frontend extends Singleton {
 			];
 		}
 
-		return $attributes[ $product_id ];
+		return array_key_exists( $product_id, $attributes ) ? $attributes[ $product_id ] : array();
 	}
 
 	/**
@@ -272,7 +330,7 @@ class Frontend extends Singleton {
 		$output = [];
 
 		foreach ( $linked_variations as $linked_variation ) {
-			if ( ! array_diff_assoc( $current_attributes['slugs'], $linked_variation['attributes']['slugs'] ) ) {
+			if ( ! empty( $linked_variation['attributes'] ) && ! array_diff_assoc( $current_attributes['slugs'], $linked_variation['attributes']['slugs'] ) ) {
 				$output = $linked_variation;
 			}
 		}

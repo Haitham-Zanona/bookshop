@@ -43,7 +43,7 @@ if ( ! function_exists( 'woodmart_shortcode_woocommerce_breadcrumb' ) ) {
 		Main::setup_preview();
 
 		if ( 'yes' === $settings['nowrap_md'] ) {
-			woodmart_enqueue_inline_style( 'woo-el-breadcrumbs' );
+			woodmart_enqueue_inline_style( 'woo-el-breadcrumbs-builder' );
 		}
 
 		?>

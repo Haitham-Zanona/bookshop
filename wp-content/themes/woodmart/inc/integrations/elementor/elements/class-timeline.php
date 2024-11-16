@@ -462,13 +462,13 @@ class Timeline extends Widget_Base {
 					$image_secondary = '';
 
 					if ( isset( $settings['image_primary']['id'] ) && $settings['image_primary']['id'] ) {
-						$image_primary = woodmart_get_image_html( $settings, 'image_primary' );
+						$image_primary = woodmart_otf_get_image_html( $settings['image_primary']['id'], $settings['image_primary_size'], $settings['image_primary_custom_dimension'] );
 					} elseif ( isset( $settings['image_primary']['url'] ) && $settings['image_primary']['url'] ) {
 						$image_primary = '<img src="' . esc_url( $settings['image_primary']['url'] ) . '">';
 					}
 
 					if ( isset( $settings['image_secondary']['id'] ) && $settings['image_secondary']['id'] ) {
-						$image_secondary = woodmart_get_image_html( $settings, 'image_secondary' );
+						$image_secondary = woodmart_otf_get_image_html( $settings['image_secondary']['id'], $settings['image_secondary_size'], $settings['image_secondary_custom_dimension'] );
 					} elseif ( isset( $settings['image_secondary']['url'] ) && $settings['image_secondary']['url'] ) {
 						$image_secondary = '<img src="' . esc_url( $settings['image_secondary']['url'] ) . '">';
 					}

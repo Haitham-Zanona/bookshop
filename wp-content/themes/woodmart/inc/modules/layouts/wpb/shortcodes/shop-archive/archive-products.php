@@ -78,6 +78,16 @@ if ( ! function_exists( 'woodmart_shortcode_shop_archive_products' ) ) {
 			woodmart_set_loop_prop( 'products_spacing', $products_spacing );
 		}
 
+		$products_spacing_tablet = woodmart_vc_get_control_data( $settings['products_spacing'], 'tablet' );
+		if ( $products_spacing_tablet && 'inherit' !== $products_spacing_tablet ) {
+			woodmart_set_loop_prop( 'products_spacing_tablet', $products_spacing_tablet );
+		}
+
+		$products_spacing_mobile = woodmart_vc_get_control_data( $settings['products_spacing'], 'mobile' );
+		if ( $products_spacing_mobile && 'inherit' !== $products_spacing_mobile ) {
+			woodmart_set_loop_prop( 'products_spacing_mobile', $products_spacing_mobile );
+		}
+
 		if ( 'inherit' !== $settings['product_hover'] ) {
 			woodmart_set_loop_prop( 'product_hover', $settings['product_hover'] );
 		}
@@ -115,8 +125,8 @@ if ( ! function_exists( 'woodmart_shortcode_shop_archive_products' ) ) {
 		Main::setup_preview();
 
 		?>
-		<div class="wd-shop-product wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
-			<?php woodmart_sticky_loader(); ?>
+		<div class="wd-shop-product wd-products-element wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
+			<?php woodmart_sticky_loader( ' wd-content-loader' ); ?>
 			<?php do_action( 'woodmart_woocommerce_main_loop' ); ?>
 		</div>
 		<?php

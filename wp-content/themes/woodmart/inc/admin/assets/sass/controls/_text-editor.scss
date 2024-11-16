@@ -22,8 +22,9 @@
 
 			div.mce-toolbar-grp {
 				padding-top: 1px;
-				padding-inline-end: 280px;
-				padding-inline-start: 6px;
+				// padding-inline-start: 6px;
+				// padding-inline-end: 280px;
+				padding-inline: 6px 280px;
 				min-height: 41px;
 
 				.rtl & {
@@ -38,8 +39,9 @@
 			.quicktags-toolbar {
 				align-items: center;
 				padding-top: 5px;
-				padding-inline-end: 280px;
-				padding-inline-start: 9px;
+				// padding-inline-start: 9px;
+				// padding-inline-end: 280px;
+				padding-inline: 9px 280px;
 				min-height: 42px;
 				border-top-left-radius: var(--xts-option-border-radius);
 			}
@@ -131,8 +133,9 @@
 		// ------------------------------------------
 
 		.wp-media-buttons-icon {
-			margin-inline-end: 8px !important;
-			margin-inline-start: 0 !important;
+			// margin-inline-start: 0 !important;
+			// margin-inline-end: 8px !important;
+			padding-inline: 0 8px !important;
 
 			&:before {
 				display: block;

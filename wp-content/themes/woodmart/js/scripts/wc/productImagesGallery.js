@@ -1,224 +1,309 @@
 /* global woodmart_settings */
-(function($) {
-	woodmartThemeModule.$document.on('wdReplaceMainGallery', function() {
-		woodmartThemeModule.productImagesGallery( true );
+woodmartThemeModule.$document.on('wdReplaceMainGallery', function() {
+	woodmartThemeModule.productImagesGallery( true );
+});
+
+[
+	'frontend/element_ready/wd_single_product_gallery.default'
+].forEach( function (value) {
+	woodmartThemeModule.wdElementorAddAction(value, function($wrapper) {
+		woodmartThemeModule.productImagesGallery();
+
+		$wrapper.find('.woocommerce-product-gallery').css('opacity', '1');
 	});
+});
 
-	$.each([
-		'frontend/element_ready/wd_single_product_gallery.default'
-	], function(index, value) {
-		woodmartThemeModule.wdElementorAddAction(value, function($wrapper) {
-			woodmartThemeModule.productImagesGallery();
+woodmartThemeModule.productImagesGallery = function( replaceGallery = false) {
+	document.querySelectorAll('.woocommerce-product-gallery').forEach( function (galleryWrapper) {
+		var galleryContainer = galleryWrapper.querySelector('.wd-carousel-container');
+		var gallery = galleryWrapper.querySelector('.woocommerce-product-gallery__wrapper:not(.quick-view-gallery)');
+		var thumbnails = galleryWrapper.querySelector('.wd-gallery-thumb .wd-carousel');
 
-			$wrapper.find('.woocommerce-product-gallery').css('opacity', '1');
-		});
-	});
+		if (!gallery) {
+			return;
+		}
 
-	woodmartThemeModule.productImagesGallery = function( replaceGallery = false) {
-		woodmartThemeModule.setupMainCarouselArg();
+		var galleryStyle = window.getComputedStyle(gallery);
 
-		$('.woocommerce-product-gallery').each(function() {
-			var $galleryWrapper = $(this);
-			var $gallery = $galleryWrapper.find('.woocommerce-product-gallery__wrapper:not(.quick-view-gallery)');
-			var $thumbnails = $galleryWrapper.find('.thumbnails');
-			var $firstImageMainGallery = $gallery.find('.wp-post-image').first();
+		var galleryDesktop = galleryStyle.getPropertyValue('--wd-col-lg') ? galleryStyle.getPropertyValue('--wd-col-lg') : galleryStyle.getPropertyValue('--wd-col');
+		var galleryTablet = galleryStyle.getPropertyValue('--wd-col-md') ? galleryStyle.getPropertyValue('--wd-col-md') : galleryStyle.getPropertyValue('--wd-col');
+		var galleryMobile = galleryStyle.getPropertyValue('--wd-col-sm') ? galleryStyle.getPropertyValue('--wd-col-sm') : galleryStyle.getPropertyValue('--wd-col');
 
-			$thumbnails.addClass('thumbnails-ready');
+		var mainCarouselArg = {
+			slidesPerView         : galleryDesktop,
+			loop                  : woodmart_settings.product_slider_autoplay,
+			centeredSlides        : 'yes' === gallery.dataset.center_mode,
+			autoHeight            : woodmart_settings.product_slider_auto_height === 'yes',
+			grabCursor            : true,
+			a11y                  : {
+				enabled: false
+			},
+			breakpoints           : {
+				1025: {
+					slidesPerView: galleryDesktop,
+					initialSlide : 'yes' === gallery.dataset.center_mode && galleryDesktop ? 1 : 0
+				},
+				768.98: {
+					slidesPerView: galleryTablet,
+					initialSlide : 'yes' === gallery.dataset.center_mode && galleryTablet ? 1 : 0
+				},
+				0: {
+					slidesPerView: galleryMobile,
+					initialSlide : 'yes' === gallery.dataset.center_mode && galleryMobile ? 1 : 0
+				}
+			},
+			slideClass            : 'wd-carousel-item',
+			slideActiveClass      : 'wd-active',
+			slideVisibleClass     : 'wd-slide-visible',
+			slideNextClass        : 'wd-slide-next',
+			slidePrevClass        : 'wd-slide-prev',
+			slideFullyVisibleClass: 'wd-full-visible',
+			slideBlankClass       : 'wd-slide-blank',
+			lazyPreloaderClass    : 'wd-lazy-preloader',
+			containerModifierClass: 'wd-',
+			wrapperClass          : 'wd-carousel-wrap',
+			on                    : {
+				slideChange: function() {
+					gallery.dispatchEvent(new CustomEvent('wdSlideChange', { activeIndex: this.activeIndex}));
 
-			if ($galleryWrapper.hasClass('thumbs-position-without') || $galleryWrapper.hasClass('thumbs-position-centered') || $galleryWrapper.hasClass('thumbs-position-bottom') || $galleryWrapper.hasClass('thumbs-position-left') || $galleryWrapper.hasClass('thumbs-position-carousel_two_columns')) {
-				if ('yes' === woodmart_settings.product_slider_auto_height) {
-					$galleryWrapper.imagesLoaded(function() {
-						initGallery();
-					});
-				} else {
-					initGallery();
+					woodmartThemeModule.$document.trigger('wood-images-loaded');
 				}
 			}
+		};
 
-			if (woodmartThemeModule.$window.width() <= 1024 && ($galleryWrapper.hasClass('thumbs-position-bottom_combined') || $galleryWrapper.hasClass('thumbs-position-bottom_column') || $galleryWrapper.hasClass('thumbs-position-bottom_grid'))) {
-				initGallery();
-			}
+		if ( gallery.parentElement.querySelector('.wd-btn-arrow.wd-next') ) {
+			mainCarouselArg.navigation = {
+				nextEl       : gallery.parentElement.querySelector('.wd-btn-arrow.wd-next'),
+				prevEl       : gallery.parentElement.querySelector('.wd-btn-arrow.wd-prev'),
+				disabledClass: 'wd-disabled',
+				lockClass    : 'wd-lock',
+				hiddenClass  : 'wd-hide'
+			};
+		}
 
-			if ($thumbnails.length !== 0) {
+		if (woodmart_settings.product_slider_autoplay) {
+			mainCarouselArg.autoplay = {
+				delay: 3000,
+				pauseOnMouseEnter: true
+			};
+		}
+
+		if (galleryWrapper.querySelector('.wd-nav-pagin')) {
+			mainCarouselArg.pagination = {
+				el                     : galleryWrapper.querySelector('.wd-nav-pagin'),
+				dynamicBullets         : galleryWrapper.querySelector('.wd-nav-pagin-wrap').classList.contains('wd-dynamic'),
+				type                   : 'bullets',
+				clickable              : true,
+				bulletClass            : 'wd-nav-pagin-item',
+				bulletActiveClass      : 'wd-active',
+				modifierClass          : 'wd-type-',
+				lockClass              : 'wd-lock',
+				currentClass           : 'wd-current',
+				totalClass             : 'wd-total',
+				hiddenClass            : 'wd-hidden',
+				clickableClass         : 'wd-clickable',
+				horizontalClass        : 'wd-horizontal',
+				verticalClass          : 'wd-vertical',
+				paginationDisabledClass: 'wd-disabled',
+				renderBullet           : function(index, className) {
+					var innerContent = '';
+
+					if (galleryWrapper.querySelector('.wd-nav-pagin-wrap').classList.contains('wd-style-number-2')) {
+						innerContent = index + 1;
+
+						if ( 9 >= innerContent ) {
+							innerContent = '0' + innerContent;
+						}
+					}
+
+					return '<li class="' + className + '"><span>' + innerContent + '</span></li>';
+				}
+			};
+		}
+
+		if ( thumbnails ) {
+			var thumbnailsWrapper = galleryWrapper.querySelector('.wd-gallery-thumb');
+			var thumbnailsDirection = galleryWrapper.classList.contains('thumbs-position-left') && ( woodmartThemeModule.$body.width() > 1024 || ! galleryWrapper.classList.contains('wd-thumbs-wrap') ) ? 'vertical' : 'horizontal';
+
+			if (thumbnails.children.length) {
 				if ( replaceGallery ) {
 					createThumbnails();
 				}
 
-				if ($galleryWrapper.hasClass('thumbs-position-left') && woodmartThemeModule.$body.width() > 1024 && typeof ($.fn.slick) != 'undefined') {
-					initThumbnailsVertical();
-				} else {
-					initThumbnailsHorizontal();
-				}
-			}
-
-			function initGallery() {
-				if ('undefined' === typeof $.fn.owlCarousel) {
-					return;
+				if ( 'vertical' === thumbnailsDirection && ! window.getComputedStyle(galleryWrapper).getPropertyValue('--wd-thumbs-height') ) {
+					galleryWrapper.style.setProperty('--wd-thumbs-height', thumbnailsWrapper.offsetHeight + 'px');
 				}
 
-				$gallery.trigger('destroy.owl.carousel');
-				$gallery.addClass('owl-carousel').owlCarousel(woodmartThemeModule.mainCarouselArg);
-				woodmartThemeModule.$document.trigger('wood-images-loaded');
-			}
+				var thumbnailsStyle = window.getComputedStyle(thumbnails);
 
-			function createThumbnails() {
-				var html = '';
+				var thumbnDesktop = thumbnailsStyle.getPropertyValue('--wd-col-lg') ? thumbnailsStyle.getPropertyValue('--wd-col-lg') : 2;
+				var thumbnTablet = thumbnailsStyle.getPropertyValue('--wd-col-md') ? thumbnailsStyle.getPropertyValue('--wd-col-md') : 2;
+				var thumbnMobile = thumbnailsStyle.getPropertyValue('--wd-col-sm') ? thumbnailsStyle.getPropertyValue('--wd-col-sm') : 2;
 
-				$gallery.find('.woocommerce-product-gallery__image').each(function() {
-					var $this   = $(this);
-					var image   = $this.data('thumb'),
-					    alt     = $this.find('a img').attr('alt'),
-					    title   = $this.find('a img').attr('title'),
-					    classes = '';
-
-					if (!title && $this.find('a picture').length) {
-						title = $this.find('a picture').attr('title');
-					}
-
-					if ( $this.find('.wd-product-video').length ) {
-						classes += ' wd-with-video';
-					}
-
-					html += '<div class="product-image-thumbnail' + classes + '">';
-					html += '<img alt="' + alt + '" title="' + title + '" src="' + image + '" />';
-
-					html += '</div>';
-				});
-
-				if ($thumbnails.hasClass('slick-slider')) {
-					$thumbnails.slick('unslick');
-				} else if ($thumbnails.hasClass('owl-carousel')) {
-					$thumbnails.trigger('destroy.owl.carousel');
-				}
-
-				$thumbnails.empty();
-				$thumbnails.append(html);
-			}
-
-			function initThumbnailsVertical() {
-				var verticalItemsCount = $thumbnails.data('vertical_items');
-
-				if ( $firstImageMainGallery.hasClass('wd-lazy-load') && ! $firstImageMainGallery.hasClass('wd-loaded') ) {
-					return;
-				}
-
-				$firstImageMainGallery.attr('data-loaded', true);
-
-				if ( ! $thumbnails.hasClass('wd-v-thumb-default') && ! $thumbnails.hasClass('wd-height-calculated') ) {
-					var $height = $gallery.height();
-
-					if ( 'undefined' !== typeof elementorFrontend && elementorFrontend.isEditMode() ) {
-						$height = $gallery.find('.wp-post-image').height();
-					}
-
-					$thumbnails.css( '--wd-slick-h', $height + 'px' );
-
-					$thumbnails.addClass('wd-height-calculated');
-				}
-
-				$thumbnails.slick({
-					slidesToShow   : verticalItemsCount,
-					slidesToScroll : verticalItemsCount,
-					vertical       : true,
-					verticalSwiping: true,
-					infinite       : false,
-					listHeight : 100,
-					adaptiveHeight : true,
-				});
-
-				$thumbnails.on('click', '.product-image-thumbnail', function() {
-					$gallery.trigger('to.owl.carousel', $(this).index());
-				});
-
-				$gallery.on('changed.owl.carousel', function(e) {
-					var i = e.item.index;
-
-					$thumbnails.slick('slickGoTo', i);
-					$thumbnails.find('.active-thumb').removeClass('active-thumb');
-					$thumbnails.find('.product-image-thumbnail').eq(i).addClass('active-thumb');
-				});
-
-				$thumbnails.find('.product-image-thumbnail').eq(0).addClass('active-thumb');
-
-				$thumbnails.imagesLoaded(function() {
-					$thumbnails.slick('setPosition');
-				});
-			}
-
-			function initThumbnailsHorizontal() {
-				if ('undefined' === typeof $.fn.owlCarousel) {
-					return;
-				}
-
-				$thumbnails.addClass('owl-carousel').owlCarousel({
-					rtl       : woodmartThemeModule.$body.hasClass('rtl'),
-					items     : $thumbnails.data('desktop'),
-					responsive: {
-						1025: {
-							items: $thumbnails.data('desktop')
+				mainCarouselArg.thumbs = {
+					swiper: {
+						el                    : thumbnails,
+						slidesPerView         : thumbnDesktop,
+						direction             : thumbnailsDirection,
+						autoHeight            : 'horizontal' === thumbnailsDirection && woodmart_settings.product_slider_auto_height === 'yes',
+						id                    : 'wd-carousel-thumbnails',
+						slideClass            : 'wd-carousel-item',
+						slideActiveClass      : 'wd-active',
+						slideVisibleClass     : 'wd-slide-visible',
+						slideNextClass        : 'wd-slide-next',
+						slidePrevClass        : 'wd-slide-prev',
+						slideFullyVisibleClass: 'wd-full-visible',
+						slideBlankClass       : 'wd-slide-blank',
+						lazyPreloaderClass    : 'wd-lazy-preloader',
+						containerModifierClass: 'wd-',
+						wrapperClass          : 'wd-carousel-wrap',
+						grabCursor            : true,
+						a11y                  : {
+							enabled: false
 						},
-						769 : {
-							items: $thumbnails.data('tablet')
+						breakpoints           : {
+							1025 : {
+								slidesPerView: thumbnDesktop
+							},
+							768.98 : {
+								slidesPerView: thumbnTablet
+							},
+							0   : {
+								slidesPerView: thumbnMobile
+							}
 						},
-						577 : {
-							items: $thumbnails.data('tablet')
+						navigation            : {
+							nextEl       : thumbnails.nextElementSibling.querySelector('.wd-btn-arrow.wd-next'),
+							prevEl       : thumbnails.nextElementSibling.querySelector('.wd-btn-arrow.wd-prev'),
+							disabledClass: 'wd-disabled',
+							lockClass    : 'wd-lock',
+							hiddenClass  : 'wd-hide'
 						},
-						0   : {
-							items: $thumbnails.data('mobile')
+						on               : {
+							slideChange: function() {
+								woodmartThemeModule.$document.trigger('wood-images-loaded');
+							},
+							resize: function (swiper) {
+								if (galleryWrapper.classList.contains('thumbs-position-left') && galleryWrapper.classList.contains('wd-thumbs-wrap')) {
+									if ( swiper.currentBreakpoint > 1024 && ! swiper.isVertical() ) {
+										swiper.changeDirection('vertical');
+									} else if (swiper.currentBreakpoint <= 1024 && ! swiper.isHorizontal() ){
+										swiper.changeDirection('horizontal');
+									}
+								}
+							}
 						}
 					},
-					dots      : false,
-					nav       : true,
-					navText   : false,
-					navClass  : [
-						'owl-prev wd-btn-arrow',
-						'owl-next wd-btn-arrow'
-					]
-				});
-
-				var $thumbnailsOwl = $thumbnails.owlCarousel();
-
-				$thumbnails.on('mouseup', '.owl-item', function() {
-					var i = $(this).index();
-
-					$thumbnailsOwl.trigger('to.owl.carousel', i);
-					$gallery.trigger('to.owl.carousel', i);
-				});
-
-				$gallery.on('changed.owl.carousel', function(e) {
-					var i = e.item.index;
-
-					$thumbnailsOwl.trigger('to.owl.carousel', i);
-					$thumbnails.find('.active-thumb').removeClass('active-thumb');
-					$thumbnails.find('.product-image-thumbnail').eq(i).addClass('active-thumb');
-				});
-
-				$thumbnails.find('.product-image-thumbnail').eq(0).addClass('active-thumb');
+					slideThumbActiveClass : 'wd-thumb-active',
+					thumbsContainerClass  : 'wd-thumbs'
+				};
 			}
-
-			$firstImageMainGallery.on('load', function () {
-				if ( $galleryWrapper.hasClass('thumbs-position-left') && ! $firstImageMainGallery.attr('data-loaded') && woodmartThemeModule.$body.width() > 1024 && typeof ($.fn.slick) != 'undefined' ) {
-					if ($thumbnails.hasClass('slick-slider')) {
-						$thumbnails.slick('unslick');
-					}
-
-					setTimeout( initThumbnailsVertical );
-				}
-			});
-		});
-	};
-
-	woodmartThemeModule.$window.on('elementor/frontend/init', function() {
-		if (!elementorFrontend.isEditMode()) {
-			return;
 		}
 
-		woodmartThemeModule.$window.on('resize', woodmartThemeModule.debounce(function() {
-			woodmartThemeModule.productImagesGallery();
-		}, 300));
-	});
+		if (
+			galleryWrapper.classList.contains('thumbs-position-without')
+			|| galleryWrapper.classList.contains('thumbs-position-bottom')
+			|| galleryWrapper.classList.contains('thumbs-position-left')
+			|| (
+				(
+					( ! galleryContainer.classList.contains('wd-off-md') && woodmartThemeModule.$window.width() <= 1024 && woodmartThemeModule.$window.width() > 768 )
+					|| ( ! galleryContainer.classList.contains('wd-off-sm') && woodmartThemeModule.$window.width() <= 768 )
+				)
+				&& (
+					galleryWrapper.classList.contains('thumbs-grid-bottom_combined')
+					|| galleryWrapper.classList.contains('thumbs-grid-bottom_combined_2')
+					|| galleryWrapper.classList.contains('thumbs-grid-bottom_combined_3')
+					|| galleryWrapper.classList.contains('thumbs-grid-bottom_column')
+					|| galleryWrapper.classList.contains('thumbs-grid-bottom_grid')
+				)
+			)
+		) {
+			if ('yes' === woodmart_settings.product_slider_auto_height) {
+				imagesLoaded(galleryWrapper, function() {
+						initGallery();
+					});
+			} else {
+				initGallery();
+			}
+		}
 
-	$(document).ready(function() {
-		woodmartThemeModule.productImagesGallery();
+		function initGallery() {
+			if ('undefined' === typeof wdSwiper) {
+				console.error('Swiper is not defined');
+
+				return;
+			}
+
+			if (thumbnails && 'undefined' !== typeof thumbnails.swiper) {
+				thumbnails.swiper.destroy( true, false );
+			}
+			if ('undefined' !== typeof gallery.swiper) {
+				gallery.swiper.destroy( true, false );
+			}
+
+			gallery.classList.add('wd-carousel');
+
+			woodmartThemeModule.$document.trigger('wood-images-loaded');
+
+			new wdSwiper(gallery, mainCarouselArg);
+		}
+
+		function createThumbnails() {
+			var html = '';
+
+			gallery.querySelectorAll('.woocommerce-product-gallery__image').forEach( function (imageWrapper, index) {
+				var imageSrc = imageWrapper.dataset.thumb;
+				var image           = imageWrapper.querySelector('a img');
+				var alt             = image.getAttribute('alt');
+				var title           = image.getAttribute('title');
+				var classes  = '';
+
+				if (!title && imageWrapper.querySelector('a picture')) {
+					title = imageWrapper.querySelector('a picture').getAttribute('title');
+				}
+
+				if (imageWrapper.querySelector('.wd-product-video')) {
+					classes += ' wd-with-video';
+				}
+
+				html += '<div class="wd-carousel-item' + classes + '">';
+				html += '<img src="' + imageSrc + '"';
+
+				if (alt) {
+					html += ' alt="' + alt + '"';
+				}
+				if (title) {
+					html += ' title="' + title + '"';
+				}
+				if (0 === index) {
+					var imageOriginalSrc   = image.getAttribute('data-o_src');
+
+					if ( imageOriginalSrc ) {
+						html += ' data-o_src="' + imageOriginalSrc + '"';
+					}
+					//srcset
+				}
+
+				html += '/>';
+
+				html += '</div>';
+			});
+
+			thumbnails.firstElementChild.innerHTML = html;
+		}
 	});
-})(jQuery);
+}
+
+woodmartThemeModule.$window.on('elementor/frontend/init', function() {
+	if (!elementorFrontend.isEditMode()) {
+		return;
+	}
+
+	woodmartThemeModule.$window.on('resize', woodmartThemeModule.debounce(function() {
+		woodmartThemeModule.productImagesGallery();
+	}, 300));
+});
+
+window.addEventListener('load',function() {
+	woodmartThemeModule.productImagesGallery();
+});

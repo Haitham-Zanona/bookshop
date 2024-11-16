@@ -20,6 +20,12 @@ class Reviews_Sorting extends Singleton {
 	private $sorting_fields = array();
 
 	public function init() {
+		$this->sorting_fields = array(
+			'default' => esc_html__( 'Default', 'woodmart' ),
+			'newest'  => esc_html__( 'Newest', 'woodmart' ),
+			'oldest'  => esc_html__( 'Oldest', 'woodmart' ),
+		);
+
 		add_action( 'wp', array( $this, 'do_after_setup_globals_options' ), 500 );
 	}
 
@@ -27,11 +33,6 @@ class Reviews_Sorting extends Singleton {
 		if ( ! woodmart_get_opt( 'reviews_sorting' ) ) {
 			return;
 		}
-
-		$this->sorting_fields = array(
-			'newest' => esc_html__( 'Newest', 'woodmart' ),
-			'oldest' => esc_html__( 'Oldest', 'woodmart' ),
-		);
 
 		if ( woodmart_get_opt( 'reviews_enable_likes' ) ) {
 			$this->sorting_fields['most_helpful'] = esc_html__( 'Most helpful', 'woodmart' );
@@ -55,6 +56,7 @@ class Reviews_Sorting extends Singleton {
 	/**
 	 * Render.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $return Do you need to return the html?.
 	 * @return string|void
 	 */

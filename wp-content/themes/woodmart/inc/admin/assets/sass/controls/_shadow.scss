@@ -8,7 +8,8 @@
 		display: flex;
 		flex-wrap: wrap;
 		justify-content: space-between;
-		padding: 15px 15px 15px 15px;
+		// padding: 15px 15px 15px 15px;
+		padding: 15px;
 		border: 1px solid var(--xts-option-border-color);
 		border-radius: 5px;
 		background: #FFF;
@@ -36,16 +37,20 @@
 		}
 
 		.wp-picker-input-wrap {
-			margin-top: 10px;
+			// margin-top: 10px;
 			width: 100%;
 
 			margin-inline-start: 0 !important;
 
-			.wd-color-input[type=text] {
-				width: 120px !important;
+			// .wd-color-input[type=text] {
+			// 	width: 120px !important;
 
-				margin-inline-start: 0 !important;
-			}
+			// 	margin-inline-start: 0 !important;
+			// }
+		}
+
+		&.wd-color {
+			flex-basis: 200px;
 		}
 
 		&:not(.wd-color) {

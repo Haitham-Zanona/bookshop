@@ -21,9 +21,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <div <?php wc_product_cat_class( $args['classes'], $args['category'] ); ?> data-loop="<?php echo esc_attr( $args['woocommerce_loop'] ); ?>">
+	<?php if ( woodmart_loop_prop( 'products_with_background' ) || woodmart_loop_prop( 'products_bordered_grid' ) && 'inside' === woodmart_loop_prop( 'products_bordered_grid_style' ) ) : ?>
+		<div class="wd-cat-wrap">
+	<?php endif; ?>
+
 	<div class="wrapp-category">
 		<div class="category-image-wrapp">
-			<a href="<?php echo esc_url( get_term_link( $args['category']->slug, 'product_cat' ) ); ?>" class="category-image">
+			<a href="<?php echo esc_url( get_term_link( $args['category']->slug, 'product_cat' ) ); ?>" class="category-image" aria-label="<?php esc_html_e( 'Category image', 'woodmart' ); ?>">
 				<?php do_action( 'woocommerce_before_subcategory', $args['category'] ); ?>
 
 				<?php
@@ -47,8 +51,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 				?>
 			</h3>
 
-			<?php if ( ! $args['hide_product_count'] ) : ?>
-				<div class="more-products"><a href="<?php echo esc_url( get_term_link( $args['category']->slug, 'product_cat' ) ); ?>"><?php echo sprintf( _n( '%s product', '%s products', $args['category']->count, 'woodmart' ), $args['category']->count ); ?></a></div>
+			<?php if ( ! woodmart_loop_prop( 'hide_categories_product_count' ) ) : ?>
+				<div class="more-products">
+					<a href="<?php echo esc_url( get_term_link( $args['category']->slug, 'product_cat' ) ); ?>">
+					<?php
+					$products_count = $args['category']->count;
+
+					echo esc_html(
+						sprintf(
+							// translators: %s Products count.
+							_n(
+								'%s product',
+								'%s products',
+								$products_count,
+								'woodmart'
+							),
+							$products_count
+						)
+					);
+					?>
+					</a>
+				</div>
 			<?php endif; ?>
 
 			<?php
@@ -63,4 +86,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<a href="<?php echo esc_url( get_term_link( $args['category']->slug, 'product_cat' ) ); ?>" class="category-link wd-fill" aria-label="<?php echo esc_attr( sprintf( __( 'Product category %s', 'woodmart' ), $args['category']->slug ) ); ?>"></a>
 		<?php do_action( 'woocommerce_after_subcategory', $args['category'] ); ?>
 	</div>
+
+	<?php if ( woodmart_loop_prop( 'products_with_background' ) || woodmart_loop_prop( 'products_bordered_grid' ) && 'inside' === woodmart_loop_prop( 'products_bordered_grid_style' ) ) : ?>
+		</div>
+	<?php endif; ?>
 </div>

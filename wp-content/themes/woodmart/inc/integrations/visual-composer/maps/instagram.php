@@ -7,30 +7,41 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 * Instagram element map
 * ------------------------------------------------------------------------------------------------
 */
-
-if ( ! function_exists( 'woodmart_vc_map_instagram' ) ) {
-	function woodmart_vc_map_instagram() {
-		if ( ! shortcode_exists( 'woodmart_instagram' ) ) {
-			return;
-		}
-
-		vc_map(
-			array(
-				'name'        => esc_html__( 'Instagram', 'woodmart' ),
-				'base'        => 'woodmart_instagram',
-				'category'    => function_exists( 'woodmart_get_tab_title_category_for_wpb' ) ?
-					woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ) : esc_html__( 'Theme elements', 'woodmart' ),
-				'description' => esc_html__( 'Instagram photos', 'woodmart' ),
-				'icon'        => WOODMART_ASSETS . '/images/vc-icon/instagram.svg',
-				'params'      => woodmart_get_instagram_params(),
-			)
+if ( ! function_exists( 'woodmart_get_vc_map_instagram' ) ) {
+	function woodmart_get_vc_map_instagram() {
+		return array(
+			'name'        => esc_html__( 'Instagram', 'woodmart' ),
+			'base'        => 'woodmart_instagram',
+			'category'    => function_exists( 'woodmart_get_tab_title_category_for_wpb' ) ?
+				woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ) : esc_html__( 'Theme elements', 'woodmart' ),
+			'description' => esc_html__( 'Instagram photos', 'woodmart' ),
+			'icon'        => WOODMART_ASSETS . '/images/vc-icon/instagram.svg',
+			'params'      => woodmart_get_instagram_params(),
 		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_instagram' );
 }
 
 if ( ! function_exists( 'woodmart_get_instagram_params' ) ) {
 	function woodmart_get_instagram_params() {
+		$typography = array(
+			'font_family'    => '',
+			'font_size'      => '',
+			'font_weight'    => '',
+			'text_transform' => '',
+			'font_style'     => '',
+			'line_height'    => '',
+		);
+
+		if ( 'wpb' === woodmart_get_current_page_builder() ) {
+			$typography = woodmart_get_typography_map(
+				array(
+					'title'    => esc_html__( 'Typography', 'woodmart' ),
+					'key'      => 'content_typography',
+					'selector' => '{{WRAPPER}} .wd-insta-cont-inner',
+				)
+			);
+		}
+
 		return apply_filters(
 			'woodmart_get_instagram_params',
 			array(
@@ -95,7 +106,6 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 						'value'   => array( 'images' ),
 					),
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
-					'description'      => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 				),
 				array(
 					'type'             => 'textfield',
@@ -130,6 +140,26 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 						'element' => 'data_source',
 						'value'   => array( 'images' ),
 					),
+				),
+				array(
+					'type'             => 'woodmart_switch',
+					'heading'          => esc_html__( 'Rounded corners for images', 'woodmart' ),
+					'skip_in'          => 'widget',
+					'param_name'       => 'rounded',
+					'true_state'       => 1,
+					'false_state'      => 0,
+					'default'          => 0,
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+				array(
+					'type'             => 'woodmart_switch',
+					'heading'          => esc_html__( 'Hide likes and comments', 'woodmart' ),
+					'skip_in'          => 'widget',
+					'param_name'       => 'hide_mask',
+					'true_state'       => 1,
+					'false_state'      => 0,
+					'default'          => 0,
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				array(
 					'heading'       => esc_html__( 'Rounding', 'woodmart' ),
@@ -209,17 +239,9 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'param_name' => 'content_divider',
 				),
 				array(
-					'type'             => 'textfield',
-					'heading'          => esc_html__( 'Title', 'woodmart' ),
-					'param_name'       => 'title',
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
-				),
-				array(
-					'type'             => 'textfield',
-					'heading'          => esc_html__( 'Username', 'woodmart' ),
-					'hint'             => esc_html__( 'Enter your Instagram username. For example: asos', 'woodmart' ),
-					'param_name'       => 'username',
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
+					'type'       => 'textfield',
+					'heading'    => esc_html__( 'Title', 'woodmart' ),
+					'param_name' => 'title',
 				),
 				array(
 					'type'             => 'woodmart_slider',
@@ -254,7 +276,6 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'type'             => 'textfield',
 					'heading'          => esc_html__( 'Photo size', 'woodmart' ),
 					'param_name'       => 'size',
-					'description'      => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 					'hint'             => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\'. Leave empty to use \'thumbnail\' size.', 'woodmart' ),
 					'dependency'       => array(
 						'element'            => 'data_source',
@@ -270,6 +291,83 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'skip_in'    => 'widget',
 					'hint'       => esc_html__( 'Add here few words about your instagram profile.', 'woodmart' ),
 				),
+
+				array(
+					'type'             => 'wd_slider',
+					'param_name'       => 'content_width',
+					'heading'          => esc_html__( 'Content width', 'woodmart' ),
+					'devices'          => array(
+						'desktop' => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+						'tablet'  => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+						'mobile'  => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+					),
+					'range'            => array(
+						'%'  => array(
+							'min'  => 0,
+							'max'  => 100,
+							'step' => 1,
+						),
+						'px' => array(
+							'min'  => 0,
+							'max'  => 1000,
+							'step' => 1,
+						),
+					),
+					'selectors'        => array(
+						'{{WRAPPER}} .wd-insta-cont-inner' => array(
+							'max-width: {{VALUE}}{{UNIT}};',
+						),
+					),
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+				array(
+					'type'             => 'woodmart_button_set',
+					'heading'          => esc_html__( 'Color Scheme', 'woodmart' ),
+					'param_name'       => 'content_color_scheme',
+					'value'            => array(
+						esc_html__( 'Inherit', 'woodmart' ) => '',
+						esc_html__( 'Light', 'woodmart' ) => 'light',
+						esc_html__( 'Dark', 'woodmart' )  => 'dark',
+					),
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+				array(
+					'heading'          => esc_html__( 'Text color', 'woodmart' ),
+					'type'             => 'wd_colorpicker',
+					'param_name'       => 'content_color',
+					'selectors'        => array(
+						'{{WRAPPER}} .wd-insta-cont-inner' => array(
+							'color: {{VALUE}};',
+						),
+					),
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+				array(
+					'heading'          => esc_html__( 'Background color', 'woodmart' ),
+					'type'             => 'wd_colorpicker',
+					'param_name'       => 'content_bg_color',
+					'selectors'        => array(
+						'{{WRAPPER}} .wd-insta-cont-inner' => array(
+							'background-color: {{VALUE}};',
+						),
+					),
+					'edit_field_class' => 'vc_col-sm-6 vc_column',
+				),
+				$typography['font_family'],
+				$typography['font_size'],
+				$typography['font_weight'],
+				$typography['text_transform'],
+				$typography['font_style'],
+				$typography['line_height'],
 				/**
 				* Link
 				*/
@@ -278,6 +376,12 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'holder'     => 'div',
 					'title'      => esc_html__( 'Link', 'woodmart' ),
 					'param_name' => 'link_divider',
+				),
+				array(
+					'type'       => 'textfield',
+					'heading'    => esc_html__( 'Username', 'woodmart' ),
+					'hint'       => esc_html__( 'Enter your Instagram username. For example: asos', 'woodmart' ),
+					'param_name' => 'username',
 				),
 				array(
 					'type'             => 'dropdown',
@@ -310,8 +414,8 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'param_name'       => 'design',
 					'skip_in'          => 'widget',
 					'value'            => array(
-						esc_html__( 'Grid', 'woodmart' )   => 'grid',
-						esc_html__( 'Slider', 'woodmart' ) => 'slider',
+						esc_html__( 'Grid', 'woodmart' ) => 'grid',
+						esc_html__( 'Carousel', 'woodmart' ) => 'slider',
 					),
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
@@ -331,23 +435,13 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'skip_in'          => 'widget',
 				),
 				array(
-					'type'             => 'dropdown',
+					'type'             => 'woodmart_slider',
 					'param_name'       => 'per_row',
-					'value'            => array(
-						'1'  => '1',
-						'2'  => '2',
-						'3'  => '3',
-						'4'  => '4',
-						'5'  => '5',
-						'6'  => '6',
-						'7'  => '7',
-						'8'  => '8',
-						'9'  => '9',
-						'10' => '10',
-						'11' => '11',
-						'12' => '12',
-					),
-					'std'              => '3',
+					'min'              => '1',
+					'max'              => '8',
+					'step'             => '1',
+					'default'          => '4',
+					'units'            => 'col',
 					'wd_dependency'    => array(
 						'element' => 'per_row_tabs',
 						'value'   => array( 'desktop' ),
@@ -356,24 +450,13 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'skip_in'          => 'widget',
 				),
 				array(
-					'type'             => 'dropdown',
+					'type'             => 'woodmart_slider',
 					'param_name'       => 'per_row_tablet',
-					'value'            => array(
-						esc_html__( 'Auto', 'woodmart' ) => 'auto',
-						'1'  => '1',
-						'2'  => '2',
-						'3'  => '3',
-						'4'  => '4',
-						'5'  => '5',
-						'6'  => '6',
-						'7'  => '7',
-						'8'  => '8',
-						'9'  => '9',
-						'10' => '10',
-						'11' => '11',
-						'12' => '12',
-					),
-					'std'              => 'auto',
+					'min'              => '1',
+					'max'              => '8',
+					'step'             => '1',
+					'default'          => '',
+					'units'            => 'col',
 					'wd_dependency'    => array(
 						'element' => 'per_row_tabs',
 						'value'   => array( 'tablet' ),
@@ -382,24 +465,13 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'skip_in'          => 'widget',
 				),
 				array(
-					'type'             => 'dropdown',
+					'type'             => 'woodmart_slider',
 					'param_name'       => 'per_row_mobile',
-					'value'            => array(
-						esc_html__( 'Auto', 'woodmart' ) => 'auto',
-						'1'  => '1',
-						'2'  => '2',
-						'3'  => '3',
-						'4'  => '4',
-						'5'  => '5',
-						'6'  => '6',
-						'7'  => '7',
-						'8'  => '8',
-						'9'  => '9',
-						'10' => '10',
-						'11' => '11',
-						'12' => '12',
-					),
-					'std'              => 'auto',
+					'min'              => '1',
+					'max'              => '8',
+					'step'             => '1',
+					'default'          => '',
+					'units'            => 'col',
 					'wd_dependency'    => array(
 						'element' => 'per_row_tabs',
 						'value'   => array( 'mobile' ),
@@ -418,12 +490,28 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				array(
-					'type'             => 'dropdown',
+					'type'             => 'woodmart_button_set',
 					'heading'          => esc_html__( 'Space between images', 'woodmart' ),
+					'param_name'       => 'spacing_custom_tabs',
+					'tabs'             => true,
+					'value'            => array(
+						esc_html__( 'Desktop', 'woodmart' ) => 'desktop',
+						esc_html__( 'Tablet', 'woodmart' ) => 'tablet',
+						esc_html__( 'Mobile', 'woodmart' ) => 'mobile',
+					),
+					'default'          => 'desktop',
+					'dependency'       => array(
+						'element' => 'spacing',
+						'value'   => array( '1' ),
+					),
+					'edit_field_class' => 'wd-res-control wd-custom-width vc_col-sm-12 vc_column',
+					'skip_in'          => 'widget',
+				),
+				array(
+					'type'             => 'dropdown',
 					'param_name'       => 'spacing_custom',
 					'skip_in'          => 'widget',
 					'value'            => array(
-						'',
 						0,
 						2,
 						6,
@@ -431,61 +519,75 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 						20,
 						30,
 					),
+					'std'              => 6,
+					'wd_dependency'    => array(
+						'element' => 'spacing_custom_tabs',
+						'value'   => array( 'desktop' ),
+					),
 					'dependency'       => array(
 						'element' => 'spacing',
 						'value'   => array( '1' ),
 					),
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
+					'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
 				),
 				array(
-					'type'             => 'woodmart_switch',
-					'heading'          => esc_html__( 'Rounded corners for images', 'woodmart' ),
+					'type'             => 'dropdown',
+					'param_name'       => 'spacing_custom_tablet',
 					'skip_in'          => 'widget',
-					'param_name'       => 'rounded',
-					'true_state'       => 1,
-					'false_state'      => 0,
-					'default'          => 0,
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
-				),
-				array(
-					'type'             => 'woodmart_switch',
-					'heading'          => esc_html__( 'Hide likes and comments', 'woodmart' ),
-					'skip_in'          => 'widget',
-					'param_name'       => 'hide_mask',
-					'true_state'       => 1,
-					'false_state'      => 0,
-					'default'          => 0,
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
-				),
-				array(
-					'type'             => 'woodmart_switch',
-					'heading'          => esc_html__( 'Hide pagination control', 'woodmart' ),
-					'param_name'       => 'hide_pagination_control',
-					'hint'             => esc_html__( 'If "YES" pagination control will be removed', 'woodmart' ),
-					'true_state'       => 'yes',
-					'false_state'      => 'no',
-					'default'          => 'no',
-					'skip_in'          => 'widget',
+					'value'            => array(
+						esc_html__( 'Inherit', 'woodmart' ) => '',
+						'0'  => 0,
+						'2'  => 2,
+						'6'  => 6,
+						'10' => 10,
+						'20' => 20,
+						'30' => 30,
+					),
+					'std'              => '',
+					'wd_dependency'    => array(
+						'element' => 'spacing_custom_tabs',
+						'value'   => array( 'tablet' ),
+					),
 					'dependency'       => array(
+						'element' => 'spacing',
+						'value'   => array( '1' ),
+					),
+					'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
+				),
+				array(
+					'type'             => 'dropdown',
+					'param_name'       => 'spacing_custom_mobile',
+					'skip_in'          => 'widget',
+					'value'            => array(
+						esc_html__( 'Inherit', 'woodmart' ) => '',
+						'0'  => 0,
+						'2'  => 2,
+						'6'  => 6,
+						'10' => 10,
+						'20' => 20,
+						'30' => 30,
+					),
+					'std'              => '',
+					'wd_dependency'    => array(
+						'element' => 'spacing_custom_tabs',
+						'value'   => array( 'mobile' ),
+					),
+					'dependency'       => array(
+						'element' => 'spacing',
+						'value'   => array( '1' ),
+					),
+					'edit_field_class' => 'wd-res-item vc_col-sm-12 vc_column',
+				),
+				array(
+					'type'       => 'woodmart_title_divider',
+					'holder'     => 'div',
+					'title'      => esc_html__( 'Carousel', 'woodmart' ),
+					'group'      => esc_html__( 'Carousel', 'woodmart' ),
+					'param_name' => 'carousel_divider',
+					'dependency' => array(
 						'element' => 'design',
 						'value'   => array( 'slider' ),
 					),
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
-				),
-				array(
-					'type'             => 'woodmart_switch',
-					'heading'          => esc_html__( 'Hide prev/next buttons', 'woodmart' ),
-					'param_name'       => 'hide_prev_next_buttons',
-					'hint'             => esc_html__( 'If "YES" prev/next control will be removed', 'woodmart' ),
-					'true_state'       => 'yes',
-					'false_state'      => 'no',
-					'default'          => 'no',
-					'skip_in'          => 'widget',
-					'dependency'       => array(
-						'element' => 'design',
-						'value'   => array( 'slider' ),
-					),
-					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
 				* Extra
@@ -503,6 +605,13 @@ Follow our documentation <a href="https://xtemos.com/docs/woodmart/faq-guides/se
 					'param_name' => 'el_class',
 					'hint'       => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' ),
 				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				function_exists( 'woodmart_get_vc_responsive_spacing_map' ) ? woodmart_get_vc_responsive_spacing_map() : '',
 			)
 		);
 	}

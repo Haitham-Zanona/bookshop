@@ -21,17 +21,9 @@ defined( 'ABSPATH' ) || exit;
 global $post, $product;
 
 $is_quick_view = woodmart_loop_prop( 'is_quick_view' );
+$classes       = 'wd-carousel-item';
 
 $attachment_ids = $product->get_gallery_image_ids();
-
-$thums_position = woodmart_get_opt( 'thums_position' );
-
-$product_design = woodmart_product_design();
-
-// Full size images for sticky product design
-if ( $product_design == 'sticky' ) {
-	$thums_position = 'bottom';
-}
 
 if ( $attachment_ids && $product->get_image_id() ) {
 	foreach ( $attachment_ids as $attachment_id ) {
@@ -59,7 +51,7 @@ if ( $attachment_ids && $product->get_image_id() ) {
 		ob_start();
 
 		?>
-		<div class="product-image-wrap">
+		<div class="<?php echo esc_attr( $classes ); ?>">
 			<figure data-thumb="<?php echo esc_url( isset( $thumbnail[0] ) ? $thumbnail[0] : '' ); ?>" class="woocommerce-product-gallery__image">
 				<a data-elementor-open-lightbox="no" href="<?php echo esc_url( isset( $full_size_image[0] ) ? $full_size_image[0] : '' ); ?>">
 					<?php echo wp_get_attachment_image( $attachment_id, 'woocommerce_single', false, $attributes ); ?>

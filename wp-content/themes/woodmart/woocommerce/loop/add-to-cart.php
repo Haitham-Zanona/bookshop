@@ -10,10 +10,10 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see 	    https://docs.woocommerce.com/document/template-structure/
- * @author 		WooThemes
- * @package 	WooCommerce/Templates
- * @version     3.3.0
+ * @see         https://docs.woocommerce.com/document/template-structure/
+ * @author      WooThemes
+ * @package     WooCommerce/Templates
+ * @version     9.0.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -22,12 +22,21 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $product;
 
-echo apply_filters( 'woocommerce_loop_add_to_cart_link', 
-	sprintf( '<a href="%s" data-quantity="%s" class="%s add-to-cart-loop" %s><span>%s</span></a>',
+echo apply_filters(
+	'woocommerce_loop_add_to_cart_link',
+	sprintf(
+		'<a href="%s" aria-describedby="woocommerce_loop_add_to_cart_link_describedby_%s" data-quantity="%s" class="%s add-to-cart-loop" %s><span>%s</span></a>',
 		esc_url( $product->add_to_cart_url() ),
+		esc_attr( $product->get_id() ),
 		esc_attr( isset( $args['quantity'] ) ? $args['quantity'] : 1 ),
 		esc_attr( isset( $args['class'] ) ? $args['class'] : 'button' ),
 		isset( $args['attributes'] ) ? wc_implode_html_attributes( $args['attributes'] ) : '',
 		esc_html( $product->add_to_cart_text() )
 	),
-$product, $args );
+	$product,
+	$args
+);
+?>
+<span id="woocommerce_loop_add_to_cart_link_describedby_<?php echo esc_attr( $product->get_id() ); ?>" class="screen-reader-text">
+	<?php echo esc_html( $args['aria-describedby_text'] ); ?>
+</span>

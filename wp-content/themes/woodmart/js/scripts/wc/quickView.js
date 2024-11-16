@@ -9,10 +9,6 @@
 		});
 	});
 
-	woodmartThemeModule.$document.on('wdReplaceMainGallery', function () {
-		woodmartThemeModule.quickViewCarousel();
-	});
-
 	woodmartThemeModule.quickViewInit = function() {
 		woodmartThemeModule.$document.on('click', '.open-quick-view', function(e) {
 			e.preventDefault();
@@ -45,24 +41,6 @@
 		});
 	};
 
-	woodmartThemeModule.quickViewCarousel = function() {
-		if ('undefined' === typeof $.fn.owlCarousel) {
-			return;
-		}
-
-		var $quickViewCarousel = $('.product-quick-view .woocommerce-product-gallery__wrapper');
-
-		$quickViewCarousel.trigger('destroy.owl.carousel');
-		$quickViewCarousel.addClass('owl-carousel').owlCarousel({
-			rtl    : woodmartThemeModule.$body.hasClass('rtl'),
-			items  : 1,
-			dots   : false,
-			nav    : true,
-			navText: false,
-			navClass : ['owl-prev wd-btn-arrow', 'owl-next wd-btn-arrow'],
-		});
-	};
-
 	woodmartThemeModule.quickViewLoad = function(id, btn) {
 		var data = {
 			id    : id,
@@ -81,15 +59,16 @@
 					src : items,
 					type: 'inline'
 				},
-				tClose      : woodmart_settings.close,
-				tLoading    : woodmart_settings.loading,
-				removalDelay: 500,
-				callbacks   : {
+				tClose         : woodmart_settings.close,
+				tLoading       : woodmart_settings.loading,
+				removalDelay   : 600,
+				fixedContentPos: true,
+				callbacks      : {
 					beforeOpen: function() {
-						this.st.mainClass = 'mfp-move-horizontal quick-view-wrapper';
+						this.wrap.addClass('wd-popup-slide-from-left');
 					},
 					open      : function() {
-						var $form = $('.variations_form');
+						var $form = $(this.content[0]).find('.variations_form');
 
 						$form.each(function() {
 							$(this).wc_variation_form().find('.variations select:eq(0)').trigger('change');
@@ -101,7 +80,6 @@
 						setTimeout(function() {
 							woodmartThemeModule.$document.trigger('wdQuickViewOpen300');
 						}, 300);
-						woodmartThemeModule.quickViewCarousel();
 					}
 				}
 			});
@@ -131,6 +109,5 @@
 
 	$(document).ready(function() {
 		woodmartThemeModule.quickViewInit();
-		woodmartThemeModule.quickViewCarousel();
 	});
 })(jQuery);

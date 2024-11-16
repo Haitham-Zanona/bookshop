@@ -44,7 +44,6 @@
 			?>
 		</div>
 		<div class="bottom-information">
-			<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
 			<?php
 				/**
 				 * woocommerce_after_shop_loop_item_title hook
@@ -54,6 +53,7 @@
 				 */
 				do_action( 'woocommerce_after_shop_loop_item_title' );
 			?>
+			<?php echo wp_kses_post( woodmart_get_product_rating() ); ?>
 			<?php 
 				echo woodmart_swatches_list();
 			?>
@@ -67,6 +67,12 @@
 			<?php woodmart_quick_view_btn( get_the_ID() ); ?>
 			<?php do_action( 'woodmart_product_action_buttons' ); ?>
 		</div>
-
 	</div>
+	<?php if ( woodmart_loop_prop( 'progress_bar' ) ) : ?>
+		<?php woodmart_stock_progress_bar(); ?>
+	<?php endif ?>
+
+	<?php if ( woodmart_loop_prop( 'timer' ) ) : ?>
+		<?php woodmart_product_sale_countdown( array( 'products_hover' => 'info' ) ); ?>
+	<?php endif ?>
 </div>

@@ -18,7 +18,7 @@
 		$('.wd-visits-count').each( function () {
 			var $this = $(this);
 			var productId = $this.data('product-id');
-			var $count = $this.find('.wd-visits-count-number');
+			var $count = $this.find('.wd-count-number');
 
 			if ( ! productId ) {
 				return;

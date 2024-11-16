@@ -117,12 +117,7 @@ if ( ! function_exists( 'woodmart_shortcode_open_street_map' ) ) {
 		$placeholder = '<img src="' . WOODMART_ASSETS_IMAGES . '/google-map-placeholder.jpg">';
 
 		if ( ! empty( $attr['map_init_placeholder'] ) ) {
-			$placeholder = wpb_getImageBySize(
-				array(
-					'attach_id'  => $attr['map_init_placeholder'],
-					'thumb_size' => ! empty( $attr['map_init_placeholder_size'] ) ? $attr['map_init_placeholder_size'] : 'full',
-				)
-			)['thumbnail'];
+			$placeholder = woodmart_otf_get_image_html( $attr['map_init_placeholder'], ! empty( $attr['map_init_placeholder_size'] ) ? $attr['map_init_placeholder_size'] : 'full' );
 		}
 
 		$map_settings = array_filter(
@@ -164,7 +159,7 @@ if ( ! function_exists( 'woodmart_shortcode_open_street_map' ) ) {
 			<?php if ( 'button' === $attr['init_type'] ) : ?>
 				<div class="wd-init-map-wrap wd-fill">
 					<a href="#" rel="nofollow noopener" class="btn btn-color-white wd-init-map">
-						<span><?php esc_attr_e( 'Show map', 'woodmart' ); ?></span>
+						<span><?php esc_html_e( 'Show map', 'woodmart' ); ?></span>
 					</a>
 				</div>
 			<?php endif ?>

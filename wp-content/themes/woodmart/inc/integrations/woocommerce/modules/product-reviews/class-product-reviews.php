@@ -7,7 +7,7 @@
 
 namespace XTS\Modules;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
@@ -20,6 +20,8 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 class Product_Reviews extends Singleton {
 	/**
 	 * Init.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function init() {
 		$this->define_constants();
@@ -37,7 +39,7 @@ class Product_Reviews extends Singleton {
 	/**
 	 * Define constants.
 	 *
-	 * @since 1.0.0
+	 * @codeCoverageIgnore
 	 */
 	private function define_constants() {
 		define( 'XTS_PRODUCT_REVIEWS_DIR', WOODMART_THEMEROOT . '/inc/integrations/woocommerce/modules/product-reviews/' );
@@ -54,6 +56,7 @@ class Product_Reviews extends Singleton {
 				'parent'   => 'general_single_product_section',
 				'priority' => 50,
 				'icon'     => 'xts-i-bag',
+				'class'    => 'xts-preset-section-disabled',
 			)
 		);
 
@@ -68,12 +71,12 @@ class Product_Reviews extends Singleton {
 				'options'     => array(
 					'tabs'     => array(
 						'name'  => esc_html__( 'Tabs', 'woodmart' ),
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-location-tabs.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-location-tabs.jpg" alt="">', true ),
 						'value' => 'tabs',
 					),
 					'separate' => array(
 						'name'  => esc_html__( 'Separate section', 'woodmart' ),
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-location-separate-section.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-location-separate-section.jpg" alt="">', true ),
 						'value' => 'separate',
 					),
 				),
@@ -198,13 +201,13 @@ class Product_Reviews extends Singleton {
 				'section'     => 'single_product_comments_section',
 				'options'     => array(
 					'before' => array(
-						'name'  => 'Before reviews',
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-form-location-before.jpg" alt="">', 'woodmart' ), true ),
+						'name'  => esc_html__( 'Before reviews', 'woodmart' ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-form-location-before.jpg" alt="">', true ),
 						'value' => 'before',
 					),
 					'after' => array(
-						'name'  => 'After reviews',
-						'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-form-location-after.jpg" alt="">', 'woodmart' ), true ),
+						'name'  => esc_html__( 'After reviews', 'woodmart' ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews-form-location-after.jpg" alt="">', true ),
 						'value' => 'after',
 					),
 				),
@@ -217,7 +220,7 @@ class Product_Reviews extends Singleton {
 			array(
 				'id'          => 'reviews_style',
 				'name'        => esc_html__( 'Style', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews_style.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'reviews_style.jpg" alt="">', true ),
 				'description' => esc_html__( 'Choose style of the product\'s review.', 'woodmart' ),
 				'type'        => 'select',
 				'section'     => 'single_product_comments_section',

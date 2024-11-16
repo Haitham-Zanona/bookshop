@@ -623,9 +623,9 @@ if ( ! class_exists( 'WOODMART_Banner_Widget' ) ) {
 								esc_html__( 'Round', 'woodmart' ) => 'semi-round',
 							),
 							'images_value'     => array(
-								'rectangle'  => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/rectangle.png',
-								'round'      => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/circle.png',
-								'semi-round' => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/round.png',
+								'rectangle'  => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/rectangle.jpeg',
+								'round'      => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/circle.jpeg',
+								'semi-round' => WOODMART_ASSETS_IMAGES . '/settings/buttons/shape/round.jpeg',
 							),
 							'dependency'       => array(
 								'element'            => 'btn_style',
@@ -836,6 +836,12 @@ if ( ! class_exists( 'WOODMART_Banner_Widget' ) ) {
 		 * @param array $instance the value of the options for output.
 		 */
 		public function widget( $args, $instance ) {
+			if ( $this->is_widget_preview() ) {
+				return;
+			}
+
+			$instance['custom_height'] = 'yes';
+
 			extract( $args );
 
 			echo wp_kses_post( $before_widget );

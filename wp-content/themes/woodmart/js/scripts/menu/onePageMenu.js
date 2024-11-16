@@ -31,6 +31,7 @@
 
 				if (itemHash === hash) {
 					$this.siblings().removeClass('current-menu-item');
+					$this.parents('.whb-row').find('.onepage-link').removeClass('current-menu-item');
 					$this.addClass('current-menu-item');
 				}
 			});

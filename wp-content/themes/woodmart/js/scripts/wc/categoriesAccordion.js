@@ -3,6 +3,9 @@
 	woodmartThemeModule.$document.on('wdBackHistory wdShopPageInit', function () {
 		woodmartThemeModule.categoriesAccordion();
 	});
+	window.addEventListener('popstate', function() {
+		woodmartThemeModule.categoriesAccordion();
+	});
 
 	woodmartThemeModule.categoriesAccordion = function() {
 

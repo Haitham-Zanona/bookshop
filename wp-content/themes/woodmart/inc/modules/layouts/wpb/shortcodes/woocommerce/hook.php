@@ -9,6 +9,7 @@ use XTS\Modules\Layouts\Main;
 use XTS\WC_Wishlist\Ui as Wishlist;
 use XTS\Modules\Compare\Ui as Compare;
 use XTS\Modules\Linked_Variations\Frontend as Linked_Variations;
+use XTS\Modules\Shipping_Progress_Bar\Main as Shipping_Progress_Bar;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -48,6 +49,7 @@ if ( ! function_exists( 'woodmart_shortcode_woocommerce_hook' ) ) {
 		if ( 'yes' === $settings['clean_actions'] ) {
 			if ( 'woocommerce_checkout_billing' === $settings['hook'] ) {
 				remove_action( 'woocommerce_checkout_billing', array( WC()->checkout(), 'checkout_form_billing' ) );
+				remove_action( 'woocommerce_checkout_billing', array( Shipping_Progress_Bar::get_instance(), 'render_shipping_progress_bar_with_wrapper' ) );
 			} elseif ( 'woocommerce_checkout_shipping' === $settings['hook'] ) {
 				remove_action( 'woocommerce_checkout_shipping', array( WC()->checkout(), 'checkout_form_shipping' ) );
 			} elseif ( 'woocommerce_checkout_before_customer_details' === $settings['hook'] ) {
@@ -87,6 +89,7 @@ if ( ! function_exists( 'woodmart_shortcode_woocommerce_hook' ) ) {
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_sguide_display', 38 );
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_before_add_to_cart_area', 25 );
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_after_add_to_cart_area', 31 );
+				remove_action( 'woocommerce_single_product_summary', array( $GLOBALS['woocommerce']->structured_data, 'generate_product_data' ), 60 );
 
 				if ( woodmart_get_opt( 'wishlist' ) ) {
 					remove_action( 'woocommerce_single_product_summary', array( Wishlist::get_instance(), 'add_to_wishlist_single_btn' ), 33 );
@@ -118,6 +121,12 @@ if ( ! function_exists( 'woodmart_shortcode_woocommerce_hook' ) ) {
 				remove_action( 'woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 20 );
 				remove_action( 'woocommerce_checkout_order_review', 'woocommerce_checkout_payment', 10 );
 			}
+		}
+
+		if ( ! has_action( $settings['hook'] ) ) {
+			Main::restore_preview();
+
+			return '';
 		}
 
 		?>

@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 /**
  * General.
@@ -187,7 +187,7 @@ Options::add_section(
 	array(
 		'id'       => 'icons_fonts_section',
 		'parent'   => 'general_typography_section',
-		'name'     => esc_html__( 'Icons fonts', 'woodmart' ),
+		'name'     => esc_html__( 'Icon fonts', 'woodmart' ),
 		'priority' => 40,
 		'icon'     => 'xts-i-typography',
 	)
@@ -273,6 +273,16 @@ Options::add_section(
 		'parent'   => 'general_styles_section',
 		'name'     => esc_html__( 'Notices', 'woodmart' ),
 		'priority' => 60,
+		'icon'     => 'xts-i-brush',
+	)
+);
+
+Options::add_section(
+	array(
+		'id'       => 'general_carousel',
+		'parent'   => 'general_styles_section',
+		'name'     => esc_html__( 'Carousel', 'woodmart' ),
+		'priority' => 70,
 		'icon'     => 'xts-i-brush',
 	)
 );
@@ -440,6 +450,26 @@ Options::add_section(
 		'parent'   => 'general_shop_section',
 		'priority' => 70,
 		'icon'     => 'xts-i-cart',
+		'class'    => 'xts-preset-section-disabled',
+	)
+);
+
+Options::add_section(
+	array(
+		'id'       => 'waitlist_section',
+		'parent'   => 'general_shop_section',
+		'name'     => esc_html__( 'Waitlist', 'woodmart' ),
+		'priority' => 80,
+		'icon'     => 'xts-i-cart',
+	)
+);
+
+Options::add_section(
+	array(
+		'id'       => 'cart_section',
+		'parent'   => 'general_shop_section',
+		'name'     => esc_html__( 'Cart', 'woodmart' ),
+		'priority' => 90,
 	)
 );
 
@@ -448,7 +478,8 @@ Options::add_section(
 		'id'       => 'checkout_section',
 		'parent'   => 'general_shop_section',
 		'name'     => esc_html__( 'Checkout', 'woodmart' ),
-		'priority' => 85,
+		'priority' => 100,
+		'class'    => 'xts-preset-section-disabled',
 	)
 );
 
@@ -457,7 +488,27 @@ Options::add_section(
 		'id'       => 'thank_you_page_section',
 		'parent'   => 'general_shop_section',
 		'name'     => esc_html__( 'Thank you page', 'woodmart' ),
-		'priority' => 80,
+		'priority' => 110,
+		'icon'     => 'xts-i-cart',
+	)
+);
+
+Options::add_section(
+	array(
+		'id'       => 'bought_together_section',
+		'parent'   => 'general_shop_section',
+		'name'     => esc_html__( 'Frequently bought together', 'woodmart' ),
+		'priority' => 120,
+		'icon'     => 'xts-i-cart',
+	)
+);
+
+Options::add_section(
+	array(
+		'id'       => 'free_gifts_section',
+		'parent'   => 'general_shop_section',
+		'name'     => esc_html__( 'Free gifts', 'woodmart' ),
+		'priority' => 130,
 		'icon'     => 'xts-i-cart',
 	)
 );
@@ -580,7 +631,7 @@ Options::add_section(
 	array(
 		'id'       => 'product_images',
 		'parent'   => 'general_single_product_section',
-		'name'     => esc_html__( 'Images', 'woodmart' ),
+		'name'     => esc_html__( 'Gallery', 'woodmart' ),
 		'priority' => 20,
 		'icon'     => 'xts-i-bag',
 	)
@@ -833,6 +884,7 @@ Options::add_section(
 		'name'     => esc_html__( 'Maintenance', 'woodmart' ),
 		'priority' => 160,
 		'icon'     => 'xts-i-tools',
+		'class'    => 'xts-preset-section-disabled',
 	)
 );
 
@@ -845,6 +897,7 @@ Options::add_section(
 		'name'     => esc_html__( 'White label', 'woodmart' ),
 		'priority' => 170,
 		'icon'     => 'xts-i-tag',
+		'class'    => 'xts-preset-section-disabled',
 	)
 );
 
@@ -893,5 +946,6 @@ Options::add_section(
 		'name'     => esc_html__( 'Import / Export / Reset', 'woodmart' ),
 		'priority' => 220,
 		'icon'     => 'xts-i-round-right',
+		'class'    => 'xts-preset-section-disabled',
 	)
 );

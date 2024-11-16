@@ -1,60 +1,76 @@
 /* global woodmart_settings */
-(function($) {
-	woodmartThemeModule.$document.on('wdCarouselFlickityInited', function () {
-		woodmartThemeModule.sliderDistortion();
-	});
+woodmartThemeModule.$document.on('wdSwiperCarouselInited', function () {
+	woodmartThemeModule.sliderDistortion();
+});
 
-	woodmartThemeModule.sliderDistortion = function() {
-		var $elements = $('.wd-slider-wrapper.anim-distortion');
+woodmartThemeModule.sliderDistortion = function() {
+	if ('undefined' === typeof ShaderX || woodmartThemeModule.$body.hasClass('single-woodmart_slide') || ! document.querySelector('.wd-slider.wd-anim-distortion .wd-carousel.wd-initialized')) {
+		return;
+	}
 
-		if ('undefined' === typeof ShaderX || woodmartThemeModule.$body.hasClass('single-woodmart_slide')) {
+	document.querySelectorAll('.wd-slider.wd-anim-distortion').forEach( function ($slider) {
+		var $slides = $slider.querySelectorAll('.wd-carousel .wd-slide');
+		var imgSrc  = getImageSrc( $slides[0] );
+		var imgSrc2 = getImageSrc( $slides[1] );
+
+		if ($slider.classList.contains('webgl-inited') || !imgSrc || !imgSrc2) {
 			return;
 		}
 
-		$elements.each(function() {
-			var $slider = $(this),
-			    $slides = $slider.find('.wd-slide'),
-			    imgSrc  = $slides.eq(0).data('image-url'),
-			    imgSrc2 = $slides.eq(1).data('image-url');
+		$slider.classList.add('webgl-inited');
 
-			if ($slider.hasClass('webgl-inited') || !imgSrc || !imgSrc2) {
+		var shaderX = new ShaderX({
+			container     : $slider.querySelector('.wd-carousel'),
+			sizeContainer : $slider,
+			vertexShader  : woodmartThemeModule.shaders.matrixVertex,
+			fragmentShader: woodmartThemeModule.shaders[woodmart_settings.slider_distortion_effect] ? woodmartThemeModule.shaders[woodmart_settings.slider_distortion_effect] : woodmartThemeModule.shaders.sliderWithWave,
+			width         : $slider.offsetWidth,
+			height        : $slider.offsetHeight,
+			distImage     : woodmart_settings.slider_distortion_effect === 'sliderPattern' ? woodmart_settings.theme_url + '/images/dist11.jpg' : false
+		});
+
+		shaderX.loadImage(imgSrc, 0, function() {
+			$slider.classList.add('wd-canvas-loaded');
+		});
+		shaderX.loadImage(imgSrc, 1);
+		shaderX.loadImage(imgSrc2, 0, undefined, true);
+
+		$slider.querySelector('.wd-carousel').addEventListener('wdSlideChange', function (e) {
+			var activeSlide = e.target.swiper.visibleSlides[0];
+
+			imgSrc = getImageSrc( activeSlide );
+
+			if (!imgSrc) {
 				return;
 			}
 
-			$slider.addClass('webgl-inited');
+			shaderX.replaceImage(imgSrc);
 
-			var shaderX = new ShaderX({
-				container     : $slider.find('.flickity-viewport'),
-				sizeContainer : $slider,
-				vertexShader  : woodmartThemeModule.shaders.matrixVertex,
-				fragmentShader: woodmartThemeModule.shaders[woodmart_settings.slider_distortion_effect] ? woodmartThemeModule.shaders[woodmart_settings.slider_distortion_effect] : woodmartThemeModule.shaders.sliderWithWave,
-				width         : $slider.outerWidth(),
-				height        : $slider.outerHeight(),
-				distImage     : woodmart_settings.slider_distortion_effect === 'sliderPattern' ? woodmart_settings.theme_url + '/images/dist11.jpg' : false
-			});
+			if (activeSlide.nextElementSibling) {
+				imgSrc2 = getImageSrc( activeSlide.nextElementSibling);
 
-			shaderX.loadImage(imgSrc, 0, function() {
-				$slider.addClass('wd-canvas-image-loaded');
-			});
-			shaderX.loadImage(imgSrc, 1);
-			shaderX.loadImage(imgSrc2, 0, undefined, true);
-
-			$slider.on('change.flickity', function(event, index) {
-				imgSrc = $slides.eq(index).data('image-url');
-
-				if (!imgSrc) {
-					return;
+				if ( imgSrc2 ) {
+					shaderX.loadImage(imgSrc2, 0, undefined, true);
 				}
-
-				shaderX.replaceImage(imgSrc);
-
-				if ($slides.eq(index + 1).length > 0) {
-					imgSrc2 = $slides.eq(index + 1).data('image-url');
-					if ( imgSrc2 ) {
-						shaderX.loadImage(imgSrc2, 0, undefined, true);
-					}
-				}
-			});
+			}
 		});
-	};
-})(jQuery);
+	});
+
+	function getImageSrc( slide ) {
+		var imageSrc = slide.dataset.imageUrl;
+
+		if ( woodmartThemeModule.$window.width() <= 1024 && slide.dataset.imageUrlMd ) {
+			imageSrc = slide.dataset.imageUrlMd;
+		}
+
+		if ( woodmartThemeModule.$window.width() <= 767 && slide.dataset.imageUrlSm ) {
+			imageSrc = slide.dataset.imageUrlSm;
+		}
+
+		return imageSrc;
+	}
+};
+
+window.addEventListener('load',function() {
+	woodmartThemeModule.sliderDistortion();
+});

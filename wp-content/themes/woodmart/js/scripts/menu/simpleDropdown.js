@@ -49,7 +49,8 @@
 				}
 
 				btn.find('span').text(label);
-				input.val(value).trigger('cat_selected');
+				input.val(value);
+				input.closest('form.woodmart-ajax-search').find('[type="text"]').trigger('cat_selected');
 				hideList();
 				inputPadding();
 			});

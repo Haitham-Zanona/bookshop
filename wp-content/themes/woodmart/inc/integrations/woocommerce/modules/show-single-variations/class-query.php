@@ -36,6 +36,8 @@ class Query extends Singleton {
 		add_filter( 'woocommerce_product_variation_title', array( $this, 'variation_title' ), 10, 4 );
 		add_filter( 'woocommerce_product_variation_get_average_rating', array( $this, 'get_average_rating' ), 10, 2 );
 
+		add_filter( 'woocommerce_product_related_posts_query', array( $this, 'add_variations_to_related_products' ), 10, 2 );
+
 		add_filter( 'get_the_excerpt', array( $this, 'get_the_excerpt' ), 10, 2 );
 		add_action( 'woocommerce_display_product_attributes', array( $this, 'variation_product_attributes' ), 10, 2 );
 	}
@@ -43,6 +45,7 @@ class Query extends Singleton {
 	/**
 	 * Update request for product variation.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array  $clauses Request.
 	 * @param object $query Query.
 	 * @return array
@@ -51,7 +54,7 @@ class Query extends Singleton {
 		global $wpdb;
 
 		if ( ! empty( $query->query_vars['woodmart_single_variations_filter'] ) ) {
-			if ( woodmart_get_opt( 'hide_variation_parent' ) && ( ! woodmart_get_opt( 'wishlist_page' ) || get_queried_object_id() !== (int) woodmart_get_opt( 'wishlist_page' ) && empty( $_POST['atts']['is_wishlist'] ) ) ) {
+			if ( woodmart_get_opt( 'hide_variation_parent' ) && ( ! woodmart_get_opt( 'wishlist_page' ) || get_queried_object_id() !== (int) apply_filters( 'wpml_object_id', woodmart_get_opt( 'wishlist_page' ), 'page', true ) && empty( $_REQUEST['atts']['is_wishlist'] ) ) ) { //phpcs:ignore
 				$clauses['where'] .= " AND 0 = (select count(*) as totalpart from {$wpdb->posts} as posts where posts.post_parent = {$wpdb->posts}.ID and posts.post_type = 'product_variation' ) ";
 			}
 
@@ -71,6 +74,20 @@ class Query extends Singleton {
 					$clauses['where'] = implode( ') temp )', $data_requests );
 				}
 			}
+
+			$clauses['where'] .= " AND {$wpdb->posts}.ID NOT IN (
+			    SELECT {$wpdb->posts}.ID
+			    FROM {$wpdb->posts}
+			    left JOIN {$wpdb->postmeta} ON ({$wpdb->posts}.ID = {$wpdb->postmeta}.post_id)
+			    WHERE $wpdb->postmeta.meta_key = '_wd_show_variation' AND $wpdb->postmeta.meta_value = 'no'
+			)";
+
+			$clauses['where'] .= " AND {$wpdb->posts}.post_parent NOT IN (
+				SELECT {$wpdb->posts}.ID
+				FROM {$wpdb->posts}
+				WHERE $wpdb->posts.post_type = 'product'
+				AND {$wpdb->posts}.post_status != 'publish'
+			)";
 		}
 
 		return $clauses;
@@ -96,9 +113,10 @@ class Query extends Singleton {
 	 * @return void
 	 */
 	public function add_variations_to_product_query( $query ) {
-		if ( ( is_admin() && ( ! isset( $_REQUEST['action'] ) ) ) || isset( $query->query['product'] ) ) { //phpcs:ignore
+		if ( ( is_admin() && ( ! isset( $_REQUEST['action'] ) || in_array( $_REQUEST['action'], array( 'woocommerce_do_ajax_product_export', 'woocommerce_do_ajax_product_import' ), true ) ) ) || isset( $query->query['product'] ) || ! empty( $query->query['wd_show_variable_products'] ) || ! empty( $query->query['preview'] ) ) { //phpcs:ignore
 			return;
 		}
+
 		global $pagenow;
 
 		$post_type = array_filter( (array) $query->get( 'post_type' ) );
@@ -184,7 +202,12 @@ class Query extends Singleton {
 		$content = get_post_meta( $post->ID, '_variation_description', true );
 
 		if ( ! $content && ! empty( $post->post_parent ) ) {
-			$parent  = wc_get_product( $post->post_parent );
+			$parent = wc_get_product( $post->post_parent );
+
+			if ( ! $parent ) {
+				return $except;
+			}
+
 			$content = get_the_excerpt( $parent->get_id() );
 		}
 
@@ -228,8 +251,13 @@ class Query extends Singleton {
 						}
 					}
 				} else {
-					$term_slug  = $product->get_attributes()[ $attribute->get_name() ];
-					$value_name = get_term_by( 'slug', $term_slug, $attribute->get_name() )->name;
+					$term_slug = $product->get_attributes()[ $attribute->get_name() ];
+
+					if ( ! $term_slug ) {
+						continue;
+					}
+
+					$value = get_term_by( 'slug', $term_slug, $attribute->get_name() )->name;
 
 					if ( $attribute_taxonomy->attribute_public ) {
 						$values[] = '<a href="' . esc_url( get_term_link( get_term_by( 'slug', $term_slug, $attribute->get_name() )->term_id, $attribute->get_name() ) ) . '" rel="tag">' . $value_name . '</a>';
@@ -252,6 +280,17 @@ class Query extends Singleton {
 		}
 
 		return $product_attributes;
+	}
+
+	public function add_variations_to_related_products( $query, $product_id ) {
+		if ( woodmart_get_opt( 'show_single_variation' ) ) {
+			$find    = "AND p.post_type = 'product'";
+			$replace = "AND ( p.post_type = 'product' OR p.post_type = 'product_variation' )";
+
+			$query['where'] = str_replace( $find, $replace, $query['where'] );
+		}
+
+		return $query;
 	}
 }
 

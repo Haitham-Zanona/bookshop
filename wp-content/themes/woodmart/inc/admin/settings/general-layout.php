@@ -3,7 +3,7 @@ if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -132,7 +132,7 @@ Options::add_field(
 		'id'          => 'hide_main_sidebar_mobile',
 		'section'     => 'general_layout_section',
 		'name'        => esc_html__( 'Off canvas sidebar for mobile', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'off-canvas-sidebar-for-mobile.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'off-canvas-sidebar-for-mobile.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'You can hide the sidebar on mobile devices and show it nicely with a button click.', 'woodmart' ),
 		'group'       => esc_html__( 'Sidebar', 'woodmart' ),
 		'type'        => 'switcher',

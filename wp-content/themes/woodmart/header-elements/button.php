@@ -25,4 +25,24 @@ if ( ! empty( $params['button_inline'] ) ) {
 	$params['button_inline'] = 'yes';
 }
 
-echo woodmart_shortcode_button($params);
+if ( ! empty( $params['image'] ) ) {
+	$params['icon_type'] = 'image';
+}
+
+if ( isset( $id ) ) {
+	$params['wrapper_class'] = 'whb-' . $id;
+}
+
+if ( $params['bg_color'] || $params['bg_color_hover'] ) {
+	$params['btn_classes']  = ' btn-scheme-' . $params['color_scheme'];
+	$params['btn_classes'] .= ' btn-scheme-hover-' . $params['color_scheme_hover'];
+
+	$params['bg_color']       = '';
+	$params['bg_color_hover'] = '';
+} else {
+	$params['btn_classes'] = ' btn-color-' . $params['color'];
+}
+
+$params['is_header_button'] = true;
+
+echo woodmart_shortcode_button( $params );

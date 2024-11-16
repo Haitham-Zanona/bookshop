@@ -9,6 +9,8 @@ if ( ! defined( 'WOOCS_VERSION' ) ) {
 	return;
 }
 
+add_filter( 'woodmart_do_not_recalulate_total_on_get_refreshed_fragments', '__return_true' );
+
 if ( ! function_exists( 'woodmart_woocs_convert_product_bundle_in_cart' ) ) {
 	/**
 	 * Back convector bundle product price.
@@ -24,6 +26,7 @@ if ( ! function_exists( 'woodmart_woocs_convert_product_bundle_in_cart' ) ) {
 	}
 
 	add_filter( 'woodmart_fbt_set_product_cart_price', 'woodmart_woocs_convert_product_bundle_in_cart', 10, 2 );
+	add_filter( 'woodmart_pricing_before_calculate_discounts', 'woodmart_woocs_convert_product_bundle_in_cart', 10, 2 );
 }
 
 if ( ! function_exists( 'woodmart_woocs_shipping_progress_bar_amount' ) ) {
@@ -42,4 +45,23 @@ if ( ! function_exists( 'woodmart_woocs_shipping_progress_bar_amount' ) ) {
 	}
 
 	add_filter( 'woodmart_fbt_set_product_price_cart', 'woodmart_woocs_shipping_progress_bar_amount' );
+	add_filter( 'woodmart_shipping_progress_bar_amount', 'woodmart_woocs_shipping_progress_bar_amount' );
+}
+
+if ( ! function_exists( 'woodmart_woocs_convert_price' ) ) {
+	/**
+	 * Convector bundle product price.
+	 *
+	 * @param float $price Product price.
+	 * @return mixed|string
+	 */
+	function woodmart_woocs_convert_price( $price ) {
+		global $WOOCS; // phpcs:ignore.
+
+		return $WOOCS->woocs_convert_price( $price ); // phpcs:ignore.
+	}
+
+	// Discount product price table.
+	add_filter( 'woodmart_pricing_amount_discounts_value', 'woodmart_woocs_convert_price', 10, 1 );
+	add_filter( 'woodmart_product_pricing_amount_discounts_value', 'woodmart_woocs_convert_price', 10, 1 );
 }

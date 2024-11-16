@@ -5,6 +5,7 @@
 
 namespace XTS\Elementor;
 
+use Elementor\Control_Media;
 use Elementor\Group_Control_Image_Size;
 use Elementor\Repeater;
 use Elementor\Utils;
@@ -92,13 +93,69 @@ class Image_Hotspot extends Widget_Base {
 		);
 
 		$this->add_control(
+			'source_type',
+			array(
+				'label'   => esc_html__( 'Source', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'image' => esc_html__( 'Image', 'woodmart' ),
+					'video' => esc_html__( 'Video', 'woodmart' ),
+				),
+				'default' => 'image',
+			)
+		);
+
+		$this->add_control(
+			'video',
+			array(
+				'label'      => esc_html__( 'Choose video', 'woodmart' ),
+				'type'       => Controls_Manager::MEDIA,
+				'media_type' => 'video',
+				'condition'  => array(
+					'source_type' => 'video',
+				),
+			)
+		);
+
+		$this->add_control(
+			'video_poster',
+			[
+				'label'     => esc_html__( 'Fallback image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'condition' => array(
+					'source_type' => 'video',
+				),
+			]
+		);
+
+		$this->add_group_control(
+			Group_Control_Image_Size::get_type(),
+			[
+				'name'      => 'video_poster',
+				'fields_options' => array(
+					'size'             => array(
+						'label' => esc_html__( 'Fallback image size', 'woodmart' ),
+					),
+				),
+				'default'   => 'full',
+				'separator' => 'none',
+				'condition' => array(
+					'source_type' => 'video',
+				),
+			]
+		);
+
+		$this->add_control(
 			'image',
 			[
-				'label'   => esc_html__( 'Choose image', 'woodmart' ),
-				'type'    => Controls_Manager::MEDIA,
-				'default' => [
+				'label'     => esc_html__( 'Choose image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'default'   => [
 					'url' => Utils::get_placeholder_image_src(),
 				],
+				'condition' => array(
+					'source_type' => 'image',
+				),
 			]
 		);
 
@@ -108,6 +165,9 @@ class Image_Hotspot extends Widget_Base {
 				'name'      => 'image',
 				'default'   => 'large',
 				'separator' => 'none',
+				'condition' => array(
+					'source_type' => 'image',
+				),
 			]
 		);
 
@@ -340,9 +400,9 @@ class Image_Hotspot extends Widget_Base {
 		 * General settings.
 		 */
 		$this->start_controls_section(
-			'general_style_section',
+			'icon_style_section',
 			[
-				'label' => esc_html__( 'General', 'woodmart' ),
+				'label' => esc_html__( 'Icon', 'woodmart' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
@@ -350,7 +410,7 @@ class Image_Hotspot extends Widget_Base {
 		$this->add_control(
 			'icon',
 			[
-				'label'   => esc_html__( 'Hotspot icon', 'woodmart' ),
+				'label'   => esc_html__( 'Icon style', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => [
 					'default' => esc_html__( 'Default', 'woodmart' ),
@@ -358,6 +418,19 @@ class Image_Hotspot extends Widget_Base {
 				],
 				'default' => 'default',
 			]
+		);
+
+		$this->add_control(
+			'icon_position',
+			array(
+				'label'   => esc_html__( 'Icon position', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'static' => esc_html__( 'Static', 'woodmart' ),
+					'hover'  => esc_html__( 'On hover', 'woodmart' ),
+				),
+				'default' => 'static',
+			)
 		);
 
 		$this->add_control(
@@ -371,6 +444,38 @@ class Image_Hotspot extends Widget_Base {
 					'click' => esc_html__( 'Click', 'woodmart' ),
 				],
 				'default'     => 'hover',
+			]
+		);
+
+		$this->add_control(
+			'primary_color',
+			array(
+				'label'     => esc_html__( 'Primary color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-image-hotspot' => '--hotspot-primary: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->add_control(
+			'secondary_color',
+			array(
+				'label'     => esc_html__( 'Secondary color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-image-hotspot' => '--hotspot-secondary: {{VALUE}};',
+				),
+			)
+		);
+
+		$this->end_controls_section();
+
+		$this->start_controls_section(
+			'content_style_section',
+			[
+				'label' => esc_html__( 'Content', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
 
@@ -402,15 +507,19 @@ class Image_Hotspot extends Widget_Base {
 	 */
 	protected function render() {
 		$default_settings = [
+			'source_type'           => 'image',
+			'video'                 => array( 'id' => '' ),
+			'video_poster'          => array( 'id' => '' ),
 			'image'                 => '',
 			'action'                => 'hover',
 			'icon'                  => 'default',
+			'icon_position'         => 'static',
 			'woodmart_color_scheme' => 'dark',
 			'items'                 => [],
 		];
 
-		$settings     = wp_parse_args( $this->get_settings_for_display(), $default_settings );
-		$image_output = '';
+		$settings      = wp_parse_args( $this->get_settings_for_display(), $default_settings );
+		$source_output = '';
 
 		$this->add_render_attribute(
 			[
@@ -420,16 +529,22 @@ class Image_Hotspot extends Widget_Base {
 						'hotspot-action-' . $settings['action'],
 						'hotspot-icon-' . $settings['icon'],
 						'color-scheme-' . $settings['woodmart_color_scheme'],
+						'wd-hotspot-' . $settings['icon_position'],
 					],
 				],
 			]
 		);
 
-		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-			$image_url = woodmart_get_image_url( $settings['image']['id'], 'image', $settings );
-			$image_output = '<img class="wd-image-hotspot-img" src="' . esc_url( $image_url ) . '">';
-		} elseif ( isset( $settings['image']['url'] ) ) {
-			$image_output = '<img class="wd-image-hotspot-img" src="' . esc_url( $settings['image']['url'] ) . '">';
+		if ( 'image' === $settings['source_type'] ) {
+			$source_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'], array( 'class' => 'wd-image-hotspot-img' ) );
+		} elseif ( 'video' === $settings['source_type'] ) {
+			$video_attr = '';
+
+			if ( ! empty( $settings['video_poster']['id'] ) ) {
+				$video_attr .= ' poster="' . woodmart_otf_get_image_url( $settings['video_poster']['id'], $settings['video_poster_size'], $settings['video_poster_custom_dimension'] ) . '"';
+			}
+
+			$source_output = '<video src="' . wp_get_attachment_url( $settings['video']['id'] ) . '" class="wd-image-hotspot-img" autoplay muted loop playsinline' . $video_attr . '"></video>';
 		}
 
 		wp_enqueue_script( 'imagesloaded' );
@@ -441,10 +556,10 @@ class Image_Hotspot extends Widget_Base {
 		?>
 		<div <?php echo $this->get_render_attribute_string( 'wrapper' ); ?>>
 			<div class="wd-image-hotspot-hotspots">
-				<?php if ( $image_output ) : ?>
-					<?php echo $image_output; // phpcs:ignore ?>
+				<?php if ( $source_output ) : ?>
+					<?php echo $source_output; // phpcs:ignore ?>
 				<?php endif; ?>
-				
+
 				<?php foreach ( $settings['items'] as $index => $item ) : ?>
 					<?php
 					$default_settings = [
@@ -463,7 +578,7 @@ class Image_Hotspot extends Widget_Base {
 					$args       = [];
 
 					if ( 'product' === $settings['hotspot_type'] && $settings['product_id'] && woodmart_woocommerce_installed() ) {
-						$product = wc_get_product( $settings['product_id'] );
+						$product = wc_get_product( apply_filters( 'wpml_object_id', $settings['product_id'], 'product', true ) );
 
 						if ( ! $product ) {
 							continue;
@@ -496,7 +611,7 @@ class Image_Hotspot extends Widget_Base {
 						$image_output = '';
 
 						if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
-							$image_output = woodmart_get_image_html( $settings, 'image' );
+							$image_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] );
 						}
 					}
 

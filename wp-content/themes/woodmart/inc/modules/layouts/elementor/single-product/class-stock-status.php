@@ -10,6 +10,7 @@ namespace XTS\Modules\Layouts;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Plugin;
+use XTS\Modules\Waitlist\Frontend as Waitlist_Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -106,15 +107,15 @@ class Stock_Status extends Widget_Base {
 	 */
 	protected function render() {
 		Main::setup_preview();
-			global $product;
+		global $product;
 
-			woodmart_enqueue_js_script( 'stock-status' );
+		woodmart_enqueue_js_script( 'stock-status' );
 
+		if ( $product->is_type( 'variable' ) ) {
 			echo ' '; // So that the wrapper of the element is always displayed, regardless of the type of this project.
-
-			if ( ! $product->is_type( 'variable' ) ) {
-				echo wc_get_stock_html( $product );
-			}
+		} else {
+			echo wc_get_stock_html( $product ); // phpcs:ignore.
+		}
 		Main::restore_preview();
 	}
 }

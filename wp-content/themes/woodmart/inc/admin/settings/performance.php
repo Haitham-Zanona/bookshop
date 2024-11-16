@@ -3,7 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
@@ -14,6 +14,18 @@ Options::add_field(
 		'section'     => 'performance_other',
 		'default'     => false,
 		'priority'    => 10,
+	)
+);
+
+Options::add_field(
+	array(
+		'id'          => 'load_text_domain',
+		'name'        => esc_html__( 'Load text domain', 'woodmart' ),
+		'description' => esc_html__( 'Enable it to load translations from all possible locations. Usually needs to be disabled so the translation will be loaded from the system folder only wp-content/languages/themes and the performance will be better.', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'performance_other',
+		'default'     => true,
+		'priority'    => 20,
 	)
 );
 
@@ -91,49 +103,12 @@ Options::add_field(
 /**
  * JS
  */
-
-Options::add_field(
-	array(
-		'id'                 => 'combined_js',
-		'name'               => esc_html__( 'Combine JS files', 'woodmart' ),
-		'description'        => esc_html__( 'Load one JS file that contains all theme scripts and library initializations.', 'woodmart' ),
-		'group'              => esc_html__( 'General', 'woodmart' ),
-		'type'               => 'switcher',
-		'section'            => 'performance_js',
-		'status'             => 'deprecated',
-		'status_description' => esc_html__( 'Should be always DISABLED. Combining all theme files will lead to a larger page size. You need to use an additional plugin to combine all JS files that are loaded on your pages. For example WP Rocket.', 'woodmart' ),
-		'default'            => false,
-		'on-text'            => esc_html__( 'Yes', 'woodmart' ),
-		'off-text'           => esc_html__( 'No', 'woodmart' ),
-		'priority'           => 10,
-		'class'              => 'xts-col-6',
-	)
-);
-
-Options::add_field(
-	array(
-		'id'                 => 'minified_js',
-		'name'               => esc_html__( 'Include minified JS', 'woodmart' ),
-		'description'        => esc_html__( 'Minified versions of JS files will be loaded. Works well with all caching and optimizations plugins.', 'woodmart' ),
-		'group'              => esc_html__( 'General', 'woodmart' ),
-		'type'               => 'switcher',
-		'section'            => 'performance_js',
-		'status'             => 'deprecated',
-		'status_description' => esc_html__( 'Should be always ENABLED. This option will be removed soon and you will be able to load unminified JS files only when you enable Debug mode in WordPress.', 'woodmart' ),
-		'default'            => '1',
-		'on-text'            => esc_html__( 'Yes', 'woodmart' ),
-		'off-text'           => esc_html__( 'No', 'woodmart' ),
-		'priority'           => 20,
-		'class'              => 'xts-col-6',
-	)
-);
-
 Options::add_field(
 	array(
 		'id'          => 'disable_owl_mobile_devices',
-		'name'        => esc_html__( 'Disable OWL Carousel script on mobile devices', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-owl-carousel.gif" alt="">', 'woodmart' ), true ),
-		'description' => esc_html__( 'Using native browser\'s scrolling feature on mobile devices may improve your page loading and performance on some devices. Desktop will be handled with OWL Carousel JS library.', 'woodmart' ),
+		'name'        => esc_html__( 'Disable Swiper slider script on mobile devices', 'woodmart' ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'disable-owl-carousel.mp4" autoplay loop muted></video>',
+		'description' => esc_html__( 'Using native browser scrolling feature on mobile devices may improve your page loading and performance on some devices. This option does not apply to the main product carousel and Woodmart slider.', 'woodmart' ),
 		'group'       => esc_html__( 'General', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'performance_js',
@@ -205,7 +180,7 @@ foreach ( $config_libraries as $key => $libraries ) {
 			array(
 				'id'       => $library['name'] . '_library',
 				'section'  => 'performance_js',
-				'name'     => ucfirst( $library['title'] ) . ' library',
+				'name'     => ucfirst( $library['title'] ) . ' ' . esc_html__( 'library', 'woodmart' ),
 				'group'    => esc_html__( 'Advanced', 'woodmart' ),
 				'type'     => 'buttons',
 				'options'  => array(
@@ -314,7 +289,7 @@ Options::add_field(
 	array(
 		'id'          => 'lazy_loading',
 		'name'        => esc_html__( 'Lazy loading for images', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-for-images.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-for-images.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable this option to optimize your images loading on the website. They will be loaded only when user will scroll the page.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'performance_lazy_loading',
@@ -350,12 +325,12 @@ Options::add_field(
 		'options'     => array(
 			'fade' => array(
 				'name'  => esc_html__( 'Fade', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-appearance-effect-fade.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-appearance-effect-fade.mp4" autoplay loop muted></video>',
 				'value' => 'fade',
 			),
 			'blur' => array(
 				'name'  => esc_html__( 'Blur', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-appearance-effect-blur.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'lazy-loading-appearance-effect-blur.mp4" autoplay loop muted></video>',
 				'value' => 'blur',
 			),
 			'none' => array(
@@ -420,6 +395,20 @@ Options::add_field(
 	)
 );
 
+Options::add_field(
+	array(
+		'id'          => 'disable_wordpress_lazy_loading',
+		'name'        => esc_html__( 'Disable native WordPress lazy loading', 'woodmart' ),
+		'description' => esc_html__( 'This option will remove attribute loading=“lazy” from all images on your website.', 'woodmart' ),
+		'type'        => 'switcher',
+		'section'     => 'performance_lazy_loading',
+		'default'     => false,
+		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
+		'off-text'    => esc_html__( 'No', 'woodmart' ),
+		'priority'    => 80,
+	)
+);
+
 /**
  * Plugins
  */
@@ -448,21 +437,6 @@ Options::add_field(
 		'on-text'     => esc_html__( 'Yes', 'woodmart' ),
 		'off-text'    => esc_html__( 'No', 'woodmart' ),
 		'priority'    => 11,
-	)
-);
-
-Options::add_field(
-	array(
-		'id'                 => 'load_elementor_optimized_css',
-		'type'               => 'switcher',
-		'section'            => 'plugins_section',
-		'name'               => esc_html__( 'Load Elementor optimized CSS', 'woodmart' ),
-		'description'        => esc_html__( 'Load only theme-required styles for Elementor. Don\'t use it if you are using most of the standard Elementor\'s widgets.', 'woodmart' ),
-		'group'              => esc_html__( 'Elementor', 'woodmart' ),
-		'default'            => '0',
-		'priority'           => 20,
-		'status'             => 'deprecated',
-		'status_description' => esc_html__( 'Should be always DISABLED. You can now use Elementor’s plugin optimization settings instead.', 'woodmart' ),
 	)
 );
 
@@ -628,7 +602,7 @@ Options::add_field(
 		'id'          => 'icons_font_display',
 		'name'        => esc_html__( '"font-display" for icon fonts', 'woodmart' ),
 		'description' => wp_kses(
-			__( 'You can specify "font-display" property for fonts used for icons in our theme including Font Awesome. Read more information <a href="https://developers.google.com/web/updates/2016/02/font-display">here</a>', 'woodmart' ),
+			__( 'You can specify "font-display" property for icon fonts used in our theme. Read more information <a href="https://developers.google.com/web/updates/2016/02/font-display">here</a>', 'woodmart' ),
 			true
 		),
 		'type'        => 'select',
@@ -675,6 +649,8 @@ Options::add_field(
 		),
 		'default'     => 'not_use',
 		'priority'    => 30,
+		'status'      => 'deprecated',
+		'status_description' => esc_html__( 'Since from Elementor version 3.18.0 "Inline Font Icons" feature is enabled by default, the Font Awesome icon font can’t be added to site pages using this option.', 'woodmart' ),
 	)
 );
 
@@ -699,7 +675,7 @@ Options::add_field(
 	array(
 		'id'          => 'preloader',
 		'name'        => esc_html__( 'Preloader', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'preloader.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'preloader.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable preloader animation while loading your website content. Useful when you move all the CSS to the footer.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'preloader_section',

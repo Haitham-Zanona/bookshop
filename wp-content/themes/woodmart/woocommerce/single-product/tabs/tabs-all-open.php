@@ -39,21 +39,23 @@ woodmart_enqueue_inline_style( 'woo-single-prod-el-tabs-opt-layout-all-open' );
 		$title_wrapper_classes = ' tab-title-' . $key;
 
 		// Builder classes.
-		if ( 'woocommerce_product_additional_information_tab' === $product_tab['callback'] ) {
+		if ( isset( $product_tab['callback'] ) && 'woocommerce_product_additional_information_tab' === $product_tab['callback'] ) {
 			$content_classes .= ' wd-single-attrs';
 			$content_classes .= $args['builder_additional_info_classes'];
 		}
 
-		if ( 'comments_template' === $product_tab['callback'] ) {
+		if ( isset( $product_tab['callback'] ) && 'comments_template' === $product_tab['callback'] ) {
 			$content_classes .= ' wd-single-reviews';
 			$content_classes .= $args['builder_reviews_classes'];
 		}
 		?>
 		<div class="wd-tab-wrapper<?php echo esc_attr( $item_wrapper_classes ); ?>">
 			<div class="wd-all-open-title title<?php echo esc_attr( $title_wrapper_classes ); ?>">
-				<span>
-					<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
-				</span>
+				<?php if ( isset( $product_tab['title'] ) ) : ?>
+					<span>
+						<?php echo wp_kses_post( apply_filters( 'woocommerce_product_' . $key . '_tab_title', $product_tab['title'], $key ) ); ?>
+					</span>
+				<?php endif; ?>
 			</div>
 
 			<div class="woocommerce-Tabs-panel panel entry-content wc-tab<?php echo esc_attr( $content_classes ); ?>" id="tab-<?php echo esc_attr( $key ); ?>" role="tabpanel" aria-labelledby="tab-title-<?php echo esc_attr( $key ); ?>" data-accordion-index="<?php echo esc_attr( $key ); ?>">

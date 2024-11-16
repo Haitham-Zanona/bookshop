@@ -9,14 +9,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
 		'id'          => 'wishlist',
 		'type'        => 'switcher',
 		'name'        => esc_html__( 'Enable wishlist', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-wishlist.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-wishlist.jpg" alt="">', true ),
 		'description' => wp_kses( __( 'Enable wishlist functionality built in with the theme. Read more information in our <a href="https://xtemos.com/docs/woodmart/woodmart-wishlist/">documentation</a>.', 'woodmart' ), true ),
 		'section'     => 'wishlist_section',
 		'default'     => '1',
@@ -59,7 +59,7 @@ Options::add_field(
 		'id'          => 'wishlist_bulk_action',
 		'type'        => 'switcher',
 		'name'        => esc_html__( 'Bulk actions', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'bulk-action-move-or-remove-to-wishlist.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'bulk-action-move-or-remove-to-wishlist.mp4" autoplay loop muted></video>',
 		'description' => esc_html__( 'Enable the ability to bulk move or remove products in the wishlist.', 'woodmart' ),
 		'section'     => 'wishlist_section',
 		'default'     => '1',
@@ -72,11 +72,11 @@ Options::add_field(
 		'id'          => 'wishlist_empty_text',
 		'type'        => 'textarea',
 		'name'        => esc_html__( 'Empty wishlist text', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-wishlist-text.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'empty-wishlist-text.jpg" alt="">', true ),
 		'description' => esc_html__( 'Text will be displayed if user don\'t add any products to wishlist.', 'woodmart' ),
 		'section'     => 'wishlist_section',
 		'wysiwyg'     => false,
-		'default'     => 'You don\'t have any products in the wishlist yet. <br> You will find a lot of interesting products on our "Shop" page.',
+		'default'     => 'You don\'t have any products in the wishlist yet. You will find a lot of interesting products on our "Shop" page.',
 		'priority'    => 50,
 	)
 );
@@ -86,7 +86,7 @@ Options::add_field(
 		'id'          => 'wishlist_expanded',
 		'type'        => 'switcher',
 		'name'        => esc_html__( 'Enable multiple wishlists', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'multiple-wishlists.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'multiple-wishlists.mp4" autoplay loop muted></video>',
 		'group'       => esc_html__( 'Multiple wishlists', 'woodmart' ),
 		'description' => esc_html__( 'Allows customers to organize favorite products into multiple wishlists based on their interest', 'woodmart' ),
 		'section'     => 'wishlist_section',
@@ -101,7 +101,7 @@ Options::add_field(
 	array(
 		'id'       => 'wishlist_show_popup',
 		'name'     => esc_html__( 'Show wishlists popup', 'woodmart' ),
-		'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'add-to-wishlist-popup.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'add-to-wishlist-popup.mp4" autoplay loop muted></video>',
 		'group'    => esc_html__( 'Multiple wishlists', 'woodmart' ),
 		'type'     => 'buttons',
 		'section'  => 'wishlist_section',
@@ -136,7 +136,7 @@ Options::add_field(
 		'id'          => 'product_loop_wishlist',
 		'type'        => 'switcher',
 		'name'        => esc_html__( 'Show button on products in loop', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-button-on-products-in-loop.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'show-button-on-products-in-loop.jpg" alt="">', true ),
 		'description' => esc_html__( 'Display wishlist product button on all products grids and lists.', 'woodmart' ),
 		'group'       => esc_html__( 'Buttons', 'woodmart' ),
 		'section'     => 'wishlist_section',

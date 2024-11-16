@@ -112,6 +112,35 @@ class Countdown extends Widget_Base {
 		);
 
 		$this->add_control(
+			'timer_style',
+			array(
+				'label'   => esc_html__( 'Style', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'standard'    => esc_html__( 'Standard', 'woodmart' ),
+					'transparent' => esc_html__( 'Transparent', 'woodmart' ),
+					'active'      => esc_html__( 'Primary color', 'woodmart' ),
+					'simple'      => esc_html__( 'Simple', 'woodmart' ),
+				),
+				'default' => 'standard',
+			)
+		);
+
+		$this->add_control(
+			'woodmart_color_scheme',
+			array(
+				'label'   => esc_html__( 'Color Scheme', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					''      => esc_html__( 'Inherit', 'woodmart' ),
+					'light' => esc_html__( 'Light', 'woodmart' ),
+					'dark'  => esc_html__( 'Dark', 'woodmart' ),
+				),
+				'default' => '',
+			)
+		);
+
+		$this->add_control(
 			'alignment',
 			array(
 				'label'        => esc_html__( 'Alignment', 'woodmart' ),

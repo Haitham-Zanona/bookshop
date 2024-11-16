@@ -29,15 +29,15 @@
 
 		var $productGallery = $('.woocommerce-product-gallery');
 		if ($productGallery.hasClass('thumbs-position-bottom') || $productGallery.hasClass('thumbs-position-left')) {
-			$mainGallery.on('changed.owl.carousel', function(e) {
-				var $wrapper = $mainGallery.find('.product-image-wrap').eq(e.item.index).find('.woocommerce-product-gallery__image');
+			document.querySelector('.woocommerce-product-gallery__wrapper:not(.quick-view-gallery)').addEventListener('wdSlideChange', function (e) {
+				var $wrapper = $mainGallery.find('.wd-carousel-item').eq(e.target.swiper.activeIndex).find('.woocommerce-product-gallery__image');
 
 				init($wrapper);
 			});
 
-			init($mainGallery.find('.product-image-wrap').eq(0).find('.woocommerce-product-gallery__image'));
+			init($mainGallery.find('.wd-carousel-item').eq(0).find('.woocommerce-product-gallery__image'));
 		} else {
-			$mainGallery.find('.product-image-wrap').each(function() {
+			$mainGallery.find('.wd-carousel-item').each(function() {
 				var $wrapper = $(this).find('.woocommerce-product-gallery__image');
 
 				init($wrapper);

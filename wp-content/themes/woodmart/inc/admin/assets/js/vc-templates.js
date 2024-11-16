@@ -50,7 +50,7 @@
 			$list.addClass('xts-loading element-adding');
 		});
 
-		var $vcTemplatesBtn = $('#vc_templates-editor-button, #vc_templates-more-layouts'),
+		var $vcTemplatesBtn = $('#vc_templates-editor-button, #vc_templates-more-layouts, #vc-templatera-editor-button'),
 		    templatesLoaded = false,
 		    templates;
 

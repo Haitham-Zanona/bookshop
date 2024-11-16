@@ -28,6 +28,7 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu' ) ) {
 		if ( $el_class ) {
 			$class .= ' ' . $el_class;
 		}
+		$class .= apply_filters( 'vc_shortcodes_css_class', '', '', $atts );
 		$class .= ' mega-menu-list wd-wpb';
 		$class .= woodmart_get_css_animation( $css_animation );
 		$class .= woodmart_get_old_classes( ' sub-menu' );
@@ -38,9 +39,8 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu' ) ) {
 
 		// Image settings.
 		$image_output = '';
-		if ( function_exists( 'wpb_getImageBySize' ) && $image ) {
-			$img = wpb_getImageBySize( array( 'attach_id' => $image, 'thumb_size' => $image_size, 'class' => 'wd-nav-img' ) );
-			$image_output = isset( $img['thumbnail'] ) ? $img['thumbnail'] : '';
+		if ( $image ) {
+			$image_output = woodmart_otf_get_image_html( $image, $image_size, array(), array( 'class' => 'wd-nav-img' ) );
 		}
 
 		ob_start();
@@ -56,7 +56,7 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu' ) ) {
 						<?php endif; ?>
 
 						<span class="nav-link-text">
-							<?php echo wp_kses( $title, woodmart_get_allowed_html() ); ?>
+							<?php echo wp_kses( vc_value_from_safe( $title ), woodmart_get_allowed_html() ); ?>
 						</span>
 						<?php echo woodmart_get_menu_label_tag( $label, $label_text ); ?>
 					</a>
@@ -77,7 +77,6 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu' ) ) {
 
 if( ! function_exists( 'woodmart_shortcode_extra_menu_list' ) ) {
 	function woodmart_shortcode_extra_menu_list($atts, $content) {
-		if( ! function_exists( 'wpb_getImageBySize' ) ) return;
 		$output = $class = $label_out = '';
 		extract(shortcode_atts( array(
 			'link' => '',
@@ -99,9 +98,8 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu_list' ) ) {
 
 		// Image settings.
 		$image_output = '';
-		if ( function_exists( 'wpb_getImageBySize' ) && $image ) {
-			$img = wpb_getImageBySize( array( 'attach_id' => $image, 'thumb_size' => $image_size, 'class' => 'wd-nav-img' ) );
-			$image_output = isset( $img['thumbnail'] ) ? $img['thumbnail'] : '';
+		if ( $image ) {
+			$image_output = woodmart_otf_get_image_html( $image, $image_size, array(), array( 'class' => 'wd-nav-img' ) );
 		}
 
 		ob_start();
@@ -113,7 +111,7 @@ if( ! function_exists( 'woodmart_shortcode_extra_menu_list' ) ) {
 					<?php echo $image_output; ?>
 				<?php endif; ?>
 
-				<?php echo wp_kses( $title, woodmart_get_allowed_html() ); ?>
+				<?php echo wp_kses( vc_value_from_safe( $title ), woodmart_get_allowed_html() ); ?>
 				<?php echo woodmart_get_menu_label_tag( $label, $label_text ); ?>
 			</a>
 		</li>

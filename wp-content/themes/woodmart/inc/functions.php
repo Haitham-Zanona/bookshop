@@ -1,39 +1,98 @@
-<?php use Elementor\Plugin;
+<?php
+use Elementor\Plugin;
+use XTS\Registry;
 
-if ( !function_exists('woodmart_get_whb_headers_array' ) ) {
-	function woodmart_get_whb_headers_array( $get_from_options = false, $new = false ) {
-		if ( $get_from_options ) {
-			$list = get_option( 'whb_saved_headers' );
-		} else {
-			$headers_list = whb_get_builder()->list;
-			$list = $headers_list->get_all();
+if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
+	exit( 'No direct script access allowed' );
+};
+
+if ( ! function_exists( 'woodmart_get_opt' ) ) {
+	function woodmart_get_opt( $slug = '', $default = false ) {
+		global $woodmart_options, $xts_woodmart_options;
+
+		$opt = $default;
+
+		if ( isset( $xts_woodmart_options[ $slug ] ) ) {
+			$opt = $xts_woodmart_options[ $slug ];
+
+			return apply_filters( 'woodmart_option', $opt, $slug );
 		}
 
-		$headers = array();
+		if ( isset( $woodmart_options[ $slug ] ) ) {
+			$opt = $woodmart_options[ $slug ];
 
-		if ( $new ) {
-			$headers['none'] = array(
-				'name'  => 'none',
-				'value' => 'none',
-			);
-		} else {
-			$headers['none'] = 'none';
+			return apply_filters( 'woodmart_option', $opt, $slug );
 		}
 
-		if( ! empty( $list ) && is_array( $list ) ) {
-			foreach ($list as $key => $header) {
-				if ( $new ) {
-					$headers[$key] = array(
-						'name'  => $header['name'],
-						'value' => $key,
-					);
-				} else {
-					$headers[$key] = $header['name'];
+		return apply_filters( 'woodmart_option', $opt, $slug );
+	}
+}
+
+if ( ! function_exists( 'woodmart_is_opt_changed' ) ) {
+	function woodmart_is_opt_changed( $slug ) {
+		global $xts_woodmart_options;
+
+		$global_options = get_option( 'xts-woodmart-options' );
+		$current        = isset( $xts_woodmart_options[ $slug ] ) ? $xts_woodmart_options[ $slug ] : false;
+		$global         = isset( $global_options[ $slug ] ) ? $global_options[ $slug ] : false;
+
+		if ( is_array( $current ) && is_array( $global ) ) {
+			foreach ( $current as $key => $data ) {
+				if ( ! isset( $global[ $key ] ) || $data != $global[ $key ] ) {
+					return true;
 				}
 			}
+		} else {
+			return (string) $current != (string) $global;
 		}
+	}
+}
 
-		return $headers;
+if ( ! function_exists( 'woodmart_page_ID' ) ) {
+	function woodmart_page_ID() {
+		return Registry::getInstance()->layout->get_page_id();
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_content_class' ) ) {
+	function woodmart_get_content_class() {
+		return Registry::getInstance()->layout->get_content_class();
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_sidebar_class' ) ) {
+	function woodmart_get_sidebar_class() {
+		return Registry::getInstance()->layout->get_sidebar_class();
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_page_layout' ) ) {
+	function woodmart_get_page_layout() {
+		return Registry::getInstance()->layout->get_page_layout();
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_main_container_class' ) ) {
+	function woodmart_get_main_container_class() {
+		return Registry::getInstance()->layout->get_main_container_class();
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_carousel_breakpoints' ) ) {
+	/**
+	 * Added global breakpoints for carousel config.
+	 *
+	 * @return array
+	 */
+	function woodmart_get_carousel_breakpoints() {
+		return apply_filters(
+			'woodmart_get_carousel_breakpoints',
+			array(
+				'1025'   => 'lg',
+				'768.98' => 'md',
+				'0'      => 'sm',
+			)
+		);
 	}
 }
 
@@ -52,33 +111,10 @@ if ( ! function_exists( 'woodmart_pjax_with_pagination_fix' ) ) {
 	add_filter( 'paginate_links', 'woodmart_pjax_with_pagination_fix' );
 }
 
-if ( ! defined('WOODMART_THEME_DIR')) exit('No direct script access allowed');
-
-if ( ! function_exists( 'woodmart_is_data_encode' ) ) {
+if ( ! function_exists( 'woodmart_is_css_encode' ) ) {
 	function woodmart_is_css_encode( $data ) {
 		return strlen( $data ) > 50;
 	}
-}
-
-if ( ! function_exists( 'woodmart_set_default_header' ) ) {
-	/**
-	 * Setup default header from theme settings
-	 *
-	 * @since 1.0.0
-	 */
-	function woodmart_set_default_header() {
-		if ( ! isset( $_GET['settings-updated'] ) || isset( $_GET['preset'] ) ) { // phpcs:ignore
-			return;
-		}
-
-		$theme_settings_header_id = woodmart_get_opt( 'default_header' );
-
-		if ( $theme_settings_header_id ) {
-			update_option( 'whb_main_header', $theme_settings_header_id );
-		}
-	}
-
-	add_filter( 'init', 'woodmart_set_default_header', 1000 );
 }
 
 if( ! function_exists( 'woodmart_enqueue_gallery_script' ) ) {
@@ -114,7 +150,7 @@ if( ! function_exists( 'woodmart_get_blog_shortcode_ajax' ) ) {
 				$data = woodmart_shortcode_blog( $atts );
 			}
 
-			echo json_encode( $data );
+			wp_send_json( $data );
 
 			die();
 		}
@@ -136,7 +172,7 @@ if( ! function_exists( 'woodmart_get_portfolio_shortcode_ajax' ) ) {
 				$data = woodmart_shortcode_portfolio( $atts );
 			}
 
-			echo json_encode( $data );
+			wp_send_json( $data );
 
 			die();
 		}
@@ -206,6 +242,7 @@ if( ! function_exists( 'woodmart_get_link_attributes' ) ) {
 			if ( $popup ) $a_href = $link['url'];
 			$a_title = $link['title'];
 			$a_target = $link['target'];
+			$a_rel    = $link['rel'];
 		}
 
 		$attributes = array();
@@ -215,6 +252,9 @@ if( ! function_exists( 'woodmart_get_link_attributes' ) ) {
 			$attributes[] = 'title="' . esc_attr( trim( $a_title ) ) . '"';
 			if ( ! empty( $a_target ) ) {
 				$attributes[] = 'target="' . esc_attr( trim( $a_target ) ) . '"';
+			}
+			if ( ! empty( $a_rel ) ) {
+				$attributes[] = 'rel="' . esc_attr( trim( $a_rel ) ) . '"';
 			}
 		}
 
@@ -267,12 +307,14 @@ if ( ! function_exists( 'woodmart_get_taxonomies_by_query_autocomplete' ) ) {
 	 * @since 1.0.0
 	 */
 	function woodmart_get_taxonomies_by_query_autocomplete() {
+		check_ajax_referer( 'woodmart_get_taxonomies_by_query_autocomplete_nonce', 'security' );
+
 		$output = array();
 
 		$args = array(
 			'number'     => 5,
 			'taxonomy'   => $_POST['value'], // phpcs:ignore
-			'search'     => $_POST['params']['term'], // phpcs:ignore
+			'search'     => isset( $_POST['params']['term'] ) ? $_POST['params']['term'] : '', // phpcs:ignore.
 			'hide_empty' => false,
 		);
 
@@ -338,6 +380,8 @@ if ( ! function_exists( 'woodmart_get_post_by_query_autocomplete' ) ) {
 	 * @since 1.0.0
 	 */
 	function woodmart_get_post_by_query_autocomplete() {
+		check_ajax_referer( 'woodmart_get_post_by_query_autocomplete_nonce', 'security' );
+
 		$output = array();
 
 		$args = array(
@@ -367,44 +411,18 @@ if ( ! function_exists( 'woodmart_get_post_by_query_autocomplete' ) ) {
 	add_action( 'wp_ajax_nopriv_woodmart_get_post_by_query_autocomplete', 'woodmart_get_post_by_query_autocomplete' );
 }
 
-// **********************************************************************//
-// ! Body classes
-// **********************************************************************//
-
-if ( ! function_exists( 'xts_get_default_value' ) ) {
-	/**
-	 * Get default theme settings value
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $key Value key.
-	 *
-	 * @return string
-	 */
-	function xts_get_default_value( $key ) {
-		// $default_values = xts_get_config( 'framework-defaults' );
-		// $theme_values   = xts_get_config( 'theme-defaults' );
-
-		// if ( $theme_values ) {
-		// 	$default_values = wp_parse_args( $theme_values, $default_values );
-		// }
-
-		return '';
-		return isset( $default_values[ $key ] ) ? $default_values[ $key ] : '';
-	}
-}
-
 if ( ! function_exists( 'woodmart_product_attributes_array' ) ) {
 	function woodmart_product_attributes_array() {
 
 		if ( ! function_exists( 'wc_get_attribute_taxonomies' ) ) {
-			return;
+			return array();
 		}
 		$attributes = array();
 
 		foreach ( wc_get_attribute_taxonomies() as $attribute ) {
 			$attributes[ 'pa_' . $attribute->attribute_name ] = array(
-				'name' => $attribute->attribute_label, 'value' => 'pa_' . $attribute->attribute_name,
+				'name'  => $attribute->attribute_label,
+				'value' => 'pa_' . $attribute->attribute_name,
 			);
 		}
 
@@ -563,29 +581,6 @@ if( ! function_exists( 'woodmart_body_class' ) ) {
 	add_filter('body_class', 'woodmart_body_class');
 }
 
-
-
-/**
- * ------------------------------------------------------------------------------------------------
- * Get header body classes
- * ------------------------------------------------------------------------------------------------
- */
-
-if ( ! function_exists( 'woodmart_get_header_body_classes' ) ) {
-	function woodmart_get_header_body_classes() {
-		$classes = array();
-		$settings = whb_get_settings();
-		if ( isset( $settings['overlap'] ) && $settings['overlap'] ) {
-			$classes[] = 'wd-header-overlap';
-			$classes[] = woodmart_get_old_classes( 'woodmart-header-overcontent' );
-		}
-		if ( 'light' === whb_get_dropdowns_color() ) {
-			$classes[] = 'dropdowns-color-light';
-		}
-		return $classes;
-	}
-}
-
 /**
  * ------------------------------------------------------------------------------------------------
  * Filter wp_title
@@ -613,8 +608,8 @@ if( ! function_exists( 'woodmart_wp_title' ) ) {
 
 		return $title;
 	}
-	add_filter( 'wp_title', 'woodmart_wp_title', 10, 2 );
 
+	add_filter( 'wp_title', 'woodmart_wp_title', 10, 2 );
 }
 
 /**
@@ -744,39 +739,6 @@ if( ! function_exists( 'woodmart_get_footer_config' ) ) {
 	}
 }
 
-
-// **********************************************************************//
-// ! Theme 3d plugins
-// **********************************************************************//
-
-
-if(!defined('YITH_REFER_ID')) {
-	define('YITH_REFER_ID', '1040314');
-}
-
-
-if( ! function_exists( 'woodmart_3d_plugins' )) {
-	function woodmart_3d_plugins() {
-		if( function_exists( 'set_revslider_as_theme' ) ){
-			set_revslider_as_theme();
-		}
-	}
-
-	add_action( 'init', 'woodmart_3d_plugins' );
-}
-
-if( ! function_exists( 'woodmart_vcSetAsTheme' ) ) {
-
-	function woodmart_vcSetAsTheme() {
-		if( function_exists( 'vc_set_as_theme' ) ){
-			vc_set_as_theme();
-		}
-	}
-
-	add_action( 'vc_before_init', 'woodmart_vcSetAsTheme' );
-}
-
-
 // **********************************************************************//
 // ! Obtain real page ID (shop page, blog, portfolio or simple page)
 // **********************************************************************//
@@ -839,7 +801,6 @@ if( ! function_exists( 'woodmart_get_html_block' ) ) {
 		}
 
 		if ( woodmart_is_elementor_installed() && Plugin::$instance->documents->get( $id )->is_built_with_elementor() ) {
-			$content .= woodmart_elementor_get_content_css( $id );
 			$content .= woodmart_elementor_get_content( $id );
 		} else {
 			$shortcodes_custom_css = get_post_meta( $id, '_wpb_shortcodes_custom_css', true );
@@ -857,7 +818,13 @@ if( ! function_exists( 'woodmart_get_html_block' ) ) {
 				$content .= '</style>';
 			}
 
-			$content .= do_shortcode( $post->post_content );
+			$post_content = $post->post_content;
+
+			if ( ! str_contains( $post_content, '[vc_row' ) && ! has_blocks( $post_content ) ) {
+				$post_content = wpautop( $post_content );
+			}
+
+			$content .= do_shortcode( $post_content );
 		}
 
 		return $content;
@@ -915,39 +882,6 @@ if ( ! function_exists( 'woodmart_get_html_blocks_array_with_empty' ) ) {
 	}
 }
 
-if ( ! function_exists( 'woodmart_get_theme_settings_headers_array' ) ) {
-	/**
-	 * Function to get array of HTML Blocks in theme settings array style.
-	 *
-	 * @return array
-	 */
-	function woodmart_get_theme_settings_headers_array() {
-		$list = get_option( 'whb_saved_headers' );
-
-		if ( ! $list ) {
-			$list = whb_get_builder()->list->get_all();
-		}
-
-		$headers = array();
-
-		$headers['none'] = array(
-			'name'  => esc_html__( 'None', 'woodmart' ),
-			'value' => 'none',
-		);
-
-		if ( ! empty( $list ) && is_array( $list ) ) {
-			foreach ( $list as $key => $header ) {
-				$headers[ $key ] = array(
-					'name'  => $header['name'],
-					'value' => $key,
-				);
-			}
-		}
-
-		return $headers;
-	}
-}
-
 if ( ! function_exists( 'woodmart_get_elementor_html_blocks_array' ) ) {
 	/**
 	 * Function to get array of HTML Blocks.
@@ -977,20 +911,20 @@ if ( ! function_exists( 'woodmart_get_elementor_html_blocks_array' ) ) {
 // ! Set excerpt length and more btn
 // **********************************************************************//
 
-add_filter( 'excerpt_length', 'woodmart_excerpt_length', 999 );
-
-if( ! function_exists( 'woodmart_excerpt_length' ) ) {
+if ( ! function_exists( 'woodmart_excerpt_length' ) ) {
 	function woodmart_excerpt_length( $length ) {
 		return 20;
 	}
+
+	add_filter( 'excerpt_length', 'woodmart_excerpt_length', 999 );
 }
 
-add_filter('excerpt_more', 'woodmart_new_excerpt_more');
-
-if( ! function_exists( 'woodmart_new_excerpt_more' ) ) {
+if ( ! function_exists( 'woodmart_new_excerpt_more' ) ) {
 	function woodmart_new_excerpt_more( $more ) {
 		return '';
 	}
+
+	add_filter('excerpt_more', 'woodmart_new_excerpt_more');
 }
 
 // **********************************************************************//
@@ -1001,12 +935,14 @@ add_action( 'woodmart_before_wp_footer', 'woodmart_scroll_top_btn' );
 
 if( ! function_exists( 'woodmart_scroll_top_btn' ) ) {
 	function woodmart_scroll_top_btn( $more ) {
-		if( !woodmart_get_opt( 'scroll_top_btn' ) ) return;
+		if ( ! woodmart_get_opt( 'scroll_top_btn' ) ) {
+			return;
+		}
 
 		woodmart_enqueue_js_script( 'scroll-top' );
 		woodmart_enqueue_inline_style( 'scroll-top' );
 		?>
-		<a href="#" class="scrollToTop" aria-label="<?php esc_html_e( 'Scroll to top button', 'woodmart' ); ?>"></a>
+		<a href="#" class="scrollToTop" aria-label="<?php esc_attr_e( 'Scroll to top button', 'woodmart' ); ?>"></a>
 		<?php
 	}
 }
@@ -1020,15 +956,19 @@ if( ! function_exists( 'woodmart_get_related_posts_args' ) ) {
 	function woodmart_get_related_posts_args( $post_id ) {
 		$taxs = wp_get_post_tags( $post_id );
 		$args = array();
+
 		if ( $taxs ) {
 			$tax_ids = array();
-			foreach( $taxs as $individual_tax ) $tax_ids[] = $individual_tax->term_id;
+
+			foreach ( $taxs as $individual_tax ) {
+				$tax_ids[] = $individual_tax->term_id;
+			}
 
 			$args = array(
-				'tag__in'               => $tax_ids,
-				'post__not_in'          => array( $post_id ),
-				'showposts'             => 12,
-				'ignore_sticky_posts'   => 1
+				'tag__in'             => $tax_ids,
+				'post__not_in'        => array( $post_id ),
+				'showposts'           => 12,
+				'ignore_sticky_posts' => 1,
 			);
 
 		}
@@ -1063,504 +1003,6 @@ if( ! function_exists( 'woodmart_get_related_projects_args' ) ) {
 }
 
 // **********************************************************************//
-// ! Navigation walker
-// **********************************************************************//
-
-if ( ! class_exists( 'WOODMART_Mega_Menu_Walker' ) ) {
-	class WOODMART_Mega_Menu_Walker extends Walker_Nav_Menu {
-		/**
-		 * Design.
-		 *
-		 * @var string
-		 */
-		private $color_scheme;
-
-		/**
-		 * Design.
-		 *
-		 * @var string
-		 */
-		private $design = 'default';
-
-		/**
-		 * ID.
-		 *
-		 * @var integer
-		 */
-		private $id;
-
-		/**
-		 * WOODMART_Mega_Menu_Walker constructor.
-		 */
-		public function __construct() {
-			$this->color_scheme = whb_get_dropdowns_color();
-		}
-
-		/**
-		 * Starts the list before the elements are added.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param string $output Passed by reference. Used to append additional content.
-		 * @param int    $depth  Depth of menu item. Used for padding.
-		 * @param mixed  $args   An array of arguments. @see wp_nav_menu().
-		 *
-		 * @see   Walker::start_lvl()
-		 */
-		public function start_lvl( &$output, $depth = 0, $args = array() ) {
-			$indent        = str_repeat( "\t", $depth );
-			$is_nav_mobile = strstr( $args->menu_class, 'wd-nav-mobile' );
-			$is_nav_fs     = strstr( $args->menu_class, 'wd-nav-fs' );
-			$classes       = '';
-			$style         = get_post_meta( $this->id, '_menu_item_style_' . $this->design, true );
-			$scroll = get_post_meta( $this->id, '_menu_item_scroll', true );
-
-			if ( 0 === $depth && ! $is_nav_mobile ) {
-				if ( 'default' !== $this->color_scheme ) {
-					$classes .= ' color-scheme-' . $this->color_scheme;
-				}
-
-				$classes .= ' wd-design-' . $this->design;
-
-				if ( ! $is_nav_fs ) {
-					$classes .= ' wd-dropdown-menu wd-dropdown';
-				} else {
-					$classes .= ' wd-dropdown-fs-menu';
-				}
-
-				if ( $style ) {
-					$classes .= ' wd-style-' . $style;
-				}
-
-				if ( 'full-height' === $this->design || 'yes' === $scroll ) {
-					$classes .= ' wd-scroll';
-				}
-
-				$classes .= woodmart_get_old_classes( ' sub-menu-dropdown' );
-
-				$output .= $indent . '<div class="' . trim( $classes ) . '">';
-
-				if ( 'full-height' === $this->design ) {
-					$output .= $indent . '<div class="wd-scroll-content">';
-					$output .= $indent . '<div class="wd-dropdown-inner">';
-				}
-
-				$output .= $indent . '<div class="container">';
-
-				if ( 'aside' === $this->design ) {
-					$output .= $indent . '<div class="wd-sub-menu-wrapp">';
-				}
-			}
-
-			if ( 0 === $depth ) {
-				if ( ( 'full-width' === $this->design || 'sized' === $this->design || 'full-height' === $this->design ) && ! $is_nav_mobile ) {
-					$sub_menu_class  = 'wd-sub-menu row';
-					$sub_menu_class .= woodmart_get_old_classes( ' sub-menu' );
-				} else {
-					$sub_menu_class  = 'wd-sub-menu';
-					$sub_menu_class .= woodmart_get_old_classes( ' sub-menu' );
-				}
-			} else {
-				if ( 'default' === $this->design && ! $is_nav_mobile && ! $is_nav_fs ) {
-					$sub_menu_class = 'sub-sub-menu wd-dropdown';
-				} elseif ( 'default' === $this->design && $is_nav_fs ) {
-					$sub_menu_class = 'sub-sub-menu wd-dropdown-fs-menu';
-				} else {
-					$sub_menu_class = 'sub-sub-menu';
-				}
-			}
-
-			if ( ! $is_nav_mobile && 0 === $depth ) {
-				$sub_menu_class .= ' color-scheme-' . $this->color_scheme;
-			} elseif ( ! $is_nav_mobile && 1 === $depth && 'aside' === $this->design ) {
-				$output .= $indent . '<div class="wd-dropdown-menu wd-dropdown wd-wp-menu">';
-			}
-
-			$output .= "\n$indent<ul class=\"$sub_menu_class\">\n";
-
-			if ( 'light' === $this->color_scheme || 'dark' === $this->color_scheme ) {
-				$this->color_scheme = whb_get_dropdowns_color();
-			}
-		}
-
-		/**
-		 * Ends the list of after the elements are added.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param string $output Passed by reference. Used to append additional content.
-		 * @param int    $depth  Depth of menu item. Used for padding.
-		 * @param mixed  $args   An array of arguments. @see wp_nav_menu().
-		 *
-		 * @see   Walker::end_lvl()
-		 */
-		public function end_lvl( &$output, $depth = 0, $args = array() ) {
-			$is_nav_mobile = strstr( $args->menu_class, 'wd-nav-mobile' );
-			$indent        = str_repeat( "\t", $depth );
-			$output       .= "$indent</ul>\n";
-
-			if ( ! $is_nav_mobile && 1 === $depth && 'aside' === $this->design ) {
-				$output .= "$indent</div>\n";
-			}
-
-			if ( 0 === $depth && ! $is_nav_mobile ) {
-				if ( 'aside' === $this->design ) {
-					$output .= "$indent</div>\n";
-				} elseif ( 'full-height' === $this->design ) {
-					$output .= $indent . '</div>';
-					$output .= $indent . '</div>';
-				}
-
-				$output .= "$indent</div>\n";
-				$output .= "$indent</div>\n";
-			}
-		}
-
-		/**
-		 * Start the element output.
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param string $output Passed by reference. Used to append additional content.
-		 * @param object $item   Menu item data object.
-		 * @param int    $depth  Depth of menu item. Used for padding.
-		 * @param mixed  $args   An array of arguments. @see wp_nav_menu().
-		 * @param int    $id     Current item ID.
-		 *
-		 * @see   Walker::start_el()
-		 */
-		public function start_el( &$output, $item, $depth = 0, $args = array(), $id = 0 ) {
-			$this->id      = $item->ID;
-			$indent        = $depth ? str_repeat( "\t", $depth ) : '';
-			$classes       = empty( $item->classes ) ? array() : (array) $item->classes;
-			$classes[]     = 'menu-item-' . $item->ID;
-			$classes[]     = 'item-level-' . $depth;
-			$label_out     = '';
-			$design        = get_post_meta( $item->ID, '_menu_item_design', true );
-			$width         = get_post_meta( $item->ID, '_menu_item_width', true );
-			$height        = get_post_meta( $item->ID, '_menu_item_height', true );
-			$scroll        = get_post_meta( $item->ID, '_menu_item_scroll', true );
-			$icon          = get_post_meta( $item->ID, '_menu_item_icon', true );
-			$event         = get_post_meta( $item->ID, '_menu_item_event', true );
-			$label         = get_post_meta( $item->ID, '_menu_item_label', true );
-			$label_text    = get_post_meta( $item->ID, '_menu_item_label-text', true );
-			$block         = get_post_meta( $item->ID, '_menu_item_block', true );
-			$dropdown_ajax = get_post_meta( $item->ID, '_menu_item_dropdown-ajax', true );
-			$opanchor      = get_post_meta( $item->ID, '_menu_item_opanchor', true );
-			$color_scheme  = get_post_meta( $item->ID, '_menu_item_colorscheme', true );
-			$image_type    = get_post_meta( $item->ID, '_menu_item_image-type', true );
-
-			$is_nav_mobile = false;
-			if ( is_object( $args ) && property_exists( $args, 'menu_class' ) ) {
-				$is_nav_mobile = strstr( $args->menu_class, 'wd-nav-mobile' );
-				$is_nav_fs     = strstr( $args->menu_class, 'wd-nav-fs' );
-			}
-
-			if ( 'light' === $color_scheme ) {
-				$this->color_scheme = 'light';
-			} elseif ( 'dark' === $color_scheme ) {
-				$this->color_scheme = 'dark';
-			}
-
-			if ( 0 === $depth && $design ) {
-				$this->design = $design;
-			}
-
-			if ( ! $design ) {
-				$design       = 'default';
-				$this->design = 'default';
-			}
-
-			if ( 'aside' === $design ) {
-				woodmart_enqueue_inline_style( 'dropdown-aside' );
-			}
-
-			if ( 'full-height' === $design ) {
-				woodmart_enqueue_inline_style( 'dropdown-full-height' );
-			}
-
-			if ( 'full-height' === $design || 'yes' === $scroll && ( 'full-width' === $design || 'sized' === $design ) ) {
-				woodmart_enqueue_inline_style( 'header-mod-content-calc' );
-			}
-
-			if ( ! is_object( $args ) ) {
-				return;
-			}
-
-			if ( 0 === $depth && ! $is_nav_mobile ) {
-				$classes[] = woodmart_get_old_classes( 'menu-item-design-' . $design );
-				if ( 'sized' === $design || 'full-width' === $design || 'aside' === $design || 'full-height' === $design ) {
-					$classes[] = 'menu-mega-dropdown';
-				} else {
-					$classes[] = 'menu-simple-dropdown';
-				}
-			}
-
-			$event = empty( $event ) ? 'hover' : $event;
-
-			if ( ! $is_nav_fs && ! $is_nav_mobile ) {
-				$classes[] = 'wd-event-' . $event;
-			}
-
-			if ( ( 'full-width' === $this->design || 'sized' === $this->design || 'full-height' === $this->design ) && 1 === $depth && ! $is_nav_mobile ) {
-				$classes[] .= 'col-auto';
-			}
-
-			if ( $block && $is_nav_mobile && 'default' !== $design ) {
-				$classes[] = 'menu-item-has-block';
-			}
-
-			if ( 'enable' === $opanchor ) {
-				woodmart_enqueue_js_library( 'waypoints' );
-				woodmart_enqueue_js_script( 'one-page-menu' );
-				$classes[] = 'onepage-link';
-				$key       = array_search( 'current-menu-item', $classes );
-				if ( false !== $key ) {
-					unset( $classes[ $key ] );
-				}
-			}
-
-			if ( ! empty( $label ) ) {
-				woodmart_enqueue_inline_style( 'mod-nav-menu-label' );
-
-				$classes[] = 'item-with-label';
-				$classes[] = 'item-label-' . $label;
-				$label_out = '<span class="menu-label menu-label-' . $label . '">' . esc_attr( $label_text ) . '</span>';
-			}
-
-			woodmart_enqueue_js_script( 'menu-offsets' );
-			woodmart_enqueue_js_script( 'menu-setup' );
-
-			if ( ! empty( $block ) && ! $args->walker->has_children ) {
-				$classes[] = 'menu-item-has-children';
-			}
-
-			if ( 'yes' === $dropdown_ajax ) {
-				woodmart_enqueue_js_script( 'menu-dropdowns-ajax' );
-				$classes[] = 'dropdown-load-ajax';
-			}
-
-			if ( $height && ( 'sized' === $design || 'aside' === $design || 'full-width' === $design ) ) {
-				$classes[] = 'dropdown-with-height';
-			}
-
-			/**
-			 * Filter the CSS class(es) applied to a menu item's list item element.
-			 *
-			 * @since 3.0.0
-			 * @since 4.1.0 The `$depth` parameter was added.
-			 *
-			 * @param array  $classes The CSS classes that are applied to the menu item's `<li>` element.
-			 * @param object $item    The current menu item.
-			 * @param array  $args    An array of {@see wp_nav_menu()} arguments.
-			 * @param int    $depth   Depth of menu item. Used for padding.
-			 */
-			$class_names = join( ' ', apply_filters( 'nav_menu_css_class', array_filter( $classes ), $item, $args, $depth ) );
-			$class_names = $class_names ? ' class="' . esc_attr( $class_names ) . '"' : '';
-
-			/**
-			 * Filter the ID applied to a menu item's list item element.
-			 *
-			 * @since 3.0.1
-			 * @since 4.1.0 The `$depth` parameter was added.
-			 *
-			 * @param string $menu_id The ID that is applied to the menu item's `<li>` element.
-			 * @param object $item    The current menu item.
-			 * @param array  $args    An array of {@see wp_nav_menu()} arguments.
-			 * @param int    $depth   Depth of menu item. Used for padding.
-			 */
-			$id = apply_filters( 'nav_menu_item_id', 'menu-item-' . $item->ID, $item, $args, $depth );
-			$id = $id ? ' id="' . esc_attr( $id ) . '"' : '';
-
-			$styles = '';
-
-			if ( ( 'aside' === $design || 'sized' === $design || 'full-height' === $design || 'full-width' === $design ) && ! $is_nav_mobile && ( $height || $width ) ) {
-				if ( $height ) {
-					$styles .= '--wd-dropdown-height: ' . $height . 'px;';
-				}
-				if ( $width ) {
-					$styles .= '--wd-dropdown-width: ' . $width . 'px;';
-				}
-			}
-
-			if ( 0 === $depth && ! $is_nav_mobile && 'image' !== $image_type ) {
-				if ( has_post_thumbnail( $item->ID ) ) {
-					$post_thumbnail = wp_get_attachment_image_src( get_post_thumbnail_id( $item->ID ), 'full' );
-
-					if ( ! empty( $post_thumbnail ) && isset( $post_thumbnail[0] ) ) {
-						$styles .= '--wd-dropdown-bg-img: url(' . $post_thumbnail[0] . ');';
-					}
-				}
-			}
-
-			if ( $styles ) {
-                $styles = 'style="' . $styles . '"';
-			}
-
-			$output .= $indent . '<li' . $id . $class_names . ' ' . $styles . '>';
-
-			$atts           = array();
-			$atts['title']  = ! empty( $item->attr_title ) ? $item->attr_title : '';
-			$atts['target'] = ! empty( $item->target ) ? $item->target : '';
-			$atts['rel']    = ! empty( $item->xfn ) ? $item->xfn : '';
-			$atts['href']   = ! empty( $item->url ) ? $item->url : '';
-
-			/**
-			 * Filter the HTML attributes applied to a menu item's anchor element.
-			 *
-			 * @since 3.6.0
-			 * @since 4.1.0 The `$depth` parameter was added.
-			 *
-			 * @param array  $atts   {
-			 *                       The HTML attributes applied to the menu item's `<a>` element, empty strings are ignored.
-			 *
-			 * @type string  $title  Title attribute.
-			 * @type string  $target Target attribute.
-			 * @type string  $rel    The rel attribute.
-			 * @type string  $href   The href attribute.
-			 * }
-			 *
-			 * @param object $item   The current menu item.
-			 * @param array  $args   An array of {@see wp_nav_menu()} arguments.
-			 * @param int    $depth  Depth of menu item. Used for padding.
-			 */
-			$atts          = apply_filters( 'nav_menu_link_attributes', $atts, $item, $args, $depth );
-			$atts['class'] = 'woodmart-nav-link';
-
-			$attributes = '';
-			foreach ( $atts as $attr => $value ) {
-				if ( ! empty( $value ) ) {
-					$value       = 'href' === $attr ? esc_url( $value ) : esc_attr( $value );
-					$attributes .= ' ' . $attr . '="' . $value . '"';
-				}
-			}
-
-			$image_output = '';
-
-			if ( 'product_cat' === $item->object || ( 'image' === $image_type && has_post_thumbnail( $item->ID ) ) ) {
-				if ( 'image' === $image_type && has_post_thumbnail( $item->ID ) ) {
-					$icon_data = array(
-						'id'  => get_post_thumbnail_id( $item->ID ),
-						'url' => get_the_post_thumbnail_url( $item->ID ),
-					);
-				} else {
-					$icon_data = get_term_meta( $item->object_id, 'category_icon_alt', true );
-				}
-
-				$icon_attrs = apply_filters( 'woodmart_megamenu_icon_attrs', false );
-
-				if ( $icon_data ) {
-					if ( is_array( $icon_data ) && $icon_data['id'] ) {
-						if ( woodmart_is_svg( $icon_data['url'] ) ) {
-							$image_output .= woodmart_get_svg_html( $icon_data['id'], apply_filters( 'woodmart_mega_menu_icon_size_svg', '18x18' ), array( 'class' => 'wd-nav-img' ) );
-						} else {
-							$image_output .= wp_get_attachment_image( $icon_data['id'], apply_filters( 'woodmart_mega_menu_icon_size', 'thumbnail' ), false, array( 'class' => 'wd-nav-img' ) );
-						}
-					} else {
-						if ( isset( $icon_data['url'] ) ) {
-							$icon_data = $icon_data['url'];
-						}
-
-						if ( $icon_data ) {
-							$image_output .= '<img src="' . esc_url( $icon_data ) . '" alt="' . esc_attr( $item->title ) . '" ' . $icon_attrs . ' class="wd-nav-img' . woodmart_get_old_classes( ' category-icon' ) . '" />';
-						}
-					}
-				}
-			}
-
-			$item_output  = $args->before;
-			$item_output .= '<a' . $attributes . '>';
-			if ( $icon ) {
-				if ( 'wpb' === woodmart_get_current_page_builder() ) {
-					wp_enqueue_style( 'vc_font_awesome_5' );
-					wp_enqueue_style( 'vc_font_awesome_5_shims' );
-				} else {
-					wp_enqueue_style( 'elementor-icons-fa-solid' );
-					wp_enqueue_style( 'elementor-icons-fa-brands' );
-					wp_enqueue_style( 'elementor-icons-fa-regular' );
-				}
-				$item_output .= '<span class="wd-nav-icon fa fa-' . $icon . '"></span>';
-			}
-
-			$item_output .= $image_output;
-
-			/** This filter is documented in wp-includes/post-template.php */
-			if ( 0 === $depth ) {
-				$item_output .= '<span class="nav-link-text">' . $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after . '</span>';
-			} else {
-				$item_output .= $args->link_before . apply_filters( 'the_title', $item->title, $item->ID ) . $args->link_after;
-			}
-
-			$item_output .= $label_out;
-			$item_output .= '</a>';
-			$item_output .= $args->after;
-
-			if ( ! $is_nav_mobile ) {
-				if ( $block && ! $args->walker->has_children ) {
-					$classes = '';
-
-					if ( ! $is_nav_fs ) {
-						$classes .= ' wd-dropdown-menu wd-dropdown';
-					} else {
-						$classes .= ' wd-dropdown-fs-menu';
-					}
-
-					$classes .= ' wd-design-' . $design;
-					$classes .= ' color-scheme-' . $this->color_scheme;
-					$classes .= woodmart_get_old_classes( ' sub-menu-dropdown' );
-
-					if ( 'full-height' === $this->design || 'yes' === $scroll ) {
-						$classes .= ' wd-scroll';
-					}
-
-					$item_output .= "\n$indent<div class=\"" . trim( $classes ) . "\">\n";
-
-					if ( 'full-height' === $design || 'yes' === $scroll ) {
-						$item_output .= "\n$indent<div class=\"wd-scroll-content\">\n";
-						$item_output .= "\n$indent<div class=\"wd-dropdown-inner\">\n";
-					}
-
-					$item_output .= "\n$indent<div class=\"container\">\n";
-					if ( 'yes' === $dropdown_ajax ) {
-						$item_output .= '<div class="dropdown-html-placeholder wd-fill" data-id="' . $block . '"></div>';
-					} else {
-						$item_output .= woodmart_html_block_shortcode( array( 'id' => $block ) );
-					}
-					$item_output .= "\n$indent</div>\n";
-
-					if ( 'full-height' === $design || 'yes' === $scroll ) {
-						$item_output .= "\n$indent</div>\n";
-						$item_output .= "\n$indent</div>\n";
-					}
-
-					$item_output .= "\n$indent</div>\n";
-
-					if ( 'light' === $this->color_scheme || 'dark' === $this->color_scheme ) {
-						$this->color_scheme = whb_get_dropdowns_color();
-					}
-				}
-			}
-
-			/**
-			 * Filter a menu item's starting output.
-			 *
-			 * The menu item's starting output only includes `$args->before`, the opening `<a>`,
-			 * the menu item's title, the closing `</a>`, and `$args->after`. Currently, there is
-			 * no filter for modifying the opening and closing `<li>` for a menu item.
-			 *
-			 * @since 3.0.0
-			 *
-			 * @param string $item_output The menu item's starting HTML output.
-			 * @param object $item        Menu item data object.
-			 * @param int    $depth       Depth of menu item. Used for padding.
-			 * @param array  $args        An array of {@see wp_nav_menu()} arguments.
-			 */
-			$output .= apply_filters( 'walker_nav_menu_start_el', $item_output, $item, $depth, $args );
-		}
-	}
-}
-
-// **********************************************************************//
 // ! Load menu drodpwns with AJAX actions
 // **********************************************************************//
 
@@ -1571,6 +1013,10 @@ if( ! function_exists('woodmart_load_html_dropdowns_action') ) {
 			'message' => 'Can\'t load HTML blocks with AJAX',
 			'data' => array(),
 		);
+
+		if ( woodmart_is_elementor_installed() && ! apply_filters( 'woodmart_enqueue_html_dropdowns_inline_style', false ) && isset( $_REQUEST['action'] ) && 'woodmart_load_html_dropdowns' === $_REQUEST['action'] ) {
+			add_filter( 'elementor/frontend/builder_content/before_print_css', '__return_false' );
+		}
 
 		if( class_exists('WPBMap') )
 			WPBMap::addAllMappedShortcodes();
@@ -1588,9 +1034,7 @@ if( ! function_exists('woodmart_load_html_dropdowns_action') ) {
 			}
 		}
 
-		echo json_encode($response);
-
-		die();
+		wp_send_json( $response );
 	}
 	add_action( 'wp_ajax_woodmart_load_html_dropdowns', 'woodmart_load_html_dropdowns_action' );
 	add_action( 'wp_ajax_nopriv_woodmart_load_html_dropdowns', 'woodmart_load_html_dropdowns_action' );
@@ -1601,7 +1045,7 @@ if( ! function_exists('woodmart_load_html_dropdowns_action') ) {
 // **********************************************************************//
 
 if( ! function_exists( 'woodmart_strip_shortcode_gallery' ) ) {
-	function  woodmart_strip_shortcode_gallery( $content ) {
+	function woodmart_strip_shortcode_gallery( $content ) {
 		preg_match_all( '/'. get_shortcode_regex() .'/s', $content, $matches, PREG_SET_ORDER );
 		if ( ! empty( $matches ) ) {
 			foreach ( $matches as $shortcode ) {
@@ -1629,7 +1073,7 @@ if( ! function_exists( 'woodmart_excerpt_from_content' ) ) {
 			$post_content = preg_replace('`\[[^\]]*\]`','',$post_content);
 		}
 
-		$post_content = stripslashes( wp_filter_nohtml_kses( $post_content ) );
+		$post_content = trim( stripslashes( wp_filter_nohtml_kses( $post_content ) ) );
 
 		if ( woodmart_get_opt( 'blog_words_or_letters' ) == 'letter' ) {
 			$excerpt = mb_substr( $post_content, 0, $limit );
@@ -1820,118 +1264,17 @@ add_filter( 'vc_shortcode_output', 'woodmart_get_gradient_attr', 10, 3 );
 // **********************************************************************//
 if( ! function_exists( 'woodmart_get_gradient_css' ) ) {
 	function woodmart_get_gradient_css( $gradient_attr ) {
-		$gradient_css    = explode( '|', $gradient_attr );
+		$gradient_css = explode( '|', $gradient_attr );
 		$css          = $gradient_css[1];
 		$webkit_css   = $gradient_css[1];
 
 		$css = str_replace( array( 'left', 'top', 'right', 'bottom' ), array( 'to side1', 'to side2', 'to side3', 'to side4' ), $css );
 		$css = str_replace( array( 'side1', 'side2', 'side3', 'side4' ), array( 'right', 'bottom', 'left', 'top' ), $css );
 
-		$result          = 'background-image:-webkit-' . $webkit_css . ';';
-		$result         .= 'background-image:' . $css . ';';
+		$result  = 'background-image:-webkit-' . $webkit_css . ';';
+		$result .= 'background-image:' . $css . ';';
+
 		return $result;
-	}
-}
-
-// **********************************************************************//
-//  Function return all images sizes
-// **********************************************************************//
-
-if ( ! function_exists( 'woodmart_get_all_image_sizes' ) ) {
-	/**
-	 * Retrieve available image sizes
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return array
-	 */
-	function woodmart_get_all_image_sizes() {
-		global $_wp_additional_image_sizes;
-
-		$default_image_sizes = array( 'thumbnail', 'medium', 'medium_large', 'large' );
-		$image_sizes         = array();
-
-		foreach ( $default_image_sizes as $size ) {
-			$image_sizes[ $size ] = array(
-				'width'  => (int) get_option( $size . '_size_w' ),
-				'height' => (int) get_option( $size . '_size_h' ),
-				'crop'   => (bool) get_option( $size . '_crop' ),
-			);
-		}
-
-		if ( $_wp_additional_image_sizes ) {
-			$image_sizes = array_merge( $image_sizes, $_wp_additional_image_sizes );
-		}
-
-		$image_sizes['full'] = array();
-
-		return $image_sizes;
-	}
-}
-
-if ( ! function_exists( 'woodmart_get_image_dimensions_by_size_key' ) ) {
-	/**
-	 * This function return size array by size key.
-	 *
-	 * @param string $size_key enter 'thumbnail' if you want to get size thumbnail array.
-	 * @return array
-	 */
-	function woodmart_get_image_dimensions_by_size_key( $size_key ) {
-		global $_wp_additional_image_sizes;
-
-		if ( isset( $_wp_additional_image_sizes[ $size_key ] ) ) {
-			$res = $_wp_additional_image_sizes[ $size_key ];
-		} else {
-			$res = woodmart_get_image_size( $size_key );
-		}
-
-		if ( strpos( $size_key, 'x' ) && 'woodmart_shop_catalog_x2' !== $size_key ) {
-			$res = woodmart_get_explode_size( $size_key, '600' );
-		}
-
-		return $res;
-	}
-}
-
-if( ! function_exists( 'woodmart_get_image_size' ) ) {
-	function woodmart_get_image_size( $thumb_size ) {
-		if ( is_string( $thumb_size ) && in_array( $thumb_size, array( 'thumbnail', 'thumb', 'medium', 'large', 'full' ) ) ) {
-			$images_sizes = woodmart_get_all_image_sizes();
-			$image_size = $images_sizes[$thumb_size];
-			if ( $thumb_size == 'full') {
-				$image_size['width'] = 3000;
-				$image_size['height'] = 3000;
-			}
-			return array( $image_size['width'], $image_size['height'] );
-		}elseif ( is_string( $thumb_size ) ) {
-			preg_match_all( '/\d+/', $thumb_size, $thumb_matches );
-			if ( isset( $thumb_matches[0] ) ) {
-				$thumb_size = array();
-				if ( count( $thumb_matches[0] ) > 1 ) {
-					$thumb_size[] = $thumb_matches[0][0]; // width
-					$thumb_size[] = $thumb_matches[0][1]; // height
-				} elseif ( count( $thumb_matches[0] ) > 0 && count( $thumb_matches[0] ) < 2 ) {
-					$thumb_size[] = $thumb_matches[0][0]; // width
-					$thumb_size[] = $thumb_matches[0][0]; // height
-				} else {
-					$thumb_size = false;
-				}
-			}
-		}
-
-		return $thumb_size;
-	}
-}
-
-if( ! function_exists( 'woodmart_get_image_src' ) ) {
-	function woodmart_get_image_src( $thumb_id, $thumb_size ) {
-		if ( ! $thumb_size ) {
-			return false;
-		}
-
-		$thumb_size = woodmart_get_image_size( $thumb_size );
-		$thumbnail = wpb_resize( $thumb_id, null, $thumb_size[0], $thumb_size[1], true );
-		return isset( $thumbnail['url'] ) ? $thumbnail['url'] : '';
 	}
 }
 
@@ -1975,76 +1318,14 @@ if( ! function_exists( 'woodmart_twitter_process_links' ) ) {
 		// NEW Link Creation from clickable items in the text
 		$text = preg_replace( '/((http)+(s)?:\/\/[^<>\s]+)/i', '<a href="$0" target="_blank" rel="nofollow noopener">$0</a>', $text );
 		// Clickable Twitter names
-		$text = preg_replace( '/[@]+([A-Za-z0-9-_]+)/', '<a href="https://twitter.com/$1" target="_blank" rel="nofollow noopener">@\\1</a>', $text );
+		$text = preg_replace( '/[@]+([A-Za-z0-9-_]+)/', '<a href="https://x.com/$1" target="_blank" rel="nofollow noopener">@\\1</a>', $text );
 		// Clickable Twitter hash tags
-		$text = preg_replace( '/[#]+([A-Za-z0-9-_]+)/', '<a href="https://twitter.com/search?q=%23$1" target="_blank" rel="nofollow noopener">$0</a>', $text );
+		$text = preg_replace( '/[#]+([A-Za-z0-9-_]+)/', '<a href="https://x.com/search?q=%23$1" target="_blank" rel="nofollow noopener">$0</a>', $text );
 		// END TWEET CONTENT REGEX
 		return $text;
 
 	}
 }
-
-// **********************************************************************//
-// Woodmart Owl Items Per Slide
-// **********************************************************************//
-if( ! function_exists( 'woodmart_owl_items_per_slide' ) ) {
-	function woodmart_owl_items_per_slide( $slides_per_view, $hide = array(), $post_type = false, $location = false, $custom_sizes = false ) {
-		$items = woodmart_get_owl_items_numbers( $slides_per_view, $post_type, $custom_sizes );
-		$classes = '';
-
-		if ( woodmart_get_opt( 'thums_position' ) == 'centered' && $location == 'main-gallery' ) {
-			$items['desktop'] = $items['tablet_landscape'] = $items['tablet'] = $items['mobile'] = 2;
-		}
-
-		if ( ! in_array( 'lg', $hide ) ) $classes .= 'owl-items-lg-' . $items['desktop'];
-		if ( ! in_array( 'md', $hide ) ) $classes .= ' owl-items-md-' . $items['tablet_landscape'];
-		$classes .= ' owl-items-sm-' . $items['tablet'];
-		$classes .= ' owl-items-xs-' . $items['mobile'];
-
-		return $classes;
-	}
-}
-// **********************************************************************//
-// Woodmart Get Owl Items Numbers
-// **********************************************************************//
-if ( ! function_exists( 'woodmart_get_owl_items_numbers' ) ) {
-	function woodmart_get_owl_items_numbers( $slides_per_view, $post_type = false, $custom_sizes = false ) {
-		$items = woodmart_get_col_sizes( $slides_per_view );
-
-		if ( $post_type == 'product' ) {
-			if ( 'auto' !== woodmart_get_opt( 'products_columns_tablet' ) && ! empty( $mobile_columns ) ) {
-				$items['tablet'] = woodmart_get_opt( 'products_columns_tablet' );
-			}
-
-			$items['mobile'] = woodmart_get_opt( 'products_columns_mobile' );
-		}
-
-		if ( $items['desktop'] == 1 ) {
-			$items['mobile'] = 1;
-		}
-
-		if ( $custom_sizes && is_array( $custom_sizes ) ) {
-			$auto_columns = woodmart_get_col_sizes( $custom_sizes['desktop'] );
-
-			if ( empty( $custom_sizes['tablet_landscape'] ) || 'auto' === $custom_sizes['tablet_landscape'] ) {
-				$custom_sizes['tablet_landscape'] = $auto_columns['tablet_landscape'];
-			}
-
-			if ( empty( $custom_sizes['tablet'] ) || 'auto' === $custom_sizes['tablet'] ) {
-				$custom_sizes['tablet'] = $auto_columns['tablet'];
-			}
-
-			if ( empty( $custom_sizes['mobile'] ) || 'auto' === $custom_sizes['mobile'] ) {
-				$custom_sizes['mobile'] = $auto_columns['mobile'];
-			}
-
-			return $custom_sizes;
-		}
-
-		return $items;
-	}
-}
-
 
 if ( ! function_exists( 'woodmart_get_grid_el_columns' ) ) {
 	function woodmart_get_grid_el_columns( $columns ) {
@@ -2071,82 +1352,127 @@ if ( ! function_exists( 'woodmart_get_grid_el_columns' ) ) {
 
 if ( ! function_exists( 'woodmart_get_col_sizes' ) ) {
 	function woodmart_get_col_sizes( $desktop_columns ) {
+		$desktop_columns = (int) $desktop_columns;
+
 		$sizes = array(
 			'1'  => array(
-				'desktop'          => '1',
-				'tablet'           => '1',
-				'tablet_landscape' => '1',
-				'mobile'           => '1',
+				'desktop' => '1',
+				'tablet'  => '1',
+				'mobile'  => '1',
 			),
 			'2'  => array(
-				'desktop'          => '2',
-				'tablet_landscape' => '2',
-				'tablet'           => '1',
-				'mobile'           => '1',
+				'desktop' => '2',
+				'tablet'  => '2',
+				'mobile'  => '1',
 			),
 			'3'  => array(
-				'desktop'          => '3',
-				'tablet_landscape' => '3',
-				'tablet'           => '2',
-				'mobile'           => '1',
+				'desktop' => '3',
+				'tablet'  => '3',
+				'mobile'  => '1',
 			),
 			'4'  => array(
-				'desktop'          => '4',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '1',
+				'desktop' => '4',
+				'tablet'  => '4',
+				'mobile'  => '1',
 			),
 			'5'  => array(
-				'desktop'          => '5',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '5',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'6'  => array(
-				'desktop'          => '6',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '6',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'7'  => array(
-				'desktop'          => '7',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '7',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'8'  => array(
-				'desktop'          => '8',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '8',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'9'  => array(
-				'desktop'          => '9',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '9',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'10' => array(
-				'desktop'          => '10',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '10',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'11' => array(
-				'desktop'          => '11',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '11',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 			'12' => array(
-				'desktop'          => '12',
-				'tablet_landscape' => '4',
-				'tablet'           => '3',
-				'mobile'           => '2',
+				'desktop' => '12',
+				'tablet'  => '4',
+				'mobile'  => '2',
 			),
 		);
 
-		return $sizes[ $desktop_columns ];
+		return isset( $sizes[ $desktop_columns ] ) ? $sizes[ $desktop_columns ] : $sizes['3'];
+	}
+}
+
+if ( ! function_exists( 'woodmart_get_grid_attrs' ) ) {
+	function woodmart_get_grid_attrs( $settings ) {
+		$desktop_columns = isset( $settings['columns'] ) ? $settings['columns'] : '3';
+		$tablet_columns  = isset( $settings['columns_tablet'] ) ? $settings['columns_tablet'] : 'auto';
+		$mobile_columns  = isset( $settings['columns_mobile'] ) ? $settings['columns_mobile'] : 'auto';
+
+		if ( isset( $tablet_columns['size'] ) ) {
+			$tablet_columns = $tablet_columns['size'];
+		}
+		if ( isset( $mobile_columns['size'] ) ) {
+			$mobile_columns = $mobile_columns['size'];
+		}
+
+		$auto_columns = woodmart_get_col_sizes( $desktop_columns );
+		$style_attrs  = '';
+
+		if ( ! $tablet_columns || 'auto' === $tablet_columns ) {
+			$tablet_columns = $auto_columns['tablet'];
+		}
+
+		if ( ! $mobile_columns || 'auto' === $mobile_columns ) {
+			$mobile_columns = $auto_columns['mobile'];
+		}
+
+		$style_attrs .= '--wd-col-lg:' . $desktop_columns . ';';
+		$style_attrs .= '--wd-col-md:' . $tablet_columns . ';';
+		$style_attrs .= '--wd-col-sm:' . $mobile_columns . ';';
+
+		if ( isset( $settings['spacing'] ) && '' !== (string) $settings['spacing'] ) {
+			$style_attrs .= '--wd-gap-lg:' . $settings['spacing'] . 'px;';
+		}
+
+		if ( isset( $settings['spacing_tablet'] ) && 'false' === $settings['spacing_tablet'] ) {
+			$settings['spacing_tablet'] = '';
+		}
+		if ( isset( $settings['spacing_mobile'] ) && 'false' === $settings['spacing_mobile'] ) {
+			$settings['spacing_mobile'] = '';
+		}
+
+		if ( isset( $settings['spacing_tablet'] ) && '' !== (string) $settings['spacing_tablet'] && ( empty( $settings['spacing'] ) || $settings['spacing'] !== $settings['spacing_tablet'] ) ) {
+			$style_attrs .= '--wd-gap-md:' . $settings['spacing_tablet'] . 'px;';
+		}
+
+		if ( isset( $settings['spacing'], $settings['spacing_mobile'] ) && ! $settings['spacing_mobile'] && in_array( (int) $settings['spacing'], array( 20, 30 ), true ) ) {
+			$settings['spacing_mobile'] = 10;
+		}
+
+		if ( isset( $settings['spacing_mobile'] ) && '' !== (string) $settings['spacing_mobile'] && ( empty( $settings['spacing_tablet'] ) || $settings['spacing_tablet'] !== $settings['spacing_mobile'] ) ) {
+			$style_attrs .= '--wd-gap-sm:' . $settings['spacing_mobile'] . 'px;';
+		}
+
+		return $style_attrs;
 	}
 }
 
@@ -2158,7 +1484,7 @@ if ( ! function_exists( 'woodmart_get_grid_el_class_new' ) ) {
 		$classes      = '';
 
 		if ( 'auto' === $tablet_columns || empty( $tablet_columns ) ) {
-			$tablet_columns = $auto_columns['tablet_landscape'];
+			$tablet_columns = $auto_columns['tablet'];
 		}
 
 		if ( 'auto' === $mobile_columns || empty( $mobile_columns ) ) {
@@ -2328,47 +1654,6 @@ if ( ! function_exists('woodmart_settings_js') ) {
 		<?php endif;
 
 		return ob_get_clean();
-	}
-}
-
-// **********************************************************************//
-// Header classes
-// **********************************************************************//
-if ( ! function_exists( 'woodmart_get_header_classes' ) ) {
-	function woodmart_get_header_classes(){
-		$settings = whb_get_settings();
-		$custom_product_header = woodmart_get_opt( 'single_product_header');
-
-		$header_class = 'whb-header';
-		$header_class .= ' whb-' . WOODMART_HB_Frontend::get_instance()->get_current_id();
-		$header_class .= ( $settings['overlap'] ) ? ' whb-overcontent' : '';
-		$header_class .= ( $settings['overlap'] && $settings['boxed'] ) ? ' whb-boxed' : '';
-		$header_class .= ( $settings['full_width'] ) ? ' whb-full-width' : '';
-		$header_class .= ( $settings['sticky_shadow'] ) ? ' whb-sticky-shadow' : '';
-		$header_class .= ( $settings['sticky_effect'] ) ? ' whb-scroll-' . $settings['sticky_effect'] : '';
-		$header_class .= ( $settings['sticky_clone'] && $settings['sticky_effect'] == 'slide' ) ? ' whb-sticky-clone' : ' whb-sticky-real';
-		$header_class .= ( $settings['hide_on_scroll'] ) ? ' whb-hide-on-scroll' : '';
-
-		woodmart_enqueue_js_script( 'header-builder' );
-
-		if ( ! empty( $custom_product_header ) && $custom_product_header != 'none' && woodmart_woocommerce_installed() && is_product() ) {
-			$header_class .= ' whb-custom-header';
-		}
-
-		echo 'class="' . esc_attr( $header_class ) . '"';
-	}
-}
-
-// **********************************************************************//
-// Print script tag with content
-// **********************************************************************//
-if ( ! function_exists( 'woodmart_add_inline_script' ) ) {
-	function woodmart_add_inline_script( $key, $content, $position = 'after' ) {
-		?>
-		<script>
-			<?php echo apply_filters( 'woodmart_inline_script', $content ); ?>
-		</script>
-		<?php
 	}
 }
 

@@ -36,6 +36,7 @@ class Bundles_Table extends \WP_List_Table {
 	/**
 	 * Default column.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array  $item Data.
 	 * @param string $column_name Column name.
 	 *
@@ -48,6 +49,7 @@ class Bundles_Table extends \WP_List_Table {
 	/**
 	 * Get content in column Name.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $item Data.
 	 *
 	 * @return void
@@ -87,6 +89,7 @@ class Bundles_Table extends \WP_List_Table {
 	/**
 	 * Get content in column Product.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $item Data.
 	 *
 	 * @return string

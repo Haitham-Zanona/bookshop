@@ -19,7 +19,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-if ( 'mask-subcat' === woodmart_loop_prop( 'product_categories_design' ) ) {
+$sub_categories = array();
+
+if ( ! woodmart_loop_prop( 'hide_categories_subcategories' ) && 'mask-subcat' === woodmart_loop_prop( 'product_categories_design' ) ) {
 	$sub_categories = get_terms(
 		'product_cat',
 		array(
@@ -33,6 +35,10 @@ if ( 'mask-subcat' === woodmart_loop_prop( 'product_categories_design' ) ) {
 ?>
 
 <div <?php wc_product_cat_class( $args['classes'], $args['category'] ); ?> data-loop="<?php echo esc_attr( $args['woocommerce_loop'] ); ?>">
+	<?php if ( woodmart_loop_prop( 'products_with_background' ) || woodmart_loop_prop( 'products_bordered_grid' ) && 'inside' === woodmart_loop_prop( 'products_bordered_grid_style' ) ) : ?>
+		<div class="wd-cat-wrap">
+	<?php endif; ?>
+
 	<div class="wd-cat-inner">
 		<div class="wd-cat-thumb">
 			<?php do_action( 'woocommerce_after_subcategory', $args['category'] ); ?>
@@ -60,13 +66,13 @@ if ( 'mask-subcat' === woodmart_loop_prop( 'product_categories_design' ) ) {
 					</a>
 				</h3>
 
-				<?php if ( ! $args['hide_product_count'] ) : ?>
+				<?php if ( ! woodmart_loop_prop( 'hide_categories_product_count' ) ) : ?>
 					<div class="wd-cat-count">
 						<?php echo esc_html( $args['category']->count ); ?>
 					</div>
 				<?php endif; ?>
 			</div>
-			<?php if ( isset( $sub_categories ) && ! empty( $sub_categories ) ) : ?>
+			<?php if ( ! empty( $sub_categories ) ) : ?>
 				<div class="wd-cat-footer wd-scroll-content">
 					<ul class="wd-cat-sub-menu wd-sub-menu">
 						<?php foreach ( $sub_categories as $sub_category ) : // phpcs:ignore ?>
@@ -81,4 +87,8 @@ if ( 'mask-subcat' === woodmart_loop_prop( 'product_categories_design' ) ) {
 			<?php endif; ?>
 		</div>
 	</div>
+
+	<?php if ( woodmart_loop_prop( 'products_with_background' ) || woodmart_loop_prop( 'products_bordered_grid' ) && 'inside' === woodmart_loop_prop( 'products_bordered_grid_style' ) ) : ?>
+		</div>
+	<?php endif; ?>
 </div>

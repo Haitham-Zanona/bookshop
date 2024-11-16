@@ -7,6 +7,7 @@
 
 namespace XTS\Modules;
 
+use WPBMap;
 use XTS\Modules\Compare\Ui;
 use XTS\Singleton;
 
@@ -44,9 +45,11 @@ class Compare extends Singleton {
 			return;
 		}
 
+		// @codeCoverageIgnoreStart
 		if ( is_multisite() ) {
 			$this->cookie_name .= '_' . get_current_blog_id();
 		}
+		// @codeCoverageIgnoreEnd
 
 		add_action( 'wp_ajax_woodmart_add_to_compare', array( $this, 'add_to_compare' ) );
 		add_action( 'wp_ajax_nopriv_woodmart_add_to_compare', array( $this, 'add_to_compare' ) );
@@ -90,8 +93,9 @@ class Compare extends Singleton {
 	 * @return array
 	 */
 	public function add_localized_settings( $localized ) {
-		$localized['compare_by_category'] = woodmart_get_opt( 'compare_by_category' ) ? 'yes' : 'no';
-		$localized['compare_page_nonce']  = wp_create_nonce( 'wd-compare-page' );
+		$localized['compare_by_category']       = woodmart_get_opt( 'compare_by_category' ) ? 'yes' : 'no';
+		$localized['compare_page_nonce']        = wp_create_nonce( 'wd-compare-page' );
+		$localized['compare_save_button_state'] = woodmart_get_opt( 'compare_save_button_state' ) ? 'yes' : 'no';
 
 		return $localized;
 	}
@@ -107,6 +111,8 @@ class Compare extends Singleton {
 
 	/**
 	 * Add product to compare.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function add_to_compare() {
 		$id = sanitize_text_field( $_GET['id'] ); // phpcs:ignore
@@ -118,7 +124,7 @@ class Compare extends Singleton {
 
 		$products = $this->get_compared_products();
 
-		if ( ! in_array( $id, $products, true ) ) {
+		if ( ! in_array( $id, $products ) ) { //phpcs:ignore
 			$products[] = $id;
 
 			setcookie( $this->cookie_name, wp_json_encode( $products ), 0, COOKIEPATH, COOKIE_DOMAIN, woodmart_cookie_secure_param(), false );
@@ -129,7 +135,6 @@ class Compare extends Singleton {
 		wp_send_json(
 			array(
 				'count'     => $this->get_compare_count(),
-				'table'     => Ui::get_instance()->compare_page(),
 				'fragments' => apply_filters( 'woodmart_get_update_compare_fragments', array() ),
 			)
 		);
@@ -138,6 +143,7 @@ class Compare extends Singleton {
 	/**
 	 * Remove product to compare.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 3.3
 	 */
 	public function remove_from_compare() {
@@ -159,7 +165,7 @@ class Compare extends Singleton {
 
 		if ( in_array( $id, $products ) ) { //phpcs:ignore
 			foreach ( $products as $key => $product_id ) {
-				if ( $id === $product_id ) {
+				if ( (int) $id === (int) $product_id ) {
 					unset( $products[ $key ] );
 				}
 			}
@@ -171,6 +177,10 @@ class Compare extends Singleton {
 		} else {
 			setcookie( $this->cookie_name, wp_json_encode( $products ), 0, COOKIEPATH, COOKIE_DOMAIN, woodmart_cookie_secure_param(), false );
 			$_COOKIE[ $this->cookie_name ] = wp_json_encode( $products );
+		}
+
+		if ( 'wpb' === woodmart_get_current_page_builder() && class_exists( 'WPBMap' ) ) {
+			WPBMap::addAllMappedShortcodes();
 		}
 
 		wp_send_json(
@@ -185,6 +195,7 @@ class Compare extends Singleton {
 	/**
 	 * Remove category with product in compare.
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function remove_category_from_compare() {
@@ -415,6 +426,7 @@ class Compare extends Singleton {
 	/**
 	 * Remove unnecessary products.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0
 	 */
 	public function remove_unnecessary_products() {

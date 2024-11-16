@@ -71,3 +71,39 @@ if( ! function_exists( 'woodmart_quick_shop_wrapper' ) ) {
 		<?php
 	}
 }
+
+if ( ! function_exists( 'woodmart_load_available_variations' ) ) {
+	function woodmart_load_available_variations() {
+		if ( empty( $_GET['id'] ) ) { // phpcs:ignore
+			return;
+		}
+
+		$product = wc_get_product( absint( $_GET['id'] ) ); // phpcs:ignore
+
+		if ( ! $product ) {
+			return;
+		}
+
+		$cache          = apply_filters( 'woodmart_swatches_cache', true );
+		$transient_name = 'woodmart_swatches_cache_' . $product->get_id();
+
+		if ( $cache ) {
+			$available_variations = get_transient( $transient_name );
+		} else {
+			$available_variations = array();
+		}
+
+		if ( ! $available_variations ) {
+			$available_variations = $product->get_available_variations();
+
+			if ( $cache ) {
+				set_transient( $transient_name, $available_variations, apply_filters( 'woodmart_swatches_cache_time', WEEK_IN_SECONDS ) );
+			}
+		}
+
+		wp_send_json( $available_variations );
+	}
+
+	add_action( 'wp_ajax_woodmart_load_available_variations', 'woodmart_load_available_variations' );
+	add_action( 'wp_ajax_nopriv_woodmart_load_available_variations', 'woodmart_load_available_variations' );
+}

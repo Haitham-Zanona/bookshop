@@ -20,6 +20,16 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Products_Widget extends Widget_Base {
 	/**
+	 * @var mixed
+	 */
+	protected $ids;
+
+	/**
+	 * @var mixed
+	 */
+	protected $include_products;
+
+	/**
 	 * Get widget name.
 	 *
 	 * @since 1.0.0
@@ -285,6 +295,7 @@ class Products_Widget extends Widget_Base {
 		$type                                    = 'WC_Widget_Products';
 		$settings['number']                      = isset( $settings['number']['size'] ) ? $settings['number']['size'] : 3;
 
+		woodmart_enqueue_inline_style( 'widget-product-list' );
 		?>
 		<div class="widget_products">
 			<?php
@@ -308,11 +319,13 @@ class Products_Widget extends Widget_Base {
 	}
 
 	public function add_category_order( $query_args ) {
-		if ( isset( $this->ids[0] ) && $this->ids[0] ) {
+		$ids = $this->ids;
+
+		if ( ! empty( $ids[0] ) ) {
 			$query_args['tax_query'][] = array(
 				'taxonomy' => 'product_cat',
 				'field'    => 'id',
-				'terms'    => $this->ids,
+				'terms'    => $ids,
 			);
 		}
 
@@ -320,8 +333,10 @@ class Products_Widget extends Widget_Base {
 	}
 
 	public function add_product_order( $query_args ) {
-		if ( isset( $this->include_products[0] ) && $this->include_products[0] ) {
-			$query_args['post__in']       = $this->include_products;
+		$include_products = $this->include_products;
+
+		if ( ! empty( $include_products[0] ) ) {
+			$query_args['post__in']       = $include_products;
 			$query_args['orderby']        = 'post__in';
 			$query_args['posts_per_page'] = - 1;
 		}

@@ -85,7 +85,7 @@ class XTS_Library {
 
 				<div class="elementor-templates-modal__header__items-area">
 					<div class="elementor-templates-modal__header__close elementor-templates-modal__header__close--normal elementor-templates-modal__header__item">
-						<i class="eicon-close" aria-hidden="true" title="<?php echo esc_html__( 'Close', 'woodmart' ); ?>"></i>
+						<i class="eicon-close" aria-hidden="true" title="<?php echo esc_attr__( 'Close', 'woodmart' ); ?>"></i>
 
 						<span class="elementor-screen-only">
 							<?php echo esc_html__( 'Close', 'woodmart' ); ?>

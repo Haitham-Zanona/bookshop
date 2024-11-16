@@ -39,16 +39,17 @@
 
 	woodmartThemeModule.productHover = function() {
 		var $hoverBase = $('.wd-hover-with-fade');
+		var $carousel  = $hoverBase.closest('.wd-carousel');
 
 		if (woodmartThemeModule.windowWidth <= 1024) {
-			if ( $hoverBase.hasClass('wd-hover-fw-button')) {
+			if ( $carousel.length > 0 && $hoverBase.hasClass('wd-hover-fw-button')) {
 				$hoverBase.addClass('wd-fade-off');
 			}
 
 			$hoverBase.on('click', function(e) {
 				var $this = $(this);
 				var hoverClass = 'state-hover';
-				if (!$this.hasClass(hoverClass) && woodmart_settings.base_hover_mobile_click === 'no' && !$this.hasClass('wd-hover-fw-button') ) {
+				if (!$this.hasClass(hoverClass) && !$this.hasClass('wd-fade-off') && woodmart_settings.base_hover_mobile_click === 'no' && !$this.hasClass('wd-hover-fw-button') ) {
 					e.preventDefault();
 					$('.' + hoverClass).removeClass(hoverClass);
 					$this.addClass(hoverClass);
@@ -89,7 +90,7 @@
 			$holder.data('column_width', columnWidth);
 		}
 
-		$('.wd-products-holder').on('mouseenter mousemove touchstart', function() {
+		$('.wd-products').on('mouseenter mousemove touchstart', function() {
 			productHolderWidth($(this));
 		});
 
@@ -104,9 +105,9 @@
 				return;
 			}
 
-			productHolderWidth($this.parent('.wd-products-holder'));
+			productHolderWidth($this.parent('.wd-products'));
 
-			var columnWidth = $this.parent('.wd-products-holder').data('column_width');
+			var columnWidth = $this.parent('.wd-products').data('column_width');
 
 			if (!columnWidth) {
 				return;

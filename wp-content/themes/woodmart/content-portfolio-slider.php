@@ -4,39 +4,13 @@
  */
 
 $size = woodmart_loop_prop( 'portfolio_image_size' );
+$img  = woodmart_otf_get_image_html( get_post_thumbnail_id(), woodmart_loop_prop( 'portfolio_image_size' ), woodmart_loop_prop( 'portfolio_image_size_custom' ) );
 
-if ( woodmart_is_elementor_installed() ) {
-	$custom_sizes = woodmart_loop_prop( 'portfolio_image_size_custom' );
-
-	$img = woodmart_get_image_html( // phpcs:ignore
-		array(
-			'image_size'             => $size,
-			'image_custom_dimension' => $custom_sizes,
-			'image'                  => array(
-				'id' => get_post_thumbnail_id(),
-			),
-		),
-		'image'
-	);
-} elseif ( function_exists( 'wpb_getImageBySize' ) ) {
-	$img = wpb_getImageBySize(
-		array(
-			'attach_id'  => get_post_thumbnail_id(),
-			'thumb_size' => $size,
-		)
-	);
-
-	$img = isset( $img['thumbnail'] ) ? $img['thumbnail'] : '';
-} else {
-	$img = get_the_post_thumbnail( $post->ID, $size );
-}
-
+$classes[] = 'wd-project';
 $classes[] = 'portfolio-entry';
 
 $columns = woodmart_loop_prop( 'portfolio_column' );
 $style   = woodmart_loop_prop( 'portfolio_style' );
-
-$classes[] = 'portfolio-single';
 
 $cats = wp_get_post_terms( get_the_ID(), 'project-cat' );
 

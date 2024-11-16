@@ -13,6 +13,7 @@ use Elementor\Widget_Base;
 use XTS\WC_Wishlist\Ui as Wishlist;
 use XTS\Modules\Compare\Ui as Compare;
 use XTS\Modules\Linked_Variations\Frontend as Linked_Variations;
+use XTS\Modules\Shipping_Progress_Bar\Main as Shipping_Progress_Bar;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -56,6 +57,15 @@ class Hook extends Widget_Base {
 	 */
 	public function get_categories() {
 		return array( 'wd-woocommerce-elements' );
+	}
+
+	/**
+	 * Show in panel.
+	 *
+	 * @return bool Whether to show the widget in the panel or not.
+	 */
+	public function show_in_panel() {
+		return woodmart_woocommerce_installed();
 	}
 
 	/**
@@ -107,7 +117,6 @@ class Hook extends Widget_Base {
 					'woocommerce_after_single_product'     => 'woocommerce_after_single_product',
 
 					'woocommerce_before_cart'              => 'woocommerce_before_cart',
-					'woocommerce_after_cart_table'         => 'woocommerce_after_cart_table',
 					'woocommerce_cart_collaterals'         => 'woocommerce_cart_collaterals',
 					'woocommerce_after_cart'               => 'woocommerce_after_cart',
 
@@ -157,6 +166,7 @@ class Hook extends Widget_Base {
 		if ( 'yes' === $settings['clean_actions'] ) {
 			if ( 'woocommerce_checkout_billing' === $settings['hook'] ) {
 				remove_action( 'woocommerce_checkout_billing', array( WC()->checkout(), 'checkout_form_billing' ) );
+				remove_action( 'woocommerce_checkout_billing', array( Shipping_Progress_Bar::get_instance(), 'render_shipping_progress_bar_with_wrapper' ) );
 			} elseif ( 'woocommerce_checkout_shipping' === $settings['hook'] ) {
 				remove_action( 'woocommerce_checkout_shipping', array( WC()->checkout(), 'checkout_form_shipping' ) );
 			} elseif ( 'woocommerce_checkout_before_customer_details' === $settings['hook'] ) {
@@ -196,6 +206,7 @@ class Hook extends Widget_Base {
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_sguide_display', 38 );
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_before_add_to_cart_area', 25 );
 				remove_action( 'woocommerce_single_product_summary', 'woodmart_after_add_to_cart_area', 31 );
+				remove_action( 'woocommerce_single_product_summary', array( $GLOBALS['woocommerce']->structured_data, 'generate_product_data' ), 60 );
 
 				if ( woodmart_get_opt( 'linked_variations' ) ) {
 					remove_action( 'woocommerce_single_product_summary', array( Linked_Variations::get_instance(), 'output' ), 25 );

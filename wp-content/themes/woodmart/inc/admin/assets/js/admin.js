@@ -4,11 +4,14 @@ var woodmartAdminModule, woodmart_media_init;
 	'use strict';
 
 	woodmartAdminModule = (function() {
-
 		var woodmartAdmin = {
-			addNotice: function($selector, $type, $message) {
-				$selector.html('<div class="xts-notice xts-' + $type + '">' + $message + '</div>').fadeIn();
-
+			addNotice: function ($selector, $type, $message) {
+				$selector.prepend(
+					`<div class="xts-notice xts-${$type}">` +
+						$message +
+					'</div>'
+				).fadeIn();
+	
 				woodmartAdmin.hideNotice();
 			},
 
@@ -325,7 +328,6 @@ var woodmartAdminModule, woodmart_media_init;
 					woodmartAdmin.whiteLabel();
 				});
 			},
-
 			mediaInit: function() {
 				var clicked_button = false;
 				$('.woodmart-image-upload').each(function(i, input) {
@@ -384,8 +386,8 @@ var woodmartAdminModule, woodmart_media_init;
 
 					button.addClass('wd-inited');
 				});
-			}
-
+			},
+			woodmartAdmin
 		};
 
 	}());

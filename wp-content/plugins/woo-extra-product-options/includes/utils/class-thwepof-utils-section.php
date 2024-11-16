@@ -263,12 +263,12 @@ class THWEPOF_Utils_Section {
 	}
 	
 	public static function sort_fields($section){
-		uasort($section->fields, array('self', 'sort_by_order'));
+		uasort($section->fields, array(__CLASS__, 'sort_by_order'));
 		return $section;
 	}
 	
 	public static function sort_field_set($field_set){
-		uasort($field_set, array('self', 'sort_by_order'));
+		uasort($field_set, array(__CLASS__, 'sort_by_order'));
 		return $field_set;
 	}
 	

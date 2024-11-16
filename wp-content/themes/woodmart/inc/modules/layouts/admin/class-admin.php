@@ -48,9 +48,12 @@ class Admin extends Singleton {
 			'single_product'   => esc_html__( 'Single product', 'woodmart' ),
 			'shop_archive'     => esc_html__( 'Products archive', 'woodmart' ),
 			'cart'             => esc_html__( 'Cart', 'woodmart' ),
+			'empty_cart'       => esc_html__( 'Empty cart', 'woodmart' ),
 			'checkout_form'    => esc_html__( 'Checkout form', 'woodmart' ),
 			'checkout_content' => esc_html__( 'Checkout top content', 'woodmart' ),
 		);
+
+		add_filter( 'woodmart_admin_localized_string_array', array( $this, 'add_localized_settings' ) );
 
 		$this->add_actions();
 	}
@@ -95,9 +98,13 @@ class Admin extends Singleton {
 	 * @param WP_Post $post      Post object.
 	 */
 	public function add_conditions_box( $post_type, $post ) {
+		if ( 'woodmart_layout' !== $post_type ) {
+			return;
+		}
+
 		$type = get_post_meta( $post->ID, $this->type_meta_key, true );
 
-		if ( 'cart' === $type || 'checkout_content' === $type || 'checkout_form' === $type ) {
+		if ( 'cart' === $type || 'empty_cart' === $type || 'checkout_content' === $type || 'checkout_form' === $type ) {
 			return;
 		}
 
@@ -164,6 +171,10 @@ class Admin extends Singleton {
 
 		if ( 'checkout' === $current_tab ) {
 			$current_tab = array( 'checkout_form', 'checkout_content' );
+		}
+
+		if ( 'cart' === $current_tab ) {
+			$current_tab = array( 'cart', 'empty_cart' );
 		}
 
 		$query->query_vars['type_meta_key'] = $this->type_meta_key; // phpcs:ignore
@@ -256,7 +267,7 @@ class Admin extends Singleton {
 		$conditions = get_post_meta( $post_id, $this->conditions_meta_key, true );
 		$type       = get_post_meta( $post_id, $this->type_meta_key, true );
 
-		if ( 'cart' === $type || 'checkout_content' === $type || 'checkout_form' === $type ) {
+		if ( 'cart' === $type || 'empty_cart' === $type || 'checkout_content' === $type || 'checkout_form' === $type ) {
 			return ob_get_clean();
 		}
 
@@ -387,16 +398,16 @@ class Admin extends Singleton {
 					'url' => WOODMART_DEMO_URL . 'shop/furniture/feelgood-designs/?opts=single_product_layout_4',
 				),
 				'layout-6'  => array(
-					'url' => WOODMART_DEMO_URL . 'shop/toys/augue-adipiscing-euismod/',
+					'url' => WOODMART_DEMO_URL . 'shop/toys/augue-adipiscing-euismod/?opts=single_product_layout_6',
 				),
 				'layout-7'  => array(
-					'url' => WOODMART_DEMO_URL . 'shop/furniture/reflect-chest-of-drawers/?opt=product_sticky',
+					'url' => WOODMART_DEMO_URL . 'shop/furniture/reflect-chest-of-drawers/?opts=single_product_layout_7',
 				),
 				'layout-8'  => array(
-					'url' => WOODMART_DEMO_URL . 'shop/furniture/char-with-love/?opt=product_shadow',
+					'url' => WOODMART_DEMO_URL . 'shop/furniture/char-with-love/?opts=single_product_layout_8',
 				),
 				'layout-9'  => array(
-					'url' => WOODMART_DEMO_URL . 'shop/furniture/euismod-aliquam-parturient/?opt=accordion_content',
+					'url' => WOODMART_DEMO_URL . 'shop/furniture/euismod-aliquam-parturient/?opts=single_product_layout_9',
 				),
 				// Megamarket.
 				'layout-10' => array(
@@ -474,6 +485,7 @@ class Admin extends Singleton {
 
 		unset( $tabs['checkout_content'] );
 		unset( $tabs['checkout_form'] );
+		unset( $tabs['empty_cart'] );
 
 		$current_tab = 'all';
 
@@ -483,6 +495,10 @@ class Admin extends Singleton {
 
 		if ( 'checkout_content' === $current_tab || 'checkout_form' === $current_tab ) {
 			$current_tab = 'checkout';
+		}
+
+		if ( 'empty_cart' === $current_tab ) {
+			$current_tab = 'cart';
 		}
 
 		$base_url = add_query_arg(
@@ -498,6 +514,23 @@ class Admin extends Singleton {
 				'tabs'        => $tabs,
 				'current_tab' => $current_tab,
 				'base_url'    => $base_url,
+			)
+		);
+	}
+
+	/**
+	 * Add localized settings.
+	 *
+	 * @param array $settings Settings.
+	 * @return array
+	 */
+	public function add_localized_settings( $settings ) {
+		return array_merge(
+			$settings,
+			array(
+				'creation_error' => esc_html__( 'Something went wrong with the creation of the layout!', 'woodmart' ),
+				'editing_error'  => esc_html__( 'Something went wrong with editing the layout!', 'woodmart' ),
+				'success_save'   => esc_html__( 'Conditions has been successfully saved', 'woodmart' ),
 			)
 		);
 	}

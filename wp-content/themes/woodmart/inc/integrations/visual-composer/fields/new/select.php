@@ -19,11 +19,19 @@ if ( ! function_exists( 'woodmart_get_select_param' ) ) {
 	 * @return false|string
 	 */
 	function woodmart_get_select_param( $settings, $value ) {
+		$devices_maps = array(
+			'desktop'         => esc_html__( 'Desktop', 'woodmart' ),
+			'tablet'          => esc_html__( 'Tablet', 'woodmart' ),
+			'tablet_vertical' => esc_html__( 'Tablet', 'woodmart' ),
+			'mobile'          => esc_html__( 'Mobile', 'woodmart' ),
+		);
+
 		$devices = $settings['devices'];
 		$data    = json_decode( woodmart_decompress( $value ), true );
+
 		if ( isset( $data['devices'] ) ) {
 			$settings['default'] = $settings['devices'];
-			$settings['devices'] = $data['devices'];
+			$settings['devices'] = wp_parse_args( $data['devices'], $settings['devices'] );
 		}
 
 		$wrapper_classes = ' wd-style-' . $settings['style'];
@@ -46,8 +54,8 @@ if ( ! function_exists( 'woodmart_get_select_param' ) ) {
 						}
 						?>
 
-						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>">
-							<span><?php echo esc_attr( $device ); ?></span>
+						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>" title="<?php echo esc_attr( ucfirst( $device ) ); ?>">
+							<span><?php echo esc_html( $devices_maps[ $device ] ); ?></span>
 						</span>
 					<?php endforeach; ?>
 				</div>

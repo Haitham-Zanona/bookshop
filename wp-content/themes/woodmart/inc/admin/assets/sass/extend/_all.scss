@@ -218,6 +218,7 @@
 	cursor: pointer;
 	transition: .2s all ease-in-out;
 	transform: none;
+	text-decoration: none;
 
 	&:hover,
 	&:focus {
@@ -316,10 +317,11 @@
 
 %xts-fill {
 	position: absolute;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	left: 0;
+	inset: 0;
+	// top: 0;
+	// right: 0;
+	// bottom: 0;
+	// left: 0;
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -491,9 +493,11 @@
 	&:before,
 	&:after {
 		position: absolute;
-		z-index: $z-layer-10;
+		// z-index: $z-layer-10;
+		z-index: 999999;
 		visibility: hidden;
 		opacity: 0;
+		cursor: wait;
 
 		// visibility: visible;
 		// opacity: 1;
@@ -503,10 +507,11 @@
 
 	&:before {
 		content: "";
-		top: 0;
-		right: 0;
-		bottom: 0;
-		left: 0;
+		inset: 0;
+		// top: 0;
+		// right: 0;
+		// bottom: 0;
+		// left: 0;
 		border-radius: var(--xts-brd-radius);
 		background-color: $bg-color;
 	}

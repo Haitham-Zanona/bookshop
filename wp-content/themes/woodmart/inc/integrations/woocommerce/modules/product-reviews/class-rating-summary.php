@@ -24,15 +24,6 @@ class Rating_Summary extends Singleton {
 		if ( ! woodmart_get_opt( 'reviews_rating_summary' ) ) {
 			return;
 		}
-
-		$this->hooks();
-	}
-
-	/**
-	 * Hooks.
-	 */
-	public function hooks() {
-		add_filter( 'comment_post_redirect', array( $this, 'redirect_after_comment' ) );
 	}
 
 	/**
@@ -74,6 +65,7 @@ class Rating_Summary extends Singleton {
 	/**
 	 * Render rating summary.
 	 *
+	 * @codeCoverageIgnore
 	 * @param bool $return Do you need to return the html?.
 	 * @return string|void
 	 */
@@ -174,16 +166,6 @@ class Rating_Summary extends Singleton {
 		if ( $return ) {
 			return ob_get_clean();
 		}
-	}
-
-	/**
-	 * This method returns a value HTTP_REFERER, to return to the same page after adding a new comment to the product.
-	 *
-	 * @param string $location The 'redirect_to' URI sent via $_POST.
-	 * @return array|string
-	 */
-	public function redirect_after_comment( $location ) { // phpcs:ignore.
-		return wp_unslash( $_SERVER['HTTP_REFERER'] ); // phpcs:ignore.
 	}
 }
 

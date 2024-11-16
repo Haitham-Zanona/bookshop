@@ -108,15 +108,17 @@ class Reviews extends Widget_Base {
 		$this->add_responsive_control(
 			'reviews_columns',
 			array(
-				'label'        => esc_html__( 'Reviews columns', 'woodmart' ),
-				'type'         => Controls_Manager::SELECT,
-				'options'      => array(
+				'label'          => esc_html__( 'Reviews columns', 'woodmart' ),
+				'type'           => Controls_Manager::SELECT,
+				'options'        => array(
 					'1' => esc_html__( '1', 'woodmart' ),
 					'2' => esc_html__( '2', 'woodmart' ),
 				),
 				'default'        => '1',
 				'tablet_default' => '1',
 				'mobile_default' => '1',
+				'devices'        => array( 'desktop', 'tablet', 'mobile' ),
+				'classes'        => 'wd-hide-custom-breakpoints',
 			)
 		);
 

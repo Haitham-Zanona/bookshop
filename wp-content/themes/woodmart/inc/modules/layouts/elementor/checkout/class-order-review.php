@@ -11,6 +11,8 @@ use Elementor\Controls_Manager;
 use Elementor\Plugin;
 use Elementor\Widget_Base;
 use XTS\Modules\Checkout_Order_Table;
+use Automattic\WooCommerce\Internal\Orders\OrderAttributionController;
+use Automattic\WooCommerce\Utilities\FeaturesUtil;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -131,6 +133,13 @@ class Order_Review extends Widget_Base {
 		}
 
 		woocommerce_order_review();
+
+		// Render order attribution inputs if feature is enabled.
+		if ( FeaturesUtil::feature_is_enabled( 'order_attribution' ) ) {
+			$order_attribution_controller = new OrderAttributionController();
+
+			$order_attribution_controller->stamp_html_element();
+		}
 	}
 
 	/**

@@ -184,7 +184,7 @@
 
 	var $html = $('html');
 
-	$html.addClass('browser-' + jscd.browser);
+	$html.addClass('browser-' + jscd.browser.replaceAll(' ', '-'));
 	$html.addClass('platform-' + jscd.os);
 	
 })(jQuery);

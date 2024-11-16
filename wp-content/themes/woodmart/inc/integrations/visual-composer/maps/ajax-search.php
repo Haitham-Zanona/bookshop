@@ -5,26 +5,22 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_ajax_search' ) ) {
-	function woodmart_vc_map_ajax_search() {
-		if ( ! shortcode_exists( 'woodmart_ajax_search' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_ajax_search' ) ) {
+	function woodmart_get_vc_map_ajax_search() {
+		return array(
 			'name'        => esc_html__( 'AJAX Search', 'woodmart' ),
 			'description' => esc_html__( 'Shows AJAX search form', 'woodmart' ),
 			'base'        => 'woodmart_ajax_search',
 			'category'    => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
-        	'icon'        => WOODMART_ASSETS . '/images/vc-icon/ajax-search.svg',
+			'icon'        => WOODMART_ASSETS . '/images/vc-icon/ajax-search.svg',
 			'params'      => array(
 				array(
 					'type'       => 'woodmart_css_id',
 					'param_name' => 'woodmart_css_id',
 				),
 				/**
-				* Search results
-				*/
+				 * Search results
+				 */
 				array(
 					'type'       => 'woodmart_title_divider',
 					'holder'     => 'div',
@@ -92,8 +88,8 @@ if( ! function_exists( 'woodmart_vc_map_ajax_search' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Style
-				*/
+				 * Style
+				 */
 				array(
 					'type'       => 'woodmart_title_divider',
 					'holder'     => 'div',
@@ -108,15 +104,49 @@ if( ! function_exists( 'woodmart_vc_map_ajax_search' ) ) {
 						esc_html__( 'Default', 'woodmart' ) => 'default',
 						esc_html__( 'With background', 'woodmart' ) => 'with-bg',
 						esc_html__( 'With background 2', 'woodmart' ) => 'with-bg-2',
+						esc_html__( 'Fourth', 'woodmart' ) => '4',
 					),
 					'images_value'     => array(
 						'default'   => WOODMART_ASSETS_IMAGES . '/header-builder/search/default.jpg',
 						'with-bg'   => WOODMART_ASSETS_IMAGES . '/header-builder/search/with-bg.jpg',
 						'with-bg-2' => WOODMART_ASSETS_IMAGES . '/header-builder/search/with-bg-2.jpg',
+						'4'         => WOODMART_ASSETS_IMAGES . '/header-builder/search/fourth.jpg',
 					),
 					'std'              => 'default',
 					'wood_tooltip'     => true,
 					'edit_field_class' => 'vc_col-sm-12 vc_column wd-form-style',
+				),
+				array(
+					'heading'          => esc_html__( 'Form height', 'woodmart' ),
+					'type'             => 'wd_slider',
+					'param_name'       => 'form_height',
+					'devices'          => array(
+						'desktop' => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+						'tablet'  => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+						'mobile'  => array(
+							'unit'  => 'px',
+							'value' => '',
+						),
+					),
+					'range'            => array(
+						'px' => array(
+							'min'  => 30,
+							'max'  => 100,
+							'step' => 1,
+						),
+					),
+					'selectors'        => array(
+						'{{WRAPPER}} .searchform' => array(
+							'--wd-form-height: {{VALUE}}{{UNIT}};',
+						),
+					),
+					'edit_field_class' => 'vc_col-sm-12 vc_column',
 				),
 				array(
 					'type'       => 'woodmart_button_set',
@@ -232,7 +262,6 @@ if( ! function_exists( 'woodmart_vc_map_ajax_search' ) ) {
 				),
 				woodmart_get_vc_responsive_spacing_map(),
 			),
-		) );
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_ajax_search' );
 }

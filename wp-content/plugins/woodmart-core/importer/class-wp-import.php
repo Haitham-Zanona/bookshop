@@ -24,6 +24,7 @@ class WOODCORE_Import extends WP_Importer {
 	var $base_url   = '';
 	// XTemos.
 	var $wd_data = array();
+	var $wd_download_by_cdn = false;
 	// XTemos.
 
 	// mappings from old information to new
@@ -1203,6 +1204,11 @@ class WOODCORE_Import extends WP_Importer {
 			return new WP_Error( 'import_no_file', __( 'Could not create temporary file.', 'wordpress-importer' ) );
 		}
 
+		if ( apply_filters( 'woodmart_downloader_images_from_cdn', $this->wd_download_by_cdn ) && strpos( $url, 'wp-content/uploads/' ) && strpos( $url, '/dummy.xtemos.com/' ) ) {
+			$url = str_replace( 'https://dummy.xtemos.com/', 'https://woodmart-dummy.b-cdn.net/', $url );
+			$url = str_replace( 'http://dummy.xtemos.com/', 'https://woodmart-dummy.b-cdn.net/', $url );
+		}
+
 		// Fetch the remote URL and write it to the placeholder file.
 		// XTemos.
 		for ( $i = 1; $i <= apply_filters( 'woodmart_safe_remote_iterations', 3 ); $i++ ) {
@@ -1225,12 +1231,14 @@ class WOODCORE_Import extends WP_Importer {
 				$logger->info(
 					json_encode(
 						[
-							'url'  => $file_name,
+							'url'  => $url,
 							'data' => $remote_response,
 						]
 					),
 					array( 'source' => 'failed-import-images' )
 				);
+
+				$this->wd_download_by_cdn = true;
 			}
 		}
 		// XTemos.

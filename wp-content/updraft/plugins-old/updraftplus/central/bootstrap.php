@@ -20,7 +20,7 @@ class UpdraftCentral_Main {
 	 * Class constructor
 	 */
 	public function __construct() {
-		
+
 		add_action('udrpc_log', array($this, 'udrpc_log'), 10, 3);
 		
 		add_action('wp_ajax_updraftcentral_receivepublickey', array($this, 'wp_ajax_updraftcentral_receivepublickey'));
@@ -116,7 +116,7 @@ class UpdraftCentral_Main {
 		} else {
 			$url_prefix = is_ssl() ? 'https' : 'http';
 			$host = empty($_SERVER['HTTP_HOST']) ? parse_url(network_site_url(),  PHP_URL_HOST) : $_SERVER['HTTP_HOST'];
-			$current_url = $url_prefix."://".$host.$_SERVER['REQUEST_URI'];
+			$current_url = $url_prefix."://".$host.wp_unslash($_SERVER['REQUEST_URI']);
 		}
 		$remove_query_args = array('state', 'action', 'oauth_verifier', 'nonce', 'updraftplus_instance', 'access_token', 'user_id', 'updraftplus_googledriveauth');
 
@@ -132,8 +132,8 @@ class UpdraftCentral_Main {
 	public function get_wordpress_version() {
 		static $got_wp_version = false;
 		if (!$got_wp_version) {
-			@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
-			$got_wp_version = $wp_version;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+			@include(ABSPATH.WPINC.'/version.php');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
+			$got_wp_version = $wp_version;// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable -- The variable is defined inside the ABSPATH.WPINC.'/version.php'.
 		}
 		return $got_wp_version;
 	}
@@ -186,7 +186,7 @@ class UpdraftCentral_Main {
 		if ('ok' == $result['responsetype']) {
 			$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_successful', true);
 		} else {
-			echo '<strong>'.$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_failed').'</strong><br>';
+			echo '<strong><span id="udc-connect-failed">'.$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_failed').'</span></strong><br>';
 			switch ($result['code']) {
 				case 'unknown_key':
 					$updraftcentral_host_plugin->retrieve_show_message('unknown_key', true);
@@ -427,10 +427,12 @@ class UpdraftCentral_Main {
 	 */
 	public function get_udrpc($indicator_name = 'migrator.updraftplus.com') {
 
-		global $updraftcentral_host_plugin;
+		global $updraftcentral_host_plugin, $updraftplus;
+
+		$updraftplus->ensure_phpseclib();
 		
-		if (!class_exists('UpdraftPlus_Remote_Communications')) include_once($updraftcentral_host_plugin->get_host_dir().'/vendor/team-updraft/common-libs/src/updraft-rpc/class-udrpc.php');
-		$ud_rpc = new UpdraftPlus_Remote_Communications($indicator_name);
+		if (!class_exists('UpdraftPlus_Remote_Communications_V2')) include_once($updraftcentral_host_plugin->get_host_dir().'/vendor/team-updraft/common-libs/src/updraft-rpc/class-udrpc2.php');
+		$ud_rpc = new UpdraftPlus_Remote_Communications_V2($indicator_name);
 		$ud_rpc->set_can_generate(true);
 		
 		return $ud_rpc;
@@ -468,7 +470,7 @@ class UpdraftCentral_Main {
 		
 		// Normally, key generation takes seconds, even on a slow machine. However, some Windows machines appear to have a setup in which it takes a minute or more. And then, if you're on a double-localhost setup on slow hardware - even worse. It doesn't hurt to just raise the maximum execution time.
 		
-		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTCENTRAL_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTCENTRAL_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the function.
 		
 		$key_size = (empty($extra_info['key_size']) || !is_numeric($extra_info['key_size']) || $extra_info['key_size'] < 512) ? 2048 : (int) $extra_info['key_size'];
 
@@ -750,6 +752,11 @@ class UpdraftCentral_Main {
 					</tr>
 				</tbody>
 			</table>
+			<div id="updraft-copy-modal" title="<?php _e('Copy to clipboard', 'updraftplus');?>">
+				<p>
+					<?php echo __('Your web browser prevented the copy operation.', 'updraftplus').' '.'<a href="https://updraftplus.com/faqs/how-do-i-set-clipboard-permissions-for-different-browsers/" target="__blank">'.' '.__('Follow this link to read about how to set browser permission', 'updraftplus').'</a>'; ?>
+				</p>
+			</div>
 		</div>
 		<?php
 		return ob_get_clean();

@@ -108,7 +108,7 @@ class Send_On_Sales_Products extends Singleton {
 				}
 			}
 
-			update_option( 'woodmart_wishlist_products_on_sale', $products_on_sales );
+			update_option( 'woodmart_wishlist_products_on_sale', $products_on_sales, false );
 		}
 	}
 
@@ -146,7 +146,7 @@ class Send_On_Sales_Products extends Singleton {
 			}
 		}
 
-		update_option( 'woodmart_wishlist_products_on_sale', $products_on_sales );
+		update_option( 'woodmart_wishlist_products_on_sale', $products_on_sales, false );
 	}
 
 	/**
@@ -219,7 +219,7 @@ class Send_On_Sales_Products extends Singleton {
 
 		$wpdb->query( "ALTER TABLE {$wpdb->woodmart_wishlists_table} ADD COLUMN on_sale boolean DEFAULT 0 NOT NULL AFTER date_added" );
 
-		update_option( 'woodmart_added_column_on_sale_in_product_db', true );
+		update_option( 'woodmart_added_column_on_sale_in_product_db', true, false );
 	}
 
 	/**
@@ -246,7 +246,7 @@ class Send_On_Sales_Products extends Singleton {
 					unset( $products_ids_on_sale[ $user_id ] );
 				}
 
-				update_option( 'woodmart_wishlist_products_on_sale', $products_ids_on_sale );
+				update_option( 'woodmart_wishlist_products_on_sale', $products_ids_on_sale, false );
 			}
 		}
 	}

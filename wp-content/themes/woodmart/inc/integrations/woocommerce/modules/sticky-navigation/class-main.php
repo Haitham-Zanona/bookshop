@@ -5,14 +5,14 @@
  * @package woodmart
  */
 
-namespace XTS\Modules;
+namespace XTS\Modules\Sticky_Navigation;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use WOODMART_Mega_Menu_Walker;
-use XTS\Options;
+use XTS\Admin\Modules\Options;
+use XTS\Modules\Mega_Menu_Walker;
 use XTS\Singleton;
 
 /**
@@ -38,6 +38,7 @@ class Main extends Singleton {
 	/**
 	 * Output sticky category navigation menu.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 */
 	public function template() {
@@ -67,7 +68,7 @@ class Main extends Singleton {
 						'menu'       => woodmart_get_opt( 'sticky_navigation_menu' ),
 						'menu_class' => 'menu wd-nav wd-nav-vertical wd-nav-sticky',
 						'container'  => '',
-						'walker'     => new WOODMART_Mega_Menu_Walker(),
+						'walker'     => new Mega_Menu_Walker(),
 					)
 				);
 				?>
@@ -145,11 +146,12 @@ class Main extends Singleton {
 
 		Options::add_field(
 			array(
-				'id'       => 'sticky_navigation_title',
-				'name'     => esc_html__( 'Title', 'woodmart' ),
-				'type'     => 'text_input',
-				'section'  => 'sticky_navigation_section',
-				'priority' => 25,
+				'id'          => 'sticky_navigation_title',
+				'name'        => esc_html__( 'Title', 'woodmart' ),
+				'type'        => 'text_input',
+				'section'     => 'sticky_navigation_section',
+				'priority'    => 25,
+				'description' => esc_html__( 'Specify your custom title or leave it empty to keep "Menu".', 'woodmart' ),
 			)
 		);
 
@@ -225,6 +227,7 @@ class Main extends Singleton {
 	/**
 	 * Get all menus.
 	 *
+	 * @codeCoverageIgnore
 	 * @return array
 	 */
 	private function get_menus_array() {
@@ -253,9 +256,11 @@ class Main extends Singleton {
 	 * @return array
 	 */
 	public function body_class( $classes ) {
-		if ( woodmart_get_opt( 'sticky_navigation_menu' ) ) {
-			$classes[] = 'wd-sticky-nav-enabled';
+		if ( ! woodmart_get_opt( 'sticky_navigation_menu' ) || woodmart_is_maintenance_active() || wp_is_mobile() && woodmart_get_opt( 'mobile_optimization', 0 ) ) {
+			return $classes;
 		}
+
+		$classes[] = 'wd-sticky-nav-enabled';
 
 		return $classes;
 	}

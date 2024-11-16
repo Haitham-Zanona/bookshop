@@ -74,6 +74,14 @@ if ( ! class_exists( 'WPH_Widget' ) )
 			return $categories_array;
 		}
 
+		public function is_widget_preview() {
+			if ( apply_filters( 'woodmart_hide_content_on_widget_preview', true ) && defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+				return true;
+			}
+
+			return false;
+		}
+
         /** 
         * Create Widget 
         * 

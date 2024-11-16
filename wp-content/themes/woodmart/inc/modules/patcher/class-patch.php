@@ -80,7 +80,7 @@ class Patch {
 
 			$patch_success[ WOODMART_VERSION ][ $this->patch_id ] = true;
 
-			update_option( 'xts_successfully_installed_patches', $patch_success );
+			update_option( 'xts_successfully_installed_patches', $patch_success, false );
 
 			wp_send_json(
 				array(

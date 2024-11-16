@@ -20,24 +20,6 @@ return array(
 			'dependency' => array(),
 		),
 	),
-	'flickity'               => array(
-		array(
-			'title'      => esc_html__( 'Flickity', 'woodmart' ),
-			'name'       => 'flickity',
-			'file'       => '/js/libs/flickity-all',
-			'in_footer'  => true,
-			'dependency' => array(),
-		),
-	),
-	'flickity-fade'          => array(
-		array(
-			'title'      => esc_html__( 'Flickity fade', 'woodmart' ),
-			'name'       => 'flickity-fade',
-			'file'       => '/js/libs/flickity-fade',
-			'in_footer'  => true,
-			'dependency' => array(),
-		),
-	),
 	'cookie'                 => array(
 		array(
 			'title'      => esc_html__( 'Cookie', 'woodmart' ),
@@ -92,15 +74,6 @@ return array(
 			'dependency' => array(),
 		),
 	),
-	'owl'                    => array(
-		array(
-			'title'      => esc_html__( 'OWL carousel', 'woodmart' ),
-			'name'       => 'owl',
-			'file'       => '/js/libs/owl.carousel',
-			'in_footer'  => true,
-			'dependency' => array(),
-		),
-	),
 	'panr-parallax-bundle'   => array(
 		array(
 			'title'      => esc_html__( 'Panr parallax', 'woodmart' ),
@@ -146,20 +119,20 @@ return array(
 			'dependency' => array(),
 		),
 	),
-	'slick'                  => array(
-		array(
-			'title'      => esc_html__( 'Slick slider', 'woodmart' ),
-			'name'       => 'slick',
-			'file'       => '/js/libs/slick',
-			'in_footer'  => true,
-			'dependency' => array(),
-		),
-	),
 	'sticky-kit'             => array(
 		array(
 			'title'      => esc_html__( 'Sticky kit', 'woodmart' ),
 			'name'       => 'sticky-kit',
 			'file'       => '/js/libs/sticky-kit',
+			'in_footer'  => true,
+			'dependency' => array(),
+		),
+	),
+	'swiper'                 => array(
+		array(
+			'title'      => esc_html__( 'Swiper', 'woodmart' ),
+			'name'       => 'wd_swiper',
+			'file'       => '/js/libs/swiper',
 			'in_footer'  => true,
 			'dependency' => array(),
 		),

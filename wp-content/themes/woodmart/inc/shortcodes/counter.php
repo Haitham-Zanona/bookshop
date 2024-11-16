@@ -52,7 +52,7 @@ if ( ! function_exists( 'woodmart_shortcode_animated_counter' ) ) {
 
 		?>
 			<div class="woodmart-counter wd-wpb <?php echo esc_attr( $el_class ); ?>" id="<?php echo esc_attr( $counter_id ); ?>">
-				<div class="counter-value wd-font-weight-<?php echo esc_attr( $atts['font_weight'] ); ?>" data-state="new" data-final="<?php echo esc_attr( $atts['value'] ); ?>"><?php echo esc_attr( $atts['value'] ); ?></div>
+				<div class="counter-value wd-font-weight-<?php echo esc_attr( $atts['font_weight'] ); ?>" data-state="new" data-final="<?php echo esc_attr( $atts['value'] ); ?>"><?php echo esc_html( $atts['value'] ); ?></div>
 				<?php if ( '' !== $atts['label'] ) : ?>
 					<div class="counter-label"><?php echo esc_html( $atts['label'] ); ?></div>
 				<?php endif ?>

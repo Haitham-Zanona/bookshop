@@ -1,3 +1,4 @@
+/* global xtsAdminWishlistSettings */
 (function($) {
 	const woodmartWishlist = function() {
 		function selectControl() {
@@ -114,11 +115,30 @@
 			}
 		}
 
+		function createPromotion() {
+			$('#doaction, #doaction2').on('click', function( e ) {
+				if ( 'create-promotion' !== $('#bulk-action-selector-top').val() ) {
+					return;
+				}
+
+				if ( ! confirm( xtsAdminWishlistSettings.send_promotional_confirm_text ) ) {
+					e.preventDefault();
+				}
+			});
+
+			$('.wd-create-promotion').on('click', function(e) {
+				if ( $(this).hasClass('xts-disabled') || ! confirm( xtsAdminWishlistSettings.send_promotional_confirm_text ) ) {
+					e.preventDefault();
+				}
+			});
+		}
+
 		return {
 			init: function() {
 				selectControl();
 				userSelectControl();
 				dateControl();
+				createPromotion();
 			}
 		}
 	}

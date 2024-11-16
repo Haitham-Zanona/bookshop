@@ -94,6 +94,15 @@ class Banner_Carousel extends Widget_Base {
 			)
 		);
 
+		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
 		$repeater = new Repeater();
 
 		$repeater->start_controls_tabs( 'banner_tabs' );
@@ -124,17 +133,76 @@ class Banner_Carousel extends Widget_Base {
 		$repeater->start_controls_tab(
 			'image_tab',
 			array(
-				'label' => esc_html__( 'Image', 'woodmart' ),
+				'label' => esc_html__( 'Background', 'woodmart' ),
+			)
+		);
+
+		$repeater->add_control(
+			'source_type',
+			array(
+				'label'   => esc_html__( 'Source', 'woodmart' ),
+				'type'    => Controls_Manager::SELECT,
+				'options' => array(
+					'image' => esc_html__( 'Image', 'woodmart' ),
+					'video' => esc_html__( 'Video', 'woodmart' ),
+				),
+				'default' => 'image',
+			)
+		);
+
+		$repeater->add_control(
+			'video',
+			array(
+				'label'      => esc_html__( 'Choose video', 'woodmart' ),
+				'type'       => Controls_Manager::MEDIA,
+				'media_type' => 'video',
+				'condition'  => array(
+					'source_type' => 'video',
+				),
+			)
+		);
+
+		$repeater->add_control(
+			'video_poster',
+			array(
+				'label'     => esc_html__( 'Fallback image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'condition' => array(
+					'source_type' => 'video',
+				),
+			)
+		);
+
+		$repeater->add_group_control(
+			Group_Control_Image_Size::get_type(),
+			array(
+				'name'           => 'video_poster',
+				'fields_options' => array(
+					'size'             => array(
+						'label' => esc_html__( 'Fallback image size', 'woodmart' ),
+					),
+					'custom_dimension' => array(
+						'label' => esc_html__( 'Fallback image Dimension', 'woodmart' ),
+					),
+				),
+				'default'        => 'full',
+				'separator'      => 'none',
+				'condition'      => array(
+					'source_type' => 'video',
+				),
 			)
 		);
 
 		$repeater->add_control(
 			'image',
 			array(
-				'label'   => esc_html__( 'Choose image', 'woodmart' ),
-				'type'    => Controls_Manager::MEDIA,
-				'default' => array(
+				'label'     => esc_html__( 'Choose image', 'woodmart' ),
+				'type'      => Controls_Manager::MEDIA,
+				'default'   => array(
 					'url' => Utils::get_placeholder_image_src(),
+				),
+				'condition' => array(
+					'source_type' => 'image',
 				),
 			)
 		);
@@ -145,6 +213,9 @@ class Banner_Carousel extends Widget_Base {
 				'name'      => 'image',
 				'default'   => 'thumbnail',
 				'separator' => 'none',
+				'condition' => array(
+					'source_type' => 'image',
+				),
 			)
 		);
 
@@ -163,7 +234,7 @@ class Banner_Carousel extends Widget_Base {
 		$repeater->add_responsive_control(
 			'image_height',
 			array(
-				'label'     => esc_html__( 'Image height', 'woodmart' ),
+				'label'     => esc_html__( 'Banner height', 'woodmart' ),
 				'type'      => Controls_Manager::SLIDER,
 				'default'   => array(
 					'size' => 340,
@@ -176,7 +247,7 @@ class Banner_Carousel extends Widget_Base {
 					),
 				),
 				'selectors' => array(
-					'{{WRAPPER}} {{CURRENT_ITEM}} .banner-image' => 'height: {{SIZE}}{{UNIT}};',
+					'{{WRAPPER}} {{CURRENT_ITEM}}' => '--wd-img-height: {{SIZE}}{{UNIT}};',
 				),
 				'condition' => array(
 					'custom_height' => array( 'Yes' ),
@@ -202,6 +273,7 @@ class Banner_Carousel extends Widget_Base {
 				),
 				'condition' => array(
 					'custom_height' => array( 'Yes' ),
+					'source_type'   => 'image',
 				),
 			)
 		);
@@ -572,145 +644,6 @@ class Banner_Carousel extends Widget_Base {
 		$this->end_controls_section();
 
 		/**
-		 * Carousel settings.
-		 */
-		$this->start_controls_section(
-			'carousel_style_section',
-			array(
-				'label' => esc_html__( 'Carousel', 'woodmart' ),
-				'tab'   => Controls_Manager::TAB_STYLE,
-			)
-		);
-
-		$this->add_responsive_control(
-			'slides_per_view',
-			array(
-				'label'       => esc_html__( 'Slides per view', 'woodmart' ),
-				'description' => esc_html__( 'Set numbers of slides you want to display at the same time on slider\'s container for carousel mode.', 'woodmart' ),
-				'type'        => Controls_Manager::SLIDER,
-				'default'     => array(
-					'size' => 3,
-				),
-				'size_units'  => '',
-				'range'       => array(
-					'px' => array(
-						'min'  => 1,
-						'max'  => 8,
-						'step' => 1,
-					),
-				),
-			)
-		);
-
-		$this->add_control(
-			'slider_spacing',
-			array(
-				'label'   => esc_html__( 'Space between', 'woodmart' ),
-				'type'    => Controls_Manager::SELECT,
-				'options' => array(
-					0  => esc_html__( '0 px', 'woodmart' ),
-					2  => esc_html__( '2 px', 'woodmart' ),
-					6  => esc_html__( '6 px', 'woodmart' ),
-					10 => esc_html__( '10 px', 'woodmart' ),
-					20 => esc_html__( '20 px', 'woodmart' ),
-					30 => esc_html__( '30 px', 'woodmart' ),
-				),
-				'default' => 30,
-			)
-		);
-
-		$this->add_control(
-			'scroll_per_page',
-			array(
-				'label'        => esc_html__( 'Scroll per page', 'woodmart' ),
-				'description'  => esc_html__( 'Scroll per page not per item. This affect next/prev buttons and mouse/touch dragging.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'yes',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->add_control(
-			'hide_pagination_control',
-			array(
-				'label'        => esc_html__( 'Hide pagination control', 'woodmart' ),
-				'description'  => esc_html__( 'If "YES" pagination control will be removed.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->add_control(
-			'hide_prev_next_buttons',
-			array(
-				'label'        => esc_html__( 'Hide prev/next buttons', 'woodmart' ),
-				'description'  => esc_html__( 'If "YES" prev/next control will be removed', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->add_control(
-			'wrap',
-			array(
-				'label'        => esc_html__( 'Slider loop', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->add_control(
-			'autoplay',
-			array(
-				'label'        => esc_html__( 'Slider autoplay', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->add_control(
-			'speed',
-			array(
-				'label'       => esc_html__( 'Slider speed', 'woodmart' ),
-				'description' => esc_html__( 'Duration of animation between slides (in ms)', 'woodmart' ),
-				'default'     => '5000',
-				'type'        => Controls_Manager::NUMBER,
-				'condition'   => array(
-					'autoplay' => 'yes',
-				),
-			)
-		);
-
-		$this->add_control(
-			'scroll_carousel_init',
-			array(
-				'label'        => esc_html__( 'Init carousel on scroll', 'woodmart' ),
-				'description'  => esc_html__( 'This option allows you to init carousel script only when visitor scroll the page to the slider. Useful for performance optimization.', 'woodmart' ),
-				'type'         => Controls_Manager::SWITCHER,
-				'default'      => 'no',
-				'label_on'     => esc_html__( 'Yes', 'woodmart' ),
-				'label_off'    => esc_html__( 'No', 'woodmart' ),
-				'return_value' => 'yes',
-			)
-		);
-
-		$this->end_controls_section();
-
-		/**
 		 * Title settings.
 		 */
 		$this->start_controls_section(
@@ -920,6 +853,7 @@ class Banner_Carousel extends Widget_Base {
 					'standard'    => esc_html__( 'Standard', 'woodmart' ),
 					'transparent' => esc_html__( 'Transparent', 'woodmart' ),
 					'active'      => esc_html__( 'Primary color', 'woodmart' ),
+					'simple'      => esc_html__( 'Simple', 'woodmart' ),
 				],
 				'default' => 'standard',
 			]
@@ -1117,8 +1051,8 @@ class Banner_Carousel extends Widget_Base {
 				'type'      => Controls_Manager::SELECT,
 				'options'   => array(
 					'rectangle'  => esc_html__( 'Rectangle', 'woodmart' ),
-					'round'      => esc_html__( 'Circle', 'woodmart' ),
-					'semi-round' => esc_html__( 'Round', 'woodmart' ),
+					'round'      => esc_html__( 'Round', 'woodmart' ),
+					'semi-round' => esc_html__( 'Rounded', 'woodmart' ),
 				),
 				'condition' => array(
 					'btn_style!' => array( 'link' ),
@@ -1136,7 +1070,7 @@ class Banner_Carousel extends Widget_Base {
 			)
 		);
 
-		woodmart_get_button_style_icon_map( $this );
+		woodmart_get_button_style_icon_map( $this, 'btn_' );
 
 		$this->add_control(
 			'button_layout_heading',
@@ -1204,7 +1138,7 @@ class Banner_Carousel extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		woodmart_elementor_banner_carousel_template( $this->get_settings_for_display() );
+		woodmart_elementor_banner_carousel_template( $this->get_settings_for_display(), $this );
 	}
 }
 

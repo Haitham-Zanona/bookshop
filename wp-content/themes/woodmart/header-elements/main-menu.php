@@ -1,4 +1,6 @@
 <?php
+use XTS\Modules\Mega_Menu_Walker;
+
 $extra_class = '';
 $menu_style  = ( $params['menu_style'] ) ? $params['menu_style'] : 'default';
 $location    = 'main-menu';
@@ -79,12 +81,12 @@ if ( $params['full_screen'] ) {
 	return;
 }
 ?>
-<div class="wd-header-nav wd-header-main-nav <?php echo esc_attr( $classes ); ?>" role="navigation" aria-label="<?php esc_html_e( 'Main navigation', 'woodmart' ); ?>">
+<div class="wd-header-nav wd-header-main-nav <?php echo esc_attr( $classes ); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Main navigation', 'woodmart' ); ?>">
 	<?php
 	$args = array(
 		'container'  => '',
 		'menu_class' => 'menu wd-nav wd-nav-main' . $menu_classes,
-		'walker'     => new WOODMART_Mega_Menu_Walker(),
+		'walker'     => new Mega_Menu_Walker(),
 	);
 
 	if ( empty( $params['menu_id'] ) ) {

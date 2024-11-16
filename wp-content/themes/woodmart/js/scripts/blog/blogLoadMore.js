@@ -58,7 +58,7 @@
 						var items = $(html);
 
 						if (items) {
-							if (holder.hasClass('masonry-container')) {
+							if (holder.hasClass('wd-masonry')) {
 								holder.append(items).isotope('appended', items);
 								holder.imagesLoaded().progress(function() {
 									holder.isotope('layout');

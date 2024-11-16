@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Options;
 use XTS\WC_Wishlist\Wishlist;
 use XTS\WC_Wishlist\Ui;
 
@@ -89,7 +88,7 @@ class WC_Wishlist {
 
 		Ui::get_instance();
 
-		add_action( 'init', array( $this, 'custom_rewrite_rule' ), 10, 0 );
+		add_action( 'init', array( $this, 'custom_rewrite_rule' ), 10 );
 
 		add_filter( 'query_vars', array( $this, 'add_query_vars' ) );
 	}
@@ -120,10 +119,12 @@ class WC_Wishlist {
 	 * @return void
 	 */
 	public function custom_rewrite_rule() {
-		$id = woodmart_get_opt( 'wishlist_page' );
-		add_rewrite_rule( '^wishlist/([^/]*)/page/([^/]*)?', 'index.php?page_id=' . ( (int) $id ) . '&wishlist_id=$matches[1]&paged=$matches[2]', 'top' );
-		add_rewrite_rule( '^wishlist/page/([^/]*)?', 'index.php?page_id=' . ( (int) $id ) . '&paged=$matches[1]', 'top' );
-		add_rewrite_rule( '^wishlist/([^/]*)/?', 'index.php?page_id=' . ( (int) $id ) . '&wishlist_id=$matches[1]', 'top' );
+		$id   = (int) woodmart_get_opt( 'wishlist_page' );
+		$slug = (string) get_post_field( 'post_name', $id );
+
+		add_rewrite_rule( '^' . $slug . '/([^/]*)/page/([^/]*)?', 'index.php?page_id=' . $id . '&wishlist_id=$matches[1]&paged=$matches[2]', 'top' );
+		add_rewrite_rule( '^' . $slug . '/page/([^/]*)?', 'index.php?page_id=' . $id . '&paged=$matches[1]', 'top' );
+		add_rewrite_rule( '^' . $slug . '/([^/]*)/?', 'index.php?page_id=' . $id . '&wishlist_id=$matches[1]', 'top' );
 	}
 
 	/**
@@ -173,10 +174,7 @@ class WC_Wishlist {
 			}
 		}
 
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) && function_exists( 'wpml_object_id_filter' ) ) {
-			global $sitepress;
-			$product_id = wpml_object_id_filter( $product_id, 'product', true, $sitepress->get_default_language() );
-		}
+		$product_id = apply_filters( 'wpml_object_id', $product_id, 'product', true, apply_filters( 'wpml_default_language', null ) );
 
 		$response = array(
 			'status'    => $wishlist->add( $product_id, $wishlist_id ) ? 'success' : 'errors',
@@ -187,11 +185,7 @@ class WC_Wishlist {
 
 		$wishlist->update_count_cookie();
 
-		add_filter( 'woodmart_is_ajax', '__return_false' );
-
-		$response['wishlist_content'] = Ui::get_instance()->wishlist_page_content( $wishlist );
-
-		echo wp_json_encode( $response );
+		wp_send_json( $response );
 
 		exit;
 	}
@@ -248,9 +242,18 @@ class WC_Wishlist {
 				--$product_atts['ajax_page'];
 			}
 
-			$product_atts['include'] = implode( ',', $products );
+			$product_atts['post_type'] = 'ids';
+			$product_atts['include']   = implode( ',', $products );
+
+			woodmart_set_loop_prop( 'is_wishlist', true );
+
+			add_action( 'woocommerce_product_query_tax_query', array( Ui::get_instance(), 'out_out_stock_products_fix' ) );
 
 			$content = woodmart_shortcode_products( $product_atts );
+
+			remove_action( 'woocommerce_product_query_tax_query', array( Ui::get_instance(), 'out_out_stock_products_fix' ) );
+
+			woodmart_set_loop_prop( 'is_wishlist', false );
 		} else {
 			ob_start();
 
@@ -267,7 +270,7 @@ class WC_Wishlist {
 			'hash'             => apply_filters( 'woodmart_get_wishlist_hash', '' ),
 		);
 
-		echo wp_json_encode( $response );
+		wp_send_json( $response );
 
 		exit;
 	}
@@ -281,10 +284,7 @@ class WC_Wishlist {
 	 * @return void
 	 */
 	public function remove_product_from_wishlist( $wishlist, $product_id, $group_id ) {
-		if ( defined( 'ICL_SITEPRESS_VERSION' ) && function_exists( 'wpml_object_id_filter' ) ) {
-			global $sitepress;
-			$product_id = wpml_object_id_filter( $product_id, 'product', true, $sitepress->get_default_language() );
-		}
+		$product_id = apply_filters( 'wpml_object_id', $product_id, 'product', true, apply_filters( 'wpml_default_language', null ) );
 
 		$wishlist->remove( intval( $product_id ), $group_id );
 
@@ -308,7 +308,9 @@ class WC_Wishlist {
 	 * @since 1.0.0
 	 */
 	private function define_constants() {
-		define( 'XTS_WISHLIST_DIR', WOODMART_THEMEROOT . '/inc/integrations/woocommerce/modules/wishlist/' );
+		if ( ! defined( 'XTS_WISHLIST_DIR' ) ) {
+			define( 'XTS_WISHLIST_DIR', WOODMART_THEMEROOT . '/inc/integrations/woocommerce/modules/wishlist/' );
+		}
 	}
 
 	/**
@@ -318,13 +320,13 @@ class WC_Wishlist {
 	 */
 	private function include_files() {
 		$files = array(
+			'functions',
 			'class-storage-interface',
 			'class-db-storage',
 			'class-cookies-storage',
 			'class-ui',
 			'class-wishlist',
 			'class-sends-about-products-wishlists',
-			'functions',
 			'backend/class-backend',
 		);
 
@@ -425,13 +427,14 @@ class WC_Wishlist {
 	 * @return array
 	 */
 	public function update_localized_settings( $settings ) {
-		$settings['wishlist_expanded']        = ( woodmart_get_opt( 'wishlist_expanded' ) && is_user_logged_in() ) ? 'yes' : 'no';
-		$settings['wishlist_show_popup']      = woodmart_get_opt( 'wishlist_show_popup' );
-		$settings['wishlist_page_nonce']      = wp_create_nonce( 'wd-wishlist-page' );
-		$settings['wishlist_fragments_nonce'] = wp_create_nonce( 'wd-wishlist-fragments' );
-		$settings['wishlist_remove_notice']   = esc_html__( 'Do you really want to remove these products?', 'woodmart' );
-		$settings['wishlist_hash_name']       = apply_filters( 'woodmart_wishlist_hash_name', 'woodmart_wishlist_hash_' . md5( get_current_blog_id() . '_' . get_site_url( get_current_blog_id(), '/' ) ) );
-		$settings['wishlist_fragment_name']   = apply_filters( 'woodmart_wishlist_fragment_name', 'woodmart_wishlist_fragments_' . md5( get_current_blog_id() . '_' . get_site_url( get_current_blog_id(), '/' ) ) );
+		$settings['wishlist_expanded']          = ( woodmart_get_opt( 'wishlist_expanded' ) && is_user_logged_in() ) ? 'yes' : 'no';
+		$settings['wishlist_show_popup']        = woodmart_get_opt( 'wishlist_show_popup' );
+		$settings['wishlist_page_nonce']        = wp_create_nonce( 'wd-wishlist-page' );
+		$settings['wishlist_fragments_nonce']   = wp_create_nonce( 'wd-wishlist-fragments' );
+		$settings['wishlist_remove_notice']     = esc_html__( 'Do you really want to remove these products?', 'woodmart' );
+		$settings['wishlist_hash_name']         = apply_filters( 'woodmart_wishlist_hash_name', 'woodmart_wishlist_hash_' . md5( get_current_blog_id() . '_' . get_site_url( get_current_blog_id(), '/' ) ) );
+		$settings['wishlist_fragment_name']     = apply_filters( 'woodmart_wishlist_fragment_name', 'woodmart_wishlist_fragments_' . md5( get_current_blog_id() . '_' . get_site_url( get_current_blog_id(), '/' ) ) );
+		$settings['wishlist_save_button_state'] = woodmart_get_opt( 'wishlist_save_button_state', '0' ) ? 'yes' : 'no';
 
 		if ( woodmart_get_opt( 'wishlist_expanded' ) ) {
 			$settings['wishlist_current_default_group_text'] = esc_html__( 'Current default group', 'woodmart' );

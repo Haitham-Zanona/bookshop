@@ -88,19 +88,19 @@
 						<div class="xts-option-title">
 							<label>
 								<span>
-									<?php esc_html_e( 'MP4 video file' ); ?>
+									<?php esc_html_e( 'MP4 video file', 'woodmart' ); ?>
 								</span>
 							</label>
 						</div>
 						<div class="xts-option-control">
 							<div class="xts-upload-preview"></div>
 							<div class="xts-upload-btns">
-								<button class="xts-btn xts-upload-btn xts-i-import">
+								<a class="xts-btn xts-upload-btn xts-i-import">
 									<?php esc_html_e( 'Upload', 'woodmart' ); ?>
-								</button>
-								<button class="xts-btn xts-color-warning xts-remove-upload-btn xts-i-trash">
+								</a>
+								<a class="xts-btn xts-color-warning xts-remove-upload-btn xts-i-trash">
 									<?php esc_html_e( 'Remove', 'woodmart' ); ?>
-								</button>
+								</a>
 								<input type="hidden" class="xts-upload-input-url" data-name="upload_video_url" value="">
 								<input type="hidden" class="xts-upload-input-id" data-name="upload_video_id" value="">
 							</div>

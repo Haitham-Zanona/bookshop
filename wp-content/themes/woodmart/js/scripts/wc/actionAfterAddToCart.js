@@ -29,16 +29,17 @@
 				].join('');
 
 				$.magnificPopup.open({
-					removalDelay: 500, //delay removal by X to allow out-animation
-					tClose      : woodmart_settings.close,
-					tLoading    : woodmart_settings.loading,
-					callbacks   : {
+					removalDelay   : 600, //delay removal by X to allow out-animation
+					tClose         : woodmart_settings.close,
+					tLoading       : woodmart_settings.loading,
+					fixedContentPos: true,
+					callbacks      : {
 						beforeOpen: function() {
-							this.st.mainClass = 'mfp-move-horizontal cart-popup-wrapper';
+							this.wrap.addClass('wd-popup-slide-from-left');
 						}
 					},
-					items       : {
-						src : '<div class="mfp-with-anim wd-popup popup-added_to_cart wd-close-btn-inset">' + html + '</div>',
+					items          : {
+						src : '<div class="wd-popup popup-added_to_cart">' + html + '</div>',
 						type: 'inline'
 					}
 				});

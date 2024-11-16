@@ -1123,7 +1123,7 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
                     continue;
                 }
 
-                if ( ! $this->is_plugin_installed( $slug ) ) {
+                if ( ! $this->is_plugin_installed( $slug ) && empty( $plugin['hide_notice'] ) ) {
                     if ( current_user_can( 'install_plugins' ) ) {
                         $install_link_count++;
 
@@ -1137,7 +1137,7 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
                         $total_required_action_count++;
                     }
                 } else {
-                    if ( ! $this->is_plugin_active( $slug ) && $this->can_plugin_activate( $slug ) ) {
+                    if ( ! $this->is_plugin_active( $slug ) && $this->can_plugin_activate( $slug ) && empty( $plugin['hide_notice'] ) ) {
                         if ( current_user_can( 'activate_plugins' ) ) {
                             $activate_link_count++;
 
@@ -1375,6 +1375,7 @@ if ( ! class_exists( 'TGM_Plugin_Activation' ) ) {
                 'force_deactivation' => false,   // Boolean
                 'external_url'       => '',      // String
                 'is_callable'        => '',      // String|Array.
+                'hide_notice'        => false,      // String|Array.
             );
 
             // Prepare the received data.

@@ -9,7 +9,7 @@
 
 	woodmartThemeModule.stockStatus = function() {
 		$( '.variations_form' )
-			.on('show_variation', '.woocommerce-variation',function( event, variation ) {
+			.on('show_variation', '.woocommerce-variation', function( event, variation ) {
 				$('.wd-single-stock-status').each(function() {
 					let $wrapper = $(this);
 
@@ -18,7 +18,7 @@
 					}
 
 					if ( variation.hasOwnProperty( 'availability_html' ) ) {
-						$wrapper.html( variation.availability_html );
+						$wrapper.html(variation.availability_html);
 					}
 				});
 			})

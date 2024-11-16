@@ -33,10 +33,18 @@ class Cart extends Layout_Type {
 	public function check( $condition, $type = '' ) {
 		$is_active = false;
 
-		switch ( $condition['condition_type'] ) {
-			case 'cart':
-				$is_active = is_cart() && ! WC()->cart->is_empty();
-				break;
+		if ( 'cart' === $type ) {
+			switch ( $condition['condition_type'] ) {
+				case 'cart':
+					$is_active = is_cart() && ! WC()->cart->is_empty();
+					break;
+			}
+		} elseif ( 'empty_cart' === $type ) {
+			switch ( $condition['condition_type'] ) {
+				case 'empty_cart':
+					$is_active = is_cart() && WC()->cart->is_empty();
+					break;
+			}
 		}
 
 		return $is_active;
@@ -50,7 +58,7 @@ class Cart extends Layout_Type {
 	 * @return bool|string
 	 */
 	public function override_template( $template ) {
-		if ( woodmart_woocommerce_installed() && is_cart() && Main::get_instance()->has_custom_layout( 'cart' ) ) {
+		if ( woodmart_woocommerce_installed() && is_cart() && ( Main::get_instance()->has_custom_layout( 'cart' ) || Main::get_instance()->has_custom_layout( 'empty_cart' ) ) ) {
 			$this->display_template();
 
 			return false;
@@ -64,9 +72,15 @@ class Cart extends Layout_Type {
 	 */
 	private function display_template() {
 		$this->before_template_content();
+
 		?>
 		<div class="woocommerce">
-			<?php $this->template_content( 'cart' ); ?>
+			<?php if ( WC()->cart->is_empty() ) : ?>
+				<span class="wc-empty-cart-message"></span>
+				<?php $this->template_content( 'empty_cart' ); ?>
+			<?php else : ?>
+				<?php $this->template_content( 'cart' ); ?>
+			<?php endif; ?>
 		</div>
 		<?php
 		$this->after_template_content();

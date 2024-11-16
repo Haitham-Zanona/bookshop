@@ -142,17 +142,15 @@ if ( (bool) woodmart_get_opt( 'product_sticky' ) || woodmart_get_opt( 'product_s
 			<div class="product-image-summary <?php echo esc_attr( $product_image_summary_class ); ?>">
 				<div class="row product-image-summary-inner">
 					<div class="<?php echo esc_attr( $product_images_class ); ?> product-images" <?php echo !empty( $product_images_attr ) ? $product_images_attr: ''; ?>>
-						<div class="product-images-inner">
-							<?php
-								/**
-								 * woocommerce_before_single_product_summary hook
-								 *
-								 * @hooked woocommerce_show_product_sale_flash - 10
-								 * @hooked woocommerce_show_product_images - 20
-								 */
-								do_action( 'woocommerce_before_single_product_summary' );
-							?>
-						</div>
+						<?php
+							/**
+							 * woocommerce_before_single_product_summary hook
+							 *
+							 * @hooked woocommerce_show_product_sale_flash - 10
+							 * @hooked woocommerce_show_product_images - 20
+							 */
+							do_action( 'woocommerce_before_single_product_summary' );
+						?>
 					</div>
 					<?php if ( $image_width == 5 && 'wpb' === woodmart_get_current_page_builder() ): ?>
 						<div class="vc_row-full-width"></div>

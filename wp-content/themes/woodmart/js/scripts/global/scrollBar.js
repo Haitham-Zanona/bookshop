@@ -1,13 +1,12 @@
-/* global woodmart_settings */
+var observer = new MutationObserver(() => {
+	if ( window.innerWidth > document.getElementsByTagName( 'html' )[0].offsetWidth ) {
+		document.getElementsByTagName( 'html' )[0].className += ' wd-scrollbar';
+		observer.disconnect();
+	}
+});
 
-(function($) {
-	woodmartThemeModule.siteScroll = function() {
-		if ( window.innerWidth > woodmartThemeModule.windowWidth ) {
-			$('html').addClass('wd-scrollbar');
-		}
-	};
+window.addEventListener('load',function() {
+	observer.disconnect();
+});
 
-	$(document).ready(function() {
-		woodmartThemeModule.siteScroll();
-	});
-})(jQuery);
+observer.observe(document.getElementsByTagName( 'html' )[0], {childList : true,  subtree: true});

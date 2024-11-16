@@ -92,7 +92,7 @@ class THWEPOF_Admin_Settings_Advanced extends THWEPOF_Admin_Settings{
 	}
 		
 	public function save_advanced_settings($settings){
-		$result = update_option(THWEPOF_Utils::OPTION_KEY_ADVANCED_SETTINGS, $settings);
+		$result = update_option(THWEPOF_Utils::OPTION_KEY_ADVANCED_SETTINGS, $settings, 'no');
 		return $result;
 	}
 	
@@ -276,7 +276,7 @@ class THWEPOF_Admin_Settings_Advanced extends THWEPOF_Admin_Settings{
 			$settings_data_encoded = sanitize_textarea_field(wp_unslash($_POST['i_settings_data']));
 			$base64_decoded = base64_decode($settings_data_encoded);
 
-			if(!is_serialized($base64_decoded)){
+			if(!is_serialized($base64_decoded) || false == $base64_decoded ){
 			// if(!$this->is_json($base64_decoded,$return_data = false)){
 				$this->print_notices(__('The entered import settings data is invalid. Please try again with valid data.', 'woo-extra-product-options'), 'error', false);
 				return false;
@@ -293,23 +293,51 @@ class THWEPOF_Admin_Settings_Advanced extends THWEPOF_Admin_Settings{
 			   $this->print_notices(__('Your changes were not saved due to an error (or serialized data may compromised).', 'woo-extra-product-options'), 'error', false);
 				return false;
 			}
+
+			if ($settings === false) {
+			    // Failed to unserialize the data
+			    $error = error_get_last();
+			    $error_message = isset($error['message']) ? $error['message'] : 'Unknown error';
+			    error_log('Unserialize error: ' . $error_message);
+			    $this->print_notices(__('Failed to unserialize import settings data. Please check the data and try again.', 'woo-extra-product-options'), 'error', false);
+			    return false;
+			}
+
+			// Check if the unserialized data is an array
+			if (!is_array($settings)) {
+			    error_log('Unserialized data is not an array: ' . print_r($settings, true));
+			    $this->print_notices(__('Imported settings data is not in the expected format. Please check the data and try again.', 'woo-extra-product-options'), 'error', false);
+			    return false;
+			}
 			
-			if($settings){	
+			if($settings){
 				foreach($settings as $key => $value){	
 					if($key === 'OPTION_KEY_CUSTOM_SECTIONS'){
-						$result = update_option(THWEPOF_Utils::OPTION_KEY_CUSTOM_SECTIONS, $value);	
+						if ($value) {
+						    foreach ($value as $section_name => $section) {
+							$section_class = is_array($section) ? current($section) : (is_object($section) ? current(get_object_vars($section)) : null);
+
+						        if ($section_class !== 'THWEPOF_Section') {
+						            $this->print_notices(__('Invalid settings detected. Ensure the data is valid and not corrupted!', 'woo-extra-product-options'), 'error', false);
+						            return false;
+						        }
+						        break;
+						    }
+						}
+
+						$result = update_option(THWEPOF_Utils::OPTION_KEY_CUSTOM_SECTIONS, $value, 'no');
 					}
 					if($key === 'OPTION_KEY_SECTION_HOOK_MAP'){ 
-						$result1 = update_option(THWEPOF_Utils::OPTION_KEY_SECTION_HOOK_MAP, $value);  
+						$result1 = update_option(THWEPOF_Utils::OPTION_KEY_SECTION_HOOK_MAP, $value, 'no');
 					}
-					if($key === 'OPTION_KEY_NAME_TITLE_MAP'){ 
-						$result2 = update_option(THWEPOF_Utils::OPTION_KEY_NAME_TITLE_MAP, $value); 
+					if($key === 'OPTION_KEY_NAME_TITLE_MAP'){
+						$result2 = update_option(THWEPOF_Utils::OPTION_KEY_NAME_TITLE_MAP, $value, 'no');
 					}
 					if($key === 'OPTION_KEY_ADVANCED_SETTINGS'){ 
 						$result3 = $this->save_advanced_settings($value);  
-					}						  
-				}					
-			}		
+					}
+				}
+			}
 									
 			if($result || $result1 || $result2 || $result3){
 				$this->print_notices(__('Your Settings Updated.', 'woo-extra-product-options'), 'updated', false);
@@ -317,7 +345,7 @@ class THWEPOF_Admin_Settings_Advanced extends THWEPOF_Admin_Settings{
 			}else{
 				$this->print_notices(__('Your changes were not saved due to an error (or you made none!).', 'woo-extra-product-options'), 'error', false);
 				return false;
-			}	 			
+			}
 		}
 	}
 

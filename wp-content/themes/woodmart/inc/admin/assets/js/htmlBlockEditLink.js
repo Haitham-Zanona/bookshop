@@ -21,10 +21,19 @@
 		$('.xts-edit-block-link').each(function() {
 			var $link = $(this);
 			var $parent = $link.parent();
+
+			if ($link.parents('.whb-editor-field-inner').length) {
+				$parent = $link.parents('.whb-editor-field-inner');
+			}
+
 			var $select = $parent.find('select');
 
 			if (!$select.length) {
 				$select = $parent.parent().find('select');
+			}
+
+			if ( ! $select.length ) {
+				return;
 			}
 
 			changeLink();

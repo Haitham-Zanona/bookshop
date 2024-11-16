@@ -51,7 +51,9 @@
 						if (response.status === 'success') {
 							renderResults(response.data);
 							if (woodmart_settings.ajax_dropdowns_save && woodmartThemeModule.supports_html5_storage) {
-								localStorage.setItem(storageKey, JSON.stringify(response.data));
+								try {
+									localStorage.setItem(storageKey, JSON.stringify(response.data));
+								} catch (e) {}
 							}
 						} else {
 							console.log('loading html dropdowns returns wrong data - ', response.message);

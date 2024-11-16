@@ -29,7 +29,6 @@ $checkout_content_post = get_post( $checkout_content_id );
 		<?php if ( $checkout_form_id ) : ?>
 			<form name="checkout" method="post" class="checkout woocommerce-checkout" action="<?php echo esc_url( wc_get_checkout_url() ); ?>" enctype="multipart/form-data">
 				<?php if ( woodmart_is_elementor_installed() && Elementor\Plugin::$instance->documents->get( $checkout_form_post->ID )->is_built_with_elementor() ) : ?>
-					<?php echo woodmart_elementor_get_content_css( $checkout_form_post->ID ); // phpcs:ignore ?>
 					<?php echo woodmart_elementor_get_content( $checkout_form_post->ID ); // phpcs:ignore ?>
 				<?php else : ?>
 					<?php
@@ -58,7 +57,6 @@ $checkout_content_post = get_post( $checkout_content_id );
 	<div class="woocommerce-checkout">
 		<?php if ( $checkout_content_id ) : ?>
 			<?php if ( woodmart_is_elementor_installed() && Elementor\Plugin::$instance->documents->get( $checkout_content_post->ID )->is_built_with_elementor() ) : ?>
-				<?php echo woodmart_elementor_get_content_css( $checkout_content_post->ID ); // phpcs:ignore ?>
 				<?php echo woodmart_elementor_get_content( $checkout_content_post->ID ); // phpcs:ignore ?>
 			<?php else : ?>
 				<?php

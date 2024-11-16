@@ -42,8 +42,8 @@ if ( ! function_exists( 'woodmart_get_dimensions_responsive_param' ) ) {
 						}
 						?>
 
-						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>">
-							<span><?php echo esc_attr( $device ); ?></span>
+						<span class="wd-device<?php echo esc_attr( $device_classes ); ?>" data-value="<?php echo esc_attr( $device ); ?>" title="<?php echo esc_attr( ucfirst( $device ) ); ?>">
+							<span><?php echo esc_html( $device ); ?></span>
 						</span>
 					<?php endforeach; ?>
 				</div>

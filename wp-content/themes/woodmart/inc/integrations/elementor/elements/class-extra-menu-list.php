@@ -419,6 +419,22 @@ class Extra_Menu_List extends Widget_Base {
 
 		$link_attrs = woodmart_get_link_attrs( $settings['link'] );
 
+		// Image settings.
+		$image_output      = '';
+		$custom_image_size = isset( $settings['image_custom_dimension']['width'] ) && $settings['image_custom_dimension']['width'] ? $settings['image_custom_dimension'] : array(
+			'width'  => 128,
+			'height' => 128,
+		);
+
+		if ( isset( $settings['image']['id'] ) && $settings['image']['id'] ) {
+			$image_output = woodmart_otf_get_image_html( $settings['image']['id'], $settings['image_size'], $settings['image_custom_dimension'] );
+
+			if ( woodmart_is_svg( $settings['image']['url'] ) ) {
+				$custom_image_size = 'custom' !== $settings['image_size'] ? $settings['image_size'] : $custom_image_size;
+				$image_output      = woodmart_get_svg_html( $settings['image']['id'], $custom_image_size );
+			}
+		}
+
 		woodmart_enqueue_inline_style( 'mod-nav-menu-label' );
 		?>
 			<ul <?php echo $this->get_render_attribute_string( 'parent_ul' ); ?>>
@@ -426,7 +442,7 @@ class Extra_Menu_List extends Widget_Base {
 					<?php if ( $settings['title'] ) : ?>
 						<a <?php echo $link_attrs; ?>>
 							<?php if ( $settings['image'] ) : ?>
-								<?php echo woodmart_get_image_html( $settings, 'image' ); ?>
+								<?php echo $image_output; // phpcs:ignore. ?>
 							<?php endif; ?>
 
 							<?php if ( woodmart_elementor_is_edit_mode() ) : ?>
@@ -478,7 +494,8 @@ class Extra_Menu_List extends Widget_Base {
 							<li <?php echo $this->get_render_attribute_string( $repeater_li_key ); ?>>
 								<a <?php echo $link_attrs; ?>>
 									<?php if ( $item['image'] ) : ?>
-										<?php echo woodmart_get_image_html( $item, 'image' ); ?>
+										<?php echo woodmart_otf_get_image_html( $item['image']['id'], $item['image_size'], $item['image_custom_dimension'] );
+										?>
 									<?php endif; ?>
 
 									<?php if ( woodmart_elementor_is_edit_mode() ) : ?>

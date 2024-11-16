@@ -5,6 +5,7 @@
 
 	$.each([
 		'frontend/element_ready/column',
+		'frontend/element_ready/container',
 		'frontend/element_ready/wd_builder_off_canvas_column_btn.default'
 	], function(index, value) {
 		woodmartThemeModule.wdElementorAddAction(value, function() {
@@ -16,7 +17,7 @@
 		var $closeSide = $('.wd-close-side');
 		var $colOffCanvas = $('[class*="wd-col-offcanvas"]');
 		var alignment = $colOffCanvas.hasClass('wd-alignment-left') ? 'left' : 'right';
-		var $openButton = $('.wd-off-canvas-btn, .wd-off-canvas-btn + .wd-sidebar-opener, .wd-sidebar-opener.wd-on-toolbar');
+		var $openButton = $('.wd-off-canvas-btn, .wd-off-canvas-btn ~ .wd-sidebar-opener, .wd-sidebar-opener.wd-on-toolbar');
 		var innerWidth = woodmartThemeModule.$window.width();
 
 		var offCanvassInit = function() {
@@ -31,6 +32,10 @@
 			$openButton.on('click', function(e) {
 				e.preventDefault();
 
+				if (! $colOffCanvas.length) {
+					return;
+				}
+
 				$colOffCanvas.addClass('wd-scroll wd-opened');
 				$closeSide.addClass('wd-close-side-opened');
 				$openButton.addClass('wd-opened');
@@ -43,9 +48,9 @@
 			offCanvassInit();
 		} else if ('wpb' === woodmart_settings.current_page_builder && (($colOffCanvas.hasClass('wd-col-offcanvas-lg') && innerWidth >= 1200) || ($colOffCanvas.hasClass('wd-col-offcanvas-md-sm') && 769 <= innerWidth && innerWidth <= 1199) || ($colOffCanvas.hasClass('wd-col-offcanvas-sm') && innerWidth <= 768))) {
 			offCanvassInit();
-		} else if ( $colOffCanvas.hasClass( 'wd-opened' ) ) {
+		} else if ( $colOffCanvas.hasClass( 'wd-side-hidden' ) ) {
 			$openButton.off('click');
-			$('.elementor-column').removeClass('wd-side-hidden wd-inited wd-scroll wd-opened wd-left wd-right');
+			$('.elementor-column, .e-con').removeClass('wd-side-hidden wd-inited wd-scroll wd-opened wd-left wd-right');
 			$('.wpb_column').removeClass('wd-side-hidden wd-inited wd-scroll wd-opened wd-left wd-right');
 			$closeSide.removeClass('wd-close-side-opened');
 			$openButton.removeClass('wd-opened');
@@ -61,7 +66,9 @@
 			$('.wd-close-side, .close-side-widget').trigger('click');
 		});
 
-		woodmartThemeModule.$body.on('click touchstart', '.wd-close-side, .close-side-widget', function() {
+		woodmartThemeModule.$body.on('click touchstart', '.wd-close-side, .close-side-widget', function(e) {
+			e.preventDefault();
+
 			$colOffCanvas.removeClass('wd-opened');
 			$closeSide.removeClass('wd-close-side-opened');
 			$openButton.removeClass('wd-opened');

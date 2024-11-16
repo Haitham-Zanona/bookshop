@@ -6,24 +6,31 @@
  */
  // woodmart_setup_loop();
 
-$woodmart_loop 		= woodmart_loop_prop( 'woodmart_loop' );
-$blog_design   		= woodmart_loop_prop( 'blog_design' );
-$desktop_columns    = woodmart_loop_prop( 'blog_columns' );
-$tablet_columns     = woodmart_loop_prop( 'blog_columns_tablet' );
-$mobile_columns     = woodmart_loop_prop( 'blog_columns_mobile' );
-$is_shortcode  		= woodmart_loop_prop( 'blog_type' ) == 'shortcode';
-$is_large_image 	= woodmart_get_opt( 'single_post_design' ) == 'large_image';
-$classes       		= array();
+$woodmart_loop  = woodmart_loop_prop( 'woodmart_loop' );
+$blog_design    = woodmart_loop_prop( 'blog_design' );
+$is_shortcode   = woodmart_loop_prop( 'blog_type' ) == 'shortcode';
+$is_large_image = woodmart_get_opt( 'single_post_design' ) == 'large_image';
+$classes        = array();
+$post_format    = get_post_format();
+$thumb_classes  = '';
 
-if ( is_single() && $is_large_image ) $classes[] = 'post-single-large-image';
 
 if( is_single() && !$is_shortcode ) {
 	$classes[] = 'post-single-page';
+
+	if ( is_singular( 'post' ) && $is_large_image ) {
+		$classes[] = 'post-single-large-image';
+	}
 } else {
+	$classes[] = 'wd-post';
 	$classes[] = 'blog-design-' . $blog_design;
 	$classes[] = 'blog-post-loop';
 	if( $blog_design == 'chess' ) {
 		$classes[] = 'blog-design-small-images';
+	}
+
+	if ( 'quote' === $post_format ) {
+		woodmart_enqueue_inline_style( 'blog-loop-format-quote' );
 	}
 }
 
@@ -45,12 +52,8 @@ if( is_single() && !$is_shortcode ) {
 	$blog_design = 'default';
 }
 
-if( ( $blog_design == 'masonry' || $blog_design == 'mask' ) && ( $is_shortcode || ! is_single() ) ){
-	if ( ( 'auto' !== $tablet_columns && ! empty( $tablet_columns ) ) || ( 'auto' !== $mobile_columns && ! empty( $mobile_columns ) ) ) {
-		$classes[] = woodmart_get_grid_el_class_new( $woodmart_loop, false, $desktop_columns, $tablet_columns, $mobile_columns );
-	} else {
-		$classes[] = woodmart_get_grid_el_class( $woodmart_loop, $desktop_columns, false, 12 );
-	}
+if( ( 'grid' === woodmart_loop_prop( 'blog_layout' ) ) && ( $is_shortcode || ! is_single() ) ){
+	$classes[] = 'wd-col';
 }
 
 if( get_the_title() == '' ){
@@ -60,12 +63,15 @@ if( get_the_title() == '' ){
 $gallery_slider = apply_filters( 'woodmart_gallery_slider', true );
 $gallery = array();
 
-if( get_post_format() == 'gallery' && $gallery_slider ) {
+if( 'gallery' === $post_format && $gallery_slider ) {
 	$gallery = get_post_gallery( false, false );
+
+	if ( ! empty( $gallery['src'] ) ) {
+		$thumb_classes .= ' wd-carousel-container wd-post-gallery color-scheme-light';
+	}
 }
 
-$random = 'carousel-' . rand(100,999);
-
+$random = 'carousel-' . wp_rand( 100, 999 );
 ?>
 
 <article id="post-<?php the_ID(); ?>" <?php post_class( $classes ); ?>>
@@ -97,34 +103,31 @@ $random = 'carousel-' . rand(100,999);
 		<?php endif ?>
 			<header class="entry-header">
 				<?php if ( ( has_post_thumbnail() || ! empty( $gallery['src'] ) ) && ! post_password_required() && ! is_attachment() && woodmart_loop_prop( 'parts_media' ) ) : ?>
-					<?php
-					$owl_attr = woodmart_get_owl_attributes(
-						array(
-							'carousel_id'             => $random,
-							'post_type'               => 'post',
-							'slides_per_view'         => 1,
-							'hide_pagination_control' => 'yes',
-						)
-					);
-
-					woodmart_enqueue_js_script( 'owl-carousel' );
-					?>
-
-					<figure id="<?php echo esc_attr( $random ); ?>" class="entry-thumbnail" <?php echo $owl_attr; ?>>
-						<?php if ( 'gallery' === get_post_format() && $gallery_slider && ! empty( $gallery['src'] ) ) : ?>
-							<div class="post-gallery-slider owl-carousel <?php echo woodmart_owl_items_per_slide( 1 ); ?>">
-								<?php
-									foreach ($gallery['src'] as $src) {
-										if ( preg_match( "/data:image/is", $src ) ) {
-											continue;
-										}
-										?>
-										<div>
-											<?php echo apply_filters( 'woodmart_image', '<img src="' . esc_url( $src ) . '" />' ); ?>
-										</div>
+					<figure id="<?php echo esc_attr( $random ); ?>" class="entry-thumbnail<?php echo esc_attr( $thumb_classes ); ?>">
+						<?php if ( 'gallery' === $post_format && $gallery_slider && ! empty( $gallery['src'] ) ) : ?>
+							<?php
+							woodmart_enqueue_js_library( 'swiper' );
+							woodmart_enqueue_js_script( 'swiper-carousel' );
+							woodmart_enqueue_inline_style( 'swiper' );
+							?>
+							<div class="wd-carousel-inner">
+								<div class="wd-carousel wd-grid"<?php echo woodmart_get_carousel_attributes( array( 'autoheight' => 'yes' ) ); ?>>
+									<div class="wd-carousel-wrap">
 										<?php
-									}
-								?>
+											foreach ( $gallery['src'] as $src ) {
+												if ( preg_match( "/data:image/is", $src ) ) {
+													continue;
+												}
+												?>
+												<div class="wd-carousel-item">
+													<?php echo apply_filters( 'woodmart_image', '<img src="' . esc_url( $src ) . '" />' ); ?>
+												</div>
+												<?php
+											}
+										?>
+									</div>
+								</div>
+								<?php woodmart_get_carousel_nav_template( ' wd-post-arrows wd-pos-sep wd-custom-style' ); ?>
 							</div>
 						<?php elseif ( ! is_single() || $is_shortcode ): ?>
 
@@ -191,21 +194,42 @@ $random = 'carousel-' . rand(100,999);
 				<?php endif ?>
 			<?php endif ?>
 
-			<?php if ( is_search() && woodmart_loop_prop( 'parts_text' ) && get_post_format() != 'gallery' ) : // Only display Excerpts for Search ?>
+			<?php if ( is_search() && woodmart_loop_prop( 'parts_text' ) && 'gallery' !== get_post_format() ) : // Only display Excerpts for Search. ?>
 				<div class="entry-summary">
-					<?php the_excerpt(); ?>
+					<?php echo get_the_excerpt(); //phpcs:ignore ?>
 				</div><!-- .entry-summary -->
-			<?php elseif( woodmart_loop_prop( 'parts_text' ) ) : ?>
-				<div class="entry-content wd-entry-content<?php echo woodmart_get_old_classes( ' woodmart-entry-content' ); ?>">
-					<?php woodmart_get_content( woodmart_loop_prop( 'parts_btn' ), is_single() && !$is_shortcode ); ?>
-					<?php wp_link_pages( array( 'before' => '<div class="page-links"><span class="page-links-title">' . esc_html__( 'Pages:', 'woodmart' ) . '</span>', 'after' => '</div>', 'link_before' => '<span>', 'link_after' => '</span>' ) ); ?>
-				</div><!-- .entry-content -->
+			<?php else : ?>
+				<?php
+					$parts_btn       = woodmart_loop_prop( 'parts_btn' );
+					$is_full_content = 'full' === woodmart_get_opt( 'blog_excerpt' ) || ( is_single() && ! $is_shortcode );
+				?>
+
+				<?php if ( woodmart_loop_prop( 'parts_text' ) ) : ?>
+                    <div class="entry-content wd-entry-content<?php echo woodmart_get_old_classes( ' woodmart-entry-content' ); //phpcs:ignore. ?>">
+						<?php woodmart_get_content( $parts_btn, $is_full_content ); ?>
+
+						<?php
+							wp_link_pages(
+								array(
+									'before'      => '<div class="page-links"><span class="page-links-title">' . esc_html__( 'Pages:', 'woodmart' ) . '</span>',
+									'after'       => '</div>',
+									'link_before' => '<span>',
+									'link_after'  => '</span>',
+								)
+							);
+						?>
+					</div><!-- .entry-content -->
+				<?php endif; ?>
+
+				<?php if ( ! $is_full_content && $parts_btn ) : ?>
+					<?php woodmart_render_read_more_btn( 'link' ); ?>
+				<?php endif; ?>
 			<?php endif; ?>
 
-			<?php if ( $blog_design == 'default-alt' && ( ! is_single() || $is_shortcode ) ): ?>
+			<?php if ( woodmart_loop_prop( 'parts_meta' ) && 'default-alt' === $blog_design && ! is_single() ) : ?>
 				<div class="share-with-lines">
 					<span class="left-line"></span>
-					<?php if ( woodmart_is_social_link_enable( 'share' ) ): ?>
+					<?php if ( woodmart_is_social_link_enable( 'share' ) ) : ?>
 						<?php if( function_exists( 'woodmart_shortcode_social' ) ) echo woodmart_shortcode_social( array( 'style' => 'bordered', 'size' => 'small', 'form' => 'circle' ) ); ?>
 					<?php endif ?>
 					<span class="right-line"></span>

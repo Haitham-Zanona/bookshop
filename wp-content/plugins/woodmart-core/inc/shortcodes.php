@@ -10,6 +10,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  * ------------------------------------------------------------------------------------------------
  */
 class WOODMART_ShortcodeProductsWidget {
+	/**
+	 * @var mixed
+	 */
+	protected $ids;
+
+	/**
+	 * @var mixed
+	 */
+	protected $include_products;
 
 	function __construct() {
 		add_shortcode( 'woodmart_shortcode_products_widget', array( $this, 'woodmart_shortcode_products_widget' ) );
@@ -55,6 +64,8 @@ class WOODMART_ShortcodeProductsWidget {
 				'show_hidden'      => 0,
 				'images_size'      => 'woocommerce_thumbnail',
 				'el_class'         => '',
+				'woodmart_css_id'  => '',
+				'css'              => '',
 			),
 			$atts
 		);
@@ -63,12 +74,29 @@ class WOODMART_ShortcodeProductsWidget {
 		$woodmart_widget_product_img_size = $images_size;
 		$this->ids                        = $ids;
 		$this->include_products           = $include_products;
-		$output                           = '<div class="widget_products' . $el_class . '">';
-		$type                             = 'WC_Widget_Products';
+
+		$class = '';
+
+		if ( ! empty( $el_class ) ) {
+			$class .= $el_class;
+		}
+
+		if ( ! empty( $woodmart_css_id ) ) {
+			$class .= ' wd-rs-' . $woodmart_css_id;
+		}
+
+		if ( function_exists( 'vc_shortcode_custom_css_class' ) ) {
+			$class .= ' ' . vc_shortcode_custom_css_class( $css );
+		}
+
+		$output = '<div class="widget_products' . esc_attr( $class ) . '">';
+		$type   = 'WC_Widget_Products';
 
 		$args = array( 'widget_id' => uniqid() );
 
 		ob_start();
+
+		woodmart_enqueue_inline_style( 'widget-product-list' );
 
 		add_filter( 'woocommerce_products_widget_query_args', array( $this, 'add_category_order' ), 10 );
 		add_filter( 'woocommerce_products_widget_query_args', array( $this, 'add_product_order' ), 20 );
@@ -119,6 +147,8 @@ function woodmart_add_shortcodes() {
 	add_shortcode( 'woodmart_single_product_linked_variations', 'woodmart_shortcode_single_product_linked_variations' );
 	add_shortcode( 'woodmart_single_product_fbt_products', 'woodmart_shortcode_single_product_fbt_products' );
 	add_shortcode( 'woodmart_single_product_stock_status', 'woodmart_shortcode_single_product_stock_status' );
+	add_shortcode( 'woodmart_single_product_sold_counter', 'woodmart_shortcode_single_product_sold_counter' );
+	add_shortcode( 'woodmart_single_product_dynamic_discounts_table', 'woodmart_shortcode_single_product_dynamic_discounts_table' );
 
 	// Shop archive.
 	add_shortcode( 'woodmart_shop_archive_active_filters', 'woodmart_shortcode_shop_archive_active_filters' );
@@ -138,6 +168,8 @@ function woodmart_add_shortcodes() {
 	// Cart.
 	add_shortcode( 'woodmart_cart_table', 'woodmart_shortcode_cart_table' );
 	add_shortcode( 'woodmart_cart_totals', 'woodmart_shortcode_cart_totals' );
+	add_shortcode( 'woodmart_cart_free_gifts', 'woodmart_shortcode_cart_free_gifts' );
+	add_shortcode( 'woodmart_empty_cart', 'woodmart_shortcode_empty_cart' );
 
 	// Checkout.
 	add_shortcode( 'woodmart_checkout_billing_details_form', 'woodmart_shortcode_checkout_billing_details_form' );
@@ -194,6 +226,9 @@ function woodmart_add_shortcodes() {
 		add_shortcode( 'pricing_plan', 'woodmart_shortcode_pricing_plan' );
 		add_shortcode( 'woodmart_responsive_text_block', 'woodmart_shortcode_responsive_text_block' );
 		add_shortcode( 'woodmart_text_block', 'woodmart_shortcode_text_block' );
+		add_shortcode( 'woodmart_marquee', 'woodmart_shortcode_marquee' );
+		add_shortcode( 'woodmart_nested_carousel', 'woodmart_shortcode_nested_carousel' );
+		add_shortcode( 'woodmart_nested_carousel_item', 'woodmart_shortcode_nested_carousel_item' );
 		add_shortcode( 'woodmart_image', 'woodmart_shortcode_image' );
 		add_shortcode( 'woodmart_mailchimp', 'woodmart_shortcode_mailchimp' );
 		add_shortcode( 'woodmart_row_divider', 'woodmart_row_divider' );
@@ -214,6 +249,7 @@ function woodmart_add_shortcodes() {
 		add_shortcode( 'woodmart_open_street_map', 'woodmart_shortcode_open_street_map' );
 		add_shortcode( 'woodmart_table', 'woodmart_shortcode_table' );
 		add_shortcode( 'woodmart_table_row', 'woodmart_shortcode_table_row' );
+		add_shortcode( 'woodmart_video', 'woodmart_shortcode_video' );
 
 		require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		if ( is_plugin_active( 'woocommerce/woocommerce.php' ) ) {
@@ -254,6 +290,7 @@ function woodmart_add_shortcodes() {
 			vc_add_shortcode_param( 'wd_notice', 'woodmart_get_notice_param' );
 			vc_add_shortcode_param( 'wd_dimensions', 'woodmart_get_dimensions_responsive_param' );
 			vc_add_shortcode_param( 'wd_fonts', 'woodmart_get_fonts_param' );
+			vc_add_shortcode_param( 'wd_upload', 'woodmart_get_upload_param' );
 		}
 	}
 

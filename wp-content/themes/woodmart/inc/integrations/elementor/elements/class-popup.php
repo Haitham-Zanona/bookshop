@@ -123,8 +123,9 @@ class Popup extends Widget_Base {
 		woodmart_get_button_content_general_map(
 			$this,
 			[
-				'link'          => false,
-				'smooth_scroll' => false,
+				'link'                => false,
+				'smooth_scroll'       => false,
+				'collapsible_content' => false,
 			]
 		);
 
@@ -161,6 +162,22 @@ class Popup extends Widget_Base {
 					],
 				],
 			]
+		);
+
+		$this->add_control(
+			'padding',
+			array(
+				'label'      => esc_html__( 'Padding', 'woodmart' ),
+				'type'       => Controls_Manager::SLIDER,
+				'size_units' => array( 'px' ),
+				'range'      => array(
+					'px' => array(
+						'min'  => 0,
+						'max'  => 200,
+						'step' => 1,
+					),
+				),
+			)
 		);
 
 		$this->end_controls_section();
@@ -202,6 +219,20 @@ class Popup extends Widget_Base {
 
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 
+		$inline_styles_settings = array(
+			'--wd-popup-width' => $settings['width']['size'] . 'px',
+		);
+
+		if ( ! empty( $settings['padding']['size'] ) || 0 === $settings['padding']['size'] ) {
+			$inline_styles_settings['padding'] = $settings['padding']['size'] . $settings['padding']['unit'];
+		}
+
+		$inline_styles = '';
+
+		foreach ( $inline_styles_settings as $prop => $val ) {
+			$inline_styles .= $prop . ':' . $val . ';';
+		}
+
 		$settings['link']['url']    = '#' . esc_attr( $settings['popup_id'] );
 		$settings['custom_classes'] = 'wd-open-popup';
 
@@ -212,10 +243,8 @@ class Popup extends Widget_Base {
 		?>
 		<?php woodmart_elementor_button_template( $settings ); ?>
 		<?php if ( $settings['content'] ) : ?>
-			<div id="<?php echo esc_attr( $settings['popup_id'] ); ?>" class="mfp-with-anim wd-popup wd-popup-element mfp-hide<?php echo woodmart_get_old_classes( ' woodmart-content-popup' ); ?>" style="max-width:<?php echo esc_attr( $settings['width']['size'] ); ?>px;">
-				<div class="wd-popup-inner">
-					<?php echo woodmart_get_html_block( $settings['content'] ); // phpcs:ignore ?>
-				</div>
+			<div id="<?php echo esc_attr( $settings['popup_id'] ); ?>" class="wd-popup wd-popup-element mfp-hide<?php echo woodmart_get_old_classes( ' woodmart-content-popup' ); ?>" style="<?php echo esc_attr( $inline_styles ); ?>">
+				<?php echo woodmart_get_html_block( $settings['content'] ); // phpcs:ignore ?>
 			</div>
 		<?php endif; ?>
 		<?php

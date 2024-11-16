@@ -1,10 +1,11 @@
 /* global woodmart_settings */
 (function($) {
 	woodmartThemeModule.singleProductTabsAccordion = function() {
-		var $wcTabs = $('.woocommerce-tabs');
-		var $wcTabItems = $wcTabs.find('.wd-accordion-item .entry-content');
+		var $wcTabs              = $('.woocommerce-tabs');
+		var $wcTabItems          = $wcTabs.find('.wd-accordion-item .entry-content');
+		var isProductTabsElement = $wcTabs.closest('.wd-single-tabs').length > 0;
 
-		if ($wcTabs.length <= 0 || $wcTabs.data('layout') === 'accordion' || $('.site-content').hasClass('wd-builder-on')) {
+		if ($wcTabs.length <= 0 || $wcTabs.data('layout') === 'accordion' || ( $('.site-content').hasClass('wd-builder-on') && ! isProductTabsElement ) ) {
 			return;
 		}
 
@@ -14,7 +15,11 @@
 				$wcTabItems.addClass('wd-accordion-content wd-scroll').find('.wc-tab-inner').addClass('wd-scroll-content');
 				$('.single-product-page').removeClass('tabs-type-tabs').addClass('tabs-type-accordion');
 				if ($wcTabs.data('state') !== 'first' ) {
-					$wcTabItems.first().hide().siblings('.wd-active').removeClass('wd-active');
+					setTimeout(function() {
+						$wcTabItems.first().hide();
+					}, 500);
+
+					$wcTabItems.first().siblings('.wd-active').removeClass('wd-active');
 				}
 			}
 		} else if ( ! $wcTabs.hasClass('tabs-layout-tabs') ) {

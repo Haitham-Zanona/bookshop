@@ -36,13 +36,13 @@
 			}
 
 			if ($this.is('.plus')) {
-				if (max && (currentVal >= max)) {
+				if (max && ((currentVal + parseFloat(step)).toFixed(step.getDecimals()) >= max)) {
 					$qty.val(max);
 				} else {
 					$qty.val((currentVal + parseFloat(step)).toFixed(step.getDecimals()));
 				}
 			} else {
-				if (min && (currentVal <= min)) {
+				if (min && ((currentVal - parseFloat(step)).toFixed(step.getDecimals()) <= min)) {
 					$qty.val(min);
 				} else if (currentVal > 0) {
 					$qty.val((currentVal - parseFloat(step)).toFixed(step.getDecimals()));

@@ -32,6 +32,9 @@ if ( ! class_exists( 'WOODMART_Instagram_Widget' ) ) {
 		// Output function
 
 		function widget( $args, $instance )	{
+			if ( $this->is_widget_preview() ) {
+				return;
+			}
 
 			extract($args);
 
@@ -41,11 +44,13 @@ if ( ! class_exists( 'WOODMART_Instagram_Widget' ) ) {
 
 			do_action( 'wpiw_before_widget', $instance );
 
-			$instance['title'] = '';
-			$instance['spacing'] = 1;
+			$instance['title']          = '';
+			$instance['spacing']        = 1;
 			$instance['spacing_custom'] = 6;
-			$instance['per_row'] = 3;
-			$instance['username'] = $instance['username'] ? $instance['username'] : 'flickr';
+			$instance['per_row']        = 3;
+			$instance['per_row_tablet'] = 3;
+			$instance['per_row_mobile'] = 3;
+			$instance['username']       = $instance['username'] ? $instance['username'] : 'flickr';
 
 			echo woodmart_shortcode_instagram( $instance );
 

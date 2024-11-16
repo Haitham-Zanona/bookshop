@@ -172,11 +172,28 @@ class Google_Map extends Widget_Base {
 		);
 
 		$this->add_control(
+			'extra_width_classes',
+			array(
+				'type'         => 'wd_css_class',
+				'default'      => 'wd-width-100',
+				'prefix_class' => '',
+			)
+		);
+
+		$this->add_control(
 			'google_key',
 			array(
-				'label'       => esc_html__( 'Google API key (required)', 'woodmart' ),
+				'label'       => esc_html__( 'Google API key', 'woodmart' ),
 				'type'        => Controls_Manager::TEXT,
-				'description' => 'Obtain API key <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">here</a> to use our Google map VC element.',
+				'description' => wp_kses(
+					__( 'Obtain API key <a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank">here</a> to use our Google map VC element. By default, the key will be taken from Theme Settings.', 'woodmart' ),
+					array(
+						'a' => array(
+							'href'   => array(),
+							'target' => array(),
+						),
+					)
+				),
 			)
 		);
 
@@ -433,7 +450,7 @@ class Google_Map extends Widget_Base {
 				'label'       => esc_html__( 'Styles (JSON)', 'woodmart' ),
 				'type'        => 'wd_google_json',
 				'description' => sprintf(
-					__( 'Styled maps allow you to customize the presentation of the standard Google base maps, changing the visual display of such elements as roads, parks, and built-up areas.%3$s You can find more Google maps styles on the website: %1$s Snazzy Maps %2$s 3$s Just copy JSON code and paste it here.', 'woodmart' ),
+					__( 'Styled maps allow you to customize the presentation of the standard Google base maps, changing the visual display of such elements as roads, parks, and built-up areas.%3$s You can find more Google maps styles on the website: %1$s Snazzy Maps %2$s %3$s Just copy JSON code and paste it here.', 'woodmart' ),
 					'<a target="_blank" href="https://snazzymaps.com/">',
 					'</a>',
 					'<br>'
@@ -646,10 +663,14 @@ class Google_Map extends Widget_Base {
 
 		$settings = wp_parse_args( $this->get_settings_for_display(), $default_settings );
 		$uniqid   = uniqid();
-		$minified = woodmart_get_opt( 'minified_js' ) ? '.min' : '';
+		$minified = woodmart_is_minified_needed() ? '.min' : '';
 		$version  = woodmart_get_theme_info( 'Version' );
 
-		wp_enqueue_script( 'wd-google-map-api', 'https://maps.google.com/maps/api/js?libraries=geometry&callback=woodmartThemeModule.googleMapsCallback&v=weekly&key=' . $settings['google_key'], array(), $version, true );
+		if ( empty( $settings['google_key'] ) ) {
+			$settings['google_key'] = woodmart_get_opt( 'google_map_api_key' );
+		}
+
+		wp_enqueue_script( 'wd-google-map-api', 'https://maps.google.com/maps/api/js?libraries=geometry&callback=woodmartThemeModule.googleMapsCallback&v=weekly&key=' . $settings['google_key'], array( 'woodmart-theme' ), $version, true );
 		wp_enqueue_script( 'wd-maplace', WOODMART_THEME_DIR . '/js/libs/maplace' . $minified . '.js', array( 'wd-google-map-api' ), $version, true );
 
 		woodmart_enqueue_js_script( 'google-map-element' );
@@ -693,9 +714,12 @@ class Google_Map extends Widget_Base {
 		if ( is_array( $markers ) && ! empty( $markers ) ) {
 			foreach ( $markers as $marker_key => $marker ) {
 				if ( isset( $marker['image']['id'] ) && $marker['image']['id'] ) {
-					$markers[ $marker_key ]['marker_icon']      = woodmart_get_image_url( $marker['image']['id'], 'image', $marker );
+					$markers[ $marker_key ]['marker_icon']      = woodmart_otf_get_image_url( $marker['image']['id'], $marker['image_size'], $marker['image_custom_dimension'] );
 					$markers[ $marker_key ]['marker_icon_size'] = $this->get_settings_icon_size( $marker['image'], $marker['image_size'], $marker['image_custom_dimension'] );
 				}
+
+				$markers[ $marker_key ]['marker_title']       = esc_html( $markers[ $marker_key ]['marker_title'] );
+				$markers[ $marker_key ]['marker_description'] = esc_html( $markers[ $marker_key ]['marker_description'] );
 
 				unset(
 					$markers[ $marker_key ]['image'],
@@ -706,7 +730,7 @@ class Google_Map extends Widget_Base {
 		}
 
 		if ( isset( $settings['marker_icon']['id'] ) && $settings['marker_icon']['id'] ) {
-			$marker_icon = woodmart_get_image_url( $settings['marker_icon']['id'], 'marker_icon', $settings );
+			$marker_icon = woodmart_otf_get_image_url( $settings['marker_icon']['id'], $settings['marker_icon_size'], $settings['marker_icon_custom_dimension'] );
 		} else {
 			$marker_icon = WOODMART_ASSETS_IMAGES . '/google-icon.png';
 		}
@@ -731,12 +755,12 @@ class Google_Map extends Widget_Base {
 		);
 
 		if ( ! empty( $settings['marker_icon']['id'] ) ) {
-			$map_args[ 'marker_icon_size' ] = $this->get_settings_icon_size( $settings['marker_icon'], $settings['marker_icon_size'], $settings['marker_icon_custom_dimension'] );
+			$map_args['marker_icon_size'] = $this->get_settings_icon_size( $settings['marker_icon'], $settings['marker_icon_size'], $settings['marker_icon_custom_dimension'] );
 		}
 
 		// Placeholder settings.
 		if ( isset( $settings['map_init_placeholder']['id'] ) && $settings['map_init_placeholder']['id'] ) {
-			$placeholder = $image_output = woodmart_get_image_html( $settings, 'map_init_placeholder' );
+			$placeholder = woodmart_otf_get_image_html( $settings['map_init_placeholder']['id'], $settings['map_init_placeholder_size'], $settings['map_init_placeholder_custom_dimension'] );
 		} else {
 			$placeholder = '<img src="' . WOODMART_ASSETS_IMAGES . '/google-map-placeholder.jpg">';
 		}
@@ -756,7 +780,7 @@ class Google_Map extends Widget_Base {
 			<?php if ( 'button' === $settings['init_type'] ) : ?>
 				<div class="wd-init-map-wrap wd-fill">
 					<a href="#" rel="nofollow" class="btn btn-color-white wd-init-map">
-						<span><?php esc_attr_e( 'Show map', 'woodmart' ); ?></span>
+						<span><?php esc_html_e( 'Show map', 'woodmart' ); ?></span>
 					</a>
 				</div>
 			<?php endif ?>

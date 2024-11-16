@@ -87,7 +87,7 @@
 			}
 
 			function recalc() {
-				if ($menu.hasClass('wd-offsets-calculated')) {
+				if ($menu.hasClass('wd-offsets-calculated') || $menu.parents('.wd-design-aside').length) {
 					return;
 				}
 
@@ -155,7 +155,7 @@
 		});
 	}
 
-	woodmartThemeModule.$window.on('wdEventStarted', function() {
+	window.addEventListener('wdEventStarted', function () {
 		setTimeout(function () {
 			woodmartThemeModule.menuDropdownAside();
 			woodmartThemeModule.menuOffsets();

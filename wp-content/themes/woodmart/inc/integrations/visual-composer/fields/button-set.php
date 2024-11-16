@@ -36,7 +36,7 @@ if ( ! function_exists( 'woodmart_get_button_set_param' ) ) {
 		?>
 		<div class="wd-select-fields wd-style-buttons woodmart-vc-button-set<?php echo esc_attr( $wrapper_classes ); ?>">
 			<input type="hidden" class="woodmart-vc-button-set-value wpb_vc_param_value" name="<?php echo esc_attr( $settings['param_name'] ); ?>" value="<?php echo esc_attr( $current_value ); ?>">
-		
+
 			<ul class="wd-select-buttons woodmart-vc-button-set-list">
 				<?php foreach ( $settings['value'] as $title => $value ) : ?>
 					<?php
@@ -47,7 +47,7 @@ if ( ! function_exists( 'woodmart_get_button_set_param' ) ) {
 					}
 					?>
 
-					<li class="wd-buttons-item vc-button-set-item<?php echo esc_attr( $classes ); ?>" data-value="<?php echo esc_html( $value ); ?>">
+					<li class="wd-buttons-item vc-button-set-item<?php echo esc_attr( $classes ); ?>" data-value="<?php echo esc_html( $value ); ?>"<?php echo isset( $settings['tabs'] ) ? ' title="' . esc_html( $title ) . '"' : ''; ?>>
 						<span>
 							<?php echo esc_html( $title ); ?>
 						</span>

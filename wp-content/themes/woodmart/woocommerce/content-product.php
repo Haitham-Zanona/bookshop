@@ -29,7 +29,7 @@ $current_view    = woodmart_loop_prop( 'products_view' );
 $shop_view       = woodmart_get_opt( 'shop_view' );
 
 // Ensure visibility.
-if ( empty( $product ) || ! $product->is_visible() ) {
+if ( ( empty( $product ) || ! $product->is_visible() ) && ! woodmart_loop_prop( 'is_wishlist' ) ) {
 	return;
 }
 
@@ -38,24 +38,11 @@ wc_set_loop_prop( 'loop', woodmart_loop_prop( 'woocommerce_loop' ) + 1 );
 woodmart_set_loop_prop( 'woocommerce_loop', woodmart_loop_prop( 'woocommerce_loop' ) + 1 );
 $woocommerce_loop = woodmart_loop_prop( 'woocommerce_loop' );
 
-// Swatches.
-woodmart_set_loop_prop( 'swatches', woodmart_swatches_list() );
-
 // Extra post classes.
-$classes = array( 'product-grid-item' );
+$classes = array( 'wd-product' );
 
 if ( 'info' === $hover && ( woodmart_get_opt( 'new_label' ) && woodmart_is_new_label_needed( $product->get_id() ) ) || woodmart_get_product_attributes_label() || $product->is_on_sale() || $product->is_featured() || ! $product->is_in_stock() ) {
 	$classes[] = 'wd-with-labels';
-}
-
-$classes[] = 'product';
-
-if ( get_option( 'woocommerce_enable_review_rating' ) === 'yes' && 'base' === $hover && ( $product->get_rating_count() > 0 || woodmart_get_opt( 'show_empty_star_rating' ) ) ) {
-	$classes[] = 'has-stars';
-}
-
-if ( 'base' === $hover && ! woodmart_loop_prop( 'swatches' ) ) {
-	$classes[] = 'product-no-swatches';
 }
 
 // Grid or list style.
@@ -78,7 +65,7 @@ if ( 'base' === $hover || 'fw-button' === $hover ) {
 }
 
 if ( $current_view == 'list' ) {
-	$hover = 'list';
+	$hover     = 'list';
 	$classes[] = 'product-list-item';
 	woodmart_set_loop_prop( 'products_columns', 1 );
 } else {
@@ -90,7 +77,7 @@ if ( $current_view == 'list' ) {
 	}
 }
 
-if ( woodmart_loop_prop( 'product_quantity' ) && ( 'quick' === $hover || 'standard' === $hover || 'fw-button' === $hover || 'list' === $hover ) && ! $product->is_sold_individually() && 'variable' !== $product->get_type() && $product->is_purchasable() && $product->is_in_stock() ) {
+if ( woodmart_loop_prop( 'product_quantity' ) && ( 'quick' === $hover || 'standard' === $hover || 'fw-button' === $hover || 'list' === $hover ) && ! $product->is_sold_individually() && ( 'variable' !== $product->get_type() || 'variation_form' === woodmart_get_opt( 'quick_shop_variable_type' ) ) && $product->is_purchasable() && $product->is_in_stock() ) {
 	if ( 'quick' === $hover || 'fw-button' === $hover ) {
 		$classes[] = 'wd-quantity-overlap';
 	} else {
@@ -102,7 +89,6 @@ if ( ! empty( $different_sizes ) && $different_sizes && in_array( $woocommerce_l
 	woodmart_set_loop_prop( 'double_size', true );
 }
 
-
 $desktop_columns = woodmart_loop_prop( 'products_columns' );
 $tablet_columns  = woodmart_loop_prop( 'products_columns_tablet' );
 $mobile_columns  = woodmart_loop_prop( 'products_columns_mobile' );
@@ -112,23 +98,25 @@ if ( ! $is_slider ) {
 		$different_sizes = false;
 	}
 
-	if ( ( 'auto' !== $tablet_columns && ! empty( $tablet_columns ) ) || ( 'auto' !== $mobile_columns && ! empty( $mobile_columns ) ) ) {
-		if ( $desktop_columns == 1 ) {
-			$mobile_columns = 1;
-			$tablet_columns = 1;
-		}
-		$classes[] = woodmart_get_grid_el_class_new( $woocommerce_loop, $different_sizes, $desktop_columns, $tablet_columns, $mobile_columns );
-	} else {
-		$xs_columns = woodmart_loop_prop( 'products_columns_mobile' ) ? woodmart_loop_prop( 'products_columns_mobile' ) : (int) woodmart_get_opt( 'products_columns_mobile' );
-		$xs_size = 12 / $xs_columns;
-		if ( $desktop_columns == 1 ) {
-			$xs_size = 12;
-		}
-		$classes[] = woodmart_get_grid_el_class( $woocommerce_loop, $desktop_columns, $different_sizes, $xs_size );
+	if ( 'grid' === $current_view && $different_sizes && ( in_array( $woocommerce_loop, woodmart_get_wide_items_array( $different_sizes ), true ) ) ) {
+		$classes[] = 'wd-wider';
 	}
+
+	$classes[] = 'wd-col';
 } elseif ( 'base' === $hover || 'fw-button' === $hover ) {
 	$classes[] = 'wd-fade-off';
 	$classes[] = woodmart_get_old_classes( 'product-in-carousel' );
+}
+
+$classes[] = 'product-grid-item';
+$classes[] = 'product';
+
+if ( 'yes' === get_option( 'woocommerce_enable_reviews' ) && 'yes' === get_option( 'woocommerce_enable_review_rating' ) && 'base' === $hover && ( $product->get_rating_count() > 0 || woodmart_get_opt( 'show_empty_star_rating' ) ) ) {
+	$classes[] = 'has-stars';
+}
+
+if ( 'base' === $hover && ! woodmart_have_product_swatches_template() ) {
+	$classes[] = 'product-no-swatches';
 }
 
 if ( 'default' !== woodmart_loop_prop( 'products_color_scheme' ) ) {

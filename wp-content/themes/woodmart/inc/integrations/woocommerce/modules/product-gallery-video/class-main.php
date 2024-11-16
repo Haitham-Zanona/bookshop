@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Product_Gallery_Video;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 
 /**
@@ -90,7 +90,8 @@ class Main extends Singleton {
 				'section'     => 'product_images',
 				'default'     => true,
 				'group'       => esc_html__( 'Main image', 'woodmart' ),
-				'priority'    => 45,
+				'priority'    => 200,
+				'class'       => 'xts-preset-field-disabled',
 			)
 		);
 	}
@@ -98,6 +99,7 @@ class Main extends Singleton {
 	/**
 	 * Get button for gallery image.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $post_id Post ID.
 	 * @param string $attachment_id Attachment id.
 	 * @return void
@@ -129,6 +131,7 @@ class Main extends Singleton {
 	/**
 	 * Get button for main product image.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string  $content Image content.
 	 * @param integer $post_id Post ID.
 	 * @param integer $attachment_id Attachment ID.
@@ -149,6 +152,7 @@ class Main extends Singleton {
 	/**
 	 * Get product video gallery popup.
 	 *
+	 * @codeCoverageIgnore
 	 * @param object $post Post object.
 	 */
 	public function get_product_thumbnail_popup( $post ) {
@@ -157,6 +161,7 @@ class Main extends Singleton {
 		}
 
 		wp_enqueue_script( 'wd-product-gallery-videos', WOODMART_ASSETS . '/js/productGalleryVideo.js', array(), woodmart_get_theme_info( 'Version' ), true );
+		wp_enqueue_script( 'wd-tooltips', WOODMART_ASSETS . '/js/tooltip.js', array(), woodmart_get_theme_info( 'Version' ), true );
 
 		include WOODMART_THEMEROOT . '/inc/integrations/woocommerce/modules/product-gallery-video/template/popup.php';
 	}
@@ -192,6 +197,7 @@ class Main extends Singleton {
 	/**
 	 * Output product image thumbnails.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string  $content Gallery thumbnail content.
 	 * @param integer $attachment_id Thumbnail ID.
 	 * @return false|string
@@ -203,6 +209,7 @@ class Main extends Singleton {
 			return $content;
 		}
 
+		$attachment_id             = apply_filters( 'woodmart_single_product_image_thumbnail_id', $attachment_id, $product );
 		$product_settings          = (array) get_post_meta( $product->get_id(), 'woodmart_wc_video_gallery', true );
 		$this->thumbnails_settings = $product_settings;
 
@@ -239,7 +246,7 @@ class Main extends Singleton {
 		woodmart_enqueue_js_script( 'single-product-video-gallery' );
 
 		?>
-		<div class="product-image-wrap wd-with-video<?php echo esc_attr( $classes ); ?>">
+		<div class="wd-carousel-item wd-with-video<?php echo esc_attr( $classes ); ?>">
 			<?php
 			woodmart_enqueue_inline_style( 'woo-single-prod-opt-gallery-video' );
 			if ( woodmart_get_opt( 'photoswipe_icon' ) || 'popup' === woodmart_get_opt( 'image_action' ) ) {
@@ -270,7 +277,9 @@ class Main extends Singleton {
 	/**
 	 * Output video content.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $settings Video settings.
+	 *
 	 * @return void
 	 */
 	public function get_video_content( $settings ) {
@@ -278,7 +287,7 @@ class Main extends Singleton {
 		$attributes = array();
 
 		if ( 'mp4' === $settings['video_type'] ) {
-			$attributes = array( 'loop', 'type="video/mp4"', 'playsinline' );
+			$attributes = array( 'loop', 'playsinline' );
 
 			if ( $settings['autoplay'] ) {
 				$attributes[] = 'autoplay';
@@ -310,7 +319,10 @@ class Main extends Singleton {
 			</div>
 			<?php
 		} elseif ( 'youtube' === $settings['video_type'] && $settings['youtube_url'] && ( false !== stripos( $settings['youtube_url'], 'youtu.be/' ) || false !== stripos( $settings['youtube_url'], 'youtube.com/' ) ) ) {
-			if ( false !== stripos( $settings['youtube_url'], 'youtu.be/' ) ) {
+			if ( false !== stripos( $settings['youtube_url'], 'youtube.com/shorts/' ) ) {
+				$video_id = explode( 'youtube.com/shorts/', $settings['youtube_url'] );
+				$classes .= ' wd-youtube-shorts';
+			} elseif ( false !== stripos( $settings['youtube_url'], 'youtu.be/' ) ) {
 				$video_id = explode( 'youtu.be/', $settings['youtube_url'] );
 			} else {
 				$video_id = explode( 'v=', $settings['youtube_url'] );
@@ -320,22 +332,41 @@ class Main extends Singleton {
 				return;
 			}
 
-			$player_url = 'https://www.youtube.com/embed/' . $video_id[1];
+			$video_id = $video_id[1];
+
+			if ( strpos( $video_id, '?' ) ) {
+				$video_id = strstr( $video_id, '?', true );
+			}
+
+			if ( strpos( $video_id, '&' ) ) {
+				$video_id = strstr( $video_id, '&', true );
+			}
+
+			$player_url = 'https://www.youtube.com/embed/' . $video_id;
 			$attrs      = 'rel=0&showinfo=0&enablejsapi=1&loop=1&modestbranding=1&autohide=0&playsinline=1';
 			$classes   .= ' wd-product-video-youtube';
 
 			if ( 'theme' === $settings['video_control'] ) {
-				$attrs .= '&playlist=' . $video_id[1];
+				$attrs .= '&playlist=' . $video_id;
 				$attrs .= '&controls=0&iv_load_policy=3';
 			} else {
 				$attrs .= '&controls=1';
+			}
+
+			if ( apply_filters( 'woodmart_output_origin_url_for_youtube', false ) ) {
+				$attrs .= '&origin=' . get_site_url();
 			}
 
 			if ( $settings['autoplay'] ) {
 				$attrs .= '&autoplay=1&mute=1';
 			}
 
-			$attributes[] = 'src="' . $player_url . '?' . $attrs . '"';
+			if ( $settings['autoplay'] || 'native' === $settings['video_control'] && $settings['hide_gallery_img'] ) {
+				$attributes[] = 'src="' . $player_url . '?' . $attrs . '"';
+			} else {
+				$attributes[] = 'data-lazy-load="' . $player_url . '?' . $attrs . '"';
+			}
+
 			$attributes[] = 'loading="lazy"';
 
 			$this->get_iframe_template( $classes, $attributes );
@@ -358,11 +389,16 @@ class Main extends Singleton {
 				$attrs .= '&autoplay=1&muted=1';
 			}
 
+			if ( $settings['autoplay'] || 'native' === $settings['video_control'] && $settings['hide_gallery_img'] ) {
+				$attributes[] = 'src="' . $player_url . '?' . $attrs . '"';
+			} else {
+				$attributes[] = 'data-lazy-load="' . $player_url . '?' . $attrs . '"';
+			}
+
 			if ( 'theme' === $settings['video_control'] && $settings['autoplay'] ) {
 				woodmart_enqueue_js_library( 'vimeo_player' );
 			}
 
-			$attributes[] = 'src="' . $player_url . '?' . $attrs . '"';
 			$attributes[] = 'loading="lazy"';
 
 			$this->get_iframe_template( $classes, $attributes );
@@ -372,6 +408,7 @@ class Main extends Singleton {
 	/**
 	 * Get iframe template.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $classes Wrapper classes.
 	 * @param array  $attributes HTML attribute.
 	 * @return void
@@ -387,6 +424,7 @@ class Main extends Singleton {
 	/**
 	 * Get video controls content.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $settings Video controls settings.
 	 * @return void
 	 */
@@ -407,6 +445,7 @@ class Main extends Singleton {
 	/**
 	 * Get thumbnails wrapper classes.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $settings Settings video.
 	 * @return string
 	 */
@@ -448,6 +487,10 @@ class Main extends Singleton {
 	 * @return string
 	 */
 	public function product_thumbnails_classes( $classes, $attachment_id ) {
+		global $product;
+
+		$attachment_id = apply_filters( 'woodmart_single_product_image_thumbnail_id', $attachment_id, $product );
+
 		if ( woodmart_get_opt( 'single_product_main_gallery_video', true ) && ! empty( $this->thumbnails_settings[ $attachment_id ] ) && $this->check_is_available_video( $this->thumbnails_settings[ $attachment_id ] ) ) {
 			return $classes . ' wd-with-video';
 		}
@@ -458,6 +501,7 @@ class Main extends Singleton {
 	/**
 	 * Check is available video for gallery thumbnail.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $settings Settings video.
 	 * @return bool
 	 */

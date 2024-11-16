@@ -5,27 +5,26 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_author_area' ) ) {
-	function woodmart_vc_map_author_area() {
-		if ( ! shortcode_exists( 'author_area' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if( ! function_exists( 'woodmart_get_vc_map_author_area' ) ) {
+	function woodmart_get_vc_map_author_area() {
+		return array(
 			'name' => esc_html__( 'Author area', 'woodmart' ),
 			'base' => 'author_area',
 			'category' => function_exists( 'woodmart_get_tab_title_category_for_wpb' ) ? woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ) : esc_html__( 'Theme elements', 'woodmart' ),
 			'description' => esc_html__( 'Widget for author information', 'woodmart' ),
-        	'icon' => WOODMART_ASSETS . '/images/vc-icon/author-area.svg',
+			'icon' => WOODMART_ASSETS . '/images/vc-icon/author-area.svg',
 			'params' =>  woodmart_get_author_area_params()
-		) );
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_author_area' );
 }
 
 if( ! function_exists( 'woodmart_get_author_area_params' ) ) {
 	function woodmart_get_author_area_params() {
 		return apply_filters( 'woodmart_get_author_area_params', array(
+			array(
+				'param_name' => 'woodmart_css_id',
+				'type'       => 'woodmart_css_id',
+			),
 			/**
 			* Image
 			*/
@@ -48,7 +47,6 @@ if( ! function_exists( 'woodmart_get_author_area_params' ) ) {
 				'heading' => esc_html__( 'Image size', 'woodmart' ),
 				'param_name' => 'img_size',
 				'hint' => esc_html__( 'Enter image size. Example: \'thumbnail\', \'medium\', \'large\', \'full\' or other sizes defined by current theme. Alternatively enter image size in pixels: 200x100 (Width x Height). Leave empty to use \'thumbnail\' size.', 'woodmart' ),
-				'description' => esc_html__( 'Example: \'thumbnail\', \'medium\', \'large\', \'full\' or enter image size in pixels: \'200x100\'.', 'woodmart' ),
 				'edit_field_class' => 'vc_col-sm-6 vc_column',
 			),
 			/**
@@ -154,7 +152,14 @@ if( ! function_exists( 'woodmart_get_author_area_params' ) ) {
 				'heading' => esc_html__( 'Extra class name', 'woodmart' ),
 				'param_name' => 'el_class',
 				'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
-			)
+			),
+			array(
+				'type'       => 'css_editor',
+				'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+				'param_name' => 'css',
+				'group'      => esc_html__( 'Design Options', 'js_composer' ),
+			),
+			function_exists( 'woodmart_get_vc_responsive_spacing_map' ) ? woodmart_get_vc_responsive_spacing_map() : '',
 		) );
 	}
 }

@@ -5,7 +5,7 @@
 	});
 
 	woodmartThemeModule.stickySidebarBtn = function() {
-		var $trigger = $('.wd-show-sidebar-btn');
+		var $trigger = $('.wd-show-sidebar-btn,.wd-off-canvas-btn');
 		var $stickyBtn = $('.wd-sidebar-opener.wd-on-shop:not(.toolbar)');
 
 		if ($stickyBtn.length <= 0 || $trigger.length <= 0 || woodmartThemeModule.$window.width() >= 1024) {
@@ -17,9 +17,9 @@
 			var windowScroll = woodmartThemeModule.$window.scrollTop();
 
 			if (btnOffset < windowScroll) {
-				$stickyBtn.addClass('wd-sticky');
+				$stickyBtn.addClass('wd-shown');
 			} else {
-				$stickyBtn.removeClass('wd-sticky');
+				$stickyBtn.removeClass('wd-shown');
 			}
 		};
 

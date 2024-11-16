@@ -9,6 +9,7 @@ use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Image_Size;
 use Elementor\Group_Control_Typography;
+use Elementor\Utils;
 use Elementor\Widget_Base;
 use Elementor\Controls_Manager;
 use Elementor\Plugin;
@@ -331,6 +332,18 @@ class Infobox extends Widget_Base {
 		);
 
 		$this->add_responsive_control(
+			'padding',
+			array(
+				'label'      => esc_html__( 'Padding', 'woodmart' ),
+				'type'       => Controls_Manager::DIMENSIONS,
+				'size_units' => array( 'px', '%' ),
+				'selectors'  => array(
+					'{{WRAPPER}} .wd-info-box' => 'padding: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+				),
+			)
+		);
+
+		$this->add_responsive_control(
 			'border_radius',
 			[
 				'label'      => esc_html__( 'Border radius', 'woodmart' ),
@@ -338,9 +351,6 @@ class Infobox extends Widget_Base {
 				'size_units' => [ 'px', '%' ],
 				'selectors'  => [
 					'{{WRAPPER}} .wd-info-box' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
-				],
-				'condition'  => [
-					'style' => 'bg-hover',
 				],
 			]
 		);
@@ -353,21 +363,18 @@ class Infobox extends Widget_Base {
 		$this->start_controls_section(
 			'hover_style_section',
 			[
-				'label'     => esc_html__( 'Background', 'woodmart' ),
-				'tab'       => Controls_Manager::TAB_STYLE,
-				'condition' => [
-					'style' => [ 'bg-hover' ],
-				],
+				'label' => esc_html__( 'Background', 'woodmart' ),
+				'tab'   => Controls_Manager::TAB_STYLE,
 			]
 		);
 
 		$this->add_control(
 			'bg_hover_colorpicker',
 			[
-				'label'   => esc_html__( 'Colorpicker', 'woodmart' ),
+				'label'   => esc_html__( 'Background type', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => [
-					'colorpicker' => esc_html__( 'Background', 'woodmart' ),
+					'colorpicker' => esc_html__( 'Color or image', 'woodmart' ),
 					'gradient'    => esc_html__( 'Gradient', 'woodmart' ),
 				],
 				'default' => 'colorpicker',
@@ -377,11 +384,15 @@ class Infobox extends Widget_Base {
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
 			[
-				'name'      => 'box_bg_color_gradient',
-				'label'     => esc_html__( 'Background', 'woodmart' ),
-				'types'     => [ 'gradient' ],
-				'selector'  => '{{WRAPPER}} .wd-info-box',
-				'condition' => [
+				'name'           => 'box_bg_color_gradient',
+				'fields_options' => array(
+					'background' => array(
+						'label' => esc_html__( 'Background gradient',  'woodmart' ),
+					),
+				),
+				'types'          => [ 'gradient' ],
+				'selector'       => '{{WRAPPER}} .wd-info-box',
+				'condition'      => [
 					'bg_hover_colorpicker' => 'gradient',
 				],
 			]
@@ -390,20 +401,75 @@ class Infobox extends Widget_Base {
 		$this->add_group_control(
 			Group_Control_Background::get_type(),
 			[
-				'name'      => 'box_bg_hover_color_gradient',
-				'label'     => esc_html__( 'Background on hover', 'woodmart' ),
-				'types'     => [ 'gradient' ],
-				'selector'  => '{{WRAPPER}} .wd-info-box:after',
-				'condition' => [
+				'name'           => 'box_bg_hover_color_gradient',
+				'fields_options' => array(
+					'background' => array(
+						'label' => esc_html__( 'Hover background gradient', 'woodmart' ),
+					),
+				),
+				'types'          => [ 'gradient' ],
+				'selector'       => '{{WRAPPER}} .wd-info-box:after',
+				'condition'      => [
+					'style'                => 'bg-hover',
 					'bg_hover_colorpicker' => 'gradient',
 				],
 			]
 		);
 
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			array(
+				'name'           => 'box_bg_image',
+				'fields_options' => array(
+					'background' => array(
+						'label' => esc_html__( 'Background image', 'woodmart' ),
+					),
+					'image'      => array(
+						'responsive' => false,
+					),
+					'position'   => array(
+						'label'      => esc_html__( 'Background position', 'woodmart' ),
+						'responsive' => false,
+						'options'    => [
+							''              => esc_html_x( 'Default', 'Background Control', 'elementor' ),
+							'center center' => esc_html_x( 'Center Center', 'Background Control', 'elementor' ),
+							'center left'   => esc_html_x( 'Center Left', 'Background Control', 'elementor' ),
+							'center right'  => esc_html_x( 'Center Right', 'Background Control', 'elementor' ),
+							'top center'    => esc_html_x( 'Top Center', 'Background Control', 'elementor' ),
+							'top left'      => esc_html_x( 'Top Left', 'Background Control', 'elementor' ),
+							'top right'     => esc_html_x( 'Top Right', 'Background Control', 'elementor' ),
+							'bottom center' => esc_html_x( 'Bottom Center', 'Background Control', 'elementor' ),
+							'bottom left'   => esc_html_x( 'Bottom Left', 'Background Control', 'elementor' ),
+							'bottom right'  => esc_html_x( 'Bottom Right', 'Background Control', 'elementor' ),
+						],
+					),
+					'repeat'     => array(
+						'label'      => esc_html__( 'Background repeat', 'woodmart' ),
+						'responsive' => false,
+					),
+					'size'       => array(
+						'label'      => esc_html__( 'Background size', 'woodmart' ),
+						'responsive' => false,
+						'options'    => [
+							''        => esc_html_x( 'Default', 'Background Control', 'elementor' ),
+							'cover'   => esc_html_x( 'Cover', 'Background Control', 'elementor' ),
+							'contain' => esc_html_x( 'Contain', 'Background Control', 'elementor' ),
+						],
+					),
+				),
+				'include'        => array( 'background', 'image', 'position', 'repeat', 'size' ),
+				'types'          => array( 'classic' ),
+				'selector'       => '{{WRAPPER}} .wd-info-box',
+				'condition'      => array(
+					'bg_hover_colorpicker' => 'colorpicker',
+				),
+			)
+		);
+
 		$this->add_control(
 			'box_bg_color',
 			[
-				'label'     => esc_html__( 'Background', 'woodmart' ),
+				'label'     => esc_html__( 'Background color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .wd-info-box' => 'background-color: {{VALUE}}',
@@ -414,15 +480,67 @@ class Infobox extends Widget_Base {
 			]
 		);
 
+		$this->add_group_control(
+			Group_Control_Background::get_type(),
+			array(
+				'name'           => 'box_bg_hover_image',
+				'fields_options' => array(
+					'background' => array(
+						'label' => esc_html__( 'Hover background image', 'woodmart' ),
+					),
+					'image'      => array(
+						'responsive' => false,
+					),
+					'position'   => array(
+						'label'      => esc_html__( 'Background position', 'woodmart' ),
+						'responsive' => false,
+						'options'    => [
+							''              => esc_html_x( 'Default', 'Background Control', 'elementor' ),
+							'center center' => esc_html_x( 'Center Center', 'Background Control', 'elementor' ),
+							'center left'   => esc_html_x( 'Center Left', 'Background Control', 'elementor' ),
+							'center right'  => esc_html_x( 'Center Right', 'Background Control', 'elementor' ),
+							'top center'    => esc_html_x( 'Top Center', 'Background Control', 'elementor' ),
+							'top left'      => esc_html_x( 'Top Left', 'Background Control', 'elementor' ),
+							'top right'     => esc_html_x( 'Top Right', 'Background Control', 'elementor' ),
+							'bottom center' => esc_html_x( 'Bottom Center', 'Background Control', 'elementor' ),
+							'bottom left'   => esc_html_x( 'Bottom Left', 'Background Control', 'elementor' ),
+							'bottom right'  => esc_html_x( 'Bottom Right', 'Background Control', 'elementor' ),
+						],
+					),
+					'repeat'     => array(
+						'label'      => esc_html__( 'Background repeat', 'woodmart' ),
+						'responsive' => false,
+					),
+					'size'       => array(
+						'label'      => esc_html__( 'Background size', 'woodmart' ),
+						'responsive' => false,
+						'options'    => [
+							''        => esc_html_x( 'Default', 'Background Control', 'elementor' ),
+							'cover'   => esc_html_x( 'Cover', 'Background Control', 'elementor' ),
+							'contain' => esc_html_x( 'Contain', 'Background Control', 'elementor' ),
+						],
+					),
+				),
+				'include'        => array( 'background', 'image', 'position', 'repeat', 'size' ),
+				'types'          => array( 'classic' ),
+				'selector'       => '{{WRAPPER}} .wd-info-box:after',
+				'condition'      => array(
+					'style'                => 'bg-hover',
+					'bg_hover_colorpicker' => 'colorpicker',
+				),
+			)
+		);
+
 		$this->add_control(
 			'box_bg_hover_color',
 			[
-				'label'     => esc_html__( 'Background on hover', 'woodmart' ),
+				'label'     => esc_html__( 'Hover background color', 'woodmart' ),
 				'type'      => Controls_Manager::COLOR,
 				'selectors' => [
 					'{{WRAPPER}} .wd-info-box:after' => 'background-color: {{VALUE}}',
 				],
 				'condition' => [
+					'style'                => 'bg-hover',
 					'bg_hover_colorpicker' => 'colorpicker',
 				],
 			]
@@ -431,13 +549,16 @@ class Infobox extends Widget_Base {
 		$this->add_control(
 			'woodmart_hover_color_scheme',
 			[
-				'label'   => esc_html__( 'Hover color', 'woodmart' ),
+				'label'   => esc_html__( 'Hover color scheme', 'woodmart' ),
 				'type'    => Controls_Manager::SELECT,
 				'options' => [
 					'light' => esc_html__( 'Light', 'woodmart' ),
 					'dark'  => esc_html__( 'Dark', 'woodmart' ),
 				],
 				'default' => 'light',
+				'condition' => [
+					'style' => 'bg-hover',
+				],
 			]
 		);
 
@@ -525,56 +646,6 @@ class Infobox extends Widget_Base {
 		);
 
 		$this->add_control(
-			'rounding_size',
-			array(
-				'label'     => esc_html__( 'Rounding', 'woodmart' ),
-				'type'      => Controls_Manager::SELECT,
-				'options'   => array(
-					''       => esc_html__( 'Inherit', 'woodmart' ),
-					'0'      => esc_html__( '0', 'woodmart' ),
-					'5'      => esc_html__( '5', 'woodmart' ),
-					'8'      => esc_html__( '8', 'woodmart' ),
-					'12'     => esc_html__( '12', 'woodmart' ),
-					'custom' => esc_html__( 'Custom', 'woodmart' ),
-				),
-				'default'   => '',
-				'selectors' => array(
-					'{{WRAPPER}}' => '--wd-brd-radius: {{VALUE}}px;',
-				),
-				'condition' => [
-					'icon_type' => [ 'icon' ],
-				],
-			)
-		);
-
-		$this->add_control(
-			'custom_rounding_size',
-			array(
-				'label'      => esc_html__( 'Custom rounding', 'woodmart' ),
-				'type'       => Controls_Manager::SLIDER,
-				'size_units' => array( '%', 'px' ),
-				'range'      => array(
-					'px' => array(
-						'min'  => 1,
-						'max'  => 300,
-						'step' => 1,
-					),
-					'%'  => array(
-						'min'  => 1,
-						'max'  => 100,
-						'step' => 1,
-					),
-				),
-				'selectors'  => array(
-					'{{WRAPPER}}' => '--wd-brd-radius: {{SIZE}}{{UNIT}};',
-				),
-				'condition'  => array(
-					'rounding_size' => array( 'custom' ),
-				),
-			)
-		);
-
-		$this->add_control(
 			'icon_text_size',
 			[
 				'label'     => esc_html__( 'Text size', 'woodmart' ),
@@ -603,6 +674,24 @@ class Infobox extends Widget_Base {
 					'icon_type' => 'text',
 				],
 			]
+		);
+
+		$this->add_control(
+			'icon_spacing',
+			array(
+				'label'     => esc_html__( 'Spacing', 'woodmart' ),
+				'type'      => Controls_Manager::SLIDER,
+				'range'     => array(
+					'px' => array(
+						'min'  => 5,
+						'max'  => 50,
+						'step' => 1,
+					),
+				),
+				'selectors' => array(
+					'{{WRAPPER}} .wd-info-box' => '--ib-icon-sp: {{SIZE}}{{UNIT}};',
+				),
+			)
 		);
 
 		$this->end_controls_section();
@@ -938,8 +1027,8 @@ class Infobox extends Widget_Base {
 				'type'      => Controls_Manager::SELECT,
 				'options'   => [
 					'rectangle'  => esc_html__( 'Rectangle', 'woodmart' ),
-					'round'      => esc_html__( 'Circle', 'woodmart' ),
-					'semi-round' => esc_html__( 'Round', 'woodmart' ),
+					'round'      => esc_html__( 'Round', 'woodmart' ),
+					'semi-round' => esc_html__( 'Rounded', 'woodmart' ),
 				],
 				'condition' => [
 					'btn_style!' => [ 'link' ],
@@ -957,7 +1046,7 @@ class Infobox extends Widget_Base {
 			]
 		);
 
-		woodmart_get_button_style_icon_map( $this );
+		woodmart_get_button_style_icon_map( $this, 'btn_' );
 
 		$this->add_control(
 			'button_layout_heading',
@@ -1019,7 +1108,7 @@ class Infobox extends Widget_Base {
 	 * @access protected
 	 */
 	protected function render() {
-		woodmart_elementor_infobox_template( $this->get_settings_for_display() );
+		woodmart_elementor_infobox_template( $this->get_settings_for_display(), $this );
 	}
 }
 

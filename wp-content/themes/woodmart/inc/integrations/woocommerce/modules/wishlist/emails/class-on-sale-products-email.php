@@ -52,8 +52,16 @@ class On_Sale_Products_Email extends WC_Email {
 		// Triggers for this email.
 		add_action( 'woodmart_send_on_sale_products_mail_notification', array( $this, 'trigger' ), 10, 2 );
 
+		add_filter( 'woodmart_emails_list', array( $this, 'register_woodmart_email' ) );
+
 		// Call parent constructor.
 		parent::__construct();
+	}
+
+	public function register_woodmart_email( $email_class ) {
+		$email_class[] = get_class( $this );
+
+		return $email_class;
 	}
 
 	/**
@@ -72,6 +80,7 @@ class On_Sale_Products_Email extends WC_Email {
 		$user            = get_user_by( 'id', $user_id );
 		$this->user      = $user;
 		$this->recipient = $user->user_email;
+		$this->items     = array();
 
 		$product_exclusions  = $this->get_option( 'product_exclusions', array() );
 		$category_exclusions = $this->get_option( 'category_exclusions', array() );
@@ -138,20 +147,47 @@ class On_Sale_Products_Email extends WC_Email {
 	}
 
 	/**
+	 * Admin Panel Options Processing.
+	 */
+	public function process_admin_options() {
+		$post_data = $this->get_post_data();
+
+		// Save templates.
+		if ( isset( $post_data['template_html_code'] ) ) {
+			$this->save_template( $post_data['template_html_code'], $this->template_html );
+		}
+		if ( isset( $post_data['template_plain_code'] ) ) {
+			$this->save_template( $post_data['template_plain_code'], $this->template_plain );
+		}
+
+		// Save regular options.
+		$this->init_settings();
+
+		$post_data = $this->get_post_data();
+
+		foreach ( $this->get_form_fields() as $key => $field ) {
+			if ( 'title' !== $this->get_field_type( $field ) ) {
+				try {
+					$this->settings[ $key ] = $this->get_field_value( $key, $field, $post_data );
+				} catch ( Exception $e ) {
+					$this->add_error( $e->getMessage() );
+				}
+			}
+		}
+
+		$option_key = $this->get_option_key();
+
+		do_action( 'woocommerce_update_option', array( 'id' => $option_key ) );
+
+		return update_option( $option_key, apply_filters( 'woocommerce_settings_api_sanitized_fields_' . $this->id, $this->settings ), false );
+	}
+
+	/**
 	 * Init fields that will store admin preferences
 	 *
 	 * @return void
 	 */
 	public function init_form_fields() {
-		$product_categories = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => true,
-				'number'     => 0,
-				'fields'     => 'id=>name',
-			)
-		);
-
 		$saved_exclusions   = $this->get_option( 'product_exclusions', array() );
 		$exclusions_options = array();
 
@@ -164,6 +200,19 @@ class On_Sale_Products_Email extends WC_Email {
 				}
 
 				$exclusions_options[ $product_id ] = $product->get_formatted_name();
+			}
+		}
+
+		$product_categories          = array();
+		$saved_categories_exclusions = $this->get_option( 'category_exclusions', array() );
+
+		if ( $saved_categories_exclusions ) {
+			foreach ( $saved_categories_exclusions as $category_id ) {
+				$category = get_term( $category_id, 'product_cat' );
+
+				if ( ! empty( $category->name ) ) {
+					$product_categories[ $category_id ] = $category->name;
+				}
 			}
 		}
 
@@ -202,11 +251,12 @@ class On_Sale_Products_Email extends WC_Email {
 			),
 
 			'category_exclusions' => array(
-				'title'       => esc_html__( 'Category exclusions', 'woodmart' ),
-				'type'        => 'multiselect',
-				'class'       => 'wc-enhanced-select',
-				'description' => esc_html__( 'Select the product categories for which you don\'t want to send a reminder email', 'woodmart' ),
-				'options'     => $product_categories,
+				'title'             => esc_html__( 'Category exclusions', 'woodmart' ),
+				'type'              => 'multiselect',
+				'class'             => 'wc-category-search',
+				'description'       => esc_html__( 'Select the product categories for which you don\'t want to send a reminder email', 'woodmart' ),
+				'options'           => $product_categories,
+				'custom_attributes' => array( 'data-return_id' => true ),
 			),
 
 			'email_type'          => array(

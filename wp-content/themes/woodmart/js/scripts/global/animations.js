@@ -12,7 +12,7 @@
 		$('[class*="wd-animation"]').each(function() {
 			var $element = $(this);
 
-			if ('inited' === $element.data('wd-waypoint') || $element.parents('.wd-autoplay-animations-off').length > 0) {
+			if ('inited' === $element.data('wd-waypoint') || $element.parents('.wd-slider .wd-carousel').length > 0) {
 				return;
 			}
 

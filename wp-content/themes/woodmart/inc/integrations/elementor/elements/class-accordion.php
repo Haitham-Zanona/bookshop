@@ -259,7 +259,7 @@ class Accordion extends Widget_Base {
 				'type'    => Controls_Manager::SELECT,
 				'options' => array(
 					'default' => esc_html__( 'Default', 'woodmart' ),
-					'shadow'  => esc_html__( 'Shadow', 'woodmart' ),
+					'shadow'  => esc_html__( 'Boxed', 'woodmart' ),
 					'simple'  => esc_html__( 'Simple', 'woodmart' ),
 				),
 				'default' => 'default',
@@ -284,6 +284,20 @@ class Accordion extends Widget_Base {
 			array(
 				'name'      => 'shadow',
 				'selector'  => '{{WRAPPER}} .wd-accordion.wd-style-shadow > .wd-accordion-item',
+				'condition' => array(
+					'style' => array( 'shadow' ),
+				),
+			)
+		);
+
+		$this->add_control(
+			'shadow_bg_color',
+			array(
+				'label'     => esc_html__( 'Background color', 'woodmart' ),
+				'type'      => Controls_Manager::COLOR,
+				'selectors' => array(
+					'{{WRAPPER}} .wd-accordion.wd-style-shadow > .wd-accordion-item' => 'background-color: {{VALUE}}',
+				),
 				'condition' => array(
 					'style' => array( 'shadow' ),
 				),
@@ -523,6 +537,8 @@ class Accordion extends Widget_Base {
 				'default' => 'left',
 			)
 		);
+
+		$this->end_controls_section();
 	}
 
 	/***
@@ -617,9 +633,9 @@ class Accordion extends Widget_Base {
 				$icon_output = '';
 
 				if ( 'image' === $item['icon_type'] && isset( $item['image']['id'] ) && $item['image']['id'] ) {
-					$icon_output = woodmart_get_image_html( $item, 'image' );
+					$icon_output = woodmart_otf_get_image_html( $item['image']['id'], $item['image_size'], $item['image_custom_dimension'] );
 
-					if ( woodmart_is_svg( woodmart_get_image_url( $item['image']['id'], 'image', $item ) ) ) {
+					if ( woodmart_is_svg( $item['image']['url'] ) ) {
 						$icon_output = woodmart_get_svg_html( $item['image']['id'], $image_size );
 					}
 				} elseif ( 'icon' === $item['icon_type'] && $item['icon'] ) {
@@ -631,9 +647,9 @@ class Accordion extends Widget_Base {
 					<div class="wd-accordion-title<?php echo esc_attr( $loop_title_classes_wrapper ); ?>" data-accordion-index="<?php echo esc_attr( $index ); ?>">
 						<div class="wd-accordion-title-text<?php echo esc_attr( $title_classes ); ?>">
 							<?php if ( ! empty( $icon_output ) ) : ?>
-								<div class="img-wrapper">
+								<span class="img-wrapper">
 									<?php echo $icon_output; // phpcs:ignore ?>
-								</div>
+								</span>
 							<?php endif; ?>
 							<span>
 								<?php echo esc_html( $item['item_title'] ); ?>

@@ -2,9 +2,9 @@
 
 namespace XTS\Modules\Theme_Settings_Backup;
 
-use WOODMART_Stylesstorage;
-use XTS\Options as ThemeSettingsOptions;
-use XTS\Presets;
+use XTS\Admin\Modules\Options\Presets;
+use XTS\Modules\Styles_Storage;
+use XTS\Admin\Modules\Options as ThemeSettings;
 use XTS\Singleton;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,7 +46,7 @@ class Main extends Singleton {
 		}
 
 		ksort( $all_backups );
-		$all_backups = array_reverse( $all_backups, true );
+		$all_backups = array_filter( array_reverse( $all_backups, true ) );
 
 		?>
 		<div class="xts-box xts-backups xts-theme-style">
@@ -120,7 +120,7 @@ class Main extends Singleton {
 				<a href="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>?action=xts_download_backup&id=<?php echo esc_attr( $id ); ?>&security=<?php echo esc_attr( wp_create_nonce( 'xts_backup_nonce' ) ); ?>" class="xts-bordered-btn xts-color-default xts-i-export xts-export-backup">
 					<?php esc_html_e( 'Export', 'woodmart' ); ?>
 				</a>
-				<a href="#" class="xts-bordered-btn xts-color-warning xts-style-icon xts-i-trash xts-delete-backup" title="<?php esc_html_e( 'Delete', 'woodmart' ); ?>"></a>
+				<a href="#" class="xts-bordered-btn xts-color-warning xts-style-icon xts-i-trash xts-delete-backup" title="<?php esc_attr_e( 'Delete', 'woodmart' ); ?>"></a>
 			</div>
 		</div>
 		<?php
@@ -153,7 +153,7 @@ class Main extends Singleton {
 			'presets' => $presets,
 		);
 
-		update_option( 'xts_backups', $backups );
+		update_option( 'xts_backups', $backups, false );
 
 		ob_start();
 
@@ -200,12 +200,12 @@ class Main extends Singleton {
 
 		if ( isset( $backups[ $backup_id ] ) ) {
 			unset( $backups[ $backup_id ] );
-			update_option( 'xts_backups', $backups );
+			update_option( 'xts_backups', $backups, false );
 		}
 
 		if ( isset( $auto_backups[ $backup_id ] ) ) {
 			unset( $auto_backups[ $backup_id ] );
-			update_option( 'xts_backups_auto', $auto_backups );
+			update_option( 'xts_backups_auto', $auto_backups, false );
 		}
 
 		ob_start();
@@ -320,7 +320,7 @@ class Main extends Singleton {
 
 		$backup['options']['last_message'] = 'import';
 
-		$options = ThemeSettingsOptions::get_instance();
+		$options = ThemeSettings::get_instance();
 
 		$pseudo_post_data = array(
 			'import-btn'    => true,
@@ -337,7 +337,7 @@ class Main extends Singleton {
 		array_unshift( $presets, 'default' );
 
 		foreach ( $presets as $preset ) {
-			$storage = new WOODMART_Stylesstorage( 'theme_settings_' . $preset );
+			$storage = new Styles_Storage( 'theme_settings_' . $preset );
 
 			$storage->reset_data();
 			$storage->delete_file();
@@ -358,7 +358,7 @@ class Main extends Singleton {
 			return;
 		}
 
-		$auto_backups = get_option( 'xts_backups_auto' );
+		$auto_backups = (array) get_option( 'xts_backups_auto' );
 		$backup_time  = time();
 		$options      = get_option( 'xts-woodmart-options' );
 		$presets      = get_option( 'xts-options-presets' );

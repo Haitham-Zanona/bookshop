@@ -70,7 +70,7 @@ woodmart_enqueue_js_script( 'mobile-search' );
 ?>
 
 <div class="wd-header-search wd-tools-element wd-header-search-mobile<?php echo esc_attr( $extra_class ); ?>">
-	<a href="#" rel="nofollow noopener" aria-label="<?php esc_html_e( 'Search', 'woodmart' ); ?>">
+	<a href="#" rel="nofollow noopener" aria-label="<?php esc_attr_e( 'Search', 'woodmart' ); ?>">
 		<?php if ( '8' === $params['icon_design'] || ( isset( $params['wrap_type'], $params['style'], $params['icon_design'] ) && 'icon_and_text' === $params['wrap_type'] && 'text' === $params['style'] && in_array( $params['icon_design'], array( '6', '7' ), true ) ) ) : ?>
 		<span class="wd-tools-inner">
 		<?php endif; ?>

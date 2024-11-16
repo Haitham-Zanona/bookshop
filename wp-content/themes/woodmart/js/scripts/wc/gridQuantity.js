@@ -14,7 +14,7 @@
 	});
 
 	woodmartThemeModule.gridQuantity = function() {
-		$('.product-grid-item').on('change input', '.quantity .qty', function() {
+		$('.wd-product').on('change input', '.quantity .qty', function() {
 			var $this = $(this);
 			var add_to_cart_button = $this.parent().parent().find('.add_to_cart_button');
 

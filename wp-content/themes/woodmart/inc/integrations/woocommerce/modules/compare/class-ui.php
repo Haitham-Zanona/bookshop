@@ -35,6 +35,7 @@ class Ui extends Singleton {
 	/**
 	 * Add to compare button.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 *
 	 * @param string $classes Extra classes.
@@ -42,17 +43,18 @@ class Ui extends Singleton {
 	public function add_to_compare_btn( $classes = '' ) {
 		global $product;
 
-		$url = woodmart_get_compare_page_url();
+		$url        = woodmart_get_compare_page_url();
+		$product_id = apply_filters( 'wpml_object_id', $product->get_id(), 'product', true, apply_filters( 'wpml_default_language', null ) );
 
 		if ( woodmart_get_opt( 'compare_by_category' ) ) {
-			$url = add_query_arg( 'product_id', $product->get_id(), $url );
+			$url = add_query_arg( 'product_id', $product_id, $url );
 		}
 
 		woodmart_enqueue_js_script( 'woodmart-compare' );
 
 		?>
 		<div class="wd-compare-btn product-compare-button <?php echo esc_attr( $classes ); ?>">
-			<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( $product->get_id() ); ?>" rel="nofollow" data-added-text="<?php esc_html_e( 'Compare products', 'woodmart' ); ?>">
+			<a href="<?php echo esc_url( $url ); ?>" data-id="<?php echo esc_attr( $product_id ); ?>" rel="nofollow" data-added-text="<?php esc_attr_e( 'Compare products', 'woodmart' ); ?>">
 				<span><?php esc_html_e( 'Compare', 'woodmart' ); ?></span>
 			</a>
 		</div>
@@ -62,6 +64,7 @@ class Ui extends Singleton {
 	/**
 	 * Add to compare button on sticky add to cart.
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function add_to_compare_sticky_atc_btn() {
@@ -74,6 +77,7 @@ class Ui extends Singleton {
 	/**
 	 * Add to compare button on single product.
 	 *
+	 * @codeCoverageIgnore
 	 * @since 1.0.0
 	 */
 	public function add_to_compare_single_btn() {
@@ -106,6 +110,7 @@ class Ui extends Singleton {
 	/**
 	 * Output compare page content.
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $active_category Current category when AJAX request.
 	 *
 	 * @return false|string
@@ -189,6 +194,7 @@ class Ui extends Singleton {
 	/**
 	 * Header category tabs.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array   $categories Product category.
 	 * @param integer $active_category Current category.
 	 *
@@ -230,6 +236,7 @@ class Ui extends Singleton {
 	/**
 	 * Compare product table.
 	 *
+	 * @codeCoverageIgnore
 	 * @param array   $products Products.
 	 * @param integer $category Category ID.
 	 *
@@ -271,6 +278,8 @@ class Ui extends Singleton {
 
 	/**
 	 * Get content when empty compare.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function get_empty_compare_content() {
 		$empty_compare_text = woodmart_get_opt( 'empty_compare_text' );
@@ -316,6 +325,7 @@ class Ui extends Singleton {
 	/**
 	 * Get compare fields data.
 	 *
+	 * @codeCoverageIgnore
 	 * @param integer $field_id Fields ID.
 	 * @param array   $product Product data.
 	 */
@@ -498,8 +508,8 @@ class Ui extends Singleton {
 
 		$fields_settings = woodmart_get_opt( 'fields_compare' );
 
-		if ( class_exists( 'XTS\Options' ) && count( $fields_settings ) > 1 ) {
-			$fields_labels = woodmart_compare_available_fields( true );
+		if ( class_exists( 'XTS\Admin\Modules\Options' ) && $fields_settings && count( $fields_settings ) > 1 ) {
+			$fields_labels = woodmart_compare_available_fields();
 
 			foreach ( $fields_settings as $field ) {
 				if ( isset( $fields_labels [ $field ] ) ) {
@@ -614,6 +624,7 @@ class Ui extends Singleton {
 	/**
 	 * Get dropdown with products categories content.
 	 *
+	 * @codeCoverageIgnore
 	 * @return string|void
 	 */
 	public function get_dropdown_with_products_categories() {

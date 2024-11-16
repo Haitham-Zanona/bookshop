@@ -13,7 +13,16 @@ echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n";
 echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-echo esc_html__( sprintf( 'Hi, %s!', $email->user->user_login ), 'woodmart' ) . "\n";
+echo esc_html(
+	sprintf(
+		// translators: %s User login.
+		__(
+			'Hi, %s!',
+			'woodmart'
+		),
+		$email->user->user_login
+	)
+) . '\n';
 
 echo esc_html__( 'The product on your wishlist is back in stock!', 'woodmart' ) . "\n\n";
 
@@ -31,7 +40,7 @@ echo esc_html__( 'We only have limited stock, so don\'t wait any longer, and tak
 
 echo "\n\n****************************************************\n\n";
 
-echo esc_html__( sprintf( 'If you don\'t want to receive any further notification, please follow this link %s', woodmart_get_unsubscribe_link( $email->user->ID ) ), 'woodmart' );
+echo esc_html( __( 'If you don\'t want to receive any further notification, please follow this link', 'woodmart' ) . ' ' . woodmart_get_unsubscribe_link( $email->user->ID ) );
 
 echo "\n----------------------------------------\n\n";
 

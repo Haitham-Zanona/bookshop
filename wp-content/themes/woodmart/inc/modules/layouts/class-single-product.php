@@ -134,6 +134,19 @@ class Single_Product extends Layout_Type {
 			wp_reset_postdata();
 		}
 	}
+
+	/**
+	 * Template content.
+	 *
+	 * @param string $type Template type.
+	 */
+	public function template_content( $type ) {
+		remove_filter( 'the_content', 'convert_smilies', 20 );
+
+		parent::template_content( $type );
+
+		add_filter( 'the_content', 'convert_smilies', 20 );
+	}
 }
 
 Single_Product::get_instance();

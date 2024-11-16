@@ -6,10 +6,12 @@
 
 	.xts-nav {
 		display: flex;
-		margin-top: 0;
-		margin-right: -15px;
-		margin-bottom: 0;
-		margin-left: -15px;
+		// margin-top: 0;
+		// margin-right: -15px;
+		// margin-bottom: 0;
+		// margin-left: -15px;
+		margin-block: 0;
+		margin-inline: -15px;
 
 		li {
 			position: relative;
@@ -70,8 +72,9 @@
 		li {
 
 			a {
-				padding-top: 5px;
-				padding-bottom: 5px;
+				// padding-top: 5px;
+				// padding-bottom: 5px;
+				padding-block: 5px;
 			}
 		}
 	}
@@ -126,8 +129,9 @@
 
 				ul {
 					display: none;
-					padding-top: 8px;
-					padding-bottom: 8px;
+					// padding-top: 8px;
+					// padding-bottom: 8px;
+					padding-block: 8px;
 
 					a {
 						padding: 8px 7px 8px 12px;

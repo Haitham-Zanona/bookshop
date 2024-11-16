@@ -1,13 +1,13 @@
 /* global woodmart_settings */
 (function($) {
 	woodmartThemeModule.adminBarSliderMenu = function() {
-		var $sliderWrapper = $('.wd-slider-wrapper');
+		var $sliderWrapper = $('.wd-slider > .wd-carousel-inner > .wd-carousel');
 		var $adminBar = $('#wpadminbar');
 
 		if ($sliderWrapper.length > 0 && $adminBar.length > 0) {
 			$sliderWrapper.each(function() {
 				var $slider = $(this);
-				var sliderId = $slider.data('id');
+				var sliderId = $slider.parents('.wd-slider').data('id');
 				var sliderData = $slider.data('slider');
 				var $sliderSubMenu = $('#wp-admin-bar-xts_sliders > .ab-sub-wrapper > .ab-submenu');
 

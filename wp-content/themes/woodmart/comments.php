@@ -5,8 +5,8 @@
  * The area of the page that contains comments and the comment form.
  *
  * @package WordPress
- * @subpackage Twenty_Thirteen
- * @since Twenty Thirteen 1.0
+ * @subpackage WoodMart
+ * @since WoodMart 1.2
  */
 
 /*
@@ -43,7 +43,7 @@ woodmart_enqueue_inline_style( 'mod-comments' );
 			// Are there comments to navigate through?
 			if ( get_comment_pages_count() > 1 && get_option( 'page_comments' ) ) :
 		?>
-		<nav class="navigation comment-navigation" role="navigation" aria-label="<?php esc_html_e( 'Comment navigation', 'woodmart' ); ?>">
+		<nav class="navigation comment-navigation" role="navigation" aria-label="<?php esc_attr_e( 'Comment navigation', 'woodmart' ); ?>">
 			<h1 class="screen-reader-text section-heading"><?php esc_html_e( 'Comment navigation', 'woodmart' ); ?></h1>
 			<div class="nav-previous"><?php previous_comments_link( esc_html__( '&larr; Older Comments', 'woodmart' ) ); ?></div>
 			<div class="nav-next"><?php next_comments_link( esc_html__( 'Newer Comments &rarr;', 'woodmart' ) ); ?></div>

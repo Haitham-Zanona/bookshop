@@ -29,10 +29,10 @@
 				}
 
 				$this.html(event.strftime(''
-					+ '<span class="countdown-days">%-D <span>' + woodmart_settings.countdown_days + '</span></span> '
-					+ '<span class="countdown-hours">%H <span>' + woodmart_settings.countdown_hours + '</span></span> '
-					+ '<span class="countdown-min">%M <span>' + woodmart_settings.countdown_mins + '</span></span> '
-					+ '<span class="countdown-sec">%S <span>' + woodmart_settings.countdown_sec + '</span></span>'));
+					+ '<span class="countdown-days"><span class="wd-timer-value">%-D </span><span class="wd-timer-text">' + woodmart_settings.countdown_days + '</span></span> '
+					+ '<span class="countdown-hours"><span class="wd-timer-value">%H </span><span class="wd-timer-text">' + woodmart_settings.countdown_hours + '</span></span> '
+					+ '<span class="countdown-min"><span class="wd-timer-value">%M </span><span class="wd-timer-text">' + woodmart_settings.countdown_mins + '</span></span> '
+					+ '<span class="countdown-sec"><span class="wd-timer-value">%S </span><span class="wd-timer-text">' + woodmart_settings.countdown_sec + '</span></span>'));
 			});
 		});
 	};

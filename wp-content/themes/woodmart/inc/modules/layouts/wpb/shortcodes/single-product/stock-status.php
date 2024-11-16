@@ -6,6 +6,7 @@
  */
 
 use XTS\Modules\Layouts\Main;
+use XTS\Modules\Waitlist\Frontend as Waitlist_Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
@@ -31,16 +32,16 @@ if ( ! function_exists( 'woodmart_shortcode_single_product_stock_status' ) ) {
 		ob_start();
 
 		Main::setup_preview();
-			global $product;
+		global $product;
 
-			woodmart_enqueue_js_script( 'stock-status' );
-			?>
-				<div class="wd-single-stock-status wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
-					<?php if ( ! $product->is_type( 'variable' ) ) : ?>
-						<?php echo wc_get_stock_html( $product ); ?>
-					<?php endif; ?>
-				</div>
-			<?php
+		woodmart_enqueue_js_script( 'stock-status' );
+		?>
+			<div class="wd-single-stock-status wd-wpb<?php echo esc_attr( $wrapper_classes ); ?>">
+				<?php if ( ! $product->is_type( 'variable' ) ) : ?>
+					<?php echo wc_get_stock_html( $product ); // phpcs:ignore. ?>
+				<?php endif; ?>
+			</div>
+		<?php
 		Main::restore_preview();
 
 		return ob_get_clean();

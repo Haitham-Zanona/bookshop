@@ -103,7 +103,7 @@
 					}
 				});
 			} else if ('interaction' === data.init_type) {
-				woodmartThemeModule.$window.on('wdEventStarted', function() {
+				window.addEventListener('wdEventStarted', function () {
 					if ($map.hasClass('wd-map-inited')) {
 						return;
 					}

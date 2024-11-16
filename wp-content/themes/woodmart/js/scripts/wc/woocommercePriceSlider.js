@@ -3,12 +3,16 @@
 	woodmartThemeModule.$document.on('wdBackHistory wdShopPageInit', function() {
 		woodmartThemeModule.woocommercePriceSlider();
 	});
+	window.addEventListener('popstate', function() {
+		woodmartThemeModule.woocommercePriceSlider();
+	});
 
 	woodmartThemeModule.woocommercePriceSlider = function() {
-		var $amount = $('.price_slider_amount');
-		var $min_price = $('.price_slider_amount #min_price');
-		var $max_price = $('.price_slider_amount #max_price');
-		var $products = $('.products');
+		var $amount          = $('.price_slider_amount');
+		var $min_price       = $('.price_slider_amount #min_price');
+		var $max_price       = $('.price_slider_amount #max_price');
+		var $products        = $('.products');
+		var currentUrlParams = new URL(window.location.href);
 
 		if (typeof woocommerce_price_slider_params === 'undefined' || $min_price.length < 1 || !$.fn.slider) {
 			return false;
@@ -25,11 +29,11 @@
 		$('.price_slider, .price_label').show();
 
 		// Price slider uses $ ui
-		var min_price         = $min_price.data('min'),
-		    max_price         = $max_price.data('max'),
-		    step              = $amount.data('step') || 1,
-		    current_min_price = parseInt($min_price.val(), 10),
-		    current_max_price = parseInt($max_price.val(), 10);
+		var min_price         = parseInt($min_price.data('min'));
+		var max_price         = parseInt($max_price.data('max'));
+		var step              = $amount.data('step') || 1;
+		var current_min_price = parseInt(currentUrlParams.searchParams.has('min_price') ? currentUrlParams.searchParams.get('min_price') : min_price, 10);
+		var current_max_price = parseInt(currentUrlParams.searchParams.has('max_price') ? currentUrlParams.searchParams.get('max_price') : max_price, 10);
 
 		if ($products.attr('data-min_price') && $products.attr('data-min_price').length > 0) {
 			current_min_price = parseInt($products.attr('data-min_price'), 10);
@@ -50,8 +54,13 @@
 				current_max_price
 			],
 			create : function() {
-				$min_price.val(current_min_price);
-				$max_price.val(current_max_price);
+				if (current_min_price === min_price && current_max_price === max_price) {
+					$min_price.val('');
+					$max_price.val('');
+				} else {
+					$min_price.val(current_min_price);
+					$max_price.val(current_max_price);
+				}
 
 				woodmartThemeModule.$body.trigger('price_slider_create', [
 					current_min_price,
@@ -59,8 +68,13 @@
 				]);
 			},
 			slide  : function(event, ui) {
-				$('input#min_price').val(ui.values[0]);
-				$('input#max_price').val(ui.values[1]);
+				if (ui.values[0] === min_price && ui.values[1] === max_price) {
+					$min_price.val('');
+					$max_price.val('');
+				} else {
+					$min_price.val(ui.values[0]);
+					$max_price.val(ui.values[1]);
+				}
 
 				woodmartThemeModule.$body.trigger('price_slider_slide', [
 					ui.values[0],

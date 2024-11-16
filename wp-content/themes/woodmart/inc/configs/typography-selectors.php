@@ -58,8 +58,8 @@ return apply_filters(
 		),
 		'browse_categories'                  => array(
 			'title'          => '"Browse categories" title',
-			'selector'       => 'html .wd-header-cats .menu-opener',
-			'selector-hover' => 'html .wd-header-cats .menu-opener:hover',
+			'selector'       => 'html .whb-header .wd-header-cats .menu-opener',
+			'selector-hover' => 'html .whb-header .wd-header-cats .menu-opener:hover',
 		),
 		'category_navigation'                => array(
 			'title'          => 'Categories navigation links',
@@ -80,14 +80,19 @@ return apply_filters(
 			'title' => 'Mobile menu',
 		),
 		'mobile_menu_first_level'            => array(
-			'title'          => 'Mobile menu first level',
+			'title'          => 'Mobile menu dropdown first level',
 			'selector'       => 'html .wd-nav-mobile > li > a',
 			'selector-hover' => 'html .wd-nav-mobile > li > a:hover, html .wd-nav-mobile > li.current-menu-item > a',
 		),
 		'mobile_menu_second_level'           => array(
-			'title'          => 'Mobile menu second level',
+			'title'          => 'Mobile menu dropdown second level',
 			'selector'       => 'html .wd-nav-mobile .wd-sub-menu li a',
 			'selector-hover' => 'html .wd-nav-mobile .wd-sub-menu li a:hover, html .wd-nav-mobile .wd-sub-menu li.current-menu-item > a',
+		),
+		'mobile_menu_drilldown'           => array(
+			'title'          => 'Mobile menu drilldown',
+			'selector'       => 'html .wd-nav.wd-layout-drilldown > li > a, html .wd-nav.wd-layout-drilldown > li [class*="sub-menu"] > :is(.menu-item,.wd-drilldown-back) > a, html .wd-nav.wd-layout-drilldown .woocommerce-MyAccount-navigation-link > a',
+			'selector-hover' => 'html .wd-nav.wd-layout-drilldown > li > a:hover, html .wd-nav.wd-layout-drilldown > li [class*="sub-menu"] > :is(.menu-item,.wd-drilldown-back) > a:hover, html .wd-nav.wd-layout-drilldown >li [class*="sub-menu"] > .woocommerce-MyAccount-navigation-link > a:hover, html .wd-nav.wd-layout-drilldown li.current-menu-item > a',
 		),
 		'page_header'                        => array(
 			'title' => 'Page heading',
@@ -102,28 +107,43 @@ return apply_filters(
 			'selector'       => 'html .page-title .breadcrumbs a, html .page-title .breadcrumbs span, html .page-title .yoast-breadcrumb a, html .page-title .yoast-breadcrumb span',
 			'selector-hover' => 'html .page-title .breadcrumbs a:hover, html .page-title .yoast-breadcrumb a:hover',
 		),
+		'checkout_steps'              => array(
+			'title'          => 'Checkout steps',
+			'selector'       => 'html .wd-checkout-steps li',
+			'selector-hover' => 'html .wd-checkout-steps li:hover a',
+		),
 		'products_categories'                => array(
 			'title' => 'Products and categories',
 		),
 		'product_title'                      => array(
 			'title'          => 'Product grid title',
-			'selector'       => 'html .main-page-wrapper .product-grid-item .product-wrapper .wd-entities-title',
-			'selector-hover' => 'html .main-page-wrapper .product-grid-item .product-wrapper .wd-entities-title a:hover',
+			'selector'       => 'html .main-page-wrapper .wd-product .product-wrapper .wd-entities-title',
+			'selector-hover' => 'html .main-page-wrapper .wd-product .product-wrapper .wd-entities-title a:hover',
+		),
+		'product_grid_category'                      => array(
+			'title'          => 'Product grid category',
+			'selector'       => 'html .wd-product .wd-product-cats a',
+			'selector-hover' => 'html .wd-product .wd-product-cats a:hover',
+		),
+		'product_grid_brand'                      => array(
+			'title'          => 'Product grid brand',
+			'selector'       => 'html .wd-product .wd-product-brands-links a',
+			'selector-hover' => 'html .wd-product .wd-product-brands-links a:hover',
 		),
 		'product_price'                      => array(
 			'title'    => 'Product grid price',
-			'selector' => 'html .product-grid-item .price, html .product-grid-item .price > .amount, html .product-grid-item .price ins > .amount',
-			'selector-hover' => 'html .product-grid-item .price:hover, html .product-grid-item .price > .amount:hover, html .product-grid-item .price ins > .amount:hover',
+			'selector' => 'html .wd-product .price, html .wd-product .price > .amount, html .wd-product .price ins > .amount',
+			'selector-hover' => 'html .wd-product .price:hover, html .wd-product .price > .amount:hover, html .wd-product .price ins > .amount:hover',
 		),
 		'product_old_price'                  => array(
 			'title'    => 'Product grid old price',
-			'selector' => 'html .product.product-grid-item del, html .product.product-grid-item del .amount',
-			'selector-hover' => 'html .product.product-grid-item del:hover, html .product.product-grid-item del .amount:hover',
+			'selector' => 'html .product.wd-product del, html .product.wd-product del .amount',
+			'selector-hover' => 'html .product.wd-product del:hover, html .product.wd-product del .amount:hover',
 		),
 		'product_category_title'             => array(
 			'title'    => 'Category title',
-			'selector' => 'html .product.category-grid-item .wd-entities-title, html .product.category-grid-item.cat-design-replace-title .wd-entities-title, html .categories-style-masonry-first .category-grid-item:first-child .wd-entities-title, html .product.wd-cat .wd-entities-title',
-			'selector-hover' => 'html .product.category-grid-item .wd-entities-title:hover, html .product.category-grid-item.cat-design-replace-title .wd-entities-title:hover, html .categories-style-masonry-first .category-grid-item:first-child .wd-entities-title:hover, html .product.wd-cat .wd-entities-title a:hover',
+			'selector' => 'html .product.category-grid-item .wd-entities-title, html .product.category-grid-item.cat-design-replace-title .wd-entities-title, html .wd-masonry-first .category-grid-item:first-child .wd-entities-title, html .product.wd-cat .wd-entities-title',
+			'selector-hover' => 'html .product.category-grid-item .wd-entities-title:hover, html .product.category-grid-item.cat-design-replace-title .wd-entities-title:hover, html .wd-masonry-first .category-grid-item:first-child .wd-entities-title:hover, html .product.wd-cat .wd-entities-title a:hover',
 		),
 		'product_category_count'             => array(
 			'title'          => 'Category products count',
@@ -163,6 +183,16 @@ return apply_filters(
 			'selector' => 'html .wd-product-nav-desc .price > .amount, html .wd-product-nav-desc .price > ins .amount, html .wd-product-nav-desc .price > ins .amount',
 			'selector-hover' => 'html .wd-product-nav-desc .price > .amount:hover, html .wd-product-nav-desc .price > ins .amount:hover, html .wd-product-nav-desc .price > ins .amount:hover',
 		),
+		'product_accordion_single_page'          => array(
+			'title'    => 'Single product accordion',
+			'selector' => 'html .wd-builder-off .tabs-layout-accordion > .wd-accordion-item > .wd-accordion-title .wd-accordion-title-text',
+			'selector-hover' => 'html .wd-builder-off .tabs-layout-accordion > .wd-accordion-item > .wd-accordion-title:hover .wd-accordion-title-text, html .wd-builder-off .tabs-layout-accordion > .wd-accordion-item > .wd-accordion-title.wd-active .wd-accordion-title-text',
+		),
+		'product_tabs_single_page'          => array(
+			'title'    => 'Single product tabs',
+			'selector' => 'html .wd-builder-off .tabs-layout-tabs .wd-nav-tabs > li > a',
+			'selector-hover' => 'html .wd-builder-off .tabs-layout-tabs .wd-nav-tabs > li > a:hover, html .wd-builder-off .tabs-layout-tabs .wd-nav-tabs > li.active > a'
+		),
 		'quick_view'                               => array(
 			'title' => 'Quick view',
 		),
@@ -196,18 +226,23 @@ return apply_filters(
 		),
 		'blog_title'                         => array(
 			'title'          => 'Blog post title',
-			'selector'       => 'html .post.blog-post-loop .post-title',
-			'selector-hover' => 'html .post.blog-post-loop .post-title a:hover',
+			'selector'       => 'html .post.wd-post .post-title',
+			'selector-hover' => 'html .post.wd-post .post-title a:hover',
+		),
+		'blog_meta'                         => array(
+			'title'          => 'Blog post meta',
+			'selector'       => 'html .entry-meta-list li, html .hovered-social-icons:after',
+			'selector-hover' => 'html .entry-meta-list li a:hover, html .hovered-social-icons:hover:after',
 		),
 		'blog_title_shortcode'               => array(
 			'title'          => 'Blog title on WPBakery element',
-			'selector'       => 'html .blog-shortcode .post.blog-post-loop .post-title',
-			'selector-hover' => 'html .blog-shortcode .post.blog-post-loop .post-title a:hover',
+			'selector'       => 'html .wd-blog-holder .post.wd-post .post-title',
+			'selector-hover' => 'html .wd-blog-holder .post.wd-post .post-title a:hover',
 		),
 		'blog_title_carousel'                => array(
 			'title'          => 'Blog title on carousel',
-			'selector'       => 'html .slider-type-post .post.blog-post-loop .post-title',
-			'selector-hover' => 'html .slider-type-post .post.blog-post-loop .post-title a:hover',
+			'selector'       => 'html .wd-carousel-item .post.wd-post .post-title',
+			'selector-hover' => 'html .wd-carousel-item .post.wd-post .post-title a:hover',
 		),
 		'blog_title_sinle_post'              => array(
 			'title'    => 'Blog title on single post',
@@ -236,6 +271,14 @@ return apply_filters(
 			'title'          => 'Product categories all level',
 			'selector'       => 'html .widget_product_categories .product-categories li a',
 			'selector-hover' => '.widget_product_categories .product-categories li a:hover, .widget_product_categories .product-categories li.current-menu-item a',
+		),
+		'tables'                               => array(
+			'title' => 'Tables',
+		),
+		'tables_heading_title'                         => array(
+			'title'          => 'Tables heading title',
+			'selector'       => 'html table th',
+			'selector-hover' => 'html table th:hover',
 		),
 		'custom_selector'                    => array(
 			'title' => 'Write your own selector',

@@ -5,13 +5,9 @@
 * ------------------------------------------------------------------------------------------------
 */
 
-if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
-	function woodmart_vc_map_pricing_tables() {
-		if ( ! shortcode_exists( 'pricing_tables' ) || ! shortcode_exists( 'pricing_plan' ) ) {
-			return;
-		}
-
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_pricing_tables' ) ) {
+	function woodmart_get_vc_map_pricing_tables() {
+		return array(
 			'name' => esc_html__( 'Pricing tables', 'woodmart' ),
 			'base' => 'pricing_tables',
 			'as_parent' => array( 'only' => 'pricing_plan' ),
@@ -19,30 +15,124 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 			'show_settings_on_create' => false,
 			'category' => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
 			'description' => esc_html__( 'Show your pricing plans', 'woodmart' ),
-        	'icon' => WOODMART_ASSETS . '/images/vc-icon/pricing-tables.svg',
+			'icon' => WOODMART_ASSETS . '/images/vc-icon/pricing-tables.svg',
 			'params' => array(
+				array(
+					'param_name' => 'woodmart_css_id',
+					'type'       => 'woodmart_css_id',
+				),
+				array(
+					'type'       => 'woodmart_title_divider',
+					'title'      => esc_html__( 'General', 'woodmart' ),
+					'param_name' => 'title_style_section',
+				),
+				array(
+					'type'             => 'dropdown',
+					'heading'          => esc_html__( 'Display grid', 'woodmart' ),
+					'param_name'       => 'display_grid',
+					'value'            => array(
+						esc_html__( 'Stretch', 'woodmart' ) => 'stretch',
+						esc_html__( 'Number', 'woodmart' ) => 'number',
+					),
+					'std'              => 'stretch',
+					'edit_field_class' => 'vc_col-sm-12 vc_column',
+				),
+				array(
+					'type'             => 'wd_slider',
+					'heading'          => esc_html__( 'Columns', 'woodmart' ),
+					'param_name'       => 'display_grid_col',
+					'selectors'        => array(),
+					'devices'          => array(
+						'desktop' => array(
+							'unit'  => '-',
+							'value' => 3,
+						),
+						'tablet'  => array(
+							'unit' => '-',
+						),
+						'mobile'  => array(
+							'unit' => '-',
+						),
+					),
+					'range'            => array(
+						'-' => array(
+							'min'  => 1,
+							'max'  => 12,
+							'step' => 1,
+						),
+					),
+					'dependency'       => array(
+						'element' => 'display_grid',
+						'value'   => array( 'number' ),
+					),
+					'edit_field_class' => 'vc_col-sm-12 vc_column',
+				),
+				array(
+					'type'             => 'wd_select',
+					'heading'          => esc_html__( 'Space between', 'woodmart' ),
+					'param_name'       => 'space_between',
+					'style'            => 'select',
+					'selectors'        => array(),
+					'devices'          => array(
+						'desktop' => array(
+							'value' => '20',
+						),
+						'tablet'  => array(
+							'value' => '',
+						),
+						'mobile'  => array(
+							'value' => '',
+						),
+					),
+					'value'            => array(
+						esc_html__( 'Inherit', 'woodmart' ) => '',
+						esc_html__( '0 px', 'woodmart' )  => '0',
+						esc_html__( '2 px', 'woodmart' )  => '2',
+						esc_html__( '6 px', 'woodmart' )  => '6',
+						esc_html__( '10 px', 'woodmart' ) => '10',
+						esc_html__( '20 px', 'woodmart' ) => '20',
+						esc_html__( '30 px', 'woodmart' ) => '30',
+					),
+					'edit_field_class' => 'vc_col-sm-12 vc_column',
+				),
+				array(
+					'type'       => 'woodmart_title_divider',
+					'title'      => esc_html__( 'Extra', 'woodmart' ),
+					'param_name' => 'extra_style_section',
+				),
 				array(
 					'type' => 'textfield',
 					'heading' => esc_html__( 'Extra class name', 'woodmart' ),
 					'param_name' => 'el_class',
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
-				)
+				),
+				array(
+					'type'       => 'css_editor',
+					'heading'    => esc_html__( 'CSS box', 'woodmart' ),
+					'param_name' => 'css',
+					'group'      => esc_html__( 'Design Options', 'js_composer' ),
+				),
+				woodmart_get_vc_responsive_spacing_map(),
 			),
-		    'js_view' => 'VcColumnView'
-		) );
+			'js_view' => 'VcColumnView'
+		);
+	}
+}
 
-		vc_map( array(
+if ( ! function_exists( 'woodmart_get_vc_map_pricing_plan' ) ) {
+	function woodmart_get_vc_map_pricing_plan() {
+		return array(
 			'name' => esc_html__( 'Price plan', 'woodmart' ),
 			'base' => 'pricing_plan',
 			'as_child' => array( 'only' => 'pricing_tables' ),
 			'content_element' => true,
 			'category' => woodmart_get_tab_title_category_for_wpb( esc_html__( 'Theme elements', 'woodmart' ) ),
 			'description' => esc_html__( 'Price option', 'woodmart' ),
-        	'icon' => WOODMART_ASSETS . '/images/vc-icon/price-plan.svg',
+			'icon' => WOODMART_ASSETS . '/images/vc-icon/price-plan.svg',
 			'params' => array(
 				/**
-				* Content
-				*/
+				 * Content
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -61,8 +151,8 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'hint' => esc_html__( 'Start each feature text from a new line', 'woodmart' ),
 				),
 				/**
-				* Pricing
-				*/
+				 * Pricing
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -91,8 +181,8 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Button
-				*/
+				 * Button
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -144,8 +234,8 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Label
-				*/
+				 * Label
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -180,8 +270,8 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Style
-				*/
+				 * Style
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -192,7 +282,7 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'type' => 'woodmart_image_select',
 					'heading' => esc_html__( 'Style', 'woodmart' ),
 					'param_name' => 'style',
-				    'value' => array( 
+					'value' => array(
 						esc_html__( 'Default', 'woodmart' ) => 'default',
 						esc_html__( 'Alternative', 'woodmart' ) => 'alt'
 					),
@@ -236,8 +326,8 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'edit_field_class' => 'vc_col-sm-6 vc_column',
 				),
 				/**
-				* Extra
-				*/
+				 * Extra
+				 */
 				array(
 					'type' => 'woodmart_title_divider',
 					'holder' => 'div',
@@ -252,13 +342,13 @@ if( ! function_exists( 'woodmart_vc_map_pricing_tables' ) ) {
 					'hint' => esc_html__( 'If you wish to style particular content element differently, then use this field to add a class name and then refer to it in your css file.', 'woodmart' )
 				)
 			)
-		) );
-		// Necessary hooks for blog autocomplete fields
-		add_filter( 'vc_autocomplete_pricing_plan_id_callback',	'vc_include_field_search', 10, 1 ); // Get suggestion(find). Must return an array
-		add_filter( 'vc_autocomplete_pricing_plan_id_render', 'vc_include_field_render', 10, 1 ); // Render exact product. Must return an array (label,value)
+		);
 	}
-	add_action( 'vc_before_init', 'woodmart_vc_map_pricing_tables' );
 }
+
+// Necessary hooks for blog autocomplete fields
+add_filter( 'vc_autocomplete_pricing_plan_id_callback',	'vc_include_field_search', 10, 1 ); // Get suggestion(find). Must return an array
+add_filter( 'vc_autocomplete_pricing_plan_id_render', 'vc_include_field_render', 10, 1 ); // Render exact product. Must return an array (label,value)
 
 // A must for container functionality, replace Wbc_Item with your base name from mapping for parent container
 if( class_exists( 'WPBakeryShortCodesContainer' ) ){

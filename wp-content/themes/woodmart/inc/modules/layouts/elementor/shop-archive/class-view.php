@@ -100,6 +100,7 @@ class View extends Widget_Base {
 				'type'     => Controls_Manager::SELECT2,
 				'multiple' => true,
 				'options'  => array(
+					'1'    => esc_html__( '1', 'woodmart' ),
 					'2'    => esc_html__( '2', 'woodmart' ),
 					'3'    => esc_html__( '3', 'woodmart' ),
 					'4'    => esc_html__( '4', 'woodmart' ),

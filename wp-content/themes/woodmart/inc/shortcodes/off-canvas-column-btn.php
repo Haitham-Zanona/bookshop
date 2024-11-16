@@ -54,20 +54,13 @@ if ( ! function_exists( 'woodmart_shortcode_off_canvas_btn' ) ) {
 			$sticky_off_canvas_classes .= ' wd-action-custom-icon';
 		}
 
-		$image_data = wpb_getImageBySize(
-			array(
-				'attach_id'  => $settings['img_id'],
-				'thumb_size' => $settings['img_size'],
-			)
-		);
-
-		$icon_output = isset( $image_data['thumbnail'] ) ? $image_data['thumbnail'] : '';
-
-		if ( isset( $image_data['p_img_large'] ) && woodmart_is_svg( $image_data['p_img_large'][0] ) ) {
+		if ( woodmart_is_svg( wp_get_attachment_image_url( $settings['img_id'] ) ) ) {
 			$icon_output = woodmart_get_svg_html(
 				$settings['img_id'],
 				$settings['img_size']
 			);
+		} else {
+			$icon_output = woodmart_otf_get_image_html( $settings['img_id'], $settings['img_size'] );
 		}
 
 		ob_start();
@@ -90,7 +83,7 @@ if ( ! function_exists( 'woodmart_shortcode_off_canvas_btn' ) ) {
 			</div>
 			<?php if ( 'yes' === $settings['sticky'] ) : ?>
 				<?php woodmart_enqueue_inline_style( 'mod-sticky-sidebar-opener' ); ?>
-				<div class="wd-sidebar-opener wd-action-btn wd-style-icon<?php echo esc_html( $sticky_off_canvas_classes ); ?>">
+				<div class="wd-sidebar-opener wd-on-shop wd-action-btn wd-style-icon<?php echo esc_html( $sticky_off_canvas_classes ); ?>">
 					<a href="#" rel="nofollow">
 						<?php if ( ! empty( $icon_output ) ) : ?>
 							<span class="wd-action-icon">

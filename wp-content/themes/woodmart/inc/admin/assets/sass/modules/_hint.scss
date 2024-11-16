@@ -6,7 +6,8 @@
 
 	.xts-hint {
 		position: relative;
-		z-index: $z-layer-6;
+		// z-index: $z-layer-6;
+		z-index: 99999; // NOTE FOR SELECT 2
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
@@ -39,6 +40,10 @@
 			.xts-tooltip-inner {
 				min-height: 282px;
 			}
+		}
+
+		.wp-list-table & {
+			margin-inline-start: 5px;
 		}
 	}
 

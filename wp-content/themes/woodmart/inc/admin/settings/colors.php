@@ -2,14 +2,14 @@
 if ( ! defined( 'WOODMART_THEME_DIR' ) ) {
 	exit( 'No direct script access allowed' );
 }
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 
 Options::add_field(
 	array(
 		'id'          => 'rounding_size',
 		'name'        => esc_html__( 'Rounding', 'woodmart' ),
 		'description' => esc_html__( 'Change global site elements rounding. It also can be overwritten in each individual element by the same option.', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'custom-border-radius.gif" alt="">', 'woodmart' ), true ),
+		'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'custom-border-radius.mp4" autoplay loop muted></video>',
 		'type'        => 'buttons',
 		'section'     => 'styles_section',
 		'options'     => array(
@@ -39,7 +39,7 @@ Options::add_field(
 				'image' => WOODMART_ASSETS_IMAGES . '/settings/rounding-5.jpg',
 			),
 		),
-		'default'     => '0',
+		'default'     => 'none',
 		'priority'    => 10,
 	)
 );
@@ -83,7 +83,7 @@ Options::add_field(
 	array(
 		'id'          => 'dark_version',
 		'name'        => esc_html__( 'Dark theme', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'styles-and-colors-dark-theme.jpg" alt="">', 'woodmart' ), true ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'styles-and-colors-dark-theme.jpg" alt="">', true ),
 		'description' => esc_html__( 'Turn your global website colors to a dark scheme.', 'woodmart' ),
 		'type'        => 'switcher',
 		'section'     => 'styles_section',
@@ -122,7 +122,7 @@ Options::add_field(
 	array(
 		'id'                 => 'link-color',
 		'name'               => esc_html__( 'Links color', 'woodmart' ),
-		'hint'               => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'links-color.gif" alt="">', 'woodmart' ), true ),
+		'hint'               => '<video data-src="' . WOODMART_TOOLTIP_URL . 'links-color.mp4" autoplay loop muted></video>',
 		'description'        => esc_html__( 'Set the color for links on your pages, posts and products content.', 'woodmart' ),
 		'type'               => 'color',
 		'section'            => 'colors_section',
@@ -139,9 +139,9 @@ Options::add_field(
 Options::add_field(
 	array(
 		'id'          => 'android_browser_bar_color',
-		'name'        => esc_html__( 'Android browser bar color', 'woodmart' ),
-		'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'android-browser-bar-color.jpg" alt="">', 'woodmart' ), true ),
-		'description' => wp_kses( __( 'Define color for the browser top bar on Android devices. <a href="https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/#color_browser_elements" target="_blank">[Read more]</a>', 'woodmart' ), true ),
+		'name'        => esc_html__( 'Mobile browser top bar color', 'woodmart' ),
+		'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'android-browser-bar-color.jpg" alt="">', true ),
+		'description' => wp_kses( __( 'Define color for the browser top bar on iOS and Android devices. <a href="https://developers.google.com/web/fundamentals/design-and-ux/browser-customization/#color_browser_elements" target="_blank">[Read more]</a>', 'woodmart' ), true ),
 		'type'        => 'color',
 		'section'     => 'colors_section',
 		'default'     => array(),
@@ -161,7 +161,7 @@ Options::add_field(
 		'type'        => 'background',
 		'default'     => array(),
 		'section'     => 'pages_bg_section',
-		'selector'    => 'body',
+		'selector'    => 'body[class*="wrapper-boxed"]',
 		'priority'    => 12,
 		'requires'    => array(
 			array(
@@ -196,7 +196,7 @@ Options::add_field(
 		'type'     => 'background',
 		'default'  => array(),
 		'section'  => 'pages_bg_section',
-		'selector' => '.woodmart-archive-shop .main-page-wrapper',
+		'selector' => '.woodmart-archive-shop:not(.single-product) .main-page-wrapper',
 		'priority' => 30,
 		'class'    => 'xts-tab-field',
 	)
@@ -317,7 +317,7 @@ Options::add_field(
 		'type'           => 'typography',
 		'section'        => 'buttons_section',
 		'group'          => esc_html__( 'Default buttons', 'woodmart' ),
-		'name'           => 'Default buttons typography',
+		'name'           => esc_html__( 'Default buttons typography', 'woodmart' ),
 		'selector_var'   => array(
 			'font-family'    => '--btn-default-font-family',
 			'font-weight'    => '--btn-default-font-weight',
@@ -383,11 +383,11 @@ Options::add_field(
 		'type'     => 'buttons',
 		'section'  => 'buttons_section',
 		'options'  => array(
-			'dark'  => array(
+			'dark'   => array(
 				'name'  => esc_html__( 'Dark', 'woodmart' ),
 				'value' => 'dark',
 			),
-			'light' => array(
+			'light'  => array(
 				'name'  => esc_html__( 'Light', 'woodmart' ),
 				'value' => 'light',
 			),
@@ -410,11 +410,11 @@ Options::add_field(
 		'type'     => 'buttons',
 		'section'  => 'buttons_section',
 		'options'  => array(
-			'dark'  => array(
+			'dark'   => array(
 				'name'  => esc_html__( 'Dark', 'woodmart' ),
 				'value' => 'dark',
 			),
-			'light' => array(
+			'light'  => array(
 				'name'  => esc_html__( 'Light', 'woodmart' ),
 				'value' => 'light',
 			),
@@ -444,6 +444,7 @@ Options::add_field(
 				'value'   => 'custom',
 			),
 		),
+		'default'      => array(),
 		'priority'     => 70,
 		'class'        => 'xts-col-6',
 	)
@@ -464,6 +465,7 @@ Options::add_field(
 				'value'   => 'custom',
 			),
 		),
+		'default'      => array(),
 		'priority'     => 80,
 		'class'        => 'xts-col-6',
 	)
@@ -510,7 +512,7 @@ Options::add_field(
 		'group'          => esc_html__( 'Accent buttons', 'woodmart' ),
 		'type'           => 'typography',
 		'section'        => 'buttons_section',
-		'name'           => 'Accent buttons typography',
+		'name'           => esc_html__( 'Accent buttons typography', 'woodmart' ),
 		'selector_var'   => array(
 			'font-family'    => '--btn-accented-font-family',
 			'font-weight'    => '--btn-accented-font-weight',
@@ -575,11 +577,11 @@ Options::add_field(
 		'type'     => 'buttons',
 		'section'  => 'buttons_section',
 		'options'  => array(
-			'dark'  => array(
+			'dark'   => array(
 				'name'  => esc_html__( 'Dark', 'woodmart' ),
 				'value' => 'dark',
 			),
-			'light' => array(
+			'light'  => array(
 				'name'  => esc_html__( 'Light', 'woodmart' ),
 				'value' => 'light',
 			),
@@ -602,11 +604,11 @@ Options::add_field(
 		'type'     => 'buttons',
 		'section'  => 'buttons_section',
 		'options'  => array(
-			'dark'  => array(
+			'dark'   => array(
 				'name'  => esc_html__( 'Dark', 'woodmart' ),
 				'value' => 'dark',
 			),
-			'light' => array(
+			'light'  => array(
 				'name'  => esc_html__( 'Light', 'woodmart' ),
 				'value' => 'light',
 			),
@@ -636,6 +638,7 @@ Options::add_field(
 				'value'   => 'custom',
 			),
 		),
+		'default'      => array(),
 		'priority'     => 230,
 		'class'        => 'xts-col-6',
 	)
@@ -656,6 +659,7 @@ Options::add_field(
 				'value'   => 'custom',
 			),
 		),
+		'default'      => array(),
 		'priority'     => 240,
 		'class'        => 'xts-col-6',
 	)
@@ -683,7 +687,7 @@ Options::add_field(
 					'background' => '',
 				),
 				'text-transform' => '',
-			)
+			),
 		),
 		'color-hover'      => true,
 		'line-height'      => false,
@@ -741,23 +745,29 @@ Options::add_field(
 		'group'       => esc_html__( 'Style', 'woodmart' ),
 		'type'        => 'buttons',
 		'section'     => 'forms_section',
+		'selectors'   => array(
+			':root' => array(
+				'--wd-form-brd-width: {{VALUE}}px;',
+			),
+		),
 		'options'     => array(
 			0 => array(
 				'name'  => 0,
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-0.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-0.jpg" alt="">', true ),
 				'value' => 0,
 			),
 			1 => array(
 				'name'  => 1,
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-1.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-1.jpg" alt="">', true ),
 				'value' => 1,
 			),
 			2 => array(
 				'name'  => 2,
-				'hint'  => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-2.jpg" alt="">', 'woodmart' ), true ),
+				'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'form-border-width-2.jpg" alt="">', true ),
 				'value' => 2,
 			),
 		),
+		'generate_zero' => true,
 		'default'     => 2,
 		'priority'    => 20,
 	)
@@ -765,61 +775,91 @@ Options::add_field(
 
 Options::add_field(
 	array(
-		'id'       => 'form_color',
-		'name'     => esc_html__( 'Form text color', 'woodmart' ),
-		'group'    => esc_html__( 'Color', 'woodmart' ),
-		'type'     => 'color',
-		'section'  => 'forms_section',
-		'class'    => 'xts-col-6',
-		'priority' => 30,
+		'id'        => 'form_color',
+		'name'      => esc_html__( 'Form text color', 'woodmart' ),
+		'group'     => esc_html__( 'Color', 'woodmart' ),
+		'type'      => 'color',
+		'default'   => array(),
+		'section'   => 'forms_section',
+		'selectors' => array(
+			'body, [class*=color-scheme-light], [class*=color-scheme-dark], .wd-search-form[class*="wd-header-search-form"] form.searchform, .wd-el-search .searchform' => array(
+				'--wd-form-color: {{VALUE}};',
+			),
+		),
+		'class'     => 'xts-col-6',
+		'priority'  => 30,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'form_placeholder_color',
-		'name'     => esc_html__( 'Form placeholder color', 'woodmart' ),
-		'group'    => esc_html__( 'Color', 'woodmart' ),
-		'type'     => 'color',
-		'section'  => 'forms_section',
-		'class'    => 'xts-col-6',
-		'priority' => 40,
+		'id'        => 'form_placeholder_color',
+		'name'      => esc_html__( 'Form placeholder color', 'woodmart' ),
+		'group'     => esc_html__( 'Color', 'woodmart' ),
+		'type'      => 'color',
+		'default'   => array(),
+		'section'   => 'forms_section',
+		'selectors' => array(
+			'body, [class*=color-scheme-light], [class*=color-scheme-dark], .wd-search-form[class*="wd-header-search-form"] form.searchform, .wd-el-search .searchform' => array(
+				'--wd-form-placeholder-color: {{VALUE}};',
+			),
+		),
+		'class'     => 'xts-col-6',
+		'priority'  => 40,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'form_brd_color',
-		'name'     => esc_html__( 'Form border color', 'woodmart' ),
-		'group'    => esc_html__( 'Color', 'woodmart' ),
-		'type'     => 'color',
-		'section'  => 'forms_section',
-		'class'    => 'xts-col-6',
-		'priority' => 50,
+		'id'        => 'form_brd_color',
+		'name'      => esc_html__( 'Form border color', 'woodmart' ),
+		'group'     => esc_html__( 'Color', 'woodmart' ),
+		'type'      => 'color',
+		'default'   => array(),
+		'section'   => 'forms_section',
+		'selectors' => array(
+			'body, [class*=color-scheme-light], [class*=color-scheme-dark], .wd-search-form[class*="wd-header-search-form"] form.searchform, .wd-el-search .searchform' => array(
+				'--wd-form-brd-color: {{VALUE}};',
+			),
+		),
+		'class'     => 'xts-col-6',
+		'priority'  => 50,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'form_brd_color_focus',
-		'name'     => esc_html__( 'Form border color focus', 'woodmart' ),
-		'group'    => esc_html__( 'Color', 'woodmart' ),
-		'type'     => 'color',
-		'section'  => 'forms_section',
-		'class'    => 'xts-col-6',
-		'priority' => 60,
+		'id'        => 'form_brd_color_focus',
+		'name'      => esc_html__( 'Form border color focus', 'woodmart' ),
+		'group'     => esc_html__( 'Color', 'woodmart' ),
+		'type'      => 'color',
+		'default'   => array(),
+		'section'   => 'forms_section',
+		'selectors' => array(
+			'body, [class*=color-scheme-light], [class*=color-scheme-dark], .wd-search-form[class*="wd-header-search-form"] form.searchform, .wd-el-search .searchform' => array(
+				'--wd-form-brd-color-focus: {{VALUE}};',
+			),
+		),
+		'class'     => 'xts-col-6',
+		'priority'  => 60,
 	)
 );
 
 Options::add_field(
 	array(
-		'id'       => 'form_bg',
-		'name'     => esc_html__( 'Form background color', 'woodmart' ),
-		'group'    => esc_html__( 'Color', 'woodmart' ),
-		'type'     => 'color',
-		'section'  => 'forms_section',
-		'class'    => 'xts-col-6',
-		'priority' => 70,
+		'id'        => 'form_bg',
+		'name'      => esc_html__( 'Form background color', 'woodmart' ),
+		'group'     => esc_html__( 'Color', 'woodmart' ),
+		'type'      => 'color',
+		'default'   => array(),
+		'section'   => 'forms_section',
+		'selectors' => array(
+			'body, [class*=color-scheme-light], [class*=color-scheme-dark], .wd-search-form[class*="wd-header-search-form"] form.searchform, .wd-el-search .searchform' => array(
+				'--wd-form-bg: {{VALUE}};',
+			),
+		),
+		'class'     => 'xts-col-6',
+		'priority'  => 70,
 	)
 );
 
@@ -830,7 +870,7 @@ Options::add_field(
 	array(
 		'id'           => 'success_notice_bg_color',
 		'name'         => esc_html__( 'Success notice background color', 'woodmart' ),
-		'hint'         => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'notices-success.jpg" alt="">', 'woodmart' ), true ),
+		'hint'         => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'notices-success.jpg" alt="">', true ),
 		'group'        => esc_html__( 'Success', 'woodmart' ),
 		'type'         => 'color',
 		'section'      => 'notices_section',
@@ -857,7 +897,7 @@ Options::add_field(
 	array(
 		'id'           => 'warning_notice_bg_color',
 		'name'         => esc_html__( 'Warning notice background color', 'woodmart' ),
-		'hint'         => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'notices-warning.jpg" alt="">', 'woodmart' ), true ),
+		'hint'         => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'notices-warning.jpg" alt="">', true ),
 		'group'        => esc_html__( 'Warning', 'woodmart' ),
 		'type'         => 'color',
 		'section'      => 'notices_section',

@@ -19,28 +19,28 @@ if ( ! function_exists( 'woodmart_wc_attribute_update' ) ) {
 	 */
 	function woodmart_wc_attribute_update( $attribute_id, $attribute, $old_attribute_name ) {
 		$attribute_swatch_size = isset( $_POST['attribute_swatch_size'] ) ? $_POST['attribute_swatch_size'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_size', sanitize_text_field( $attribute_swatch_size ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_size', sanitize_text_field( $attribute_swatch_size ), false );
 
 		$attribute_swatch_bg_style = isset( $_POST['attribute_swatch_style'] ) ? $_POST['attribute_swatch_style'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_style', sanitize_text_field( $attribute_swatch_bg_style ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_style', sanitize_text_field( $attribute_swatch_bg_style ), false );
 
 		$attribute_swatch_dis_style = isset( $_POST['attribute_swatch_dis_style'] ) ? $_POST['attribute_swatch_dis_style'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_dis_style', sanitize_text_field( $attribute_swatch_dis_style ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_dis_style', sanitize_text_field( $attribute_swatch_dis_style ), false );
 
 		$attribute_swatch_shape = isset( $_POST['attribute_swatch_shape'] ) ? $_POST['attribute_swatch_shape'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_shape', sanitize_text_field( $attribute_swatch_shape ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_shape', sanitize_text_field( $attribute_swatch_shape ), false );
 
 		$attribute_show_on_product = isset( $_POST['attribute_show_on_product'] ) ? $_POST['attribute_show_on_product'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_show_on_product', sanitize_text_field( $attribute_show_on_product ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_show_on_product', sanitize_text_field( $attribute_show_on_product ), false );
 
 		$attribute_thumbnail = isset( $_POST['product_attr_thumbnail_id'] ) ? $_POST['product_attr_thumbnail_id'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_thumbnail', sanitize_text_field( $attribute_thumbnail ) );
+		update_option( 'woodmart_pa_' . sanitize_title_with_dashes( $attribute['attribute_name'] ) . '_thumbnail', sanitize_text_field( $attribute_thumbnail ), false );
 
 		$attribute_hint = isset( $_POST['attribute_hint'] ) ? $_POST['attribute_hint'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_hint', sanitize_text_field( $attribute_hint ) );
+		update_option( 'woodmart_pa_' . sanitize_title_with_dashes( $attribute['attribute_name'] ) . '_hint', sanitize_text_field( $attribute_hint ), false );
 
 		$attribute_change_image = isset( $_POST['attribute_change_image'] ) ? $_POST['attribute_change_image'] : ''; // phpcs:ignore.
-		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_change_image', sanitize_text_field( $attribute_change_image ) );
+		update_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_change_image', sanitize_text_field( $attribute_change_image ), false );
 	}
 
 	add_action( 'woocommerce_attribute_updated', 'woodmart_wc_attribute_update', 20, 3 );
@@ -55,28 +55,28 @@ if ( ! function_exists( 'woodmart_wc_attribute_add' ) ) {
 	 */
 	function woodmart_wc_attribute_add( $attribute_id, $attribute ) {
 		$attribute_swatch_size = isset( $_POST['attribute_swatch_size'] ) ? $_POST['attribute_swatch_size'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_size', sanitize_text_field( $attribute_swatch_size ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_size', sanitize_text_field( $attribute_swatch_size ), '', false );
 
 		$attribute_swatch_bg_style = isset( $_POST['attribute_swatch_style'] ) ? $_POST['attribute_swatch_style'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_style', sanitize_text_field( $attribute_swatch_bg_style ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_style', sanitize_text_field( $attribute_swatch_bg_style ), '', false );
 
 		$attribute_swatch_dis_style = isset( $_POST['attribute_swatch_dis_style'] ) ? $_POST['attribute_swatch_dis_style'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_dis_style', sanitize_text_field( $attribute_swatch_dis_style ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_dis_style', sanitize_text_field( $attribute_swatch_dis_style ), '', false );
 
 		$attribute_swatch_shape = isset( $_POST['attribute_swatch_shape'] ) ? $_POST['attribute_swatch_shape'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_shape', sanitize_text_field( $attribute_swatch_shape ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_swatch_shape', sanitize_text_field( $attribute_swatch_shape ), '', false );
 
 		$attribute_show_on_product = isset( $_POST['attribute_show_on_product'] ) ? $_POST['attribute_show_on_product'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_show_on_product', sanitize_text_field( $attribute_show_on_product ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_show_on_product', sanitize_text_field( $attribute_show_on_product ), '', false );
 
 		$attribute_thumbnail = isset( $_POST['product_attr_thumbnail_id'] ) ? $_POST['product_attr_thumbnail_id'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_thumbnail', sanitize_text_field( $attribute_thumbnail ) );
+		add_option( 'woodmart_pa_' . sanitize_title_with_dashes( $attribute['attribute_name'] ) . '_thumbnail', sanitize_text_field( $attribute_thumbnail ), '', false );
 
 		$attribute_hint = isset( $_POST['attribute_hint'] ) ? $_POST['attribute_hint'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_hint', sanitize_text_field( $attribute_hint ) );
+		add_option( 'woodmart_pa_' . sanitize_title_with_dashes( $attribute['attribute_name'] ) . '_hint', sanitize_text_field( $attribute_hint ), '', false );
 
 		$attribute_change_image = isset( $_POST['attribute_change_image'] ) ? $_POST['attribute_change_image'] : ''; // phpcs:ignore.
-		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_change_image', sanitize_text_field( $attribute_change_image ) );
+		add_option( 'woodmart_pa_' . $attribute['attribute_name'] . '_change_image', sanitize_text_field( $attribute_change_image ), '', false );
 	}
 
 	add_action( 'woocommerce_attribute_added', 'woodmart_wc_attribute_add', 20, 2 );
@@ -91,8 +91,8 @@ if ( ! function_exists( 'woodmart_wc_get_attribute_term' ) ) {
 	 * @param mixed $term .
 	 * @return false|mixed|void
 	 */
-	function woodmart_wc_get_attribute_term( $attribute_name, $term ) {
-		return get_option( 'woodmart_' . $attribute_name . '_' . $term );
+	function woodmart_wc_get_attribute_term( $attribute_name, $term, $default = false ) {
+		return get_option( 'woodmart_' . $attribute_name . '_' . $term, $default );
 	}
 }
 
@@ -289,6 +289,11 @@ if ( ! function_exists( 'woodmart_render_product_attrs_admin_options' ) ) {
 													<?php esc_html_e( 'Change product image on attribute click', 'woodmart' ); ?>
 												</span>
 											</label>
+											<div class="xts-hint xts-loaded">
+												<div class="xts-tooltip xts-top">
+													<div class="xts-tooltip-inner"><video data-src="https://woodmart.xtemos.com/theme-settings-tooltips/change-product-image-attribute-click.mp4" autoplay="" loop="" muted="" src="https://woodmart.xtemos.com/theme-settings-tooltips/change-product-image-attribute-click.mp4"></video></div>
+												</div>
+											</div>
 										</div>
 										<div class="xts-option-control">
 											<div class="xts-switcher-btn<?php echo esc_attr( 'on' === $change_image_product ? ' xts-active' : '' ); ?>" data-on="on" data-off="off">
@@ -325,12 +330,12 @@ if ( ! function_exists( 'woodmart_render_product_attrs_admin_options' ) ) {
 												<?php endif; ?>
 											</div>
 											<div class="xts-upload-btns">
-												<button class="xts-btn xts-upload-btn xts-i-import">
+												<a class="xts-btn xts-upload-btn xts-i-import">
 													<?php esc_html_e( 'Upload', 'woodmart' ); ?>
-												</button>
-												<button class="xts-btn xts-color-warning xts-remove-upload-btn xts-i-trash<?php echo ( isset( $thumb_id ) && ! empty( $thumb_id ) ) ? ' xts-active' : ''; ?>">
+												</a>
+												<a class="xts-btn xts-color-warning xts-remove-upload-btn xts-i-trash<?php echo ( isset( $thumb_id ) && ! empty( $thumb_id ) ) ? ' xts-active' : ''; ?>">
 													<?php esc_html_e( 'Remove', 'woodmart' ); ?>
-												</button>
+												</a>
 
 												<input id="product_attr_thumbnail_id" type="hidden" class="xts-upload-input-id" name="product_attr_thumbnail_id" value="<?php echo esc_attr( $thumb_id ); ?>" />
 											</div>
@@ -369,4 +374,40 @@ if ( ! function_exists( 'woodmart_render_product_attrs_admin_options' ) ) {
 
 	add_action( 'woocommerce_after_edit_attribute_fields', 'woodmart_render_product_attrs_admin_options' );
 	add_action( 'woocommerce_after_add_attribute_fields', 'woodmart_render_product_attrs_admin_options' );
+}
+
+if ( ! function_exists( 'woodmart_add_term_hint' ) ) {
+	/**
+	 * Add term hint.
+	 *
+	 * @param string               $term_html Output terms html.
+	 * @param WC_Product_Attribute $attribute Instance of WC_Product_Attribute class.
+	 * @param array                $values List of term values.
+	 *
+	 * @return string
+	 */
+	function woodmart_add_term_hint( $term_html, $attribute, $values ) {
+		foreach ( $attribute->get_options() as $key => $term_id ) :
+			$tooltip = get_term_meta( $term_id, 'pa_term_hint', true );
+
+			ob_start();
+			?>
+				<span class="wd-attr-term">
+					<?php echo wp_kses_post( wpautop( wptexturize( $values[ $key ] ) ) ); ?>
+
+					<?php if ( ! empty( $tooltip ) ) : ?>
+						<span class="wd-hint wd-tooltip">
+							<?php echo wp_kses_post( $tooltip ); ?>
+						</span>
+					<?php endif; ?>
+				</span>
+			<?php
+
+			$values[ $key ] = trim( ob_get_clean() );
+		endforeach;
+
+		return implode( ', ', $values );
+	}
+
+	add_filter( 'woocommerce_attribute', 'woodmart_add_term_hint', 10, 3 );
 }

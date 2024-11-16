@@ -50,10 +50,10 @@ ShaderX.prototype = {
 
 	render: function() {
 
-		if (!this.container.hasClass('wd-with-webgl')) {
+		if (!this.container.classList.contains('wd-with-webgl')) {
 			this.createCanvas();
 			this.container.append(this.canvas);
-			this.container.addClass('wd-with-webgl');
+			this.container.classList.add('wd-with-webgl');
 		}
 
 		if (this.gl && ((this.progress > 0 && this.progress < 1) || !this.drawn)) {
@@ -264,8 +264,8 @@ ShaderX.prototype = {
 				return;
 			}
 
-			var displayWidth = Math.floor(that.options.sizeContainer.outerWidth() * that.pixelRatio);
-			var displayHeight = Math.floor(that.options.sizeContainer.outerHeight() * that.pixelRatio);
+			var displayWidth = Math.floor(that.options.sizeContainer.offsetWidth * that.pixelRatio);
+			var displayHeight = Math.floor(that.options.sizeContainer.offsetHeight * that.pixelRatio);
 
 			if (that.gl.canvas.width !== displayWidth || that.gl.canvas.height !== displayHeight) {
 				that.gl.canvas.width = displayWidth;

@@ -10,7 +10,7 @@
  * happen. When this occurs the version of the template file will be bumped and
  * the readme will list any important changes.
  *
- * @see     https://docs.woocommerce.com/document/template-structure/
+ * @see     https://woo.com/document/template-structure/
  * @package WooCommerce\Templates
  * @version 3.6.0
  */
@@ -28,7 +28,7 @@ if ( ! wc_review_ratings_enabled() ) {
 $rating_count = $product->get_rating_count();
 $review_count = $product->get_review_count();
 $average      = $product->get_average_rating();
-
+$review_link  = woodmart_loop_prop( 'is_quick_view' ) ? get_permalink( $product->get_id() ) . '#reviews' : '#reviews';
 ?>
 <?php if ( $rating_count > 0 ) : ?>
 	<div class="woocommerce-product-rating">
@@ -36,7 +36,7 @@ $average      = $product->get_average_rating();
 
 		<?php if ( comments_open() ) : ?>
 			<?php //phpcs:disable ?>
-			<a href="<?php echo get_permalink( $product->get_id() ); ?>#reviews" class="woocommerce-review-link" rel="nofollow">(<?php printf( _n( '%s customer review', '%s customer reviews', $review_count, 'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)</a>
+			<a href="<?php echo esc_url( $review_link ); ?>" class="woocommerce-review-link" rel="nofollow">(<?php printf( _n( '%s customer review', '%s customer reviews', $review_count, 'woocommerce' ), '<span class="count">' . esc_html( $review_count ) . '</span>' ); ?>)</a>
 			<?php // phpcs:enable ?>
 		<?php endif ?>
 	</div>

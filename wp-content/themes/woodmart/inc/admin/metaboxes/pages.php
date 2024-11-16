@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Direct access not allowed.
 }
 
-use XTS\Metaboxes;
+use XTS\Admin\Modules\Options\Metaboxes;
 
 if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 	/**
@@ -100,7 +100,7 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'open_categories',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Open categories menu', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'open-categories-menu.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'open-categories-menu.jpg" alt="">', true ),
 				'description' => esc_html__( 'Always shows categories navigation on this page', 'woodmart' ),
 				'section'     => 'header',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -128,7 +128,7 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'title_off',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Disable page title', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-page-title.gif" alt="">', 'woodmart' ), true ),
+				'hint'        => '<video data-src="' . WOODMART_TOOLTIP_URL . 'disable-page-title.mp4" autoplay loop muted></video>',
 				'description' => esc_html__( 'You can hide page heading for this page', 'woodmart' ),
 				'section'     => 'page_title',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -151,17 +151,17 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 					),
 					'default' => array(
 						'name'  => esc_html__( 'Default', 'woodmart' ),
-						'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-default.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-default.jpg" alt="">', true ),
 						'value' => 'default',
 					),
 					'small'   => array(
 						'name'  => esc_html__( 'Small', 'woodmart' ),
-						'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-small.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-small.jpg" alt="">', true ),
 						'value' => 'small',
 					),
 					'large'   => array(
 						'name'  => esc_html__( 'Large', 'woodmart' ),
-						'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-large.jpg" alt="">', 'woodmart' ), true ),
+						'hint'  => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'page-title-size-large.jpg" alt="">', true ),
 						'value' => 'large',
 					),
 				),
@@ -302,7 +302,7 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'footer_off',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Disable footer', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-footer.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-footer.jpg" alt="">', true ),
 				'description' => esc_html__( 'You can disable footer for this page', 'woodmart' ),
 				'section'     => 'footer',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -317,7 +317,7 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'prefooter_off',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Disable prefooter', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-prefooter.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-prefooter.jpg" alt="">', true ),
 				'description' => esc_html__( 'You can disable prefooter for this page', 'woodmart' ),
 				'section'     => 'footer',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),
@@ -332,7 +332,7 @@ if ( ! function_exists( 'woodmart_register_page_metaboxes' ) ) {
 				'id'          => $woodmart_prefix . 'copyrights_off',
 				'type'        => 'checkbox',
 				'name'        => esc_html__( 'Disable copyrights', 'woodmart' ),
-				'hint'        => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-copyrights.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'disable-copyrights.jpg" alt="">', true ),
 				'description' => esc_html__( 'You can disable copyrights for this page', 'woodmart' ),
 				'section'     => 'footer',
 				'on-text'     => esc_html__( 'Yes', 'woodmart' ),

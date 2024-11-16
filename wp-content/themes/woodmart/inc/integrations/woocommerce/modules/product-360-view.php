@@ -136,7 +136,7 @@ if( ! function_exists( 'woodmart_product_360_view' ) ) {
 			<div class="product-360-button wd-action-btn wd-gallery-btn wd-style-icon-bg-text">
 				<a href="#product-360-view" rel="nofollow"><span><?php esc_html_e('360 product view', 'woodmart'); ?></span></a>
 			</div>
-			<div id="product-360-view" class="product-360-view-wrapper mfp-hide mfp-with-anim">
+			<div id="product-360-view" class="product-360-view-wrapper mfp-hide wd-popup">
 				<div class="wd-threed-view wd-product-threed threed-id-<?php echo esc_attr( $id ); ?>" data-args='<?php echo wp_json_encode( $args ); ?>'>
 					<?php if ( ! empty( $title ) ): ?>
 						<h3 class="threed-title"><span><?php echo wp_kses( $title, woodmart_get_allowed_html() ); ?></span></h3>

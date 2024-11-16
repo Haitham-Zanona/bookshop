@@ -49,8 +49,13 @@
 					a {
 						padding: 0 7px 0 7px;
 
+						span {
+							display: none;
+						}
+
 						&:before {
 							color: #BFBFBF;
+							margin: 0;
 						}
 					}
 
@@ -88,6 +93,54 @@
 	}
 
 	// ------------------------------------------------------------------------------------------------
+	// CONTROL TABS
+	// ------------------------------------------------------------------------------------------------
+
+	.xts-control-tabs-nav {
+		position: absolute;
+		top: 0;
+		inset-inline-end: 0;
+	}
+
+	.xts-control-tab-nav-item {
+		@extend %xts-devices-tabs;
+		text-transform: capitalize;
+		font-size: 14px !important;
+
+		// span {
+		// 	margin-inline-start: 8px !important;
+		// }
+
+		&:not(:last-child) {
+			margin-inline-end: 9px !important;
+		}
+
+		&:before {
+			font-size: 18px !important;
+		}
+	}
+
+	.xts-control-tab-content {
+		animation: wd-fadeIn .6s ease both;
+
+		&:not(.xts-active) {
+			display: none;
+		}
+	}
+
+	// :is(
+	// .xts-col-6,
+	// .xts-col-4) {
+
+	// 	.xts-device {
+
+	// 		span {
+	// 			display: none;
+	// 		}
+	// 	}
+	// }
+
+	// ------------------------------------------------------------------------------------------------
 	// WPB BUTTON SWITHCER WITH TABS DEVICES STYLE
 	// ------------------------------------------------------------------------------------------------
 
@@ -118,6 +171,7 @@
 			background-color: transparent !important;
 
 			@extend %xts-devices-tabs;
+			@extend %xts-devices-tabs-with-tablet-vertical;
 
 			span {
 				line-height: 1;
@@ -172,6 +226,7 @@
 		align-items: center;
 		// background-color: #FFF;
 		line-height: 1;
+		text-transform: capitalize;
 		// position: absolute;
 		// top: -45px;
 		// right: 0 !important;
@@ -179,23 +234,24 @@
 
 		> span {
 			@extend %xts-devices-tabs;
+			@extend %xts-devices-tabs-with-tablet-vertical;
 		}
 
 		// .woodmart-td-content & {
 		// 	background-color: #F7F7F7;
 		// }
 
-		:is(
-		.vc_col-xs-6,
-		.vc_col-sm-6) & {
+		// :is(
+		// .vc_col-xs-6,
+		// .vc_col-sm-6) & {
 
-			.wd-device {
+		// 	.wd-device {
 
-				span {
-					display: none;
-				}
-			}
-		}
+		// 		span {
+		// 			display: none;
+		// 		}
+		// 	}
+		// }
 	}
 
 } // END IF
@@ -252,8 +308,6 @@
 	align-items: center;
 	color: #333;
 	vertical-align: middle;
-	// text-transform: uppercase;
-	// text-transform: capitalize;
 	font-weight: 600;
 	font-size: 13px;
 	line-height: 1;
@@ -261,7 +315,8 @@
 	transition: all .25s ease-in-out;
 
 	span {
-		margin-inline-start: 5px;
+		// margin-inline-start: 5px;
+		display: none;
 	}
 
 	&:hover {
@@ -299,7 +354,7 @@
 		}
 	}
 
-	&[data-value="tablet"] {
+	&[data-value*="tablet"] {
 
 		&:before {
 			@include font-icon-content($xts-icon-tablet);
@@ -310,6 +365,18 @@
 
 		&:before {
 			@include font-icon-content($xts-icon-phone);
+		}
+	}
+}
+
+// @extend %xts-devices-tabs-with-tablet-vertical;
+
+%xts-devices-tabs-with-tablet-vertical {
+
+	&[data-value="tablet"] {
+
+		&:before {
+			transform: rotate(270deg);
 		}
 	}
 }

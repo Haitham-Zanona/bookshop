@@ -59,8 +59,8 @@
 		woodmartThemeModule.$document.on('pjax:start', function() {
 			var $siteContent = $('.site-content');
 
-			$siteContent.removeClass('ajax-loaded');
-			$siteContent.addClass('ajax-loading');
+			$siteContent.removeClass('wd-loaded');
+			$siteContent.addClass('wd-loading');
 
 			woodmartThemeModule.$document.trigger('wdPjaxStart');
 			woodmartThemeModule.$window.trigger('scroll.loaderVerticalPosition');
@@ -100,8 +100,8 @@
 				filtersState = false;
 			}
 
-			$siteContent.removeClass('ajax-loading');
-			$siteContent.addClass('ajax-loaded');
+			$siteContent.removeClass('wd-loading');
+			$siteContent.addClass('wd-loaded');
 		});
 
 		var scrollToTop = function(type) {

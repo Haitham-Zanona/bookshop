@@ -132,9 +132,10 @@
 	%highlight-field {
 		content: "";
 		position: absolute;
-		right: -10px;
+		// left: -10px;
+		// right: -10px;
+		inset-inline: -10px;
 		bottom: -10px;
-		left: -10px;
 		z-index: -1;
 		border-radius: var(--xts-brd-radius);
 		background-color: var(--xts-bg-color-active);
@@ -216,8 +217,9 @@
 				left: 15px;
 				display: block;
 				float: left;
-				margin-right: 5px;
-				margin-left: -5px;
+				// margin-right: 5px;
+				// margin-left: -5px;
+				margin-inline: -5px 5px;
 				width: 30px;
 				height: 40px;
 				// color: #E3E3E3;
@@ -313,9 +315,10 @@
 	.xts-inherit-checkbox-wrapper {
 		display: inline-flex;
 		align-items: center;
-		margin-top: -2px;
+		// margin-top: -2px;
+		// margin-bottom: -2px;
+		margin-block: -2px;
 		margin-inline-end: 10px;
-		margin-bottom: -2px;
 		padding: 4px 8px;
 		border-radius: var(--xts-option-border-radius);
 		background: var(--xts-primary-color);
@@ -337,6 +340,21 @@
 	}
 
 	.xts-preset-active {
+
+		.xts-preset-section-disabled {
+			display: none;
+		}
+
+		.xts-preset-field-disabled {
+
+			label {
+				pointer-events: none;
+			}
+
+			.xts-inherit-checkbox-wrapper {
+				display: none;
+			}
+		}
 
 		.xts-option-title {
 
@@ -431,7 +449,8 @@
 		}
 	}
 
-	.xts-section[data-id*="social_"] .xts-field[class*="ok"] {
+	.xts-section[data-id*="social_"] .xts-field[class*="ok_link"],
+	.xts-section[data-id*="social_"] .xts-field[class*="share_ok"] {
 
 		.xts-option-title {
 
@@ -516,7 +535,6 @@
 		.xts-option-title {
 
 			span {
-				// background-color: red;
 
 				&:before {
 					@include font-icon-content($xts-icon-logo-viber);
@@ -525,7 +543,7 @@
 		}
 	}
 
-	.xts-field[class*="tiktok"] {
+	#wpwrap .xts-field[class*="tiktok"] {
 
 		.xts-option-title {
 
@@ -693,6 +711,32 @@
 		}
 	}
 
+	.xts-field[class*="discord"] {
+
+		.xts-option-title {
+
+			span {
+
+				&:before {
+					@include font-icon-content($xts-icon-logo-discord);
+				}
+			}
+		}
+	}
+
+	.xts-field[class*="yelp"] {
+
+		.xts-option-title {
+
+			span {
+
+				&:before {
+					@include font-icon-content($xts-icon-logo-yelp);
+				}
+			}
+		}
+	}
+
 	// ------------------------------------------------------------------------------------------------
 	// CUSTOM CSS
 	// ------------------------------------------------------------------------------------------------
@@ -813,9 +857,10 @@
 		display: flex;
 		flex-wrap: wrap;
 		gap: 10px;
-		// margin-top: 15px;
+		--xts-tooltip-width: 250px;
 
-		> span {
+		> div {
+			position: relative;
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
@@ -829,11 +874,53 @@
 			background-color: #FFF;
 			border: 1px solid var(--xts-option-border-color);
 			border-radius: var(--xts-option-border-radius);
-			transition: all .25s ease;
+			transition: all .15s ease;
+			cursor: copy;
+			user-select: all;
+
+			&:hover {
+				color: var(--xts-bg-color-active);
+			}
+
+			&:focus,
+			&:focus-within {
+				background-color: var(--xts-bg-color-active);
+				color: #FFF;
+			}
+
+			&:focus {
+
+				.xts-tooltip {
+					pointer-events: auto;
+					visibility: visible;
+					opacity: 1;
+				}
+			}
 		}
 
-		[class*="wd-icon-caret-"] { // NOTE REMOVE AFTER FIX
-			display: none;
+		.xts-tooltip {
+			inset-inline-start: 0;
+			font-family: monospace;
+			word-spacing: -5px;
+			color: #000;
+			pointer-events: none;
+
+			&:focus-within {
+				pointer-events: auto;
+				visibility: visible;
+				opacity: 1;
+				user-select: auto;
+			}
+		}
+
+		:is(
+		.xts-icon-cont,
+		.xts-icon-font) {
+			color: #a11;
+		}
+
+		.xts-icon-weight {
+			color: #164;
 		}
 
 		&.xts-loading {
@@ -865,6 +952,16 @@
 
 			&:not(:last-child) {
 				margin-inline-end: calc(var(--xts-option-space) / 2);
+			}
+		}
+	}
+
+	.xts-sections {
+
+		&:has(.wp-picker-active) {
+
+			.xts-options-actions {
+				position: static;
 			}
 		}
 	}

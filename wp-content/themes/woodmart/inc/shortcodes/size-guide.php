@@ -59,13 +59,16 @@ if ( ! function_exists( 'woodmart_size_guide_shortcode' ) ) {
 			return '';
 		}
 
-		$size_tables = get_post_meta( $sguide_post->ID, 'woodmart_sguide' );
+		$size_tables = get_post_meta( $sguide_post->ID, 'woodmart_sguide', true );
 
 		if ( ! $size_tables ) {
 			return '';
 		}
 
 		ob_start();
+
+		woodmart_enqueue_inline_style( 'size-guide' );
+
 		?>
 		<div class="wd-sizeguide<?php echo esc_attr( $wrapper_classes ); ?>">
 			<?php if ( $sguide_post->post_title && $element_args['title'] ) : ?>
@@ -82,14 +85,12 @@ if ( ! function_exists( 'woodmart_size_guide_shortcode' ) ) {
 
 			<div class="responsive-table">
 				<table class="wd-sizeguide-table">
-					<?php foreach ( $size_tables as $table ) : ?>
-						<?php foreach ( $table as $row ) : ?>
-							<tr>
-								<?php foreach ( $row as $col ) : ?>
-									<td><?php echo esc_html( $col ); ?></td>
-								<?php endforeach; ?>
-							</tr>
-						<?php endforeach; ?>
+					<?php foreach ( $size_tables as $row ) : ?>
+						<tr>
+							<?php foreach ( $row as $col ) : ?>
+								<td><?php echo esc_html( $col ); ?></td>
+							<?php endforeach; ?>
+						</tr>
 					<?php endforeach; ?>
 				</table>
 			</div>

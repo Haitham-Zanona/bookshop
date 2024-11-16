@@ -27,6 +27,10 @@
 			display: none;
 		}
 
+		&.xts-col-4 {
+			flex-basis: calc(33.33333% - var(--xts-sp, 30px));
+		}
+
 		&.xts-col-6 {
 			flex-basis: calc(50% - var(--xts-sp, 30px));
 		}
@@ -73,9 +77,10 @@
 			}
 		}
 
-		.xts-hint {
-			margin-top: -1px;
-			margin-bottom: -1px;
+		.xts-hint{
+			// margin-top: -1px;
+			// margin-bottom: -1px;
+			margin-block: -1px;
 			margin-inline-start: 3px;
 		}
 
@@ -107,6 +112,7 @@
 		.xts-status-label {
 			// font-weight: 600;
 			font-size: 12px;
+			line-height: 1; // NOTE FOR WP MENU EDITOR
 		}
 
 		.xts-status-icon {
@@ -121,19 +127,6 @@
 			&.xts-top {
 				inset-inline-start: calc(100% - 26px);
 			}
-		}
-	}
-
-	// ------------------------------------------
-	// WPBAKERY
-	// ------------------------------------------
-
-	.xts-builder-wpb {
-
-		.xts-negative_gap-field,
-		[data-id="plugins_section"] .xts-fields-group:nth-child(4) + .xts-group-title,
-		[data-id="plugins_section"] .xts-fields-group:nth-child(4) + .xts-group-title + .xts-fields-group {
-			display: none;
 		}
 	}
 
@@ -174,6 +167,17 @@
 		user-select: none;
 	}
 
+	.xts-reset-group {
+		color: rgba(94,94,94,1);
+		animation: wd-fadeIn .2s ease both;
+		margin-block: -1px;
+		margin-inline-start: 4px;
+
+		&:hover {
+			color: rgba(94,94,94,.7);
+		}
+	}
+
 	// ------------------------------------------------------------------------------------------------
 	// WHB FIELD
 	// ------------------------------------------------------------------------------------------------
@@ -191,11 +195,22 @@
 
 			@extend %option-title;
 			@extend %option-title-label;
+
+			span {
+				vertical-align: middle;
+			}
 		}
 
 		&.xts-col-6 {
-			flex: 0 0 50%;
-			max-width: 50%;
+			flex: 1 0 50%;
+			// max-width: 50%;
+		}
+
+		.xts-hint {
+			// margin-top: -1px;
+			// margin-bottom: -1px;
+			margin-block: -1px;
+			margin-inline-start: 6px;
 		}
 	}
 
@@ -215,7 +230,8 @@
 
 		.xts-field {
 
-			&.xts-col-6 {
+			&.xts-col-6,
+			&.xts-col-4 {
 				flex-basis: 100%;
 				max-width: 100%;
 			}
@@ -231,7 +247,7 @@
 // @extend %option-title;
 
 %option-title {
-	margin-bottom: 15px;
+	margin-bottom: 15px !important;
 	padding-bottom: var(--xts-option-space);
 	border-bottom: 1px solid var(--xts-option-border-color);
 	line-height: 1;

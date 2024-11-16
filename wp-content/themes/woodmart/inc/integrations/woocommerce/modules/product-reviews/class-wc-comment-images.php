@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit( 'No direct script access allowed' );
 }
 
-use XTS\Metaboxes;
+use XTS\Admin\Modules\Options\Metaboxes;
 
 /**
  * Comment images class.
@@ -308,6 +308,7 @@ class WC_Comment_Images {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @codeCoverageIgnore
 	 * @param integer        $comment_id       The comment ID.
 	 * @param integer|string $comment_approved 1 if the comment is approved, 0 if not, 'spam' if spam.
 	 * @param array          $comment          Comment data.
@@ -389,6 +390,7 @@ class WC_Comment_Images {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @codeCoverageIgnore
 	 * @param array $comment_data Comment data.
 	 *
 	 * @return array
@@ -438,6 +440,7 @@ class WC_Comment_Images {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @codeCoverageIgnore
 	 * @param string $submit_field Default html.
 	 *
 	 * @return string
@@ -455,6 +458,7 @@ class WC_Comment_Images {
 		$max_upload_size = $this->get_max_upload_size( true );
 		$required        = woodmart_get_opt( 'single_product_comment_images_required' );
 
+		woodmart_enqueue_js_library( 'tooltips' );
 		woodmart_enqueue_js_script( 'btns-tooltips' );
 		woodmart_enqueue_js_script( 'comment-image' );
 		woodmart_enqueue_inline_style( 'woo-single-prod-opt-review-images' );

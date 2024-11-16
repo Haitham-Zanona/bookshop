@@ -7,7 +7,7 @@
 
 namespace XTS\Modules\Shipping_Progress_Bar;
 
-use XTS\Options;
+use XTS\Admin\Modules\Options;
 use XTS\Singleton;
 use XTS\Modules\Layouts\Main as Builder;
 
@@ -34,8 +34,9 @@ class Main extends Singleton {
 				'id'       => 'shipping_progress_bar',
 				'parent'   => 'general_shop_section',
 				'name'     => esc_html__( 'Free shipping bar', 'woodmart' ),
-				'priority' => 100,
+				'priority' => 140,
 				'icon'     => 'xts-i-cart',
+				'class'    => 'xts-preset-section-disabled',
 			)
 		);
 
@@ -43,7 +44,7 @@ class Main extends Singleton {
 			array(
 				'id'          => 'shipping_progress_bar_enabled',
 				'name'        => esc_html__( 'Free shipping bar', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-cart-page.jpg" alt="">', 'woodmart' ), true ),
+				'hint'        => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-cart-page.jpg" alt="">', true ),
 				'description' => esc_html__( 'Display a free shipping progress bar on the website.', 'woodmart' ),
 				'type'        => 'switcher',
 				'section'     => 'shipping_progress_bar',
@@ -117,7 +118,7 @@ class Main extends Singleton {
 			array(
 				'id'       => 'shipping_progress_bar_location_card_page',
 				'name'     => esc_html__( 'Cart page', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-cart-page.jpg" alt="">', 'woodmart' ), true ),
+				'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-cart-page.jpg" alt="">', true ),
 				'type'     => 'switcher',
 				'section'  => 'shipping_progress_bar',
 				'group'    => esc_html__( 'Locations', 'woodmart' ),
@@ -131,7 +132,7 @@ class Main extends Singleton {
 			array(
 				'id'       => 'shipping_progress_bar_location_mini_cart',
 				'name'     => esc_html__( 'Mini cart', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-mini-cart.jpg" alt="">', 'woodmart' ), true ),
+				'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-mini-cart.jpg" alt="">', true ),
 				'type'     => 'switcher',
 				'section'  => 'shipping_progress_bar',
 				'group'    => esc_html__( 'Locations', 'woodmart' ),
@@ -145,7 +146,7 @@ class Main extends Singleton {
 			array(
 				'id'       => 'shipping_progress_bar_location_checkout',
 				'name'     => esc_html__( 'Checkout page', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-checkout-page.jpg" alt="">', 'woodmart' ), true ),
+				'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'free-shipping-bar-checkout-page.jpg" alt="">', true ),
 				'type'     => 'switcher',
 				'section'  => 'shipping_progress_bar',
 				'group'    => esc_html__( 'Locations', 'woodmart' ),
@@ -159,7 +160,7 @@ class Main extends Singleton {
 			array(
 				'id'       => 'shipping_progress_bar_location_single_product',
 				'name'     => esc_html__( 'Single product', 'woodmart' ),
-				'hint'     => wp_kses( __( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-free-shipping-bar.jpg" alt="">', 'woodmart' ), true ),
+				'hint'     => wp_kses( '<img data-src="' . WOODMART_TOOLTIP_URL . 'shop-free-shipping-bar.jpg" alt="">', true ),
 				'type'     => 'switcher',
 				'section'  => 'shipping_progress_bar',
 				'group'    => esc_html__( 'Locations', 'woodmart' ),
@@ -215,7 +216,7 @@ class Main extends Singleton {
 		}
 
 		if ( woodmart_get_opt( 'shipping_progress_bar_location_checkout' ) ) {
-			add_action( 'woocommerce_checkout_before_customer_details', array( $this, 'render_shipping_progress_bar_with_wrapper' ) );
+			add_action( 'woocommerce_checkout_billing', array( $this, 'render_shipping_progress_bar_with_wrapper' ) );
 		}
 	}
 
@@ -240,6 +241,7 @@ class Main extends Singleton {
 	/**
 	 * Get shipping progress bar content.
 	 *
+	 * @codeCoverageIgnore
 	 * @return void
 	 */
 	public function render_shipping_progress_bar_with_wrapper() {
@@ -294,6 +296,8 @@ class Main extends Singleton {
 
 	/**
 	 * Render free shipping progress bar.
+	 *
+	 * @codeCoverageIgnore
 	 */
 	public function render_shipping_progress_bar() {
 		if ( ! woodmart_get_opt( 'shipping_progress_bar_enabled' ) ) {

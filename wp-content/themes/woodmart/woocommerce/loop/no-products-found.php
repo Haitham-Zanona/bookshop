@@ -4,9 +4,9 @@
  *
  * Override this template by copying it to yourtheme/woocommerce/loop/no-products-found.php
  *
- * @author 		WooThemes
- * @package 	WooCommerce/Templates
- * @version     2.0.0
+ * @author  WooThemes
+ * @package WooCommerce/Templates
+ * @version 7.8.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,7 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 ?>
-<p class="woocommerce-info woocommerce-no-products-found"><?php esc_html_e( 'No products were found matching your selection.', 'woocommerce' ); ?></p>
+<div class="woocommerce-no-products-found">
+	<?php wc_print_notice( esc_html__( 'No products were found matching your selection.', 'woocommerce' ), 'notice' ); ?>
+</div>
 
 <div class="no-products-footer">
 	<?php get_product_search_form(); ?>

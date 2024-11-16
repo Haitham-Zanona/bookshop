@@ -1,4 +1,6 @@
 <?php
+use XTS\Modules\Mega_Menu_Walker;
+
 $menu_style = ( $params['menu_style'] ) ? $params['menu_style'] : 'default';
 $location   = 'main-menu';
 $classes    = 'text-' . $params['menu_align'];
@@ -25,7 +27,7 @@ if ( ! empty( $params['bg_overlay'] ) ) {
 $classes .= woodmart_get_old_classes( ' navigation-style-' . $menu_style );
 ?>
 
-<div class="wd-header-nav wd-header-secondary-nav <?php echo esc_attr( $classes ); ?>" role="navigation" aria-label="<?php esc_html_e( 'Secondary navigation', 'woodmart' ); ?>">
+<div class="wd-header-nav wd-header-secondary-nav <?php echo esc_attr( $classes ); ?>" role="navigation" aria-label="<?php esc_attr_e( 'Secondary navigation', 'woodmart' ); ?>">
 	<?php
 	if ( wp_get_nav_menu_object( $params['menu_id'] ) && wp_get_nav_menu_items( $params['menu_id'] ) ) {
 		wp_nav_menu(
@@ -33,13 +35,21 @@ $classes .= woodmart_get_old_classes( ' navigation-style-' . $menu_style );
 				'container'  => '',
 				'menu'       => $params['menu_id'],
 				'menu_class' => 'menu wd-nav wd-nav-secondary' . $menu_classes,
-				'walker'     => new WOODMART_Mega_Menu_Walker(),
+				'walker'     => new Mega_Menu_Walker(),
 			)
 		);
 	} elseif ( $params['menu_id'] ) {
-		esc_html_e( 'Wrong menu selected', 'woodmart' );
+		?>
+		<span>
+			<?php esc_html_e( 'Wrong menu selected', 'woodmart' ); ?>
+		</span>
+		<?php
 	} else {
-		esc_html_e( 'Choose menu', 'woodmart' );
+		?>
+		<span>
+			<?php esc_html_e( 'Choose menu', 'woodmart' ); ?>
+		</span>
+		<?php
 	}
 	?>
 </div><!--END MAIN-NAV-->

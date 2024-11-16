@@ -45,8 +45,9 @@
 					label,
 					a) {
 						box-sizing: border-box;
-						padding-right: 10px;
-						padding-left: 10px;
+						// padding-right: 10px;
+						// padding-left: 10px;
+						padding-inline: 10px;
 					}
 
 					.xts-inline-btn {
@@ -92,8 +93,9 @@
 						a {
 							display: flex;
 							align-items: center;
-							padding-top: 4px;
-							padding-bottom: 4px;
+							// padding-top: 4px;
+							// padding-bottom: 4px;
+							padding-block: 4px;
 							padding-inline-start: 18px;
 							text-decoration: none;
 

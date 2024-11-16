@@ -19,11 +19,14 @@
 			return;
 		}
 
-		var $container = $('.elements-grid.grid-masonry');
+		var $container = $('.wd-products.grid-masonry');
 		$container.imagesLoaded(function() {
 			$container.isotope({
 				isOriginLeft: !woodmartThemeModule.$body.hasClass('rtl'),
-				itemSelector: '.product-category.product, .product-grid-item'
+				itemSelector: '.product-category.product, .wd-product, .wd-products > .element-title',
+				masonry: {
+					columnWidth: '.product-category.product, .wd-product'
+				}
 			});
 		});
 
@@ -34,15 +37,14 @@
 		initMasonry();
 
 		function initMasonry() {
-			var $catsContainer = $('.categories-masonry');
-			var colWidth = ($catsContainer.hasClass('categories-style-masonry')) ? '.product-category.product' : '.col-lg-3.product-category.product';
+			var $catsContainer = $('.wd-cats-element .wd-masonry');
 			$catsContainer.imagesLoaded(function() {
 				$catsContainer.packery({
 					resizable   : false,
 					isOriginLeft: !woodmartThemeModule.$body.hasClass('rtl'),
 					packery     : {
 						gutter     : 0,
-						columnWidth: colWidth
+						columnWidth: '.product-category.product'
 					},
 					itemSelector: '.product-category.product'
 				});

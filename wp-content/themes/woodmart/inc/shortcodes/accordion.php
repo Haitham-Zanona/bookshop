@@ -186,10 +186,10 @@ if ( ! function_exists( 'woodmart_shortcode_accordion' ) ) {
 					$icon_output = woodmart_display_icon( $shortcode_data[0]['image'], $shortcode_data[0]['image_size'], 128 ); // phpcs:ignore
 
 					if ( woodmart_is_svg( wp_get_attachment_image_src( $shortcode_data[0]['image'] )[0] ) ) {
-						$icon_output = woodmart_get_svg_html( $shortcode_data[0]['image'], $shortcode_data[0]['image_size'] );
+						$icon_output = '<span class="img-wrapper">' . woodmart_get_svg_html( $shortcode_data[0]['image'], $shortcode_data[0]['image_size'] ) . '</span>';
 					}
 				} elseif ( ! empty( $icon_library ) ) {
-					$icon_output = '<i class="' . esc_attr( $icon_library ) . '"></i>';
+					$icon_output = '<span class="img-wrapper"><i class="' . esc_attr( $icon_library ) . '"></i></span>';
 				}
 				?>
 
@@ -197,9 +197,7 @@ if ( ! function_exists( 'woodmart_shortcode_accordion' ) ) {
 					<div class="wd-accordion-title<?php echo esc_attr( $loop_title_classes_wrapper ); ?>" data-accordion-index="<?php echo esc_attr( $index ); ?>">
 						<div class="wd-accordion-title-text">
 							<?php if ( ! empty( $icon_output ) ) : ?>
-								<div class="img-wrapper">
-									<?php echo $icon_output; // phpcs:ignore ?>
-								</div>
+								<?php echo $icon_output; // phpcs:ignore ?>
 							<?php endif; ?>
 							<span>
 								<?php echo esc_html( $shortcode_data[0]['title'] ); ?>
